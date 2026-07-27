@@ -1,8 +1,11 @@
 <!-- ================================================================ -->
-<!-- BRIDGE-AI KENYA — ULTIMATE PREMIUM HEADER (FIXED)              -->
+<!-- BRIDGE-AI KENYA — PREMIUM HEADER (UPGRADED)                    -->
 <!-- ================================================================ -->
-<!-- Fixes: Correct section anchors, WP5 filter, training register, -->
-<!-- proper section IDs for technology pages                        -->
+<!-- Design: Clean, premium, no dropdowns                           -->
+<!-- Logo Order: BRIDGE-AI → EU Emblem                              -->
+<!-- Navigation: About | JKUAT Role | Activities | Training |       -->
+<!--             Resources | Partners | Gallery                     -->
+<!-- No dropdowns, no Contact nav, no Smart Mushrooms nav          -->
 <!-- ================================================================ -->
 
 <header class="site-header" id="siteHeader" role="banner">
@@ -12,24 +15,12 @@
     <div class="header-container">
         
         <!-- ============================================================ -->
-        <!-- BRAND / LOGO AREA — LARGER & BOLDER                        -->
+        <!-- BRAND / LOGO AREA — BRIDGE-AI → EU EMBLEM                  -->
         <!-- ============================================================ -->
         <div class="header-brand">
             <a href="{{ url_for('public.index') }}" class="brand-link" aria-label="BRIDGE-AI Kenya Home">
                 <div class="brand-group">
-                    <!-- JHUB Logo -->
-                    <div class="brand-item brand-jhub">
-                        <img src="{{ url_for('static', filename='images/logos/jkuat_logo.svg') }}" 
-                             alt="JHUB Africa" 
-                             class="brand-logo brand-logo-jhub"
-                             id="jhubLogo"
-                             loading="lazy">
-                    </div> 
-                    
-                    <!-- Premium Divider -->
-                    <span class="brand-divider"></span>
-                    
-                    <!-- BRIDGE-AI Logo -->
+                    <!-- BRIDGE-AI Logo (First) -->
                     <div class="brand-item brand-bridge">
                         <img src="{{ url_for('static', filename='images/logos/bridge_ai_logo.svg') }}" 
                              alt="BRIDGE-AI Kenya" 
@@ -38,321 +29,75 @@
                              loading="lazy">
                     </div>
 
-                    <!-- EU Emblem -->
-                    
+                    <!-- Premium Divider -->
+                    <span class="brand-divider"></span>
+
+                    <!-- EU Emblem (Second) -->
+                    <div class="brand-item brand-eu">
+                        <img src="{{ url_for('static', filename='images/logos/eu_emblem.svg') }}" 
+                             alt="Funded by the European Union" 
+                             class="brand-logo brand-logo-eu"
+                             loading="lazy">
+                    </div>
                 </div>
             </a>
         </div>
 
         <!-- ============================================================ -->
-        <!-- MAIN NAVIGATION — Home REMOVED                             -->
+        <!-- MAIN NAVIGATION — No Dropdowns, No Contact                 -->
         <!-- ============================================================ -->
         <nav class="main-nav" id="mainNav" role="navigation" aria-label="Main Navigation">
             <ul class="nav-list">
                 
                 <!-- About -->
-                <li class="nav-item nav-item--dropdown">
+                <li class="nav-item">
                     <a href="{{ url_for('public.about') }}" 
-                       class="nav-link nav-link--dropdown {% if request.endpoint == 'public.about' %}active{% endif %}"
-                       aria-haspopup="true" aria-expanded="false">
+                       class="nav-link {% if request.endpoint == 'public.about' %}active{% endif %}">
                         <span class="nav-label">About</span>
-                        <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                            <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
                         <span class="nav-underline"></span>
                     </a>
-                    <div class="dropdown-panel">
-                        <div class="dropdown-grid">
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">Project</span>
-                                <a href="{{ url_for('public.about') }}#overview" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M5 5h6M5 8h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Overview
-                                </a>
-                                <a href="{{ url_for('public.about') }}#objectives" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/></svg>
-                                    Objectives
-                                </a>
-                                <a href="{{ url_for('public.about') }}#countries" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.3"/></svg>
-                                    Countries
-                                </a>
-                            </div>
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">Technology</span>
-                                <a href="{{ url_for('public.about') }}#genai" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3a5 5 0 0 0-5 5c0 4 5 8 5 8s5-4 5-8a5 5 0 0 0-5-5Z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/></svg>
-                                    GenAI
-                                </a>
-                                <a href="{{ url_for('public.about') }}#iot" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h3M11 8h3M8 2v3M8 11v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
-                                    IoT
-                                </a>
-                                <a href="{{ url_for('public.about') }}#digital-shadows" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.3"/><line x1="5" y1="2" x2="5" y2="14" stroke="currentColor" stroke-width="1.3"/><line x1="11" y1="2" x2="11" y2="14" stroke="currentColor" stroke-width="1.3"/><line x1="2" y1="5" x2="14" y2="5" stroke="currentColor" stroke-width="1.3"/><line x1="2" y1="11" x2="14" y2="11" stroke="currentColor" stroke-width="1.3"/></svg>
-                                    Digital Shadows
-                                </a>
-                            </div>
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">Impact</span>
-                                <a href="{{ url_for('public.about') }}#use-cases" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14C8 14 3 10 3 6.5C3 4.5 4.5 3 6.5 3C8 3 8 4 8 4S8 3 9.5 3C11.5 3 13 4.5 13 6.5C13 10 8 14 8 14Z" stroke="currentColor" stroke-width="1.3"/></svg>
-                                    Use Cases
-                                </a>
-                                <a href="{{ url_for('public.about') }}#timeline" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                    Timeline
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </li>
                 
                 <!-- JKUAT Role -->
-                <li class="nav-item nav-item--dropdown">
+                <li class="nav-item">
                     <a href="{{ url_for('public.jkuat_role') }}" 
-                       class="nav-link nav-link--dropdown {% if request.endpoint == 'public.jkuat_role' %}active{% endif %}"
-                       aria-haspopup="true" aria-expanded="false">
+                       class="nav-link {% if request.endpoint == 'public.jkuat_role' %}active{% endif %}">
                         <span class="nav-label">JKUAT Role</span>
-                        <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                            <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
                         <span class="nav-underline"></span>
                     </a>
-                    <div class="dropdown-panel">
-                        <div class="dropdown-grid">
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">About JKUAT</span>
-                                <a href="{{ url_for('public.jkuat_role') }}#profile" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 14V6.5L8 2.5L13 6.5V14" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 14v-4h4v4" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-                                    JKUAT Profile
-                                </a>
-                                <a href="{{ url_for('public.jkuat_role') }}#jhub-role" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z" stroke="currentColor" stroke-width="1.3"/><path d="M8 8v2M6 9h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    JHUB Africa
-                                </a>
-                                <a href="{{ url_for('public.jkuat_role') }}#team" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="5.5" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.3"/><circle cx="10.5" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M1 13.5c0-2.5 2-4 4.5-4M10.5 9.5c2.5 0 4.5 1.5 4.5 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Our Team
-                                </a>
-                            </div>
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">Leadership</span>
-                                <a href="{{ url_for('public.jkuat_role') }}#wp5" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 6h12M5 3V1M11 3V1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    WP5 Leadership
-                                </a>
-                                <a href="{{ url_for('public.jkuat_role') }}#responsibilities" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10 5H14L11 8L12.5 12L8 9.5L3.5 12L5 8L2 5H6L8 1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-                                    Responsibilities
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                
-                <!-- Smart Mushrooms -->
-                <li class="nav-item nav-item--dropdown">
-                    <a href="{{ url_for('public.smart_mushrooms') }}" 
-                       class="nav-link nav-link--dropdown {% if request.endpoint == 'public.smart_mushrooms' %}active{% endif %}"
-                       aria-haspopup="true" aria-expanded="false">
-                        <span class="nav-label">Smart Mushrooms</span>
-                        <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                            <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <span class="nav-underline"></span>
-                    </a>
-                    <div class="dropdown-panel">
-                        <div class="dropdown-grid">
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">The Pilot</span>
-                                <a href="{{ url_for('public.smart_mushrooms') }}#problem" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v4M8 11.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Problem
-                                </a>
-                                <a href="{{ url_for('public.smart_mushrooms') }}#solution" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10 5H14L11 8L12.5 12L8 9.5L3.5 12L5 8L2 5H6L8 1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-                                    Solution
-                                </a>
-                                <a href="{{ url_for('public.smart_mushrooms') }}#technology" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3a5 5 0 0 0-5 5c0 4 5 8 5 8s5-4 5-8a5 5 0 0 0-5-5Z" stroke="currentColor" stroke-width="1.3"/></svg>
-                                    Technology
-                                </a>
-                            </div>
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">Implementation</span>
-                                <a href="{{ url_for('public.smart_mushrooms') }}#sensors" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h2M12 8h2M8 2v2M8 12v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
-                                    Sensors
-                                </a>
-                                <a href="{{ url_for('public.smart_mushrooms') }}#digital-shadows" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.3"/><line x1="5" y1="2" x2="5" y2="14" stroke="currentColor" stroke-width="1.3"/><line x1="11" y1="2" x2="11" y2="14" stroke="currentColor" stroke-width="1.3"/><line x1="2" y1="5" x2="14" y2="5" stroke="currentColor" stroke-width="1.3"/><line x1="2" y1="11" x2="14" y2="11" stroke="currentColor" stroke-width="1.3"/></svg>
-                                    Digital Shadows
-                                </a>
-                                <a href="{{ url_for('public.smart_mushrooms') }}#pilot-site" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14C8 14 3 10 3 6.5C3 4.5 4.5 3 6.5 3C8 3 8 4 8 4S8 3 9.5 3C11.5 3 13 4.5 13 6.5C13 10 8 14 8 14Z" stroke="currentColor" stroke-width="1.3"/></svg>
-                                    Pilot Site
-                                </a>
-                            </div>
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">Community</span>
-                                <a href="{{ url_for('public.smart_mushrooms') }}#training" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 6h12M5 3V1M11 3V1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Training
-                                </a>
-                                <a href="{{ url_for('public.smart_mushrooms') }}#faqs" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 6.5C6.5 5.7 7.2 5 8 5s1.5.7 1.5 1.5c0 1-1.5 1.5-1.5 2.5M8 11.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    FAQs
-                                </a>
-                                <a href="{{ url_for('public.smart_mushrooms') }}#gallery" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="5.5" cy="6.5" r="1.2" fill="currentColor"/><path d="M2 10.5l4-3 3 2.5 2-2.5 3 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                    Gallery
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </li>
                 
                 <!-- Activities -->
-                <li class="nav-item nav-item--dropdown">
+                <li class="nav-item">
                     <a href="{{ url_for('public.activities') }}" 
-                       class="nav-link nav-link--dropdown {% if request.endpoint == 'public.activities' %}active{% endif %}"
-                       aria-haspopup="true" aria-expanded="false">
+                       class="nav-link {% if request.endpoint == 'public.activities' %}active{% endif %}">
                         <span class="nav-label">Activities</span>
-                        <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                            <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
                         <span class="nav-underline"></span>
                     </a>
-                    <div class="dropdown-panel dropdown-panel--compact">
-                        <div class="dropdown-grid dropdown-grid--compact">
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">Browse</span>
-                                <a href="{{ url_for('public.activities') }}#all" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    All Activities
-                                </a>
-                                <a href="{{ url_for('public.activities') }}?wp=WP5" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 6h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    WP5
-                                </a>
-                            </div>
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">Audience</span>
-                                <a href="{{ url_for('public.activities') }}?audience=farmers" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14C8 14 3 10 3 6.5C3 4.5 4.5 3 6.5 3C8 3 8 4 8 4S8 3 9.5 3C11.5 3 13 4.5 13 6.5C13 10 8 14 8 14Z" stroke="currentColor" stroke-width="1.3"/></svg>
-                                    Farmers
-                                </a>
-                                <a href="{{ url_for('public.activities') }}?audience=youth" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 13c0-2.5 2.5-4.5 5.5-4.5s5.5 2 5.5 4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Youth
-                                </a>
-                                <a href="{{ url_for('public.activities') }}?audience=women" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 7.5v5M5.5 10h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Women
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </li>
                 
                 <!-- Training -->
-                <li class="nav-item nav-item--dropdown">
+                <li class="nav-item">
                     <a href="{{ url_for('public.training_wp5') }}" 
-                       class="nav-link nav-link--dropdown {% if request.endpoint == 'public.training_wp5' or request.endpoint == 'public.training_events' or request.endpoint == 'public.training_materials' or request.endpoint == 'public.sme_mentoring' or request.endpoint == 'public.community_of_practice' or request.endpoint == 'public.replication_toolkit' %}active{% endif %}"
-                       aria-haspopup="true" aria-expanded="false">
+                       class="nav-link {% if request.endpoint == 'public.training_wp5' or request.endpoint == 'public.training_events' or request.endpoint == 'public.training_materials' or request.endpoint == 'public.sme_mentoring' or request.endpoint == 'public.community_of_practice' or request.endpoint == 'public.replication_toolkit' %}active{% endif %}">
                         <span class="nav-label">Training</span>
-                        <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                            <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
                         <span class="nav-underline"></span>
                     </a>
-                    <div class="dropdown-panel dropdown-panel--compact">
-                        <div class="dropdown-grid dropdown-grid--compact">
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">Training Programs</span>
-                                <a href="{{ url_for('public.training_events') }}" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10 5H14L11 8L12.5 12L8 9.5L3.5 12L5 8L2 5H6L8 1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-                                    Training Events / Bootcamps
-                                </a>
-                                <a href="{{ url_for('public.training_materials') }}" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 6h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Training Materials
-                                </a>
-                                <a href="{{ url_for('public.sme_mentoring') }}" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.5 10c0-2 1.5-3 3-3s3 1 3 1 1.5-1 3-1c1 0 1 0 1 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M2.5 13c0-2 1.5-3 3-3s3 1 3 1 1.5-1 3-1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    SME Mentoring
-                                </a>
-                            </div>
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">Community</span>
-                                <a href="{{ url_for('public.community_of_practice') }}" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 8h2M12 8h2M8 2v2M8 12v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Community of Practice
-                                </a>
-                                <a href="{{ url_for('public.replication_toolkit') }}" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 9H2.5A1.5 1.5 0 0 1 1 7.5v-4A1.5 1.5 0 0 1 2.5 2h5A1.5 1.5 0 0 1 9 3.5V4" stroke="currentColor" stroke-width="1.3"/></svg>
-                                    Replication Toolkit
-                                </a>
-                                <a href="{{ url_for('public.contact') }}#training-form" class="dropdown-link dropdown-link--highlight">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                    Register for Training
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </li>
                 
                 <!-- Resources -->
-                <li class="nav-item nav-item--dropdown">
+                <li class="nav-item">
                     <a href="{{ url_for('public.resources') }}" 
-                       class="nav-link nav-link--dropdown {% if request.endpoint == 'public.resources' %}active{% endif %}"
-                       aria-haspopup="true" aria-expanded="false">
+                       class="nav-link {% if request.endpoint == 'public.resources' %}active{% endif %}">
                         <span class="nav-label">Resources</span>
-                        <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                            <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
                         <span class="nav-underline"></span>
                     </a>
-                    <div class="dropdown-panel dropdown-panel--compact">
-                        <div class="dropdown-grid dropdown-grid--compact">
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">Content</span>
-                                <a href="{{ url_for('public.resources') }}#deliverables" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 6h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Deliverables
-                                </a>
-                                <a href="{{ url_for('public.resources') }}#policy-briefs" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 3h8l2 2v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.3"/><path d="M8 3v3h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Policy Briefs
-                                </a>
-                                <a href="{{ url_for('public.resources') }}#publications" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2C8 2 3 3 3 7v5l5-1.5L13 12V7c0-4-5-5-5-5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-                                    Publications
-                                </a>
-                            </div>
-                            <div class="dropdown-column">
-                                <span class="dropdown-label">Media</span>
-                                <a href="{{ url_for('public.resources') }}#videos" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="4" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M11 6.5l3.5-2v7l-3.5-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                    Videos
-                                </a>
-                                <a href="{{ url_for('public.resources') }}#presentations" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 11v2M5.5 13h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M4.5 7l2.5 2 4.5-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                    Presentations
-                                </a>
-                                <a href="{{ url_for('public.resources') }}#training-kits" class="dropdown-link">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 3V1M11 3V1M2 6h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Training Kits
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </li>
                 
                 <!-- Partners -->
                 <li class="nav-item">
-                    <a href="{{ url_for('public.partners') }}" class="nav-link {% if request.endpoint == 'public.partners' %}active{% endif %}">
+                    <a href="{{ url_for('public.partners') }}" 
+                       class="nav-link {% if request.endpoint == 'public.partners' %}active{% endif %}">
                         <span class="nav-label">Partners</span>
                         <span class="nav-underline"></span>
                     </a>
@@ -360,20 +105,10 @@
                 
                 <!-- Gallery -->
                 <li class="nav-item">
-                    <a href="{{ url_for('public.gallery') }}" class="nav-link {% if request.endpoint == 'public.gallery' %}active{% endif %}">
+                    <a href="{{ url_for('public.gallery') }}" 
+                       class="nav-link {% if request.endpoint == 'public.gallery' %}active{% endif %}">
                         <span class="nav-label">Gallery</span>
                         <span class="nav-underline"></span>
-                    </a>
-                </li>
-                
-                <!-- Contact (CTA) -->
-                <li class="nav-item nav-item--cta">
-                    <a href="{{ url_for('public.contact') }}" class="nav-cta {% if request.endpoint == 'public.contact' %}active{% endif %}">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                            <rect x="1" y="2.5" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
-                            <path d="M1.5 3.5L7 8L12.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Contact
                     </a>
                 </li>
                 
@@ -402,30 +137,7 @@
     <div class="mobile-scrim" id="mobileScrim"></div>
     <div class="mobile-sheet" id="mobileSheet">
         
-        <!-- Sheet Header -->
-        <div class="mobile-header">
-            <div class="mobile-brand">
-                <img src="{{ url_for('static', filename='images/logos/jhub_logo.svg') }}" 
-                     alt="JHUB Africa" 
-                     class="mobile-logo"
-                     loading="lazy">
-                <span class="mobile-brand-divider"></span>
-                <img src="{{ url_for('static', filename='images/logos/bridge_ai_logo.svg') }}" 
-                     alt="BRIDGE-AI Kenya" 
-                     class="mobile-logo"
-                     loading="lazy">
-                <span class="mobile-brand-divider"></span>
-                <img src="{{ url_for('static', filename='images/logos/eu_emblem.svg') }}" 
-                     alt="EU" 
-                     class="mobile-logo mobile-logo-eu"
-                     loading="lazy">
-            </div>
-            <button class="mobile-close" id="mobileClose" aria-label="Close menu">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                    <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-            </button>
-        </div>
+        
         
         <!-- Navigation -->
         <nav class="mobile-nav" role="navigation" aria-label="Mobile navigation">
@@ -447,15 +159,6 @@
                     </a>
                 </li>
                 <li style="--delay:0.08s">
-                    <a href="{{ url_for('public.smart_mushrooms') }}" class="mobile-link {% if request.endpoint == 'public.smart_mushrooms' %}active{% endif %}">
-                        <span class="mobile-icon">
-                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2C5.5 2 2 5 2 9C2 12 5 14 9 14C13 14 16 12 16 9C16 5 12.5 2 9 2Z" stroke="currentColor" stroke-width="1.3"/><path d="M9 14v1.5M7 15.5h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                        </span>
-                        Smart Mushrooms
-                        <span class="mobile-badge">Pilot</span>
-                    </a>
-                </li>
-                <li style="--delay:0.11s">
                     <a href="{{ url_for('public.activities') }}" class="mobile-link {% if request.endpoint == 'public.activities' %}active{% endif %}">
                         <span class="mobile-icon">
                             <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2.5" y="3" width="13" height="12" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 3V1.5M12.5 3V1.5M2.5 7.5h13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
@@ -463,7 +166,7 @@
                         Activities
                     </a>
                 </li>
-                <li style="--delay:0.14s">
+                <li style="--delay:0.11s">
                     <a href="{{ url_for('public.training_wp5') }}" class="mobile-link {% if request.endpoint == 'public.training_wp5' or request.endpoint == 'public.training_events' or request.endpoint == 'public.training_materials' or request.endpoint == 'public.sme_mentoring' or request.endpoint == 'public.community_of_practice' or request.endpoint == 'public.replication_toolkit' %}active{% endif %}">
                         <span class="mobile-icon">
                             <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2.5 5.5L9 2.5L15.5 5.5V12.5L9 15.5L2.5 12.5V5.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 2.5v13M2.5 5.5l6.5 3.5 6.5-3.5" stroke="currentColor" stroke-width="1.3"/></svg>
@@ -471,7 +174,7 @@
                         Training
                     </a>
                 </li>
-                <li style="--delay:0.17s">
+                <li style="--delay:0.14s">
                     <a href="{{ url_for('public.resources') }}" class="mobile-link {% if request.endpoint == 'public.resources' %}active{% endif %}">
                         <span class="mobile-icon">
                             <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="2.5" width="12" height="13" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 6h7M5.5 9h7M5.5 12h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
@@ -479,7 +182,7 @@
                         Resources
                     </a>
                 </li>
-                <li style="--delay:0.20s">
+                <li style="--delay:0.17s">
                     <a href="{{ url_for('public.partners') }}" class="mobile-link {% if request.endpoint == 'public.partners' %}active{% endif %}">
                         <span class="mobile-icon">
                             <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5.5 9.5C5.5 9.5 3.5 8 3.5 6.5C3.5 4.9 4.5 3.5 6 3.5C7 3.5 7.5 4 8 4.5C8.5 4 9 3.5 10 3.5C11.5 3.5 12.5 4.9 12.5 6.5C12.5 8 10.5 9.5 8.5 12.5C6.5 9.5 5.5 9.5 5.5 9.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M2.5 14.5h6L7 12M15.5 14.5h-6l1.5-2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -487,23 +190,12 @@
                         Partners
                     </a>
                 </li>
-                <li style="--delay:0.23s">
+                <li style="--delay:0.20s">
                     <a href="{{ url_for('public.gallery') }}" class="mobile-link {% if request.endpoint == 'public.gallery' %}active{% endif %}">
                         <span class="mobile-icon">
                             <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2.5" y="3.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="6" cy="7" r="1.2" fill="currentColor"/><path d="M2.5 11.5l4.5-3.5 3.5 3 2.5-3 3.5 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </span>
                         Gallery
-                    </a>
-                </li>
-                <li style="--delay:0.26s">
-                    <a href="{{ url_for('public.contact') }}" class="mobile-link mobile-link--cta {% if request.endpoint == 'public.contact' %}active{% endif %}">
-                        <span class="mobile-icon">
-                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1.5" y="3.5" width="15" height="11" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M1.5 4.5L9 9.5L16.5 4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </span>
-                        Contact Us
-                        <svg class="mobile-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                            <path d="M3 8h10M9 5.5L11.5 8L9 10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
                     </a>
                 </li>
             </ul>
@@ -513,13 +205,13 @@
         <div class="mobile-footer">
             <div class="mobile-footer-bar"></div>
             <p class="mobile-footer-text">BRIDGE-AI Kenya · Horizon Europe</p>
-            <p class="mobile-footer-sub">Grant Agreement No. 101299050</p>
+            
         </div>
     </div>
 </div>
 
 <!-- ================================================================ -->
-<!-- PREMIUM HEADER STYLES — UPDATED                                -->
+<!-- PREMIUM HEADER STYLES — UPGRADED                               -->
 <!-- ================================================================ -->
 
 <style>
@@ -530,75 +222,79 @@
 :root {
     --hdr-forest: #0b4d3b;
     --hdr-forest-dark: #072f23;
-    --hdr-forest-light: #1a7a5e;
     --hdr-gold: #c8922a;
-    --hdr-gold-light: #e8b55a;
     --hdr-ink: #0e1e16;
-    --hdr-muted: #022c12;
+    --hdr-muted: #2d3d35;
     --hdr-hint: #7a9a86;
-    --hdr-bg: rgb(255, 255, 255);
-    --hdr-border: rgba(11,77,59,0.08);
-    --hdr-hover: rgba(11,77,59,0.05);
-    --hdr-active: rgba(11,77,59,0.10);
-    --hdr-shadow: 0 4px 32px rgba(0,0,0,0.04), 0 1px 0 rgba(0,0,0,0.03);
-    --hdr-radius: 10px;
-    --hdr-radius-lg: 14px;
+    --hdr-bg: rgba(255, 255, 255, 0.92);
+    --hdr-border: rgba(11, 77, 59, 0.08);
+    --hdr-hover: rgba(11, 77, 59, 0.05);
+    --hdr-active: rgba(11, 77, 59, 0.10);
+    --hdr-radius: 8px;
     --hdr-ease: cubic-bezier(0.22, 1, 0.36, 1);
-    --hdr-height: 72px;
-    --hdr-height-m: 62px;
+    --hdr-height: 80px;
+    --hdr-height-m: 64px;
 }
 
 /* ─── HEADER SHELL ───────────────────────────────────────────────── */
 .site-header {
     position: fixed;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     height: var(--hdr-height);
     z-index: 9999;
     display: flex;
     align-items: center;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    height: 120px;
+    transition: height 0.3s var(--hdr-ease), box-shadow 0.3s var(--hdr-ease);
 }
 
 .header-bg {
     position: absolute;
     inset: 0;
     background: var(--hdr-bg);
-    backdrop-filter: blur(24px) saturate(1.6);
-    -webkit-backdrop-filter: blur(24px) saturate(1.6);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border-bottom: 1px solid var(--hdr-border);
+    transition: background 0.3s var(--hdr-ease);
 }
 
 .site-header.scrolled .header-bg {
-    background: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.98);
+    border-bottom-color: rgba(11, 77, 59, 0.12);
+}
+
+.site-header.scrolled {
+    box-shadow: 0 2px 32px rgba(0, 0, 0, 0.06);
 }
 
 .header-container {
     width: 100%;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 28px;
+    padding: 0 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 100%;
     position: relative;
     z-index: 2;
-    gap: 8px;
+    gap: 16px;
 }
 
-/* ─── BRAND — LARGER & BOLDER ───────────────────────────────────── */
+/* ─── BRAND — BRIDGE-AI → EU ────────────────────────────────────── */
 .header-brand {
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    margin-right: 90px;
 }
 
 .brand-link {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     text-decoration: none;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.3s var(--hdr-ease);
 }
 
 .brand-link:hover { opacity: 0.85; }
@@ -606,7 +302,7 @@
 .brand-group {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 12px;
 }
 
 .brand-item {
@@ -614,7 +310,6 @@
     align-items: center;
 }
 
-/* LARGER LOGOS - fill header height */
 .brand-logo {
     height: auto;
     width: auto;
@@ -622,26 +317,22 @@
     transition: transform 0.3s var(--hdr-ease);
 }
 
-.brand-logo-jhub {
-    height: 80px;
-}
-
 .brand-logo-bridge {
-    height: 74px;
+    height: 56px;
 }
 
 .brand-logo-eu {
-    height: 50px;
+    height: 40px;
 }
 
 .brand-divider {
     width: 1.5px;
-    height: 34px;
+    height: 32px;
     background: linear-gradient(180deg, transparent, var(--hdr-border), transparent);
     flex-shrink: 0;
 }
 
-/* ─── NAVIGATION ────────────────────────────────────────────────── */
+/* ─── NAVIGATION — Clean, No Dropdowns ──────────────────────────── */
 .main-nav {
     display: flex;
     align-items: center;
@@ -654,7 +345,7 @@
     display: flex;
     align-items: center;
     list-style: none;
-    gap: 2px;
+    gap: 4px;
     margin: 0;
     padding: 0;
     flex-wrap: nowrap;
@@ -665,24 +356,24 @@
 .nav-link {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 7px 14px;
-    font-size: 13px;
-    font-weight: 560;
+    padding: 8px 18px;
+    font-size: 13.5px;
+    font-weight: 500;
     color: var(--hdr-muted);
     text-decoration: none;
     border-radius: var(--hdr-radius);
     cursor: pointer;
     white-space: nowrap;
     position: relative;
-    transition: all 0.2s ease;
+    transition: all 0.25s var(--hdr-ease);
     font-family: inherit;
-    letter-spacing: 0.02px;
+    letter-spacing: 0.01em;
 }
 
 .nav-link:hover {
     color: var(--hdr-forest);
     background: var(--hdr-hover);
+    transform: translateY(-1px);
 }
 
 .nav-link.active {
@@ -693,167 +384,22 @@
 
 .nav-underline {
     position: absolute;
-    bottom: 3px;
+    bottom: 2px;
     left: 50%;
     transform: translateX(-50%) scaleX(0);
-    width: 20px;
+    width: 24px;
     height: 2.5px;
     background: var(--hdr-forest);
     border-radius: 3px;
     transition: transform 0.3s var(--hdr-ease);
 }
 
-.nav-link.active .nav-underline { transform: translateX(-50%) scaleX(1); }
-.nav-link:hover .nav-underline { transform: translateX(-50%) scaleX(0.6); }
-
-.nav-chevron {
-    width: 9px;
-    height: 9px;
-    opacity: 0.35;
-    transition: transform 0.25s var(--hdr-ease);
+.nav-link.active .nav-underline {
+    transform: translateX(-50%) scaleX(1);
 }
 
-.nav-item--dropdown:hover .nav-chevron { transform: rotate(180deg); opacity: 0.6; }
-
-/* ─── DROPDOWN PANELS — STICKY HOVER FIX ────────────────────────── */
-.dropdown-panel {
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%) translateY(6px) scale(0.96);
-    min-width: 380px;
-    background: #fff;
-    border-radius: var(--hdr-radius-lg);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: all 0.25s var(--hdr-ease);
-    z-index: 9100;
-    border: 1px solid var(--hdr-border);
-    overflow: hidden;
-    padding-top: 8px;
-}
-
-/* FIX: Dropdown stays open when hovering over it */
-.nav-item--dropdown:hover .dropdown-panel,
-.dropdown-panel:hover {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: translateX(-50%) translateY(0) scale(1);
-}
-
-/* Transition bridge to prevent gap */
-.nav-item--dropdown::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 0;
-    right: 0;
-    height: 16px;
-    z-index: 1;
-    pointer-events: auto;
-}
-
-.dropdown-panel::before {
-    content: '';
-    position: absolute;
-    top: -6px;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    width: 12px;
-    height: 12px;
-    background: #fff;
-    border-top: 1px solid var(--hdr-border);
-    border-left: 1px solid var(--hdr-border);
-    border-radius: 3px 0 0 0;
-}
-
-.dropdown-panel--compact { min-width: 280px; }
-
-.dropdown-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    padding: 14px;
-    gap: 4px;
-}
-
-.dropdown-grid--compact { grid-template-columns: 1fr 1fr; }
-
-.dropdown-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-}
-
-.dropdown-label {
-    font-size: 9.5px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--hdr-hint);
-    padding: 4px 10px 6px;
-    pointer-events: none;
-}
-
-.dropdown-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 10px;
-    border-radius: var(--hdr-radius);
-    text-decoration: none;
-    color: var(--hdr-muted);
-    font-size: 12.5px;
-    font-weight: 400;
-    transition: all 0.15s ease;
-}
-
-.dropdown-link svg { flex-shrink: 0; stroke: var(--hdr-hint); }
-.dropdown-link:hover {
-    color: var(--hdr-forest);
-    transform: translateX(3px);
-}
-.dropdown-link:hover svg { stroke: var(--hdr-forest); }
-
-.dropdown-link--highlight {
-    color: var(--hdr-forest);
-    font-weight: 500;
-}
-.dropdown-link--highlight svg { stroke: var(--hdr-gold); }
-.dropdown-link--highlight:hover { background: rgba(200,146,42,0.08); }
-
-/* ─── CTA BUTTON ────────────────────────────────────────────────── */
-.nav-item--cta { margin-left: 6px; flex-shrink: 0; }
-
-.nav-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 18px;
-    background: var(--hdr-forest);
-    color: #fff !important;
-    border-radius: var(--hdr-radius);
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    font-family: inherit;
-    white-space: nowrap;
-    transition: all 0.25s var(--hdr-ease);
-    border: none;
-    cursor: pointer;
-}
-
-.nav-cta:hover {
-    background: var(--hdr-forest-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 24px rgba(11,77,59,0.25);
-}
-
-.nav-cta.active {
-    background: var(--hdr-gold);
-    box-shadow: 0 4px 20px rgba(200,146,42,0.25);
+.nav-link:hover .nav-underline {
+    transform: translateX(-50%) scaleX(0.6);
 }
 
 /* ─── HAMBURGER ──────────────────────────────────────────────────── */
@@ -862,7 +408,7 @@
 .hamburger-btn {
     display: flex;
     flex-direction: column;
-    gap: 4.5px;
+    gap: 5px;
     background: none;
     border: none;
     padding: 10px;
@@ -885,14 +431,14 @@
 }
 
 .hamburger-btn.active .hamburger-line:nth-child(1) {
-    transform: translateY(6.5px) rotate(45deg);
+    transform: translateY(7px) rotate(45deg);
 }
 .hamburger-btn.active .hamburger-line:nth-child(2) {
     opacity: 0;
     transform: scaleX(0);
 }
 .hamburger-btn.active .hamburger-line:nth-child(3) {
-    transform: translateY(-6.5px) rotate(-45deg);
+    transform: translateY(-7px) rotate(-45deg);
 }
 
 /* ─── MOBILE OVERLAY ────────────────────────────────────────────── */
@@ -916,25 +462,29 @@
 .mobile-scrim {
     position: absolute;
     inset: 0;
-    background: rgba(10,22,16,0.5);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background: rgba(10, 22, 16, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .mobile-sheet {
     position: absolute;
-    bottom: 0; left: 0; right: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background: #fff;
-    border-radius: 20px 20px 0 0;
-    padding: 24px 24px 32px;
+    border-radius: 24px 24px 0 0;
+    padding: 28px 24px 32px;
     max-height: 92vh;
     overflow-y: auto;
     transform: translateY(100%);
-    transition: transform 0.5s var(--hdr-ease);
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.mobile-overlay.active .mobile-sheet { transform: translateY(0); }
+.mobile-overlay.active .mobile-sheet {
+    transform: translateY(0);
+}
 
 .mobile-header {
     display: flex;
@@ -948,29 +498,34 @@
 .mobile-brand {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .mobile-logo {
-    height: 24px;
+    height: auto;
     width: auto;
+    display: block;
+}
+
+.mobile-logo-bridge {
+    height: 32px;
 }
 
 .mobile-logo-eu {
-    height: 18px;
+    height: 22px;
 }
 
 .mobile-brand-divider {
     width: 1px;
-    height: 20px;
+    height: 24px;
     background: var(--hdr-border);
 }
 
 .mobile-close {
     background: var(--hdr-hover);
     border: none;
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -980,7 +535,10 @@
     transition: all 0.3s var(--hdr-ease);
 }
 
-.mobile-close:hover { background: var(--hdr-active); transform: rotate(90deg); }
+.mobile-close:hover {
+    background: var(--hdr-active);
+    transform: rotate(90deg);
+}
 
 .mobile-nav-list {
     list-style: none;
@@ -1001,14 +559,17 @@
 }
 
 @keyframes slideUp {
-    to { opacity: 1; transform: translateY(0); }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .mobile-link {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 11px 14px;
+    padding: 12px 16px;
     border-radius: var(--hdr-radius);
     text-decoration: none;
     color: var(--hdr-muted);
@@ -1018,8 +579,16 @@
     transition: all 0.15s ease;
 }
 
-.mobile-link:hover { background: var(--hdr-hover); color: var(--hdr-forest); }
-.mobile-link.active { background: var(--hdr-active); color: var(--hdr-forest); font-weight: 500; }
+.mobile-link:hover {
+    background: var(--hdr-hover);
+    color: var(--hdr-forest);
+}
+
+.mobile-link.active {
+    background: var(--hdr-active);
+    color: var(--hdr-forest);
+    font-weight: 500;
+}
 
 .mobile-icon {
     width: 28px;
@@ -1033,35 +602,10 @@
     color: var(--hdr-hint);
 }
 
-.mobile-link.active .mobile-icon { background: var(--hdr-active); color: var(--hdr-forest); }
-
-.mobile-badge {
-    margin-left: auto;
-    font-size: 9px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    background: rgba(200,146,42,0.12);
-    color: #8a5e10;
-    padding: 2px 8px;
-    border-radius: 4px;
+.mobile-link.active .mobile-icon {
+    background: var(--hdr-active);
+    color: var(--hdr-forest);
 }
-
-.mobile-arrow {
-    margin-left: auto;
-    color: rgba(255,255,255,0.6);
-    flex-shrink: 0;
-}
-
-.mobile-link--cta {
-    background: var(--hdr-forest);
-    color: #fff !important;
-    margin-top: 6px;
-    padding: 13px 16px;
-    font-weight: 500;
-}
-.mobile-link--cta .mobile-icon { background: rgba(255,255,255,0.15); color: #fff; }
-.mobile-link--cta:hover { background: var(--hdr-forest-dark) !important; }
 
 .mobile-footer {
     margin-top: 24px;
@@ -1085,78 +629,182 @@
 
 .mobile-footer-sub {
     font-size: 10px;
-    color: rgba(138,170,150,0.6);
+    color: rgba(138, 170, 150, 0.6);
     margin: 2px 0 0;
 }
 
-/* ─── RESPONSIVE — SMART BREAKPOINTS ────────────────────────────── */
+/* ─── RESPONSIVE ────────────────────────────────────────────────── */
 
 /* Tablet — collapse nav */
 @media (max-width: 960px) {
-    .main-nav { display: none; }
-    .mobile-controls { display: flex; }
+    .main-nav {
+        display: none;
+    }
+    .mobile-controls {
+        display: flex;
+    }
+    .site-header {
+        height: var(--hdr-height-m);
+    }
+    .brand-logo-bridge {
+        height: 40px;
+    }
+    .brand-logo-eu {
+        height: 28px;
+    }
+    .brand-divider {
+        height: 24px;
+    }
+    .brand-group {
+        gap: 8px;
+    }
+    .header-container {
+        padding: 0 20px;
+    }
 }
 
 /* Small tablet — reduce spacing */
 @media (max-width: 768px) {
-    .site-header { height: var(--hdr-height-m); }
-    .header-container { padding: 0 16px; gap: 8px; }
-    .brand-logo { height: 30px; }
-    .brand-logo-bridge { height: 32px; }
-    .brand-logo-jhub { height: 28px; }
-    .brand-logo-eu { height: 20px; }
-    .brand-divider { height: 24px; margin: 0 6px; }
-    .brand-group { gap: 10px; }
-    .mobile-sheet { padding: 20px 16px 28px; }
-    .mobile-link { font-size: 14px; padding: 10px 12px; }
-    .dropdown-panel { min-width: 260px; }
+    .header-container {
+        padding: 0 16px;
+    }
+    .brand-logo-bridge {
+        height: 34px;
+    }
+    .brand-logo-eu {
+        height: 24px;
+    }
+    .brand-divider {
+        height: 20px;
+    }
+    .brand-group {
+        gap: 6px;
+    }
+    .mobile-sheet {
+        padding: 20px 16px 28px;
+    }
+    .mobile-logo-bridge {
+        height: 28px;
+    }
+    .mobile-logo-eu {
+        height: 20px;
+    }
+    .mobile-link {
+        font-size: 14px;
+        padding: 10px 14px;
+    }
 }
 
 /* Mobile small — compact */
 @media (max-width: 480px) {
-    .header-container { padding: 0 12px; }
-    .brand-logo { height: 24px; }
-    .brand-logo-bridge { height: 26px; }
-    .brand-logo-jhub { height: 22px; }
-    .brand-logo-eu { height: 16px; }
-    .brand-divider { height: 18px; }
-    .brand-group { gap: 8px; }
-    .hamburger-btn { padding: 8px; }
-    .hamburger-line { width: 18px; height: 1.8px; }
-    .hamburger-btn.active .hamburger-line:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
-    .hamburger-btn.active .hamburger-line:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
-    .mobile-link { font-size: 13px; padding: 9px 11px; gap: 10px; }
-    .mobile-icon { width: 24px; height: 24px; }
-    .mobile-sheet { padding: 16px 14px 24px; border-radius: 16px 16px 0 0; }
-    .mobile-close { width: 32px; height: 32px; }
-    .mobile-logo { height: 20px; }
-    .mobile-logo-eu { height: 14px; }
+    .header-container {
+        padding: 0 12px;
+    }
+    .brand-logo-bridge {
+        height: 28px;
+    }
+    .brand-logo-eu {
+        height: 20px;
+    }
+    .brand-divider {
+        height: 16px;
+    }
+    .brand-group {
+        gap: 4px;
+    }
+    .hamburger-btn {
+        padding: 8px;
+    }
+    .hamburger-line {
+        width: 18px;
+        height: 1.8px;
+    }
+    .hamburger-btn.active .hamburger-line:nth-child(1) {
+        transform: translateY(5.5px) rotate(45deg);
+    }
+    .hamburger-btn.active .hamburger-line:nth-child(3) {
+        transform: translateY(-5.5px) rotate(-45deg);
+    }
+    .mobile-link {
+        font-size: 13px;
+        padding: 9px 12px;
+        gap: 10px;
+    }
+    .mobile-icon {
+        width: 24px;
+        height: 24px;
+    }
+    .mobile-sheet {
+        padding: 16px 14px 24px;
+        border-radius: 16px 16px 0 0;
+    }
+    .mobile-close {
+        width: 32px;
+        height: 32px;
+    }
+    .mobile-logo-bridge {
+        height: 24px;
+    }
+    .mobile-logo-eu {
+        height: 16px;
+    }
+    .mobile-brand-divider {
+        height: 18px;
+    }
 }
 
 /* ─── ACCESSIBILITY ──────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-    .site-header *, .mobile-overlay * {
+    .site-header *,
+    .mobile-overlay * {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
     }
 }
 
 @media (prefers-contrast: high) {
-    .header-bg { background: #fff; border-bottom: 2px solid var(--hdr-forest); }
-    .nav-link.active { background: var(--hdr-forest); color: #fff; }
-    .dropdown-panel { border: 1.5px solid var(--hdr-forest); }
+    .header-bg {
+        background: #fff;
+        border-bottom: 2px solid var(--hdr-forest);
+    }
+    .nav-link.active {
+        background: var(--hdr-forest);
+        color: #fff;
+    }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-    .header-bg { background: #fff; backdrop-filter: none; }
-    .mobile-scrim { background: rgba(10,22,16,0.88); backdrop-filter: none; }
-    .mobile-sheet { background: #fff; }
-    .dropdown-panel { background: #fff; }
+    .header-bg {
+        background: #fff;
+        backdrop-filter: none;
+    }
+    .mobile-scrim {
+        background: rgba(10, 22, 16, 0.88);
+        backdrop-filter: none;
+    }
+    .mobile-sheet {
+        background: #fff;
+    }
+}
+
+/* ─── SCROLLBAR ──────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 4px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--hdr-hint);
+    border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--hdr-forest);
 }
 </style>
 
 <!-- ================================================================ -->
-<!-- PREMIUM HEADER JAVASCRIPT — UPDATED                            -->
+<!-- PREMIUM HEADER JAVASCRIPT — UPGRADED                           -->
 <!-- ================================================================ -->
 
 <script>
@@ -1175,7 +823,9 @@
         img.addEventListener('error', function() {
             var base = this.src.replace(/\.[^.]+$/, '');
             var png = base + '.png';
-            if (this.src !== png) { this.src = png; }
+            if (this.src !== png) {
+                this.src = png;
+            }
         });
     });
 
@@ -1188,7 +838,9 @@
         document.body.style.overflow = 'hidden';
         setTimeout(function() {
             var first = overlay.querySelector('.mobile-link');
-            if (first) { first.focus(); }
+            if (first) {
+                first.focus();
+            }
         }, 100);
     }
 
@@ -1207,10 +859,15 @@
         });
     }
 
-    if (closeBtn) { closeBtn.addEventListener('click', closeMenu); }
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeMenu);
+    }
+
     if (scrim) {
         scrim.addEventListener('click', function(e) {
-            if (e.target === scrim) { closeMenu(); }
+            if (e.target === scrim) {
+                closeMenu();
+            }
         });
     }
 
@@ -1231,15 +888,15 @@
     // ─── SCROLL BEHAVIOR ───────────────────────────────────────────
     if (header) {
         window.addEventListener('scroll', function() {
-            header.classList.toggle('scrolled', window.pageYOffset > 16);
+            var currentScroll = window.pageYOffset;
+            header.classList.toggle('scrolled', currentScroll > 16);
         }, { passive: true });
     }
 
-    // ─── ACTIVE LINK — UPDATED FOR SUB-PATHS ──────────────────────
+    // ─── ACTIVE LINK ───────────────────────────────────────────────
     function markActive() {
         var path = window.location.pathname;
-        
-        // Define training sub-paths for active state
+
         var trainingPaths = [
             '/training-and-wp5/',
             '/training-and-wp5/events/',
@@ -1248,27 +905,30 @@
             '/training-and-wp5/community-of-practice/',
             '/training-and-wp5/replication-toolkit/'
         ];
-        
+
         document.querySelectorAll('.nav-link, .mobile-link').forEach(function(link) {
             var href = link.getAttribute('href');
-            if (!href || href === '#') { return; }
-            link.classList.remove('active');
-            
-            // Handle root path
-            if (path === '/' || path === '') {
-                if (href === '/' || href === '') { link.classList.add('active'); }
+            if (!href || href === '#') {
                 return;
             }
-            
-            // Handle Training sub-paths
-            if (href === '/training-and-wp5/') {
-                if (trainingPaths.some(function(tp) { return path.startsWith(tp); })) {
+            link.classList.remove('active');
+
+            if (path === '/' || path === '') {
+                if (href === '/' || href === '') {
                     link.classList.add('active');
                 }
                 return;
             }
-            
-            // Handle other sub-paths
+
+            if (href === '/training-and-wp5/') {
+                if (trainingPaths.some(function(tp) {
+                    return path.startsWith(tp);
+                })) {
+                    link.classList.add('active');
+                }
+                return;
+            }
+
             if (href !== '/' && path.startsWith(href)) {
                 link.classList.add('active');
             }
@@ -1289,7 +949,7 @@
         }, 200);
     });
 
-    console.log('[BRIDGE-AI] Ultimate Premium Header ready (Fixed Navigation)');
+    console.log('[BRIDGE-AI] Premium Header ready (Always Sticky)');
 
 })();
 </script>

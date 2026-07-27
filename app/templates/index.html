@@ -1,11 +1,13 @@
 <!-- ================================================================ -->
-<!-- BRIDGE-AI KENYA — HOMEPAGE                                      -->
+<!-- BRIDGE-AI KENYA — MODERN HOMEPAGE (FULL UPGRADE)               -->
 <!-- ================================================================ -->
-<!-- Design: Split Screen Hero — Image Left, Content Right          -->
-<!-- Single latest image from /uploads/activities/                  -->
-<!-- Font: Inter, sans-serif (clean, modern)                        -->
-<!-- Clean, spacious, professional landing page feel.              -->
-<!-- All Jinja logic, element IDs and JS hooks preserved unchanged. -->
+<!-- Design: Material Design + Neumorphism                           -->
+<!-- Layout: Flexbox only, no grids                                 -->
+<!-- Hero: Image Right, Content Left (PC) / Background (Mobile)    -->
+<!-- Font: Inter, sans-serif (uniform, no italics)                 -->
+<!-- Icons: Font Awesome 6 (Free)                                  -->
+<!-- Sections: No badge spans, all centered                        -->
+<!-- 6 Cards: 3 rows × 2 with correct redirects                   -->
 <!-- ================================================================ -->
 
 <!DOCTYPE html>
@@ -16,9 +18,17 @@
     <title>BRIDGE-AI Kenya &mdash; AI for African Agriculture</title>
     <meta name="description" content="BRIDGE-AI Kenya at JHUB Africa: GenAI, IoT and digital skills for climate-smart mushroom farming and rural innovation in Kenya.">
 
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     <style>
         /* ================================================================ */
-        /* PAGE LOADER - Prevents FOUC                                     */
+        /* PAGE LOADER                                                     */
         /* ================================================================ */
         #page-loader {
             position: fixed;
@@ -39,8 +49,8 @@
         }
 
         .loader-spinner {
-            width: 34px;
-            height: 34px;
+            width: 38px;
+            height: 38px;
             border: 2.5px solid #E1D8C0;
             border-top-color: #7C4FA3;
             border-radius: 50%;
@@ -52,59 +62,64 @@
         }
 
         #page-loader p {
-            margin-top: 16px;
+            margin-top: 18px;
             font-size: 0.7rem;
             color: #6E7767;
-            font-family: 'IBM Plex Mono', monospace;
+            font-family: 'Inter', monospace;
             font-weight: 500;
             letter-spacing: 0.12em;
             text-transform: uppercase;
         }
 
         /* ================================================================ */
-        /* IMPORTS & VARIABLES                                             */
+        /* ROOT VARIABLES                                                  */
         /* ================================================================ */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
-
         :root {
-            --ink:            #17241B;
-            --ink-soft:       #37453A;
-            --paper:          #F7F2E6;
-            --paper-alt:      #EFE6CE;
-            --paper-card:     #FFFDF7;
-            --moss:           #26432B;
-            --moss-deep:      #16281A;
-            --moss-mid:       #3E6B45;
-            --growlight:      #7C4FA3;
+            --ink: #17241B;
+            --ink-soft: #2D3D35;
+            --paper: #F7F2E6;
+            --paper-alt: #EFE6CE;
+            --paper-card: #FFFDF7;
+            --moss: #26432B;
+            --moss-deep: #16281A;
+            --moss-mid: #3E6B45;
+            --growlight: #7C4FA3;
             --growlight-deep: #5B3878;
             --growlight-tint: rgba(124, 79, 163, 0.09);
-            --clay:           #BE5A2B;
-            --clay-tint:      rgba(190, 90, 43, 0.1);
-            --mist:           #6E7767;
-            --line:           #E1D8C0;
-            --line-on-dark:   rgba(247, 242, 230, 0.14);
+            --clay: #BE5A2B;
+            --clay-tint: rgba(190, 90, 43, 0.1);
+            --mist: #6E7767;
+            --line: #E1D8C0;
+            --line-on-dark: rgba(247, 242, 230, 0.14);
 
             --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
 
-            --shadow-sm: 0 2px 10px rgba(23, 36, 27, 0.05);
-            --shadow-md: 0 12px 32px rgba(23, 36, 27, 0.08);
+            --shadow-sm: 0 4px 20px rgba(23, 36, 27, 0.06);
+            --shadow-md: 0 12px 40px rgba(23, 36, 27, 0.08);
             --shadow-lg: 0 24px 64px rgba(23, 36, 27, 0.12);
+            --shadow-neu: 8px 8px 24px rgba(23, 36, 27, 0.08), -8px -8px 24px rgba(255, 253, 247, 0.7);
 
-            --radius-sm: 6px;
-            --radius-md: 12px;
-            --radius-lg: 22px;
-            --transition: 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+
+            --transition: 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
+        /* ================================================================ */
+        /* RESET & BASE                                                    */
+        /* ================================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: var(--font-body);
             color: var(--ink-soft);
             background: var(--paper);
-            line-height: 1.65;
-            padding-top: 72px;
+            line-height: 1.7;
+            padding-top: 80px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -114,41 +129,142 @@
         .container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 0 28px;
         }
 
         ::selection { background: var(--growlight); color: #fff; }
 
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--font-mono);
-            font-size: 1.2rem;
-            font-weight: 500;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--moss-mid);
+        /* ================================================================ */
+        /* TYPOGRAPHY — No Italics, All Centered                          */
+        /* ================================================================ */
+        h1, h2, h3, h4, h5, h6, p, span, a, li {
+            font-family: var(--font-body);
+            font-style: normal;
         }
 
-        .eyebrow::before {
-            content: '';
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--growlight);
-            flex-shrink: 0;
+        .section-header {
+            max-width: 720px;
+            margin: 0 auto 48px;
+            text-align: center;
         }
 
-        .eyebrow.on-dark { color: rgba(247, 242, 230, 0.7); }
-        .eyebrow.on-dark::before { background: #C89BE8; }
+        .section-header h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            font-style: normal;
+        }
+
+        .section-header h2 .highlight {
+            color: var(--moss);
+            font-weight: 800;
+            font-style: normal;
+        }
+
+        .section-header h2 .highlight.purple {
+            color: var(--growlight-deep);
+        }
+
+        .section-header p {
+            font-size: 1.05rem;
+            color: var(--mist);
+            margin-top: 14px;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .section-alt { background: var(--paper-alt); }
+        .section-dark { background: var(--moss-deep); color: var(--paper); }
+        .section-dark .section-header h2 { color: var(--paper); }
+        .section-dark .section-header p { color: rgba(247, 242, 230, 0.7); }
 
         /* ================================================================ */
-        /* SPLIT SCREEN HERO — Image Left, Content Right                  */
+        /* BUTTONS                                                         */
+        /* ================================================================ */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: var(--moss);
+            color: var(--paper);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            border-radius: 50px;
+            transition: all 0.35s var(--transition);
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-style: normal;
+        }
+
+        .btn-primary:hover {
+            background: var(--moss-deep);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(22, 40, 26, 0.3);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: transparent;
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            border-radius: 50px;
+            border: 1.5px solid var(--line);
+            transition: all 0.35s var(--transition);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-style: normal;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--growlight);
+            color: var(--growlight-deep);
+            background: var(--growlight-tint);
+            transform: translateY(-3px);
+        }
+
+        .btn-light {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.35s var(--transition);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-style: normal;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-light:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-icon { font-size: 1rem; }
+
+        /* ================================================================ */
+        /* HERO — Image Right, Content Left (PC) / Background (Mobile)   */
         /* ================================================================ */
         .hero {
             position: relative;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: stretch;
             overflow: hidden;
@@ -156,19 +272,29 @@
         }
 
         .hero-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-wrap: wrap;
             width: 100%;
             min-height: 80vh;
         }
 
-        /* ─── Left: Image ─── */
+        .hero-content-wrapper {
+            flex: 1 1 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 48px;
+            background: var(--paper-card);
+            order: 1;
+        }
+
         .hero-image-wrapper {
+            flex: 1 1 50%;
             position: relative;
             overflow: hidden;
             background: var(--moss-deep);
-            height: 100%;
             min-height: 400px;
+            order: 2;
         }
 
         .hero-image-wrapper .hero-slide-bg {
@@ -182,385 +308,365 @@
         }
 
         .hero-image-wrapper .hero-slide-bg.active {
-    opacity: 1;
-    /* animation: kenBurns 20s ease-in-out infinite alternate; */  /* ← COMMENT OUT or DELETE */
-}
-
-        @keyframes kenBurns {
-            0% { transform: scale(1) translate(0, 0); }
-            33% { transform: scale(1.04) translate(-1%, -0.5%); }
-            66% { transform: scale(1.07) translate(1%, 0.5%); }
-            100% { transform: scale(1.03) translate(0, -1%); }
-        }
-
-        /* ─── Right: Content ─── */
-        .hero-content-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 48px;
-            background: var(--paper-card);
+            opacity: 1;
         }
 
         .hero-content {
-            max-width: 520px;
+            max-width: 560px;
             width: 100%;
         }
 
-        .hero-content .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            
-            
-            border-radius: 60px;
-            font-family: var(--font-mono);
-            font-size: 1.6rem;
-            font-weight: 500;
-            color: var(--growlight-deep);
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            margin-bottom: 20px;
-        }
-
-        .hero-content .hero-badge .badge-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--growlight);
-        }
-
         .hero-content h1 {
-            font-family: var(--font-body);
-            font-size: 3.2rem;
-            font-weight: 800;
+            font-size: 3.6rem;
+            font-weight: 900;
             color: var(--ink);
             line-height: 1.04;
             letter-spacing: -0.02em;
             margin-bottom: 12px;
+            font-style: normal;
         }
 
         .hero-content h1 .highlight {
-            font-style: italic;
             color: var(--moss);
-            position: relative;
+            font-weight: 900;
+            font-style: normal;
         }
 
         .hero-content .hero-subtitle {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             color: var(--ink-soft);
             line-height: 1.5;
             font-weight: 500;
             margin-bottom: 6px;
+            font-style: normal;
         }
 
         .hero-content .hero-description {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--mist);
-            line-height: 1.6;
-            margin-bottom: 24px;
-            max-width: 460px;
+            line-height: 1.7;
+            margin-bottom: 28px;
+            max-width: 480px;
+            font-style: normal;
         }
 
         .hero-buttons {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            padding: 13px 28px;
-            background: var(--moss);
-            color: var(--paper);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            border-radius: 50px;
-            transition: all 0.35s var(--transition);
-            border: 1px solid var(--moss);
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            background: var(--moss-deep);
-            border-color: var(--moss-deep);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 24px rgba(22, 40, 26, 0.25);
-        }
-
-        .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            padding: 13px 28px;
-            background: transparent;
-            color: var(--ink);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            border-radius: 50px;
-            border: 1.5px solid var(--line);
-            transition: all 0.35s var(--transition);
-            cursor: pointer;
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--growlight);
-            color: var(--growlight-deep);
-            background: var(--growlight-tint);
-        }
-
-        .btn-icon {
-            width: 17px;
-            height: 17px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            flex-shrink: 0;
-        }
-
-        /* ─── Stats Row ─── */
-        .hero-stats {
-            display: flex;
-            gap: 28px;
-            padding-top: 18px;
-            border-top: 1px solid var(--line);
-        }
-
-        .hero-stats .stat-item {
-            text-align: left;
-        }
-
-        .hero-stats .stat-number {
-            font-family: var(--font-mono);
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--ink);
-            display: block;
-            line-height: 1.1;
-        }
-
-        .hero-stats .stat-number .stat-accent {
-            color: var(--growlight-deep);
-        }
-
-        .hero-stats .stat-label {
-            font-size: 0.65rem;
-            font-weight: 500;
-            color: var(--mist);
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
+            margin-bottom: 24px;
         }
 
         /* ================================================================ */
-        /* CONSOLIDATED FACT STRIP                                         */
+        /* SECTION — Challenge (Centered, No Badge)                       */
         /* ================================================================ */
-        .fact-strip {
+        .challenge-section {
             position: relative;
-            background: var(--moss-deep);
-            overflow-x: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .fact-strip-inner {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-        }
-
-        .fact {
-            padding: 22px 22px;
-            border-left: 1px solid var(--line-on-dark);
-        }
-
-        .fact:first-child { border-left: none; }
-
-        .fact .fact-label {
-            display: block;
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: rgba(247, 242, 230, 0.5);
-            margin-bottom: 6px;
-        }
-
-        .fact .fact-value {
-            display: block;
-            font-family: var(--font-mono);
-            font-size: 0.98rem;
-            font-weight: 500;
-            color: var(--paper);
-            letter-spacing: -0.2px;
-        }
-
-        .fact .fact-value .accent { color: #C89BE8; }
-
-        /* ================================================================ */
-        /* SECTION COMMON                                                   */
-        /* ================================================================ */
-        .section { padding: 96px 0; }
-
-        .section-header {
-            margin-bottom: 52px;
-            max-width: 640px;
-        }
-
-        .section-header.centered { margin-left: auto; margin-right: auto; text-align: center; }
-
-        .section-header h2 {
-            font-family: var(--font-body);
-            font-size: 2.7rem;
-            font-weight: 700;
-            color: var(--ink);
-            letter-spacing: -0.02em;
-            line-height: 1.12;
-            margin-top: 10px;
-        }
-
-        .section-header h2 .highlight { font-style: italic; color: var(--moss); font-weight: 500; }
-        .section-header h2 .highlight.purple { color: var(--growlight-deep); }
-
-        .section-header p {
-            color: var(--mist);
-            font-size: 1.02rem;
-            margin-top: 14px;
-        }
-
-        .section-alt { background: var(--paper-alt); }
-
-        /* ================================================================ */
-        /* FEATURE CARDS ("Why It Matters")                                 */
-        /* ================================================================ */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: var(--line);
-            border: 1px solid var(--line);
-            border-radius: var(--radius-lg);
+            padding: 80px 0;
+            background: var(--paper-alt);
             overflow: hidden;
         }
 
-        .feature-card {
-            background: var(--paper-card);
-            padding: 40px 32px 36px;
-            transition: all 0.4s var(--transition);
-            position: relative;
-            height: 80vh;
-            gap: 5rem;
+        .challenge-section::before {
+            content: '';
+            position: absolute;
+            right: -20%;
+            top: -20%;
+            width: 60%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(124, 79, 163, 0.04) 0%, transparent 70%);
+            pointer-events: none;
         }
 
-        .feature-card:hover { background: var(--growlight-tint); }
+        .challenge-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 48px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
 
-        .feature-card .feature-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
+        .challenge-text {
+            flex: 1 1 55%;
+            text-align: center;
+        }
+
+        .challenge-text h2 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            font-style: normal;
+        }
+
+        .challenge-text h2 .highlight {
+            color: var(--moss);
+            font-weight: 800;
+            font-style: normal;
+        }
+
+        .challenge-text p {
+            font-size: 1.02rem;
+            color: var(--ink-soft);
+            line-height: 1.8;
+            margin-bottom: 14px;
+            font-style: normal;
+            max-width: 760px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .challenge-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .challenge-stat {
+            text-align: center;
+        }
+
+        .challenge-stat .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--moss);
+            display: block;
+            line-height: 1.1;
+            font-family: var(--font-body);
+        }
+
+        .challenge-stat .stat-label {
+            font-size: 0.8rem;
+            color: var(--mist);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .challenge-image {
+            flex: 1 1 35%;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            min-height: 280px;
+            background: var(--moss-deep);
+            position: relative;
+        }
+
+        .challenge-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-height: 280px;
+        }
+
+        /* ================================================================ */
+        /* SECTION — At a Glance (Image Left, Card Right)                 */
+        /* ================================================================ */
+        .glance-section {
+            position: relative;
+            padding: 80px 0;
+            background: var(--paper);
+            overflow: hidden;
+        }
+
+        .glance-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .glance-image {
+            flex: 1 1 45%;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            min-height: 300px;
+            background: var(--moss-deep);
+        }
+
+        .glance-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-height: 300px;
+        }
+
+        .glance-content {
+            flex: 1 1 45%;
+        }
+
+        .glance-content h2 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            font-style: normal;
+        }
+
+        .glance-content h2 .highlight {
+            color: var(--moss);
+            font-weight: 800;
+            font-style: normal;
+        }
+
+        .glance-content p {
+            font-size: 1.02rem;
+            color: var(--ink-soft);
+            line-height: 1.8;
+            margin-bottom: 16px;
+            font-style: normal;
+        }
+
+        .glance-features {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .glance-feature {
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin-bottom: 22px;
-            border: 1.5px solid var(--moss);
-            color: var(--moss);
-            transition: all 0.35s var(--transition);
-        }
-
-        .feature-card:hover .feature-icon {
-            background: var(--moss);
-            color: var(--paper);
-            transform: scale(1.06);
-        }
-
-        .feature-card .feature-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.6; }
-
-        .feature-card .feature-kicker {
-            display: block;
-            font-family: var(--font-mono);
-            font-size: 0.62rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--clay);
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-
-        .feature-card h3 {
-            font-family: var(--font-body);
-            font-size: 1.28rem;
-            font-weight: 700;
-            color: var(--ink);
-            margin-bottom: 8px;
-            letter-spacing: -0.02em;
-        }
-
-        .feature-card p { color: var(--mist); font-size: 0.92rem; line-height: 1.7; margin: 0; }
-
-        /* ================================================================ */
-        /* DOING CARDS ("What JKUAT Is Doing")                              */
-        /* ================================================================ */
-        .doing-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .doing-card {
+            gap: 14px;
+            padding: 12px 18px;
             background: var(--paper-card);
-            border-radius: var(--radius-md);
-            padding: 28px 26px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
             border: 1px solid var(--line);
-            transition: all 0.4s var(--transition);
-            position: relative;
+            transition: all 0.3s var(--transition);
         }
 
-        .doing-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
+        .glance-feature:hover {
+            transform: translateX(6px);
             border-color: var(--growlight);
         }
 
-        .doing-card .doing-code {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 40px;
-            height: 26px;
-            padding: 0 8px;
-            font-family: var(--font-mono);
-            font-size: 0.68rem;
-            font-weight: 600;
-            letter-spacing: 0.03em;
+        .glance-feature i {
+            font-size: 1.4rem;
+            color: var(--growlight-deep);
+            width: 30px;
+            text-align: center;
+        }
+
+        .glance-feature span {
+            font-size: 0.95rem;
+            color: var(--ink-soft);
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        /* ================================================================ */
+        /* JKUAT ROLE — 6 Cards (3 rows × 2)                              */
+        /* ================================================================ */
+        .jkuat-section {
+            padding: 80px 0;
+            background: var(--paper-alt);
+        }
+
+        .jkuat-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .jkuat-card {
+            flex: 1 1 calc(50% - 15px);
+            min-width: 280px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s var(--transition);
+            background: var(--paper-card);
+            border: 1px solid var(--line);
+        }
+
+        .jkuat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--growlight);
+        }
+
+        .jkuat-card .card-image {
+            height: 200px;
+            overflow: hidden;
+            background: var(--moss-deep);
+        }
+
+        .jkuat-card .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s var(--transition);
+        }
+
+        .jkuat-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .jkuat-card .card-body {
+            padding: 28px 30px;
+        }
+
+        .jkuat-card .card-body .card-badge {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
             color: var(--paper);
             background: var(--moss);
-            border-radius: 5px;
-            margin-bottom: 14px;
+            padding: 3px 14px;
+            border-radius: 50px;
+            margin-bottom: 10px;
+            font-family: var(--font-body);
         }
 
-        .doing-card h4 {
-            font-family: var(--font-body);
-            font-size: 1.08rem;
+        .jkuat-card .card-body h3 {
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--ink);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            font-style: normal;
         }
 
-        .doing-card p { color: var(--mist); font-size: 0.87rem; line-height: 1.7; margin: 0; }
+        .jkuat-card .card-body p {
+            font-size: 0.92rem;
+            color: var(--mist);
+            line-height: 1.7;
+            margin-bottom: 14px;
+            font-style: normal;
+        }
+
+        .jkuat-card .card-body .card-link {
+            color: var(--moss);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s var(--transition);
+            font-style: normal;
+        }
+
+        .jkuat-card .card-body .card-link:hover {
+            color: var(--growlight-deep);
+            gap: 14px;
+        }
 
         /* ================================================================ */
-        /* COUNTERS ("Progress in the field")                               */
+        /* COUNTERS SECTION                                                */
         /* ================================================================ */
         .counters-section {
+            padding: 80px 0;
             background: var(--moss-deep);
-            padding: 64px 0;
             position: relative;
             overflow: hidden;
         }
@@ -569,38 +675,46 @@
             content: '';
             position: absolute;
             inset: 0;
-            background-image: linear-gradient(rgba(247,242,230,0.05) 1px, transparent 1px),
-                               linear-gradient(90deg, rgba(247,242,230,0.05) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(247, 242, 230, 0.04) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(247, 242, 230, 0.04) 1px, transparent 1px);
             background-size: 48px 48px;
             pointer-events: none;
         }
 
-        .counters-header { position: relative; margin-bottom: 40px; }
-
         .counters-grid {
-            position: relative;
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            display: flex;
+            flex-wrap: wrap;
             gap: 1px;
             background: var(--line-on-dark);
-            border: 1px solid var(--line-on-dark);
             border-radius: var(--radius-md);
             overflow: hidden;
+            position: relative;
+            z-index: 1;
         }
 
-        .counter-item { background: var(--moss-deep); padding: 22px 16px; text-align: left; }
+        .counter-item {
+            flex: 1 1 calc(16.666% - 1px);
+            min-width: 120px;
+            background: var(--moss-deep);
+            padding: 28px 20px;
+            text-align: center;
+        }
 
         .counter-item .counter-number {
-            font-family: var(--font-mono);
-            font-size: 2.2rem;
-            font-weight: 600;
+            font-size: 2.4rem;
+            font-weight: 700;
             color: var(--paper);
             display: block;
             line-height: 1.1;
+            font-family: var(--font-body);
             letter-spacing: -1px;
         }
 
-        .counter-item .counter-number .counter-suffix { font-size: 1.3rem; font-weight: 500; color: #C89BE8; }
+        .counter-item .counter-number .counter-suffix {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #C89BE8;
+        }
 
         .counter-item .counter-label {
             color: rgba(247, 242, 230, 0.55);
@@ -608,27 +722,50 @@
             font-weight: 500;
             margin-top: 6px;
             display: block;
+            font-family: var(--font-body);
         }
 
         /* ================================================================ */
         /* ACTIVITIES & EVENTS                                              */
         /* ================================================================ */
-        .two-col-grid {
-            display: grid;
-            grid-template-columns: 1.3fr 1fr;
+        .activity-section {
+            padding: 80px 0;
+            background: var(--paper);
+        }
+
+        .activity-grid {
+            display: flex;
+            flex-wrap: wrap;
             gap: 56px;
         }
 
-        .col-heading { margin-bottom: 26px; }
+        .activity-col {
+            flex: 1 1 calc(50% - 28px);
+            min-width: 280px;
+        }
+
+        .col-heading {
+            margin-bottom: 26px;
+            text-align: center;
+        }
+
         .col-heading h2 {
-            font-family: var(--font-body);
-            font-size: 1.9rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--ink);
-            margin-top: 6px;
+            margin-top: 4px;
+            font-style: normal;
         }
-        .col-heading h2 .accent { font-style: italic; color: var(--moss); }
-        .col-heading h2 .accent.purple { color: var(--growlight-deep); }
+
+        .col-heading h2 .accent {
+            color: var(--moss);
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        .col-heading h2 .accent.purple {
+            color: var(--growlight-deep);
+        }
 
         .activity-item {
             display: flex;
@@ -652,48 +789,69 @@
             background: var(--paper-alt);
         }
 
-        .activity-item .activity-img img { width: 100%; height: 100%; object-fit: cover; }
+        .activity-item .activity-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
         .activity-item .activity-img .placeholder {
-            width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
-            letter-spacing: 0.04em; color: var(--paper);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: var(--paper);
             background: var(--moss);
+            font-family: var(--font-body);
         }
 
         .activity-item .activity-meta {
-            display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
         }
 
         .activity-item .activity-meta .date {
-            font-family: var(--font-mono);
             font-size: 0.68rem;
             color: var(--mist);
             font-weight: 500;
+            font-family: var(--font-body);
         }
 
         .activity-item .activity-meta .tag {
             display: inline-block;
-            font-family: var(--font-mono);
             background: var(--growlight-tint);
             color: var(--growlight-deep);
-            padding: 2px 9px;
+            padding: 2px 10px;
             border-radius: 4px;
             font-size: 0.58rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.04em;
+            font-family: var(--font-body);
         }
 
         .activity-item h4 {
-            font-family: var(--font-body);
             font-size: 1.02rem;
             font-weight: 700;
             color: var(--ink);
             margin-bottom: 3px;
+            font-style: normal;
         }
-        .activity-item p { color: var(--mist); font-size: 0.85rem; line-height: 1.6; margin: 0; }
+
+        .activity-item p {
+            color: var(--mist);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+            font-style: normal;
+        }
 
         .event-item {
             display: flex;
@@ -705,9 +863,14 @@
             margin-bottom: 12px;
             transition: all 0.3s var(--transition);
             border: 1px solid var(--line);
+            box-shadow: var(--shadow-sm);
         }
 
-        .event-item:hover { border-color: var(--growlight); box-shadow: var(--shadow-sm); transform: translateX(4px); }
+        .event-item:hover {
+            border-color: var(--growlight);
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+        }
 
         .event-item .event-date {
             text-align: center;
@@ -717,33 +880,53 @@
             border-radius: var(--radius-sm);
             min-width: 50px;
             flex-shrink: 0;
-            font-family: var(--font-mono);
+            font-family: var(--font-body);
         }
 
-        .event-item .event-date .day { font-size: 1.05rem; font-weight: 600; display: block; line-height: 1.1; }
-        .event-item .event-date .month { font-size: 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; display: block; }
+        .event-item .event-date .day {
+            font-size: 1.05rem;
+            font-weight: 700;
+            display: block;
+            line-height: 1.1;
+            font-family: var(--font-body);
+        }
+
+        .event-item .event-date .month {
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            display: block;
+            font-family: var(--font-body);
+        }
 
         .event-item .event-info { flex: 1; }
         .event-item .event-info h5 {
-            font-family: var(--font-body);
             font-size: 0.94rem;
             font-weight: 700;
             color: var(--ink);
             margin: 0;
+            font-style: normal;
         }
-        .event-item .event-info p { color: var(--mist); font-size: 0.78rem; margin: 0; }
+
+        .event-item .event-info p {
+            color: var(--mist);
+            font-size: 0.78rem;
+            margin: 0;
+            font-style: normal;
+        }
 
         .event-item .event-status {
-            font-family: var(--font-mono);
             font-size: 0.56rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            padding: 4px 12px;
+            padding: 4px 14px;
             border-radius: 50px;
             background: var(--moss-mid);
             color: #fff;
             flex-shrink: 0;
+            font-family: var(--font-body);
         }
 
         .event-item .event-status.soon { background: var(--clay); }
@@ -755,137 +938,185 @@
             margin-top: 18px;
             color: var(--moss);
             font-weight: 600;
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             text-decoration: none;
             transition: all 0.3s var(--transition);
+            font-family: var(--font-body);
+            font-style: normal;
         }
 
-        .view-all:hover { gap: 10px; color: var(--growlight-deep); }
+        .view-all:hover { gap: 12px; color: var(--growlight-deep); }
+
+        /* ================================================================ */
+        /* CTA / STAY CONNECTED                                            */
+        /* ================================================================ */
+        .cta-section {
+            position: relative;
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--moss-deep), var(--moss));
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1600&q=80') center/cover no-repeat;
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        .cta-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: var(--paper);
+            margin-bottom: 12px;
+            font-style: normal;
+        }
+
+        .cta-section p {
+            font-size: 1.05rem;
+            color: rgba(247, 242, 230, 0.7);
+            max-width: 520px;
+            margin: 0 auto 32px;
+            font-style: normal;
+        }
+
+        .cta-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
 
         /* ================================================================ */
         /* RESPONSIVE                                                       */
         /* ================================================================ */
         @media (max-width: 1024px) {
-            .hero-grid {
-                grid-template-columns: 1fr;
-                min-height: auto;
-            }
-
-            .hero-image-wrapper {
-                min-height: 320px;
-                max-height: 420px;
-            }
-
-            .hero-content-wrapper {
-                padding: 40px 24px;
-            }
-
-            .hero-content h1 {
-                font-size: 2.8rem;
-            }
-
-            .hero-stats {
-                gap: 20px;
-                flex-wrap: wrap;
-            }
-
-            .hero-stats .stat-number {
-                font-size: 1.2rem;
-            }
-
-            .features-grid { grid-template-columns: 1fr; }
-            .doing-grid { grid-template-columns: repeat(2, 1fr); }
-            .two-col-grid { grid-template-columns: 1fr; gap: 44px; }
-            .counters-grid { grid-template-columns: repeat(3, 1fr); }
+            .hero-content-wrapper { padding: 40px 32px; }
+            .hero-content h1 { font-size: 2.8rem; }
             .section-header h2 { font-size: 2.2rem; }
-            .fact-strip-inner { grid-template-columns: repeat(3, 1fr); }
-            .fact:nth-child(4) { border-left: none; }
+            .challenge-text h2 { font-size: 2.2rem; }
+            .glance-content h2 { font-size: 2.2rem; }
+            .challenge-stats { gap: 24px; }
+            .challenge-stat .stat-number { font-size: 1.8rem; }
+            .counter-item { flex: 1 1 calc(33.333% - 1px); }
+            .cta-section h2 { font-size: 2.2rem; }
+            .jkuat-card { flex: 1 1 calc(50% - 15px); }
         }
 
         @media (max-width: 768px) {
             body { padding-top: 64px; }
 
-            .hero { min-height: auto; }
+            .hero-content-wrapper {
+                flex: 1 1 100%;
+                padding: 40px 24px;
+                order: 1;
+                min-height: 60vh;
+                position: relative;
+                z-index: 2;
+                background: rgba(255, 253, 247, 0.85);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
 
             .hero-image-wrapper {
-                min-height: 240px;
-                max-height: 300px;
+                flex: 1 1 100%;
+                position: absolute;
+                inset: 0;
+                min-height: 100%;
+                max-height: 100%;
+                order: 0;
+                z-index: 1;
             }
 
-            .hero-content h1 {
-                font-size: 2.2rem;
+            .hero-image-wrapper .hero-slide-bg {
+                position: absolute;
+                inset: 0;
+                background-size: cover;
+                background-position: center;
             }
 
-            .hero-content .hero-subtitle {
-                font-size: 1rem;
-            }
-
-            .hero-content .hero-description {
-                font-size: 0.9rem;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                width: 100%;
-            }
-
+            .hero-content h1 { font-size: 2.2rem; }
+            .hero-content .hero-subtitle { font-size: 1rem; }
+            .hero-content .hero-description { font-size: 0.9rem; }
+            .hero-buttons { flex-direction: column; width: 100%; }
             .hero-buttons .btn-primary,
-            .hero-buttons .btn-secondary {
-                width: 100%;
-                justify-content: center;
-            }
+            .hero-buttons .btn-secondary { width: 100%; justify-content: center; }
 
-            .hero-stats {
-                gap: 16px;
-                padding-top: 16px;
-            }
+            .section-header h2 { font-size: 1.8rem; }
+            .section-header p { font-size: 0.95rem; }
 
-            .hero-stats .stat-number {
-                font-size: 1rem;
-            }
+            .challenge-section { padding: 60px 0; }
+            .challenge-text h2 { font-size: 1.8rem; }
+            .challenge-wrapper { flex-direction: column; }
+            .challenge-image { flex: 1 1 100%; min-height: 200px; }
 
-            .hero-stats .stat-label {
-                font-size: 0.6rem;
-            }
+            .glance-section { padding: 60px 0; }
+            .glance-wrapper { flex-direction: column; }
+            .glance-image { flex: 1 1 100%; min-height: 200px; }
+            .glance-content { flex: 1 1 100%; }
+            .glance-content h2 { font-size: 1.8rem; }
 
-            .fact-strip-inner { grid-template-columns: repeat(2, 1fr); }
-            .fact:nth-child(2n+1) { border-left: none; }
-            .fact { border-bottom: 1px solid var(--line-on-dark); }
+            .jkuat-section { padding: 60px 0; }
+            .jkuat-card { flex: 1 1 100%; }
 
-            .section { padding: 60px 0; }
-            .section-header h2 { font-size: 1.9rem; }
-            .doing-grid { grid-template-columns: 1fr; }
-            .counters-grid { grid-template-columns: repeat(2, 1fr); }
+            .counter-item { flex: 1 1 calc(50% - 1px); padding: 20px 16px; }
             .counter-item .counter-number { font-size: 1.8rem; }
+
+            .activity-grid { flex-direction: column; gap: 44px; }
+            .activity-col { flex: 1 1 100%; }
+
             .activity-item { flex-direction: column; gap: 12px; }
             .activity-item .activity-img { width: 100%; height: 150px; }
+
             .event-item { flex-wrap: wrap; }
             .event-item .event-status { width: 100%; text-align: center; }
+
+            .cta-section { padding: 60px 0; }
+            .cta-section h2 { font-size: 1.8rem; }
+            .cta-buttons { flex-direction: column; width: 100%; }
+            .cta-buttons .btn-primary,
+            .cta-buttons .btn-light { width: 100%; justify-content: center; }
         }
 
         @media (max-width: 480px) {
             .hero-content h1 { font-size: 1.8rem; }
             .hero-content .hero-subtitle { font-size: 0.9rem; }
             .hero-content .hero-description { font-size: 0.85rem; }
-            .hero-stats { gap: 12px; }
-            .hero-stats .stat-number { font-size: 0.9rem; }
-            .fact-strip-inner { grid-template-columns: repeat(2, 1fr); }
-            .counters-grid { grid-template-columns: repeat(2, 1fr); }
-            .feature-card { padding: 30px 22px; }
-            .doing-card { padding: 24px 20px; }
+            .container { padding: 0 16px; }
+            .section-header h2 { font-size: 1.5rem; }
+            .challenge-text h2 { font-size: 1.5rem; }
+            .glance-content h2 { font-size: 1.5rem; }
+            .cta-section h2 { font-size: 1.5rem; }
+            .jkuat-card .card-body { padding: 20px; }
+            .glance-feature { padding: 10px 14px; }
+            .glance-feature i { font-size: 1.2rem; }
+            .glance-feature span { font-size: 0.85rem; }
         }
 
         /* ================================================================ */
         /* ACCESSIBILITY                                                    */
         /* ================================================================ */
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-            .hero-image-wrapper .hero-slide-bg { transition: none !important; animation: none !important; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
         }
 
         .btn-primary:focus-visible,
         .btn-secondary:focus-visible,
-        .view-all:focus-visible {
+        .btn-light:focus-visible,
+        .view-all:focus-visible,
+        .card-link:focus-visible {
             outline: 2px solid var(--growlight);
             outline-offset: 2px;
         }
@@ -904,8 +1135,9 @@
     </style>
 </head>
 <body>
+
     <!-- ============================================================ -->
-    <!-- LOADING OVERLAY - Prevents FOUC                              -->
+    <!-- LOADING OVERLAY                                              -->
     <!-- ============================================================ -->
     <div id="page-loader">
         <div class="loader-spinner"></div>
@@ -923,33 +1155,21 @@
     <main>
 
         <!-- ============================================================ -->
-        <!-- SPLIT SCREEN HERO — Single Latest Image                     -->
+        <!-- HERO — Image Right, Content Left (PC) / Background (Mobile) -->
         <!-- ============================================================ -->
         <section class="hero" id="heroSection">
             <div class="hero-grid">
 
-                <!-- Left: Single Latest Image -->
-                <div class="hero-image-wrapper" id="heroImageWrapper">
-                    <div id="heroSlidesContainer">
-                        <!-- Single image populated by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Right: Content -->
+                <!-- Left: Content -->
                 <div class="hero-content-wrapper">
                     <div class="hero-content">
-                        <span class="hero-badge">
-                            
-                            Horizon Europe Project
-                        </span>
-
                         <h1>
-                            BRIDGE&#8209;AI<br>
+                            BRIDGE-AI<br>
                             <span class="highlight">Kenya at JKUAT</span>
                         </h1>
 
                         <p class="hero-subtitle">
-                            GenAI, IoT &amp; digital skills for climate-smart farming.
+                            GenAI, IoT and digital skills for climate-smart farming.
                         </p>
 
                         <p class="hero-description">
@@ -958,37 +1178,21 @@
 
                         <div class="hero-buttons">
                             <a href="{{ url_for('public.smart_mushrooms') }}" class="btn-primary">
-                                <svg class="btn-icon" viewBox="0 0 24 24">
-                                    <path d="M12 2C8 4 4 7 4 12c0 4 2 7 8 7s8-3 8-7c0-5-4-8-8-10z"/>
-                                    <path d="M12 12c-2 0-3-1-3-2s1-2 3-2 3 1 3 2-1 2-3 2z"/>
-                                    <path d="M12 14v4"/>
-                                    <path d="M10 16h4"/>
-                                </svg>
+                                <i class="fas fa-seedling btn-icon"></i>
                                 Smart-Mushrooms Pilot
                             </a>
                             <a href="{{ url_for('public.training_wp5') }}" class="btn-secondary">
-                                <svg class="btn-icon" viewBox="0 0 24 24">
-                                    <path d="M12 6v7m0 0l-2-2m2 2l2-2M4 4v16h16V4H4z"/>
-                                    <path d="M8 12h8"/>
-                                </svg>
+                                <i class="fas fa-graduation-cap btn-icon"></i>
                                 Training
                             </a>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="hero-stats">
-                            <div class="stat-item">
-                                <span class="stat-number">36 <span class="stat-accent">Months</span></span>
-                                <span class="stat-label">Duration</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number">3 <span class="stat-accent">Countries</span></span>
-                                <span class="stat-label">KE · TN · NG</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number">8 <span class="stat-accent">Partners</span></span>
-                                <span class="stat-label">Consortium</span>
-                            </div>
-                        </div>
+                <!-- Right: Image -->
+                <div class="hero-image-wrapper" id="heroImageWrapper">
+                    <div id="heroSlidesContainer">
+                        <!-- Single image populated by JavaScript -->
                     </div>
                 </div>
 
@@ -996,117 +1200,172 @@
         </section>
 
         <!-- ============================================================ -->
-        <!-- CONSOLIDATED FACT STRIP                                     -->
+        <!-- THE CHALLENGE (Centered, No Badge)                          -->
         <!-- ============================================================ -->
-        <div class="fact-strip">
-            <div class="fact-strip-inner">
-                <div class="fact">
-                    <span class="fact-label">Duration</span>
-                    <span class="fact-value">36 <span class="accent">Months</span></span>
-                </div>
-                <div class="fact">
-                    <span class="fact-label">Countries</span>
-                    <span class="fact-value">KE <span class="accent">&middot;</span> TN <span class="accent">&middot;</span> NG</span>
-                </div>
-                <div class="fact">
-                    <span class="fact-label">Capacity Lead</span>
-                    <span class="fact-value">JKUAT <span class="accent">(WP5)</span></span>
-                </div>
-                <div class="fact">
-                    <span class="fact-label">Pilot Site</span>
-                    <span class="fact-value">Smart Farm Zone</span>
-                </div>
-                <div class="fact">
-                    <span class="fact-label">Partners</span>
-                    <span class="fact-value">8 <span class="accent">Consortium</span></span>
-                </div>
-                <div class="fact">
-                    <span class="fact-label">Farmers Reached</span>
-                    <span class="fact-value">400K<span class="accent">+</span></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- WHY IT MATTERS — FEATURE CARDS                               -->
-        <!-- ============================================================ -->
-        <section class="section" id="why-it-matters">
+        <section class="challenge-section" id="challenge">
             <div class="container">
-                <div class="section-header centered">
-                    <span class="eyebrow" style="justify-content:center;">Why It Matters</span>
-                    <h2>Transforming agriculture with AI</span></h2>
-                    <p>BRIDGE-AI Kenya addresses three critical areas for sustainable development.</p>
-                </div>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24"><path d="M12 3c-4 2-8 5-8 10 0 4 3 6.5 8 6.5s8-2.5 8-6.5c0-5-4-8-8-10z"/><path d="M9 12.5c0-1 1.3-1.8 3-1.8s3 .8 3 1.8-1.3 1.8-3 1.8-3-.8-3-1.8z"/><path d="M12 14.3V19"/></svg>
+                <div class="challenge-wrapper">
+                    <div class="challenge-text">
+                        <h2>The <span class="highlight">Challenge</span></h2>
+                        <p>
+                            Agriculture in Africa is highly dependent on rainfall, with more than 95% of cultivated land relying on it. This makes farmers particularly vulnerable to climate variability and extreme weather conditions.
+                        </p>
+                        <p>
+                            Limited access to irrigation systems, advisory services and digital tools further constrains productivity and innovation. While artificial intelligence offers strong potential, many solutions remain inaccessible or not adapted to local needs.
+                        </p>
+                        <div class="challenge-stats">
+                            <div class="challenge-stat">
+                                <span class="stat-number">95%</span>
+                                <span class="stat-label">Rain-fed Agriculture</span>
+                            </div>
+                            <div class="challenge-stat">
+                                <span class="stat-number">3</span>
+                                <span class="stat-label">Pilot Countries</span>
+                            </div>
+                            <div class="challenge-stat">
+                                <span class="stat-number">400K+</span>
+                                <span class="stat-label">Farmers Reached</span>
+                            </div>
                         </div>
-                        <span class="feature-kicker">Farm Systems</span>
-                        <h3>Climate-smart mushroom farming</h3>
-                        <p>IoT sensors, GenAI analytics and digital shadows optimise growing conditions, reduce waste and increase yields for Kenyan mushroom farmers.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>
-                        </div>
-                        <span class="feature-kicker">People &amp; Skills</span>
-                        <h3>Inclusive digital skills</h3>
-                        <p>Hands-on training in AI, IoT and digital agriculture empowers youth, women and smallholder farmers building capacity for the future.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.2"/><circle cx="19" cy="6" r="2.2"/><circle cx="12" cy="18" r="2.2"/><path d="M6.8 7.6L10.5 16M17.2 7.6L13.5 16M7.2 6h9.6"/></svg>
-                        </div>
-                        <span class="feature-kicker">Regional Capacity</span>
-                        <h3>African GenAI capacity</h3>
-                        <p>Local expertise in generative AI for agriculture creates a replicable model that scales across East Africa and beyond.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- ============================================================ -->
-        <!-- WHAT JKUAT IS DOING                                          -->
+        <!-- BRIDGE-AI AT A GLANCE (Image Left, Card Right)              -->
         <!-- ============================================================ -->
-        <section class="section section-alt" id="jkuat-doing">
+        <section class="glance-section" id="glance">
             <div class="container">
-                <div class="section-header centered">
-                    <span class="eyebrow" style="justify-content:center;">JKUAT's Role</span>
+                <div class="glance-wrapper">
+                    <div class="glance-image">
+                        <img src="https://images.unsplash.com/photo-1578574577315-3fbeb0cecd5c?w=800&q=80" alt="BRIDGE-AI Technology" loading="lazy">
+                    </div>
+                    <div class="glance-content">
+                        <h2>BRIDGE-AI <span class="highlight">in Action</span></h2>
+                        <p>
+                            Combining Generative AI, satellite data and field sensors to support farmers in their daily decisions.
+                        </p>
+                        <div class="glance-features">
+                            <div class="glance-feature">
+                                <i class="fas fa-microchip"></i>
+                                <span>Generative AI solutions for daily decisions</span>
+                            </div>
+                            <div class="glance-feature">
+                                <i class="fas fa-satellite"></i>
+                                <span>Satellite data and field sensors integration</span>
+                            </div>
+                            <div class="glance-feature">
+                                <i class="fas fa-globe-africa"></i>
+                                <span>Validation in Kenya, Tunisia and Nigeria</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- JKUAT ROLE — 6 Cards (3 rows × 2)                           -->
+        <!-- ============================================================ -->
+        <section class="jkuat-section" id="jkuat-role">
+            <div class="container">
+                <div class="section-header">
                     <h2>What JKUAT <span class="highlight purple">is doing</span></h2>
                     <p>Leading the Smart Mushroom pilot and WP5 capacity building in Kenya.</p>
                 </div>
-                <div class="doing-grid">
-                    <div class="doing-card">
-                        <span class="doing-code">PILOT</span>
-                        <h4>Smart Mushroom Pilot</h4>
-                        <p>GenAI-assisted monitoring, anomaly detection, digital shadows, IoT sensing and farmer advisory tools for mushroom grow rooms at JKUAT Smart Farm Zone.</p>
+                <div class="jkuat-grid">
+
+                    <!-- Row 1: Smart Mushroom Pilot -->
+                    <div class="jkuat-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1598023696416-0193a0bcd302?w=800&q=80" alt="Smart Mushroom Pilot" loading="lazy">
+                        </div>
+                        <div class="card-body">
+                            <span class="card-badge">Pilot</span>
+                            <h3>Smart Mushroom Pilot</h3>
+                            <p>GenAI-assisted monitoring, anomaly detection, digital shadows and IoT sensing for mushroom grow rooms at JKUAT Smart Farm Zone.</p>
+                            <a href="{{ url_for('public.smart_mushrooms') }}" class="card-link">
+                                Learn More <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="doing-card">
-                        <span class="doing-code">LAB</span>
-                        <h4>Kenya Living Lab</h4>
-                        <p>Co-design and feedback activities with farmers, researchers, youth, women, advisors and SMEs to ensure solutions meet local needs.</p>
+
+                    <!-- Row 1: Kenya Living Lab -->
+                    <div class="jkuat-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=800&q=80" alt="Kenya Living Lab" loading="lazy">
+                        </div>
+                        <div class="card-body">
+                            <span class="card-badge">Lab</span>
+                            <h3>Kenya Living Lab</h3>
+                            <p>Co-design and feedback activities with farmers, researchers, youth, women and SMEs to ensure solutions meet local needs.</p>
+                            <a href="{{ url_for('public.jkuat_role') }}" class="card-link">
+                                Explore JKUAT Role <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="doing-card">
-                        <span class="doing-code">TRAIN</span>
-                        <h4>Training &amp; Bootcamps</h4>
-                        <p>Hands-on training programs, bootcamps and SME mentoring build digital skills and enable replication across East Africa.</p>
+
+                    <!-- Row 2: Training & Bootcamps -->
+                    <div class="jkuat-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80" alt="Training and Bootcamps" loading="lazy">
+                        </div>
+                        <div class="card-body">
+                            <span class="card-badge">Training</span>
+                            <h3>Training &amp; Bootcamps</h3>
+                            <p>Hands-on training programs, bootcamps and workshops build digital skills and enable replication across East Africa.</p>
+                            <a href="{{ url_for('public.training_events') }}" class="card-link">
+                                View Events <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="doing-card">
-                        <span class="doing-code">MENTOR</span>
-                        <h4>SME Mentoring</h4>
-                        <p>Supporting agricultural SMEs to adopt, adapt and scale smart farming solutions through mentoring and technical assistance.</p>
+
+                    <!-- Row 2: SME Mentoring -->
+                    <div class="jkuat-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800&q=80" alt="SME Mentoring" loading="lazy">
+                        </div>
+                        <div class="card-body">
+                            <span class="card-badge">Mentor</span>
+                            <h3>SME Mentoring</h3>
+                            <p>Supporting agricultural SMEs to adopt, adapt and scale smart farming solutions through mentoring and technical assistance.</p>
+                            <a href="{{ url_for('public.sme_mentoring') }}" class="card-link">
+                                Learn More <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="doing-card">
-                        <span class="doing-code">SCALE</span>
-                        <h4>Replication Toolkit</h4>
-                        <p>Playbooks, training materials and open repositories enable replication of the Smart Mushroom model across East Africa.</p>
+
+                    <!-- Row 3: Replication Toolkit -->
+                    <div class="jkuat-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80" alt="Replication Toolkit" loading="lazy">
+                        </div>
+                        <div class="card-body">
+                            <span class="card-badge">Scale</span>
+                            <h3>Replication Toolkit</h3>
+                            <p>Playbooks, training materials and open repositories enable replication of the Smart Mushroom model across East Africa.</p>
+                            <a href="{{ url_for('public.replication_toolkit') }}" class="card-link">
+                                View Toolkit <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="doing-card">
-                        <span class="doing-code">WP5</span>
-                        <h4>WP5 Leadership</h4>
-                        <p>Leading Work Package 5: Capacity Building and Replication, building African expertise in GenAI solutions for agriculture.</p>
+
+                    <!-- Row 3: WP5 Leadership -->
+                    <div class="jkuat-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="WP5 Leadership" loading="lazy">
+                        </div>
+                        <div class="card-body">
+                            <span class="card-badge">WP5</span>
+                            <h3>WP5 Leadership</h3>
+                            <p>Leading Work Package 5: Capacity Building and Replication, building African expertise in GenAI solutions for agriculture.</p>
+                            <a href="{{ url_for('public.training_wp5') }}" class="card-link">
+                                Explore WP5 <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </section>
@@ -1114,10 +1373,10 @@
         <!-- ============================================================ -->
         <!-- PROGRESS COUNTERS                                            -->
         <!-- ============================================================ -->
-        <section class="counters-section">
+        <section class="counters-section" id="progress">
             <div class="container">
-                <div class="counters-header">
-                    <span class="eyebrow on-dark">Progress in the Field</span>
+                <div class="section-header" style="max-width:100%; margin-bottom:32px;">
+                    <h2 style="color:var(--paper);">Making a <span style="color:#C89BE8;">Difference</span></h2>
                 </div>
                 <div class="counters-grid">
                     <div class="counter-item">
@@ -1151,15 +1410,18 @@
         <!-- ============================================================ -->
         <!-- LATEST ACTIVITIES & UPCOMING EVENTS                          -->
         <!-- ============================================================ -->
-        <section class="section" id="latest">
+        <section class="activity-section" id="latest">
             <div class="container">
-                <div class="two-col-grid">
+                <div class="section-header">
+                    <h2>Latest <span class="highlight">Activities</span> &amp; <span class="highlight purple">Events</span></h2>
+                    <p>Stay updated with the latest news and upcoming training opportunities.</p>
+                </div>
+                <div class="activity-grid">
 
                     <!-- Activities -->
-                    <div>
+                    <div class="activity-col">
                         <div class="col-heading">
-                            <span class="eyebrow">Updates</span>
-                            <h2>Latest <span class="accent">activities</span></h2>
+                            <h2>Updates <span class="accent">Activities</span></h2>
                         </div>
 
                         {% if activities %}
@@ -1215,19 +1477,14 @@
                         {% endif %}
 
                         <a href="{{ url_for('public.activities') }}" class="view-all">
-                            View all activities
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="5" y1="12" x2="19" y2="12"/>
-                                <polyline points="12 5 19 12 12 19"/>
-                            </svg>
+                            View all activities <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
 
                     <!-- Events -->
-                    <div>
+                    <div class="activity-col">
                         <div class="col-heading">
-                            <span class="eyebrow">Events</span>
-                            <h2>Upcoming <span class="accent purple">training</span></h2>
+                            <h2>Upcoming <span class="accent purple">Training</span></h2>
                         </div>
 
                         {% if events %}
@@ -1265,14 +1522,30 @@
                         {% endif %}
 
                         <a href="{{ url_for('public.training_wp5') }}" class="view-all">
-                            View all training
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="5" y1="12" x2="19" y2="12"/>
-                                <polyline points="12 5 19 12 12 19"/>
-                            </svg>
+                            View all training <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
 
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- CTA / STAY CONNECTED                                         -->
+        <!-- ============================================================ -->
+        <section class="cta-section" id="connect">
+            <div class="container">
+                <h2>Stay Connected</h2>
+                <p>Follow our journey and be a part of the BRIDGE-AI community.</p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('public.contact') }}" class="btn-primary" style="background:var(--growlight); border-color:var(--growlight);">
+                        <i class="fas fa-envelope btn-icon"></i>
+                        Contact Us
+                    </a>
+                    <a href="{{ url_for('public.training_wp5') }}" class="btn-light">
+                        <i class="fas fa-bell btn-icon"></i>
+                        Subscribe Now
+                    </a>
                 </div>
             </div>
         </section>
@@ -1285,7 +1558,7 @@
     {% include 'footer.html' %}
 
     <!-- ================================================================ -->
-    <!-- PAGE-SPECIFIC JAVASCRIPT — Single Latest Image                 -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT                                        -->
     <!-- ================================================================ -->
     <script>
         (function() {
@@ -1300,8 +1573,8 @@
             function loadLatestImage() {
                 if (!container) return;
 
-                // Show loading state
-                container.innerHTML = `<div class="hero-slide-bg active" style="background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Crect width="100" height="100" fill="%2316281A"/%3E%3C/svg%3E');"></div>`;
+                // Show loading state with paper color
+                container.innerHTML = `<div class="hero-slide-bg" style="background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Crect width="100" height="100" fill="%23F7F2E6"/%3E%3C/svg%3E');"></div>`;
 
                 fetch('/api/activities/images/', {
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -1314,7 +1587,6 @@
                     var images = data.images || [];
 
                     if (images.length > 0) {
-                        // Sort by timestamp (newest first)
                         images.sort(function(a, b) {
                             var tsA = a.match(/^(\d{8}_\d{6})/);
                             var tsB = b.match(/^(\d{8}_\d{6})/);
@@ -1324,16 +1596,23 @@
                             return 0;
                         });
 
-                        // Get the latest image
                         var latestImage = images[0];
                         var imageUrl = '/static/uploads/activities/' + latestImage;
 
-                        // Replace with single image
-                        container.innerHTML = `
-                            <div class="hero-slide-bg active" style="background-image: url('${imageUrl}');"></div>
-                        `;
+                        var img = new Image();
+                        img.onload = function() {
+                            container.innerHTML = `
+                                <div class="hero-slide-bg active" style="background-image: url('${imageUrl}');"></div>
+                            `;
+                        };
+                        img.onerror = function() {
+                            container.innerHTML = `
+                                <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=1200&h=1200&fit=crop&crop=center&auto=format');"></div>
+                            `;
+                        };
+                        img.src = imageUrl;
+
                     } else {
-                        // Fallback if no images found
                         container.innerHTML = `
                             <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=1200&h=1200&fit=crop&crop=center&auto=format');"></div>
                         `;
@@ -1419,7 +1698,6 @@
             // INIT
             // ================================================================
 
-            // Load the image
             loadLatestImage();
 
             if (document.readyState === 'loading') {
@@ -1428,7 +1706,7 @@
                 animateCounters();
             }
 
-            console.log('BRIDGE-AI Kenya Homepage initialized (Single Latest Image)');
+            console.log('BRIDGE-AI Kenya Homepage initialized (Full Upgrade)');
 
         })();
     </script>
@@ -1455,5 +1733,6 @@
         setTimeout(hideLoader, 3000);
     })();
     </script>
+
 </body>
 </html>

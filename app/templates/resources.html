@@ -1,0 +1,2078 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - PUBLIC RESOURCES HUB                          -->
+<!-- ================================================================ -->
+<!-- Design: Each resource type has a UNIQUE premium layout          -->
+<!-- Rules: No emojis · No decorative symbols · No colons            -->
+<!--        No slashes · No hyphens · Clean typography              -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources Hub - BRIDGE-AI Kenya</title>
+    <meta name="description" content="Access all public BRIDGE-AI Kenya deliverables, training materials, and research publications.">
+
+    <style>
+        /* ================================================================ */
+        /* CSS VARIABLES                                                   */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #061420;
+            --primary: #0F2B3D;
+            --primary-light: #1A4A6B;
+            --primary-lighter: #2A6A8B;
+            --gold: #D4A843;
+            --gold-light: #F5D77E;
+            --text-dark: #081A28;
+            --text-body: #1A2A3A;
+            --text-muted: #5A6A7A;
+            --text-light: #8A9AAA;
+            --bg-white: #FFFFFF;
+            --bg-light: #F5F8FA;
+            --bg-lighter: #FAFCFE;
+            --border-light: #E4EAF0;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+            --shadow-xl: 0 16px 56px rgba(0,0,0,0.12);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-body);
+            background: var(--bg-white);
+            line-height: 1.7;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ================================================================ */
+        /* RESOURCES HERO                                                 */
+        /* ================================================================ */
+        .resources-hero {
+            position: relative;
+            padding: 70px 24px 60px;
+            overflow: hidden;
+            min-height: 340px;
+            display: flex;
+            align-items: center;
+            height: 80vh;
+        }
+
+        .resources-hero .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-image: url('https://jhubafrica.com/wp-content/uploads/IMG_8214-scaled.jpg');
+            background-size: cover;
+            background-position: center;
+            transform: scale(1.02);
+            transition: transform 20s ease;
+            filter: brightness(1.05) contrast(1.02);
+        }
+
+        .resources-hero:hover .hero-bg { transform: scale(1); }
+
+        .resources-hero .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+                linear-gradient(160deg, rgba(6,20,32,0.60) 0%, rgba(15,43,61,0.45) 50%, rgba(26,74,107,0.20) 100%);
+        }
+
+        .resources-hero .hero-spotlight {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+                radial-gradient(ellipse at 55% 50%, rgba(255,255,255,0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 75% 50%, rgba(212,168,67,0.08) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .resources-hero .hero-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .resources-hero .hero-badge {
+            display: inline-block;
+            padding: 4px 18px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 60px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.35);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 14px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .resources-hero h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: -0.03em;
+            line-height: 1.08;
+            margin-bottom: 10px;
+        }
+
+        .resources-hero h1 .highlight {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 40%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .resources-hero .hero-subtitle {
+            font-size: 1.05rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.55);
+            max-width: 580px;
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+
+        .hero-search {
+            display: flex;
+            align-items: center;
+            max-width: 480px;
+            background: rgba(27, 25, 25, 0.07);
+            border: 1px solid rgba(240, 230, 230, 0.87);
+            border-radius: 60px;
+            padding: 3px 3px 3px 22px;
+            transition: all var(--transition);
+        }
+
+        .hero-search:focus-within {
+            border-color: rgba(212,168,67,0.3);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 0 0 4px rgba(212,168,67,0.04);
+        }
+
+        .hero-search input {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 11px 0;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.85);
+            outline: none;
+            font-family: var(--font-sans);
+            min-width: 0;
+        }
+
+        .hero-search input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .hero-search .search-btn {
+            flex-shrink: 0;
+            padding: 8px 24px;
+            background: var(--gold);
+            border: none;
+            border-radius: 60px;
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+        }
+
+        .hero-search .search-btn:hover {
+            background: var(--gold-light);
+            transform: scale(1.02);
+        }
+
+        /* ================================================================ */
+        /* FILTER BAR                                                      */
+        /* ================================================================ */
+        .filter-bar {
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-light);
+            padding: 14px 24px;
+            position: sticky;
+            top: 72px;
+            z-index: 90;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(255,255,255,0.92);
+            transition: box-shadow var(--transition);
+        }
+
+        .filter-bar.scrolled {
+            box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+        }
+
+        .filter-bar .filter-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar .filter-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-right: 4px;
+            padding: 4px 8px 4px 0;
+        }
+
+        .filter-bar .filter-btn {
+            padding: 5px 16px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: var(--bg-white);
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+        }
+
+        .filter-bar .filter-btn:hover {
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+            background: var(--bg-lighter);
+        }
+
+        .filter-bar .filter-btn.active {
+            background: var(--primary-light);
+            color: #FFFFFF;
+            border-color: var(--primary-light);
+        }
+
+        .filter-bar .filter-btn .count {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-left: 4px;
+            transition: color var(--transition);
+        }
+
+        .filter-bar .filter-btn.active .count {
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* ================================================================ */
+        /* RESOURCES SECTION                                              */
+        /* ================================================================ */
+        .resources-section {
+            padding: 32px 24px 60px;
+        }
+
+        .resources-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* ─── Loading ─── */
+        #loadingIndicator {
+            text-align: center;
+            padding: 60px 20px;
+            display: none;
+        }
+
+        #loadingIndicator .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            border: 3px solid var(--border-light);
+            border-top-color: var(--primary-light);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        #loadingIndicator p {
+            color: var(--text-muted);
+            margin-top: 14px;
+            font-size: 0.9rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ─── No Results ─── */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .no-results h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        /* ================================================================ */
+        /* SECTION HEADER                                                  */
+        /* ================================================================ */
+        .resource-type-section {
+            margin-bottom: 48px;
+        }
+
+        .resource-type-section:last-child { margin-bottom: 0; }
+
+        .resource-type-section .section-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-light);
+            margin-bottom: 20px;
+        }
+
+        .resource-type-section .section-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+            position: relative;
+        }
+
+        .resource-type-section .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .resource-type-section .section-header .section-count {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .resource-type-section .section-header .section-count span {
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* ================================================================ */
+        /* 1. DELIVERABLES - Premium Stack                                */
+        /* ================================================================ */
+        .deliverable-item {
+            padding: 20px 24px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+            transition: all var(--transition);
+            background: var(--bg-white);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .deliverable-item:last-child { margin-bottom: 0; }
+
+        .deliverable-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary-light);
+            border-radius: 0 2px 2px 0;
+            opacity: 0.5;
+            transition: opacity var(--transition);
+        }
+
+        .deliverable-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .deliverable-item:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+
+        .deliverable-item:hover::before { opacity: 1; }
+        .deliverable-item:hover::after { opacity: 1; }
+
+        .deliverable-item .item-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: color var(--transition);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .deliverable-item .item-title:hover { color: var(--primary-light); }
+
+        .deliverable-item .file-badge {
+            display: inline-block;
+            padding: 1px 12px;
+            background: var(--primary-light);
+            color: #FFFFFF;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .deliverable-item .item-description {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .deliverable-item .item-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px 18px;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 12px;
+            padding: 6px 0;
+            border-top: 1px solid var(--bg-light);
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .deliverable-item .item-meta .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .deliverable-item .item-meta .meta-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ================================================================ */
+        /* 2. POLICY BRIEFS - Card Grid                                   */
+        /* ================================================================ */
+        .policy-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .policy-item {
+            padding: 20px 22px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition);
+            background: var(--bg-white);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .policy-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .policy-item:hover {
+            border-color: var(--gold);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+
+        .policy-item:hover::after { opacity: 1; }
+
+        .policy-item .policy-badge {
+            display: inline-block;
+            padding: 1px 12px;
+            background: var(--gold);
+            color: var(--primary-dark);
+            border-radius: 4px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+
+        .policy-item .policy-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: color var(--transition);
+            display: block;
+        }
+
+        .policy-item .policy-title:hover { color: var(--gold); }
+
+        .policy-item .policy-journal {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .policy-item .policy-size {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            margin: 6px 0 10px;
+            display: block;
+        }
+
+        /* ================================================================ */
+        /* 3. VIDEOS - Premium Cards                                      */
+        /* ================================================================ */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .video-item {
+            padding: 18px 18px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition);
+            background: var(--bg-white);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #C0392B, #E74C3C, #C0392B, transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .video-item:hover {
+            border-color: #C0392B;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
+        }
+
+        .video-item:hover::after { opacity: 1; }
+
+        .video-item .video-icon {
+            display: block;
+            font-size: 1.8rem;
+            color: #C0392B;
+            margin-bottom: 6px;
+            font-weight: 300;
+        }
+
+        .video-item .video-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: color var(--transition);
+            display: block;
+        }
+
+        .video-item .video-title:hover { color: #C0392B; }
+
+        .video-item .video-description {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin: 4px 0 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-item .video-meta {
+            font-size: 0.72rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        /* ================================================================ */
+        /* 4. PRESENTATIONS - Split Layout                               */
+        /* ================================================================ */
+        .presentation-item {
+            padding: 18px 22px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+            transition: all var(--transition);
+            background: var(--bg-white);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .presentation-item:last-child { margin-bottom: 0; }
+
+        .presentation-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #8E44AD, #A569BD, #8E44AD, transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .presentation-item:hover {
+            border-color: #8E44AD;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+
+        .presentation-item:hover::after { opacity: 1; }
+
+        .presentation-item .pres-left {
+            flex-shrink: 0;
+            text-align: center;
+            min-width: 80px;
+            padding: 8px 12px;
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+        }
+
+        .presentation-item .pres-left .pres-icon {
+            font-size: 1.6rem;
+            color: #8E44AD;
+            display: block;
+            font-weight: 300;
+        }
+
+        .presentation-item .pres-left .pres-slides {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .presentation-item .pres-left .pres-date {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            display: block;
+        }
+
+        .presentation-item .pres-right { flex: 1; }
+
+        .presentation-item .pres-right .pres-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: color var(--transition);
+            display: block;
+        }
+
+        .presentation-item .pres-right .pres-title:hover { color: #8E44AD; }
+
+        .presentation-item .pres-right .pres-description {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin: 2px 0 8px;
+        }
+
+        /* ================================================================ */
+        /* 5. TRAINING KITS - Accordion Premium                          */
+        /* ================================================================ */
+        .training-item {
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            overflow: hidden;
+            transition: all var(--transition);
+            background: var(--bg-white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .training-item:last-child { margin-bottom: 0; }
+
+        .training-item:hover {
+            border-color: #27AE60;
+            box-shadow: var(--shadow-md);
+        }
+
+        .training-item .training-header {
+            padding: 14px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background var(--transition);
+            user-select: none;
+            border-left: 3px solid transparent;
+            transition: all var(--transition);
+        }
+
+        .training-item .training-header:hover {
+            background: var(--bg-lighter);
+            border-left-color: #27AE60;
+        }
+
+        .training-item .training-header .toggle-icon {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            font-weight: 300;
+        }
+
+        .training-item .training-header .toggle-icon.open { transform: rotate(90deg); }
+
+        .training-item .training-header .training-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #27AE60;
+            flex-shrink: 0;
+        }
+
+        .training-item .training-header .training-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            flex: 1;
+        }
+
+        .training-item .training-body {
+            padding: 0 20px 16px 20px;
+            display: none;
+            border-top: 1px solid var(--bg-light);
+        }
+
+        .training-item .training-body.open { display: block; }
+
+        .training-item .training-body .training-description {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 10px;
+            padding-top: 12px;
+        }
+
+        /* ================================================================ */
+        /* 6. PUBLICATIONS - Minimal List                                */
+        /* ================================================================ */
+        .publication-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--bg-light);
+            transition: all var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .publication-item:last-child { border-bottom: none; }
+
+        .publication-item:hover {
+            background: var(--bg-lighter);
+            border-left-color: #5D6D7E;
+        }
+
+        .publication-item .pub-badge {
+            flex-shrink: 0;
+            padding: 1px 12px;
+            background: #5D6D7E;
+            color: #FFFFFF;
+            border-radius: 4px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 2px;
+        }
+
+        .publication-item .pub-content { flex: 1; min-width: 0; }
+
+        .publication-item .pub-content .pub-title {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: color var(--transition);
+            display: block;
+        }
+
+        .publication-item .pub-content .pub-title:hover { color: #5D6D7E; }
+
+        .publication-item .pub-content .pub-journal {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .publication-item .pub-content .pub-meta {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 2px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 16px;
+            align-items: center;
+        }
+
+        /* ================================================================ */
+        /* 7. OPEN SOURCE - Feature Card                                 */
+        /* ================================================================ */
+        .opensource-card {
+            padding: 22px 24px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            background: var(--bg-white);
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .opensource-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #E67E22, #F39C12, #E67E22, transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .opensource-card:hover {
+            border-color: #E67E22;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+
+        .opensource-card:hover::after { opacity: 1; }
+
+        .opensource-card .os-intro {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .opensource-card .os-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 14px 0;
+        }
+
+        .opensource-card .os-list li {
+            padding: 6px 12px;
+            border-bottom: 1px solid var(--bg-light);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px 12px;
+            font-size: 0.88rem;
+        }
+
+        .opensource-card .os-list li:last-child { border-bottom: none; }
+
+        .opensource-card .os-list .os-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .opensource-card .os-list .os-lang {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .opensource-card .os-list .os-license {
+            color: var(--text-light);
+            font-size: 0.78rem;
+        }
+
+        .opensource-card .os-list .os-stars {
+            color: var(--gold);
+            font-size: 0.78rem;
+            margin-left: auto;
+        }
+
+        .opensource-card .os-contributors {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            padding: 10px 0;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 14px;
+        }
+
+        .opensource-card .os-contributors strong {
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        /* ================================================================ */
+        /* SHARED ACTION BUTTONS - Premium                               */
+        /* ================================================================ */
+        .deliverable-item .item-actions,
+        .policy-item .policy-actions,
+        .video-item .video-actions,
+        .presentation-item .pres-right .pres-actions,
+        .training-item .training-body .training-actions,
+        .publication-item .pub-content .pub-actions,
+        .opensource-card .os-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn-download {
+            padding: 6px 20px;
+            border: none;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-sans);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-light);
+            color: #FFFFFF;
+        }
+
+        .btn-download:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(26,74,107,0.2);
+        }
+
+        .btn-download-gold {
+            background: var(--gold);
+            color: var(--primary-dark);
+        }
+
+        .btn-download-gold:hover {
+            background: var(--gold-light);
+            box-shadow: 0 4px 16px rgba(212,168,67,0.2);
+        }
+
+        .btn-watch {
+            padding: 6px 20px;
+            border: none;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-sans);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #C0392B;
+            color: #FFFFFF;
+        }
+
+        .btn-watch:hover {
+            background: #A93226;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(192,57,43,0.2);
+        }
+
+        .btn-github {
+            padding: 6px 20px;
+            border: none;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-sans);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #E67E22;
+            color: #FFFFFF;
+        }
+
+        .btn-github:hover {
+            background: #D35400;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(230,126,34,0.2);
+        }
+
+        .btn-view {
+            padding: 6px 18px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-light);
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-sans);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-view:hover {
+            background: var(--bg-light);
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+        }
+
+        .btn-action {
+            padding: 6px 20px;
+            border: none;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-sans);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #27AE60;
+            color: #FFFFFF;
+        }
+
+        .btn-action:hover {
+            background: #1E8449;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(39,174,96,0.2);
+        }
+
+        /* ================================================================ */
+        /* SHOW MORE BUTTON                                                */
+        /* ================================================================ */
+        .show-more-container {
+            text-align: center;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--bg-light);
+        }
+
+        .show-more-btn {
+            padding: 8px 28px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1.5px solid var(--border-light);
+            border-radius: 60px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+        }
+
+        .show-more-btn:hover {
+            background: var(--bg-light);
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+        }
+
+        .show-more-btn .show-more-count {
+            font-weight: 600;
+            color: var(--primary-light);
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                      */
+        /* ================================================================ */
+        @media (max-width: 1024px) {
+            .video-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 64px; }
+
+            .resources-hero {
+                padding: 40px 16px 36px;
+                min-height: 260px;
+            }
+
+            .resources-hero .hero-bg { background-attachment: scroll; }
+            .resources-hero h1 { font-size: 2.2rem; }
+            .resources-hero .hero-subtitle { font-size: 0.92rem; }
+            .hero-search { max-width: 100%; }
+            .hero-search input { font-size: 0.82rem; padding: 9px 0; }
+            .hero-search .search-btn { padding: 6px 18px; font-size: 0.75rem; }
+
+            .filter-bar { padding: 10px 16px; top: 64px; }
+            .filter-bar .filter-container { gap: 4px; }
+            .filter-bar .filter-btn { padding: 4px 12px; font-size: 0.7rem; }
+
+            .resources-section { padding: 24px 16px 40px; }
+            .resource-type-section { margin-bottom: 32px; }
+            .resource-type-section .section-header h2 { font-size: 1.05rem; }
+
+            /* ─── Deliverables ─── */
+            .deliverable-item { padding: 14px 16px; }
+            .deliverable-item .item-title { font-size: 0.95rem; }
+            .deliverable-item .item-description { font-size: 0.82rem; }
+            .deliverable-item .item-actions { flex-direction: column; align-items: stretch; }
+            .deliverable-item .item-actions .btn-download,
+            .deliverable-item .item-actions .btn-view {
+                text-align: center;
+                justify-content: center;
+                padding: 8px 16px;
+            }
+
+            /* ─── Policy Briefs ─── */
+            .policy-grid { grid-template-columns: 1fr; }
+
+            /* ─── Videos ─── */
+            .video-grid { grid-template-columns: 1fr 1fr; }
+
+            /* ─── Presentations ─── */
+            .presentation-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 14px 16px;
+            }
+
+            .presentation-item .pres-left {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                min-width: auto;
+                width: 100%;
+                padding: 6px 12px;
+            }
+
+            .presentation-item .pres-left .pres-icon { font-size: 1.4rem; }
+            .presentation-item .pres-right .pres-title { font-size: 0.95rem; }
+            .presentation-item .pres-right .pres-actions { flex-direction: column; align-items: stretch; }
+            .presentation-item .pres-right .pres-actions .btn-download,
+            .presentation-item .pres-right .pres-actions .btn-view {
+                text-align: center;
+                justify-content: center;
+                padding: 8px 16px;
+            }
+
+            /* ─── Training Kits ─── */
+            .training-item .training-header {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+            }
+
+            .training-item .training-header .training-title {
+                font-size: 0.88rem;
+                width: 100%;
+                margin-left: 24px;
+            }
+
+            .training-item .training-body { padding: 0 16px 14px 16px; }
+            .training-item .training-body .training-actions { flex-direction: column; align-items: stretch; }
+            .training-item .training-body .training-actions .btn-action,
+            .training-item .training-body .training-actions .btn-view {
+                text-align: center;
+                justify-content: center;
+                padding: 8px 16px;
+            }
+
+            /* ─── Publications ─── */
+            .publication-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+                padding: 10px 14px;
+            }
+
+            .publication-item .pub-content .pub-actions { flex-direction: column; align-items: stretch; }
+            .publication-item .pub-content .pub-actions .btn-download,
+            .publication-item .pub-content .pub-actions .btn-view {
+                text-align: center;
+                justify-content: center;
+                padding: 6px 16px;
+            }
+
+            /* ─── Open Source ─── */
+            .opensource-card { padding: 16px 18px; }
+            .opensource-card .os-list li { flex-wrap: wrap; padding: 4px 8px; }
+            .opensource-card .os-list .os-stars { margin-left: 0; }
+            .opensource-card .os-actions { flex-direction: column; align-items: stretch; }
+            .opensource-card .os-actions .btn-github,
+            .opensource-card .os-actions .btn-view {
+                text-align: center;
+                justify-content: center;
+                padding: 8px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .resources-hero h1 { font-size: 1.8rem; }
+            .resources-hero .hero-subtitle { font-size: 0.82rem; }
+            .resources-hero .hero-badge { font-size: 0.5rem; padding: 3px 14px; }
+            .filter-bar .filter-label { font-size: 0.6rem; width: 100%; margin-bottom: 2px; }
+            .video-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-light); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT                                                    -->
+    <!-- ================================================================ -->
+    <main>
+
+        <!-- ============================================================ -->
+        <!-- RESOURCES HERO                                              -->
+        <!-- ============================================================ -->
+        <section class="resources-hero">
+            <div class="hero-bg"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-spotlight"></div>
+
+            <div class="hero-container">
+                <span class="hero-badge">Centralized Library</span>
+                <h1>Resources <span class="highlight">Hub</span></h1>
+                <p class="hero-subtitle">
+                    Access all public BRIDGE-AI Kenya deliverables, training materials, and research publications. All assets are published under open-source compliance frameworks.
+                </p>
+
+                <div class="hero-search">
+                    <input type="text" id="resourceSearch" placeholder="Search materials..." onkeyup="filterResources()">
+                    <button class="search-btn" onclick="filterResources()">Search</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- FILTER BAR                                                   -->
+        <!-- ============================================================ -->
+        <div class="filter-bar" id="filterBar">
+            <div class="filter-container">
+                <span class="filter-label">Filter</span>
+                <button class="filter-btn active" data-filter="all" onclick="filterByType('all', this)">All <span class="count" id="countAll">0</span></button>
+                <button class="filter-btn" data-filter="deliverable" onclick="filterByType('deliverable', this)">Deliverables <span class="count" id="countDeliverable">0</span></button>
+                <button class="filter-btn" data-filter="policy_brief" onclick="filterByType('policy_brief', this)">Policy Briefs <span class="count" id="countPolicyBrief">0</span></button>
+                <button class="filter-btn" data-filter="video" onclick="filterByType('video', this)">Videos <span class="count" id="countVideo">0</span></button>
+                <button class="filter-btn" data-filter="presentation" onclick="filterByType('presentation', this)">Presentations <span class="count" id="countPresentation">0</span></button>
+                <button class="filter-btn" data-filter="training_kit" onclick="filterByType('training_kit', this)">Training Kits <span class="count" id="countTrainingKit">0</span></button>
+                <button class="filter-btn" data-filter="publication" onclick="filterByType('publication', this)">Publications <span class="count" id="countPublication">0</span></button>
+                <button class="filter-btn" data-filter="open_source" onclick="filterByType('open_source', this)">Open Source <span class="count" id="countOpenSource">0</span></button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- RESOURCES LIST                                               -->
+        <!-- ============================================================ -->
+        <section class="resources-section" id="resourcesSection">
+            <div class="resources-container">
+
+                <!-- Loading -->
+                <div id="loadingIndicator">
+                    <div class="spinner"></div>
+                    <p>Loading resources...</p>
+                </div>
+
+                <!-- Resources -->
+                <div id="resourcesContainer"></div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT                                        -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // STATE
+            // ================================================================
+
+            var allResources = [];
+            var currentFilter = 'all';
+            var searchTerm = '';
+
+            // ================================================================
+            // RESOURCE TYPE CONFIG
+            // ================================================================
+
+            var RESOURCE_TYPES = [
+                { value: 'deliverable', label: 'Deliverables' },
+                { value: 'policy_brief', label: 'Policy Briefs' },
+                { value: 'video', label: 'Videos' },
+                { value: 'presentation', label: 'Presentations' },
+                { value: 'training_kit', label: 'Training Kits' },
+                { value: 'publication', label: 'Publications' },
+                { value: 'open_source', label: 'Open Source' }
+            ];
+
+            var RESOURCE_TYPE_LABELS = {
+                'deliverable': 'Deliverable',
+                'policy_brief': 'Policy Brief',
+                'video': 'Video',
+                'presentation': 'Presentation',
+                'training_kit': 'Training Kit',
+                'publication': 'Publication',
+                'open_source': 'Open Source'
+            };
+
+            // ================================================================
+            // DOM REFS
+            // ================================================================
+
+            var container = document.getElementById('resourcesContainer');
+            var loadingIndicator = document.getElementById('loadingIndicator');
+            var searchInput = document.getElementById('resourceSearch');
+            var filterBar = document.getElementById('filterBar');
+
+            // ================================================================
+            // ITEMS PER TYPE CONFIG
+            // ================================================================
+
+            var ITEMS_PER_TYPE = {
+                'deliverable': 3,
+                'policy_brief': 4,
+                'video': 3,
+                'presentation': 2,
+                'training_kit': 3,
+                'publication': 4,
+                'open_source': 999
+            };
+
+            // ================================================================
+            // LOAD RESOURCES
+            // ================================================================
+
+            function loadResources() {
+                showLoading();
+
+                fetch('/api/resources/', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Network error');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    allResources = data.filter(function(item) {
+                        return item.is_public === true;
+                    });
+                    updateCounts();
+                    renderResources();
+                    hideLoading();
+                })
+                .catch(function(error) {
+                    console.error('Error loading resources:', error);
+                    allResources = [];
+                    updateCounts();
+                    renderResources();
+                    hideLoading();
+                });
+            }
+
+            // ================================================================
+            // UPDATE COUNTS
+            // ================================================================
+
+            function updateCounts() {
+                var counts = {};
+                allResources.forEach(function(item) {
+                    var type = item.resource_type || 'other';
+                    counts[type] = (counts[type] || 0) + 1;
+                });
+
+                var allCount = document.getElementById('countAll');
+                if (allCount) {
+                    allCount.textContent = allResources.length;
+                }
+
+                var typeMap = {
+                    'deliverable': 'countDeliverable',
+                    'policy_brief': 'countPolicyBrief',
+                    'video': 'countVideo',
+                    'presentation': 'countPresentation',
+                    'training_kit': 'countTrainingKit',
+                    'publication': 'countPublication',
+                    'open_source': 'countOpenSource'
+                };
+
+                Object.keys(typeMap).forEach(function(type) {
+                    var element = document.getElementById(typeMap[type]);
+                    if (element) {
+                        element.textContent = counts[type] || 0;
+                    }
+                });
+            }
+
+            // ================================================================
+            // RENDER RESOURCES
+            // ================================================================
+
+            function renderResources() {
+                if (!container) return;
+
+                var filtered = getFilteredResources();
+
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-results">
+                            <h3>No resources found</h3>
+                            <p>Try adjusting your search or filter criteria.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                var html = '';
+
+                RESOURCE_TYPES.forEach(function(typeConfig) {
+                    var type = typeConfig.value;
+                    var typeLabel = typeConfig.label;
+                    var items = filtered.filter(function(item) {
+                        return (item.resource_type || '') === type;
+                    });
+
+                    if (items.length === 0) return;
+
+                    var initialCount = ITEMS_PER_TYPE[type] || 3;
+                    var showAll = initialCount === 999;
+                    var hasMore = items.length > initialCount && !showAll;
+
+                    var displayedItems = showAll ? items : items.slice(0, initialCount);
+                    var remainingItems = items.length - initialCount;
+
+                    html += `
+                        <div class="resource-type-section" data-type="${type}">
+                            <div class="section-header">
+                                <h2>${typeLabel}</h2>
+                                <span class="section-count"><span>${items.length}</span> item${items.length !== 1 ? 's' : ''}</span>
+                            </div>
+                            <div class="type-items-container" id="typeContainer_${type}">
+                    `;
+
+                    if (type === 'deliverable') {
+                        displayedItems.forEach(function(item) {
+                            html += buildDeliverableItem(item);
+                        });
+                    } else if (type === 'policy_brief') {
+                        html += '<div class="policy-grid">';
+                        displayedItems.forEach(function(item) {
+                            html += buildPolicyItem(item);
+                        });
+                        html += '</div>';
+                    } else if (type === 'video') {
+                        html += '<div class="video-grid">';
+                        displayedItems.forEach(function(item) {
+                            html += buildVideoItem(item);
+                        });
+                        html += '</div>';
+                    } else if (type === 'presentation') {
+                        displayedItems.forEach(function(item) {
+                            html += buildPresentationItem(item);
+                        });
+                    } else if (type === 'training_kit') {
+                        displayedItems.forEach(function(item) {
+                            html += buildTrainingItem(item);
+                        });
+                    } else if (type === 'publication') {
+                        displayedItems.forEach(function(item) {
+                            html += buildPublicationItem(item);
+                        });
+                    } else if (type === 'open_source') {
+                        html += buildOpenSourceCard(displayedItems);
+                    }
+
+                    if (hasMore) {
+                        var hiddenItems = items.slice(initialCount);
+                        html += `
+                            <div class="hidden-items" id="hiddenItems_${type}" style="display:none;">
+                        `;
+                        if (type === 'deliverable') {
+                            hiddenItems.forEach(function(item) {
+                                html += buildDeliverableItem(item);
+                            });
+                        } else if (type === 'policy_brief') {
+                            html += '<div class="policy-grid">';
+                            hiddenItems.forEach(function(item) {
+                                html += buildPolicyItem(item);
+                            });
+                            html += '</div>';
+                        } else if (type === 'video') {
+                            html += '<div class="video-grid">';
+                            hiddenItems.forEach(function(item) {
+                                html += buildVideoItem(item);
+                            });
+                            html += '</div>';
+                        } else if (type === 'presentation') {
+                            hiddenItems.forEach(function(item) {
+                                html += buildPresentationItem(item);
+                            });
+                        } else if (type === 'training_kit') {
+                            hiddenItems.forEach(function(item) {
+                                html += buildTrainingItem(item);
+                            });
+                        } else if (type === 'publication') {
+                            hiddenItems.forEach(function(item) {
+                                html += buildPublicationItem(item);
+                            });
+                        }
+                        html += `
+                            </div>
+                            <div class="show-more-container">
+                                <button class="show-more-btn" onclick="toggleShowMore('${type}')">
+                                    Show More <span class="show-more-count">(+${remainingItems})</span>
+                                </button>
+                            </div>
+                        `;
+                    }
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+            }
+
+            // ================================================================
+            // BUILD FUNCTIONS
+            // ================================================================
+
+            function buildDeliverableItem(item) {
+                var fileBadge = item.file_path ? item.file_path.split('.').pop().toUpperCase() : 'FILE';
+                var actionsHtml = buildActions(item);
+                var metaHtml = buildMeta(item);
+
+                return `
+                    <div class="deliverable-item">
+                        <a href="/resources/${escapeHtml(item.slug)}/" class="item-title">
+                            ${escapeHtml(item.title)}
+                        </a>
+                        <span class="file-badge">${escapeHtml(fileBadge)}</span>
+                        ${item.description ? `<p class="item-description">${escapeHtml(item.description)}</p>` : ''}
+                        ${metaHtml}
+                        <div class="item-actions">
+                            ${actionsHtml}
+                            <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view">View Details</a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function buildPolicyItem(item) {
+                var badge = item.policy_type || 'Policy Brief';
+                var actionsHtml = buildActions(item);
+
+                return `
+                    <div class="policy-item">
+                        <span class="policy-badge">${escapeHtml(badge)}</span>
+                        <a href="/resources/${escapeHtml(item.slug)}/" class="policy-title">
+                            ${escapeHtml(item.title)}
+                        </a>
+                        ${item.journal ? `<span class="policy-journal">${escapeHtml(item.journal)}</span>` : ''}
+                        ${item.file_size ? `<span class="policy-size">${escapeHtml(item.file_size)}</span>` : ''}
+                        <div class="policy-actions">
+                            ${actionsHtml}
+                            <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view">View Details</a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function buildVideoItem(item) {
+                var actionsHtml = buildActions(item);
+
+                return `
+                    <div class="video-item">
+                        <span class="video-icon">▶</span>
+                        <a href="/resources/${escapeHtml(item.slug)}/" class="video-title">
+                            ${escapeHtml(item.title)}
+                        </a>
+                        ${item.description ? `<p class="video-description">${escapeHtml(item.description)}</p>` : ''}
+                        <div class="video-meta">
+                            ${item.duration ? 'Duration: ' + escapeHtml(item.duration) : ''}
+                            ${item.updated_at ? (item.duration ? '  ' : '') + 'Modified: ' + formatDate(item.updated_at) : ''}
+                        </div>
+                        <div class="video-actions">
+                            ${actionsHtml}
+                            <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view">View Details</a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function buildPresentationItem(item) {
+                var actionsHtml = buildActions(item);
+
+                return `
+                    <div class="presentation-item">
+                        <div class="pres-left">
+                            <span class="pres-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8E44AD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                    <line x1="8" y1="20" x2="16" y2="20"/>
+                                    <line x1="12" y1="16" x2="12" y2="20"/>
+                                    <rect x="6" y="8" width="12" height="6" rx="1" fill="#8E44AD" fill-opacity="0.15"/>
+                                    <circle cx="10" cy="11" r="0.8" fill="#8E44AD"/>
+                                    <circle cx="14" cy="11" r="0.8" fill="#8E44AD"/>
+                                    <line x1="8" y1="8" x2="8" y2="7"/>
+                                    <line x1="12" y1="8" x2="12" y2="7"/>
+                                    <line x1="16" y1="8" x2="16" y2="7"/>
+                                </svg>
+                            </span>
+                            ${item.slide_count ? `<span class="pres-slides">${escapeHtml(item.slide_count)} slides</span>` : ''}
+                            ${item.updated_at ? `<span class="pres-date">${formatDate(item.updated_at)}</span>` : ''}
+                        </div>
+                        <div class="pres-right">
+                            <a href="/resources/${escapeHtml(item.slug)}/" class="pres-title">
+                                ${escapeHtml(item.title)}
+                            </a>
+                            ${item.description ? `<p class="pres-description">${escapeHtml(item.description)}</p>` : ''}
+                            <div class="pres-actions">
+                                ${actionsHtml}
+                                <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function buildTrainingItem(item) {
+                var actionsHtml = buildActions(item);
+
+                return `
+                    <div class="training-item">
+                        <div class="training-header" onclick="toggleTraining(this)">
+                            <span class="toggle-icon">▸</span>
+                            ${item.module_label ? `<span class="training-label">${escapeHtml(item.module_label)}</span>` : ''}
+                            <span class="training-title">${escapeHtml(item.title)}</span>
+                        </div>
+                        <div class="training-body">
+                            ${item.description ? `<p class="training-description">${escapeHtml(item.description)}</p>` : ''}
+                            <div class="training-actions">
+                                ${actionsHtml}
+                                <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function buildPublicationItem(item) {
+                var badge = item.publication_type || 'Publication';
+                var actionsHtml = buildActions(item);
+
+                return `
+                    <div class="publication-item">
+                        <span class="pub-badge">${escapeHtml(badge)}</span>
+                        <div class="pub-content">
+                            <a href="/resources/${escapeHtml(item.slug)}/" class="pub-title">
+                                ${escapeHtml(item.title)}
+                            </a>
+                            ${item.journal ? `<span class="pub-journal">${escapeHtml(item.journal)}</span>` : ''}
+                            <div class="pub-meta">
+                                ${item.file_size ? `<span>${escapeHtml(item.file_size)}</span>` : ''}
+                                ${item.published_date ? `<span>Published: ${formatDate(item.published_date)}</span>` : ''}
+                            </div>
+                            <div class="pub-actions">
+                                ${actionsHtml}
+                                <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function buildOpenSourceCard(items) {
+                var listHtml = '';
+                items.forEach(function(item) {
+                    listHtml += `
+                        <li>
+                            <span class="os-name">${escapeHtml(item.repo_name || item.title)}</span>
+                            ${item.language ? `<span class="os-lang">${escapeHtml(item.language)}</span>` : ''}
+                            ${item.license ? `<span class="os-license">${escapeHtml(item.license)}</span>` : ''}
+                            ${item.stars ? `<span class="os-stars">${escapeHtml(item.stars)} stars</span>` : ''}
+                            <a href="/resources/${escapeHtml(item.slug)}/" style="margin-left:auto;font-size:0.7rem;color:var(--text-light);text-decoration:none;">View Details</a>
+                        </li>
+                    `;
+                });
+
+                var contributors = items.length > 0 && items[0].contributors ? items[0].contributors : '0';
+
+                return `
+                    <div class="opensource-card">
+                        <p class="os-intro">
+                            Contributing to the global agritech ecosystem. Our source code and
+                            datasets are hosted on GitHub under humanitarian-focused licenses.
+                        </p>
+                        <ul class="os-list">
+                            ${listHtml}
+                        </ul>
+                        <div class="os-contributors">
+                            <strong>${escapeHtml(contributors)}</strong> Active Contributors
+                        </div>
+                        <div class="os-actions">
+                            ${items.length > 0 && items[0].github_url ? `
+                                <a href="${escapeHtml(items[0].github_url)}" class="btn-github" target="_blank" rel="noopener">Visit GitHub Org</a>
+                            ` : ''}
+                            <a href="/resources/" class="btn-view">View All</a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // ================================================================
+            // BUILD ACTIONS
+            // ================================================================
+
+            function buildActions(item) {
+                var actionsHtml = '';
+                if (item.file_path) {
+                    var fileUrl = '/static/' + item.file_path;
+                    var type = item.resource_type || '';
+
+                    if (type === 'policy_brief') {
+                        actionsHtml += `
+                            <a href="${fileUrl}" class="btn-download btn-download-gold" target="_blank" onclick="event.stopPropagation();">
+                                Download
+                            </a>
+                        `;
+                    } else if (type === 'video') {
+                        actionsHtml += `
+                            <a href="${fileUrl}" class="btn-watch" target="_blank" onclick="event.stopPropagation();">
+                                Watch
+                            </a>
+                        `;
+                    } else if (type === 'open_source') {
+                        actionsHtml += `
+                            <a href="${fileUrl}" class="btn-github" target="_blank" onclick="event.stopPropagation();">
+                                View Repository
+                            </a>
+                        `;
+                    } else if (type === 'training_kit') {
+                        actionsHtml += `
+                            <a href="${fileUrl}" class="btn-action" target="_blank" onclick="event.stopPropagation();">
+                                Access Kit
+                            </a>
+                        `;
+                    } else {
+                        actionsHtml += `
+                            <a href="${fileUrl}" class="btn-download" target="_blank" onclick="event.stopPropagation();">
+                                Download
+                            </a>
+                        `;
+                    }
+                }
+                if (item.external_url && !item.file_path) {
+                    actionsHtml += `
+                        <a href="${escapeHtml(item.external_url)}" class="btn-view" target="_blank" rel="noopener noreferrer">
+                            View Resource
+                        </a>
+                    `;
+                }
+                return actionsHtml;
+            }
+
+            // ================================================================
+            // BUILD META
+            // ================================================================
+
+            function buildMeta(item) {
+                var metaHtml = '';
+                var version = item.version || '';
+                var license = item.license || '';
+                var date = item.updated_at || item.created_at || '';
+                var formattedDate = formatDate(date);
+
+                if (version || formattedDate || license) {
+                    metaHtml += '<div class="item-meta">';
+                    if (version) {
+                        metaHtml += `
+                            <span class="meta-item">
+                                <span class="meta-label">Version</span>
+                                ${escapeHtml(version)}
+                            </span>
+                        `;
+                    }
+                    if (version && (formattedDate || license)) {
+                        metaHtml += `<span class="meta-separator">|</span>`;
+                    }
+                    if (formattedDate) {
+                        metaHtml += `
+                            <span class="meta-item">
+                                <span class="meta-label">Modified</span>
+                                ${formattedDate}
+                            </span>
+                        `;
+                    }
+                    if (formattedDate && license) {
+                        metaHtml += `<span class="meta-separator">|</span>`;
+                    }
+                    if (license) {
+                        metaHtml += `
+                            <span class="meta-item">
+                                <span class="meta-label">License</span>
+                                ${escapeHtml(license)}
+                            </span>
+                        `;
+                    }
+                    metaHtml += '</div>';
+                }
+                return metaHtml;
+            }
+
+            // ================================================================
+            // TOGGLE FUNCTIONS
+            // ================================================================
+
+            window.toggleTraining = function(header) {
+                var body = header.nextElementSibling;
+                var icon = header.querySelector('.toggle-icon');
+                if (body) {
+                    body.classList.toggle('open');
+                    if (icon) {
+                        icon.classList.toggle('open');
+                    }
+                }
+            };
+
+            window.toggleShowMore = function(type) {
+                var hiddenContainer = document.getElementById('hiddenItems_' + type);
+                var showMoreContainer = hiddenContainer ? hiddenContainer.nextElementSibling : null;
+
+                if (hiddenContainer) {
+                    var isHidden = hiddenContainer.style.display === 'none';
+                    hiddenContainer.style.display = isHidden ? 'block' : 'none';
+                    if (showMoreContainer) {
+                        var btn = showMoreContainer.querySelector('.show-more-btn');
+                        if (btn) {
+                            btn.textContent = isHidden ? 'Show Less' : 'Show More';
+                            var countSpan = btn.querySelector('.show-more-count');
+                            if (countSpan) {
+                                var items = hiddenContainer.querySelectorAll('.deliverable-item, .policy-item, .video-item, .presentation-item, .training-item, .publication-item');
+                                countSpan.textContent = isHidden ? '(+' + items.length + ')' : '';
+                            }
+                        }
+                    }
+                }
+            };
+
+            // ================================================================
+            // GET FILTERED RESOURCES
+            // ================================================================
+
+            function getFilteredResources() {
+                var filtered = allResources;
+
+                if (currentFilter !== 'all') {
+                    filtered = filtered.filter(function(item) {
+                        return (item.resource_type || '') === currentFilter;
+                    });
+                }
+
+                if (searchTerm.trim()) {
+                    var term = searchTerm.trim().toLowerCase();
+                    filtered = filtered.filter(function(item) {
+                        var title = (item.title || '').toLowerCase();
+                        var description = (item.description || '').toLowerCase();
+                        return title.indexOf(term) > -1 || description.indexOf(term) > -1;
+                    });
+                }
+
+                return filtered;
+            }
+
+            // ================================================================
+            // FILTER & SEARCH
+            // ================================================================
+
+            window.filterByType = function(type, button) {
+                currentFilter = type;
+
+                document.querySelectorAll('.filter-btn').forEach(function(btn) {
+                    btn.classList.remove('active');
+                });
+                if (button) {
+                    button.classList.add('active');
+                }
+
+                renderResources();
+            };
+
+            window.filterResources = function() {
+                if (searchInput) {
+                    searchTerm = searchInput.value;
+                }
+                renderResources();
+            };
+
+            if (searchInput) {
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        filterResources();
+                    }
+                });
+            }
+
+            // ================================================================
+            // HELPERS
+            // ================================================================
+
+            function formatDate(dateStr) {
+                if (!dateStr) return '';
+                try {
+                    var d = new Date(dateStr);
+                    return d.toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                } catch (e) {
+                    return dateStr;
+                }
+            }
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                var div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function showLoading() {
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'block';
+                }
+            }
+
+            function hideLoading() {
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'none';
+                }
+            }
+
+            // ================================================================
+            // STICKY FILTER
+            // ================================================================
+
+            function handleStickyFilter() {
+                if (!filterBar) return;
+
+                var headerHeight = document.querySelector('.site-header')?.offsetHeight || 72;
+
+                window.addEventListener('scroll', function() {
+                    var currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                    if (currentScroll > headerHeight + 20) {
+                        filterBar.classList.add('scrolled');
+                    } else {
+                        filterBar.classList.remove('scrolled');
+                    }
+                }, { passive: true });
+            }
+
+            // ================================================================
+            // INITIALIZE
+            // ================================================================
+
+            document.addEventListener('DOMContentLoaded', function() {
+                loadResources();
+                handleStickyFilter();
+                console.log('BRIDGE-AI Kenya Resources Hub initialized');
+            });
+
+        })();
+    </script>
+</body>
+</html>

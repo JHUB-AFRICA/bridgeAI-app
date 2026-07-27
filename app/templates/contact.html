@@ -1,0 +1,1631 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - CONTACT PAGE                                  -->
+<!-- ================================================================ -->
+<!-- Public Contact: Inquiry type selection with dynamic forms       -->
+<!-- Features: Left/Right layout, 4 inquiry types, dynamic forms,    -->
+<!--           Reach Us Directly cards, loader, consent             -->
+<!-- CSS: Fully self-contained in this file                         -->
+<!-- Rules: No emojis · No decorative symbols · No colons           -->
+<!--        No slashes · No hyphens · Clean typography              -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - BRIDGE-AI Kenya</title>
+    <meta name="description" content="Connect with BRIDGE-AI Kenya. Reach out to our team at JKUAT for inquiries about Smart Mushroom farming, training, partnerships, and media.">
+
+    <!-- ================================================================ -->
+    <!-- PAGE-SPECIFIC STYLES                                           -->
+    <!-- ================================================================ -->
+    <style>
+        /* ================================================================ */
+        /* CSS VARIABLES                                                   */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #061420;
+            --primary: #0F2B3D;
+            --primary-light: #1A4A6B;
+            --gold: #D4A843;
+            --gold-light: #F5D77E;
+            --gold-pale: #F5ECD7;
+            --text-dark: #081A28;
+            --text-body: #1A2A3A;
+            --text-muted: #5A6A7A;
+            --text-light: #8A9AAA;
+            --bg-white: #FFFFFF;
+            --bg-light: #F5F8FA;
+            --bg-lighter: #FAFCFE;
+            --border-light: #E4EAF0;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+            --shadow-xl: 0 16px 56px rgba(0,0,0,0.10);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-body);
+            background: var(--bg-white);
+            line-height: 1.7;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ================================================================ */
+        /* LOADER OVERLAY                                                  */
+        /* ================================================================ */
+        #loaderOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease;
+        }
+
+        #loaderOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border-light);
+            border-top-color: var(--primary-light);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        .loader-text {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            font-family: var(--font-sans);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ================================================================ */
+        /* FLASH MESSAGES - SVG Close Button                              */
+        /* ================================================================ */
+        .flash-messages {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 420px;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .flash-message {
+            pointer-events: auto;
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.12);
+            border-left: 4px solid;
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .flash-message.hiding {
+            animation: slideOutRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateX(40px);
+        }
+
+        .flash-message.flash-success {
+            border-left-color: #1A6A4A;
+        }
+        .flash-message.flash-error {
+            border-left-color: #C0392B;
+        }
+        .flash-message.flash-info {
+            border-left-color: #1A4A6B;
+        }
+        .flash-message.flash-warning {
+            border-left-color: #D4A843;
+        }
+
+        .flash-message .flash-content {
+            flex: 1;
+        }
+        .flash-message .flash-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #081A28;
+        }
+        .flash-message .flash-body {
+            font-size: 0.85rem;
+            color: #5A6A7A;
+        }
+
+        .flash-message .flash-close {
+            background: none;
+            border: none;
+            color: #8A9AAA;
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+            transition: color 0.3s ease;
+            font-family: var(--font-sans);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .flash-message .flash-close:hover {
+            color: #081A28;
+            background: rgba(0,0,0,0.04);
+        }
+
+        .flash-message .flash-close svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .flash-message .flash-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background: #E4EAF0;
+            overflow: hidden;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .flash-message .flash-progress-bar {
+            height: 100%;
+            border-radius: 0 0 12px 12px;
+            animation: progressBar 4s linear forwards;
+            width: 100%;
+        }
+
+        .flash-message.flash-error .flash-progress-bar { background: #C0392B; }
+        .flash-message.flash-success .flash-progress-bar { background: #1A6A4A; }
+        .flash-message.flash-warning .flash-progress-bar { background: #D4A843; }
+        .flash-message.flash-info .flash-progress-bar { background: #1A4A6B; }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideOutRight {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(40px); }
+        }
+
+        @keyframes progressBar {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        /* ================================================================ */
+        /* HERO SECTION                                                    */
+        /* ================================================================ */
+        .contact-hero {
+            background: rgb(9, 85, 39);
+            padding: 50px 24px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(26, 74, 107, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(212, 168, 67, 0.06) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .contact-hero .hero-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-hero .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 16px 4px 12px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 60px;
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.35);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 12px;
+            backdrop-filter: blur(8px);
+        }
+
+        .contact-hero .hero-badge .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.7); }
+        }
+
+        .contact-hero {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.08;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+            margin: 0 0 8px;
+        }
+.hero-title {
+            
+            margin-top: 28px;
+        }
+        .contact-hero .hero-title .highlight {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 40%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contact-hero .hero-subtitle {
+            font-size: 0.95rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.5);
+            max-width: 620px;
+            line-height: 1.8;
+            margin: 0 0 20px;
+            letter-spacing: 0.01em;
+        }
+
+        /* ================================================================ */
+        /* CONTACT SECTION - Two Column Layout                            */
+        /* ================================================================ */
+        .contact-section {
+            padding: 40px 24px 50px;
+            background: var(--bg-white);
+        }
+
+        .contact-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* ─── Left Column - Inquiry Types ─── */
+        .inquiry-types-column {
+            position: sticky;
+            top: 100px;
+        }
+
+        .inquiry-types-column .inquiry-header {
+            margin-bottom: 16px;
+        }
+
+        .inquiry-types-column .inquiry-header .inquiry-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-light);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .inquiry-types-column .inquiry-header .inquiry-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .inquiry-types-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .inquiry-type-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            background: var(--bg-white);
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition);
+            position: relative;
+        }
+
+        .inquiry-type-card:hover {
+            border-color: var(--primary-light);
+            background: var(--bg-lighter);
+            transform: translateX(4px);
+        }
+
+        .inquiry-type-card.active {
+            border-color: var(--gold);
+            background: var(--gold-pale);
+            box-shadow: 0 4px 16px rgba(212, 168, 67, 0.08);
+        }
+
+        .inquiry-type-card .type-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: var(--bg-light);
+            color: var(--text-muted);
+            transition: all var(--transition);
+        }
+
+        .inquiry-type-card .type-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .inquiry-type-card.active .type-icon {
+            background: var(--gold);
+            color: var(--primary-dark);
+        }
+
+        .inquiry-type-card .type-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .inquiry-type-card .type-info .type-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: color var(--transition);
+        }
+
+        .inquiry-type-card.active .type-info .type-name {
+            color: var(--primary-dark);
+        }
+
+        .inquiry-type-card .type-info .type-desc {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            transition: color var(--transition);
+            display: block;
+        }
+
+        .inquiry-type-card .type-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--border-light);
+            flex-shrink: 0;
+            transition: all var(--transition);
+        }
+
+        .inquiry-type-card.active .type-indicator {
+            background: var(--gold);
+            box-shadow: 0 0 12px rgba(212, 168, 67, 0.3);
+        }
+
+        /* ─── Right Column - Form ─── */
+        .form-column {
+            background: var(--bg-white);
+            border: 1.5px solid green;
+            border-radius: var(--radius-lg);
+            padding: 32px 36px 36px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-column .form-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .form-column .form-header .form-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .form-column .form-header .form-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .form-column .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-column .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-body);
+            margin-bottom: 4px;
+        }
+
+        .form-column .form-group label .required {
+            color: #C0392B;
+        }
+
+        .form-column .form-group input,
+        .form-column .form-group select,
+        .form-column .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid green;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: black;
+            background: rgb(233, 255, 237);
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            outline: none;
+        }
+
+        .form-column .form-group input:focus,
+        .form-column .form-group select:focus,
+        .form-column .form-group textarea:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+        }
+
+        .form-column .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-column .form-group .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-column .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235A6A7A' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        .form-column .form-group select:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+        }
+
+        /* ─── Consent Checkbox ─── */
+        .form-column .consent-group {
+            margin: 20px 0 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .form-column .consent-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            accent-color: var(--primary-light);
+            cursor: pointer;
+        }
+
+        .form-column .consent-group label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            cursor: pointer;
+        }
+
+        .form-column .consent-group label a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-column .consent-group label a:hover {
+            text-decoration: underline;
+        }
+
+        /* ─── Submit Button ─── */
+        .form-column .submit-btn {
+            width: 100%;
+            padding: 14px 28px;
+            background: var(--gold);
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            box-shadow: 0 4px 16px rgba(212, 168, 67, 0.12);
+            letter-spacing: 0.02em;
+        }
+
+        .form-column .submit-btn:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212, 168, 67, 0.2);
+        }
+
+        .form-column .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ================================================================ */
+        /* REACH US DIRECTLY - SVG Icons                                  */
+        /* ================================================================ */
+        .reach-section {
+            padding: 40px 24px 50px;
+            background: var(--bg-light);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .reach-container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .reach-section .reach-header {
+            margin-bottom: 24px;
+        }
+
+        .reach-section .reach-header .reach-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-light);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .reach-section .reach-header .reach-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .reach-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .reach-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 22px 24px;
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .reach-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-light);
+        }
+
+        .reach-card .reach-icon-wrap {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gold-pale);
+            color: var(--gold);
+            margin-bottom: 10px;
+            transition: all var(--transition);
+        }
+
+        .reach-card:hover .reach-icon-wrap {
+            background: var(--gold);
+            color: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .reach-card .reach-icon-wrap svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .reach-card .reach-card-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .reach-card .reach-card-content {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .reach-card .reach-card-content a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .reach-card .reach-card-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                      */
+        /* ================================================================ */
+        @media (max-width: 1024px) {
+            .contact-container {
+                grid-template-columns: 280px 1fr;
+                gap: 30px;
+            }
+
+            .reach-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 64px;
+            }
+
+            .contact-hero {
+                padding: 32px 16px 28px;
+            }
+
+            .contact-hero .hero-title {
+                font-size: 2rem;
+            }
+
+            .contact-hero .hero-subtitle {
+                font-size: 0.85rem;
+                max-width: 100%;
+            }
+
+            .contact-section {
+                padding: 24px 16px 30px;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .inquiry-types-column {
+                position: static;
+            }
+
+            .inquiry-types-list {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+
+            .inquiry-type-card {
+                padding: 12px 14px;
+            }
+
+            .inquiry-type-card .type-icon {
+                width: 30px;
+                height: 30px;
+            }
+
+            .inquiry-type-card .type-icon svg {
+                width: 15px;
+                height: 15px;
+            }
+
+            .inquiry-type-card .type-info .type-desc {
+                display: none;
+            }
+
+            .form-column {
+                padding: 24px 18px 28px;
+            }
+
+            .form-column .form-header .form-title {
+                font-size: 1.1rem;
+            }
+
+            .form-column .form-group .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .reach-section {
+                padding: 24px 16px 30px;
+            }
+
+            .reach-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .reach-card {
+                padding: 16px 18px;
+            }
+
+            .flash-messages {
+                top: 76px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+            .flash-message {
+                padding: 14px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contact-hero .hero-title {
+                font-size: 1.6rem;
+            }
+
+            .inquiry-types-list {
+                grid-template-columns: 1fr;
+            }
+
+            .inquiry-type-card .type-info .type-desc {
+                display: block;
+                font-size: 0.65rem;
+            }
+
+            .reach-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-column {
+                padding: 18px 14px 22px;
+            }
+
+            .form-column .submit-btn {
+                padding: 12px 20px;
+                font-size: 0.85rem;
+            }
+
+            .flash-messages {
+                top: 72px;
+                right: 8px;
+                left: 8px;
+            }
+            .flash-message {
+                padding: 12px 14px;
+                font-size: 0.85rem;
+                border-radius: 10px;
+            }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADER OVERLAY                                                  -->
+    <!-- ================================================================ -->
+    <div id="loaderOverlay">
+        <div class="loader-spinner"></div>
+        <p class="loader-text">Loading contact information...</p>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- FLASH MESSAGES - With SVG Close Button                         -->
+    <!-- ================================================================ -->
+    <div class="flash-messages" id="flashMessages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}" role="alert">
+                        <div class="flash-content">
+                            <div class="flash-title">
+                                {% if category == 'success' %}Success
+                                {% elif category == 'error' %}Error
+                                {% elif category == 'warning' %}Warning
+                                {% else %}Notice{% endif %}
+                            </div>
+                            <div class="flash-body">{{ message }}</div>
+                        </div>
+                        <button class="flash-close" onclick="dismissFlash(this.parentElement)" aria-label="Close">
+                            <svg viewBox="0 0 24 24">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                        <div class="flash-progress"><div class="flash-progress-bar"></div></div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT                                                    -->
+    <!-- ================================================================ -->
+    <main>
+
+        <!-- ============================================================ -->
+        <!-- HERO SECTION                                                 -->
+        <!-- ============================================================ -->
+        <section class="contact-hero">
+            <div class="hero-container">
+                
+                <h1 class="hero-title">
+                    Connect with the <span class="highlight">Bridge of Innovation</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Whether you are a smallholder farmer looking for AI solutions or a media house
+                    tracking agritech developments, we are here to collaborate. Reach out to our team
+                    at JKUAT.
+                </p>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- CONTACT SECTION - Two Column Layout                         -->
+        <!-- ============================================================ -->
+        <section class="contact-section">
+            <div class="contact-container">
+
+                <!-- Left Column - Inquiry Types -->
+                <div class="inquiry-types-column">
+                    <div class="inquiry-header">
+                        <span class="inquiry-label">Inquiry Type</span>
+                        <span class="inquiry-sub">Select your category</span>
+                    </div>
+                    <div class="inquiry-types-list" id="inquiryTypesList">
+                        <!-- Generated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Right Column - Dynamic Form -->
+                <div class="form-column">
+                    <div class="form-header">
+                        <h2 class="form-title" id="formTitle">General Enquiry</h2>
+                        <p class="form-subtitle" id="formSubtitle">Have a question about BRIDGE-AI Kenya? Send us a message.</p>
+                    </div>
+                    <form id="contactForm" method="POST" action="/contact/" autocomplete="off">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="form_type" id="formType" value="contact">
+
+                        <!-- Dynamic Form Fields -->
+                        <div id="formFields">
+                            <!-- Generated by JavaScript -->
+                        </div>
+
+                        <!-- Consent -->
+                        <div class="consent-group">
+                            <input type="checkbox" id="consent" name="consent" required>
+                            <label for="consent">
+                                I agree to the Privacy Policy and consent to BRIDGE-AI processing my data for
+                                agricultural research purposes under GDPR and Kenyan Data Protection laws.
+                                <a href="/privacy-and-ethics/">Learn more</a>
+                            </label>
+                        </div>
+
+                        <!-- Submit -->
+                        <button type="submit" class="submit-btn">Submit Inquiry</button>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- REACH US DIRECTLY - SVG Icons                               -->
+        <!-- ============================================================ -->
+        <section class="reach-section">
+            <div class="reach-container">
+                <div class="reach-header">
+                    <span class="reach-label">Reach Us</span>
+                    <h2 class="reach-title">Reach Us Directly</h2>
+                </div>
+                <div class="reach-grid">
+                    <!-- Location -->
+                    <div class="reach-card">
+                        <div class="reach-icon-wrap">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        </div>
+                        <h4 class="reach-card-title">Location</h4>
+                        <p class="reach-card-content">
+                            JKUAT Smart Farm Zone<br>
+                            Juja, Kenya
+                        </p>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="reach-card">
+                        <div class="reach-icon-wrap">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </div>
+                        <h4 class="reach-card-title">Email</h4>
+                        <p class="reach-card-content">
+                            <a href="mailto:bridge-ai@jkuat.ac.ke">bridge-ai@jkuat.ac.ke</a>
+                        </p>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="reach-card">
+                        <div class="reach-icon-wrap">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </div>
+                        <h4 class="reach-card-title">Phone</h4>
+                        <p class="reach-card-content">
+                            +254 700 000 000
+                        </p>
+                    </div>
+
+                    <!-- Office Hours -->
+                    <div class="reach-card">
+                        <div class="reach-icon-wrap">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                        </div>
+                        <h4 class="reach-card-title">Office Hours</h4>
+                        <p class="reach-card-content">
+                            Monday to Friday<br>
+                            8:00 AM - 5:00 PM (EAT)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT                                        -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // INQUIRY TYPES CONFIGURATION
+            // ================================================================
+
+            var inquiryTypes = [{
+    id: 'contact',
+    label: 'General Enquiry',
+    desc: 'Questions about BRIDGE-AI Kenya',
+    formType: 'contact',
+    formTitle: 'General Enquiry',
+    formSubtitle: 'Have a question about BRIDGE-AI Kenya? Send us a message.',
+    fields: [
+        { type: 'text', name: 'name', label: 'Full Name', placeholder: 'E.g. John Kamau', required: true },
+        { type: 'email', name: 'email', label: 'Email Address', placeholder: 'john@example.com', required: true },
+        { type: 'text', name: 'organisation', label: 'Organisation', placeholder: 'Your organisation', required: false },
+        { type: 'hidden', name: 'audience', value: 'general' },
+        { type: 'textarea', name: 'message', label: 'Message', placeholder: 'How can we help you?', required: true }
+    ]
+}, {
+    id: 'training',
+    label: 'Training Interest',
+    desc: 'Bootcamps and capacity building',
+    formType: 'training',
+    formTitle: 'Training Interest',
+    formSubtitle: 'Register your interest in training, bootcamps, and capacity building programs.',
+    fields: [
+        { type: 'text', name: 'name', label: 'Full Name', placeholder: 'E.g. Jane Smith', required: true },
+        { type: 'email', name: 'email', label: 'Email Address', placeholder: 'jane@example.com', required: true },
+        { type: 'tel', name: 'phone', label: 'Phone Number', placeholder: '+254 700 000 000', required: false },
+        { type: 'text', name: 'county', label: 'County', placeholder: 'E.g. Kiambu', required: false },
+        {
+            type: 'select',
+            name: 'audience',
+            label: 'Audience Type',
+            placeholder: 'Select one',
+            options: [
+                { value: 'farmer', label: 'Farmer / Mushroom Grower' },
+                { value: 'youth', label: 'Youth' },
+                { value: 'student', label: 'Student' },
+                { value: 'entrepreneur', label: 'Entrepreneur' },
+                { value: 'sme', label: 'SME' },
+                { value: 'other', label: 'Other' }
+            ],
+            required: false
+        },
+        {
+            type: 'select',
+            name: 'training_interest',
+            label: 'Training Interest',
+            placeholder: 'Select one',
+            options: [
+                { value: 'smart_mushroom', label: 'Smart Mushroom Farming' },
+                { value: 'iot_sensors', label: 'IoT Sensors and Monitoring' },
+                { value: 'genai', label: 'GenAI for Agriculture' },
+                { value: 'digital_skills', label: 'Digital Skills' },
+                { value: 'entrepreneurship', label: 'Agri-Entrepreneurship' },
+                { value: 'other', label: 'Other' }
+            ],
+            required: false
+        },
+        { type: 'textarea', name: 'message', label: 'Message', placeholder: 'Tell us about your training interest', required: true }
+    ]
+}, {
+    id: 'sme',
+    label: 'SME and Partners',
+    desc: 'Mentoring and partnerships',
+    formType: 'sme',
+    formTitle: 'SME and Partners',
+    formSubtitle: 'Interested in mentoring, partnerships, or innovation challenges? Let us know.',
+    fields: [
+        { type: 'text', name: 'name', label: 'Full Name', placeholder: 'E.g. Peter Mwangi', required: true },
+        { type: 'email', name: 'email', label: 'Email Address', placeholder: 'peter@example.com', required: true },
+        { type: 'text', name: 'organisation', label: 'Organisation', placeholder: 'Your organisation', required: true },
+        { type: 'text', name: 'industry', label: 'Industry', placeholder: 'E.g. Agritech', required: false },
+        { type: 'text', name: 'interest', label: 'Interest Type', placeholder: 'E.g. Mentoring, Partnership', required: false },
+        { type: 'hidden', name: 'audience', value: 'sme' },
+        { type: 'textarea', name: 'message', label: 'Message', placeholder: 'Tell us about your interest', required: true }
+    ]
+}, {
+    id: 'media',
+    label: 'Media Request',
+    desc: 'Press and media enquiries',
+    formType: 'media',
+    formTitle: 'Media Request',
+    formSubtitle: 'For media enquiries, interviews, and press coverage of BRIDGE-AI Kenya.',
+    fields: [
+        { type: 'text', name: 'name', label: 'Full Name', placeholder: 'E.g. Sarah Wanjiru', required: true },
+        { type: 'email', name: 'email', label: 'Email Address', placeholder: 'sarah@media.com', required: true },
+        { type: 'text', name: 'outlet', label: 'Outlet', placeholder: 'E.g. Daily Nation', required: false },
+        {
+            type: 'select',
+            name: 'request_type',
+            label: 'Request Type',
+            placeholder: 'Select one',
+            options: [
+                { value: 'interview', label: 'Interview Request' },
+                { value: 'press_info', label: 'Press Information' },
+                { value: 'site_visit', label: 'Site Visit' },
+                { value: 'photo_video', label: 'Photo/Video Request' },
+                { value: 'media_kit', label: 'Media Kit' },
+                { value: 'other', label: 'Other' }
+            ],
+            required: false
+        },
+        { type: 'date', name: 'deadline', label: 'Deadline', placeholder: '', required: false },
+        { type: 'hidden', name: 'audience', value: 'media' },
+        { type: 'textarea', name: 'message', label: 'Message', placeholder: 'Tell us about your request', required: true }
+    ]
+}];
+            // ================================================================
+            // SVG ICONS FOR INQUIRY TYPES
+            // ================================================================
+
+            var inquiryIcons = {
+                'contact': '<svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+                'training': '<svg viewBox="0 0 24 24"><path d="M12 6v7"/><path d="M15 10l-3 3-3-3"/><circle cx="12" cy="12" r="10"/></svg>',
+                'sme': '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+                'media': '<svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>'
+            };
+
+            // ================================================================
+            // STATE
+            // ================================================================
+
+            var activeType = 'contact';
+
+            // ================================================================
+            // DOM REFS
+            // ================================================================
+
+            var loaderOverlay = document.getElementById('loaderOverlay');
+            var inquiryTypesList = document.getElementById('inquiryTypesList');
+            var formFields = document.getElementById('formFields');
+            var formTitle = document.getElementById('formTitle');
+            var formSubtitle = document.getElementById('formSubtitle');
+            var formType = document.getElementById('formType');
+
+            // ================================================================
+            // LOADER
+            // ================================================================
+
+            function showLoader() {
+                if (loaderOverlay) {
+                    loaderOverlay.classList.remove('hidden');
+                    loaderOverlay.style.display = 'flex';
+                }
+            }
+
+            function hideLoader() {
+                if (loaderOverlay) {
+                    loaderOverlay.classList.add('hidden');
+                    setTimeout(function() {
+                        loaderOverlay.style.display = 'none';
+                    }, 600);
+                }
+            }
+
+            // ================================================================
+            // RENDER INQUIRY TYPES
+            // ================================================================
+
+            function renderInquiryTypes() {
+                var html = '';
+                inquiryTypes.forEach(function(type) {
+                    var activeClass = type.id === activeType ? 'active' : '';
+                    var iconSvg = inquiryIcons[type.id] || '';
+                    html += `
+                        <div class="inquiry-type-card ${activeClass}" data-type="${type.id}" onclick="selectInquiryType('${type.id}')">
+                            <div class="type-icon">${iconSvg}</div>
+                            <div class="type-info">
+                                <span class="type-name">${type.label}</span>
+                                <span class="type-desc">${type.desc}</span>
+                            </div>
+                            <div class="type-indicator"></div>
+                        </div>
+                    `;
+                });
+                inquiryTypesList.innerHTML = html;
+            }
+
+            // ================================================================
+            // SELECT INQUIRY TYPE
+            // ================================================================
+
+            window.selectInquiryType = function(typeId) {
+                activeType = typeId;
+                renderInquiryTypes();
+                renderFormFields(typeId);
+                updateFormHeader(typeId);
+                updateFormType(typeId);
+            };
+
+            // ================================================================
+            // UPDATE FORM TYPE
+            // ================================================================
+
+            function updateFormType(typeId) {
+                var type = inquiryTypes.find(function(t) { return t.id === typeId; });
+                if (type && formType) {
+                    formType.value = type.formType;
+                }
+            }
+
+            // ================================================================
+            // UPDATE FORM HEADER
+            // ================================================================
+
+            function updateFormHeader(typeId) {
+                var type = inquiryTypes.find(function(t) { return t.id === typeId; });
+                if (type) {
+                    formTitle.textContent = type.formTitle;
+                    formSubtitle.textContent = type.formSubtitle;
+                }
+            }
+
+            // ================================================================
+            // RENDER FORM FIELDS
+            // ================================================================
+
+            function renderFormFields(typeId) {
+                var type = inquiryTypes.find(function(t) { return t.id === typeId; });
+                if (!type) return;
+
+                var html = '';
+                
+
+                type.fields.forEach(function(field) {
+                    var requiredAttr = field.required ? 'required' : '';
+                    var requiredStar = field.required ? ' <span class="required">*</span>' : '';
+
+                    if (field.type === 'hidden') {
+                        html += `<input type="hidden" name="${field.name}" value="${field.value || ''}">`;
+                        return;
+                    }
+
+                    if (field.type === 'select') {
+    var optionsHtml = '';
+    if (field.options && field.options.length > 0 && typeof field.options[0] === 'object') {
+        // Handle object format: { value: 'x', label: 'X' }
+        optionsHtml = field.options.map(function(opt) {
+            return `<option value="${opt.value}">${opt.label}</option>`;
+        }).join('');
+    } else {
+        // Handle string format (backward compatibility)
+        optionsHtml = field.options.map(function(opt) {
+            return `<option value="${opt}">${opt}</option>`;
+        }).join('');
+    }
+    html += `
+        <div class="form-group">
+            <label>${field.label}${requiredStar}</label>
+            <select name="${field.name}" ${requiredAttr}>
+                <option value="">${field.placeholder || 'Select one'}</option>
+                ${optionsHtml}
+            </select>
+        </div>
+    `;
+}
+ else if (field.type === 'textarea') {
+                        html += `
+                            <div class="form-group">
+                                <label>${field.label}${requiredStar}</label>
+                                <textarea name="${field.name}" placeholder="${field.placeholder || ''}" ${requiredAttr}></textarea>
+                            </div>
+                        `;
+                    } else if (field.type === 'date') {
+                        html += `
+                            <div class="form-group">
+                                <label>${field.label}${requiredStar}</label>
+                                <input type="date" name="${field.name}" ${requiredAttr}>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="form-group">
+                                <label>${field.label}${requiredStar}</label>
+                                <input type="${field.type}" name="${field.name}" placeholder="${field.placeholder || ''}" ${requiredAttr}>
+                            </div>
+                        `;
+                    }
+                });
+
+                formFields.innerHTML = html;
+            }
+
+            // ================================================================
+            // FLASH MESSAGE - Dismiss
+            // ================================================================
+
+            window.dismissFlash = function(el) {
+                if (!el || el.classList.contains('hiding')) return;
+                el.classList.add('hiding');
+                setTimeout(function() {
+                    if (el.parentElement) {
+                        el.remove();
+                    }
+                }, 400);
+            };
+
+            function autoDismissFlash() {
+                var messages = document.querySelectorAll('.flash-message');
+                messages.forEach(function(msg) {
+                    var progressBar = msg.querySelector('.flash-progress-bar');
+                    if (progressBar) {
+                        setTimeout(function() {
+                            dismissFlash(msg);
+                        }, 5000);
+                    }
+                });
+            }
+
+            // ================================================================
+            // FORM SUBMISSION HANDLING
+            // ================================================================
+
+            function setupFormSubmission() {
+                var form = document.getElementById('contactForm');
+                if (!form) return;
+
+                form.addEventListener('submit', function(e) {
+                    var consent = document.getElementById('consent');
+                    if (!consent.checked) {
+                        e.preventDefault();
+                        showClientFlash('Please agree to the Privacy Policy before submitting.', 'error');
+                        return;
+                    }
+
+                    var requiredFields = form.querySelectorAll('[required]');
+                    var isValid = true;
+                    var firstInvalid = null;
+                    requiredFields.forEach(function(field) {
+                        if (!field.value.trim()) {
+                            isValid = false;
+                            field.style.borderColor = '#C0392B';
+                            field.style.boxShadow = '0 0 0 4px rgba(192,57,43,0.1)';
+                            if (!firstInvalid) firstInvalid = field;
+                        } else {
+                            field.style.borderColor = '';
+                            field.style.boxShadow = '';
+                        }
+                    });
+
+                    if (!isValid) {
+                        e.preventDefault();
+                        showClientFlash('Please fill in all required fields.', 'error');
+                        if (firstInvalid) {
+                            firstInvalid.focus();
+                        }
+                        return;
+                    }
+
+                    showLoader();
+                });
+            }
+
+            // ================================================================
+            // CLIENT-SIDE FLASH MESSAGE
+            // ================================================================
+
+            function showClientFlash(message, type) {
+                var container = document.getElementById('flashMessages');
+                if (!container) {
+                    var newContainer = document.createElement('div');
+                    newContainer.className = 'flash-messages';
+                    newContainer.id = 'flashMessages';
+                    document.body.appendChild(newContainer);
+                    container = newContainer;
+                }
+
+                var flash = document.createElement('div');
+                flash.className = 'flash-message flash-' + (type || 'info');
+                flash.innerHTML = `
+                    <div class="flash-content">
+                        <div class="flash-title">${type === 'error' ? 'Error' : 'Notice'}</div>
+                        <div class="flash-body">${message}</div>
+                    </div>
+                    <button class="flash-close" onclick="dismissFlash(this.parentElement)" aria-label="Close">
+                        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="flash-progress"><div class="flash-progress-bar"></div></div>
+                `;
+
+                container.appendChild(flash);
+
+                setTimeout(function() {
+                    dismissFlash(flash);
+                }, 5000);
+            }
+
+                // ================================================================
+                // GET URL PARAMETERS
+                // ================================================================
+
+                function getUrlParams() {
+                    var params = new URLSearchParams(window.location.search);
+                    return {
+                        type: params.get('type'),
+                        event: params.get('event'),
+                        date: params.get('date'),
+                        location: params.get('location')
+                    };
+                }
+                // ================================================================
+                // AUTO-FILL SME FORM
+                // ================================================================
+
+                function autoFillSmeForm(params) {
+                    if (params.type !== 'sme') return;
+
+                    // Set active type to sme
+                    activeType = 'sme';
+
+                    // Re-render inquiry types to highlight SME
+                    renderInquiryTypes();
+
+                    // Render SME form fields
+                    renderFormFields('sme');
+                    updateFormHeader('sme');
+                    updateFormType('sme');
+                }
+
+                // ================================================================
+                // FORMAT DATE
+                // ================================================================
+
+                function formatEventDate(dateStr) {
+                    if (!dateStr) return '';
+                    try {
+                        var d = new Date(dateStr);
+                        return d.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                    } catch {
+                        return dateStr;
+                    }
+                }
+
+                // ================================================================
+                // AUTO-FILL TRAINING INTEREST FORM
+                // ================================================================
+
+                function autoFillTrainingForm(params) {
+                    if (params.type !== 'training') return;
+
+                    // Set active type to training
+                    activeType = 'training';
+
+                    // Re-render inquiry types to highlight training
+                    renderInquiryTypes();
+
+                    // Render training form fields
+                    renderFormFields('training');
+                    updateFormHeader('training');
+                    updateFormType('training');
+
+                    // Pre-fill the message field with event details
+                    var messageField = document.querySelector('textarea[name="message"]');
+                    if (messageField) {
+                        var message = 'I am interested in registering for the following training event:\n\n';
+                        if (params.event) {
+                            message += 'Event: ' + decodeURIComponent(params.event) + '\n';
+                        }
+                        if (params.date) {
+                            message += 'Date: ' + formatEventDate(params.date) + '\n';
+                        }
+                        if (params.location) {
+                            message += 'Location: ' + decodeURIComponent(params.location) + '\n';
+                        }
+                        message += '\nPlease provide more information about this training opportunity.';
+
+                        messageField.value = message;
+                    }
+
+                    // Auto-select "Smart Mushroom Farming" as training interest if available
+                    var trainingSelect = document.querySelector('select[name="training_interest"]');
+                    if (trainingSelect) {
+                        // Check if Smart Mushroom option exists
+                        var options = trainingSelect.querySelectorAll('option');
+                        for (var i = 0; i < options.length; i++) {
+                            if (options[i].value === 'smart_mushroom') {
+                                trainingSelect.value = 'smart_mushroom';
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // ================================================================
+                // INITIALIZE
+                // ================================================================
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Check URL parameters first
+                    var urlParams = getUrlParams();
+
+                    // Set default active type
+                    activeType = 'contact';
+
+                    // Render inquiry types
+                    renderInquiryTypes();
+
+                    // If type is training, auto-fill the training form
+                    if (urlParams.type === 'training') {
+                        autoFillTrainingForm(urlParams);
+                    }
+                    // If type is sme, auto-fill the SME form
+                    else if (urlParams.type === 'sme') {
+                        autoFillSmeForm(urlParams);
+                    } else {
+                        // Default: render contact form
+                        renderFormFields('contact');
+                        updateFormHeader('contact');
+                        updateFormType('contact');
+                    }
+
+                    setupFormSubmission();
+                    autoDismissFlash();
+                    hideLoader();
+
+                    console.log('BRIDGE-AI Kenya Contact page initialized');
+                });
+
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1459 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA — HOMEPAGE                                      -->
+<!-- ================================================================ -->
+<!-- Design: Split Screen Hero — Image Left, Content Right          -->
+<!-- Single latest image from /uploads/activities/                  -->
+<!-- Font: Inter, sans-serif (clean, modern)                        -->
+<!-- Clean, spacious, professional landing page feel.              -->
+<!-- All Jinja logic, element IDs and JS hooks preserved unchanged. -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRIDGE-AI Kenya &mdash; AI for African Agriculture</title>
+    <meta name="description" content="BRIDGE-AI Kenya at JHUB Africa: GenAI, IoT and digital skills for climate-smart mushroom farming and rural innovation in Kenya.">
+
+    <style>
+        /* ================================================================ */
+        /* PAGE LOADER - Prevents FOUC                                     */
+        /* ================================================================ */
+        #page-loader {
+            position: fixed;
+            inset: 0;
+            background: #F7F2E6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        #page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-spinner {
+            width: 34px;
+            height: 34px;
+            border: 2.5px solid #E1D8C0;
+            border-top-color: #7C4FA3;
+            border-radius: 50%;
+            animation: loaderSpin 0.8s linear infinite;
+        }
+
+        @keyframes loaderSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        #page-loader p {
+            margin-top: 16px;
+            font-size: 0.7rem;
+            color: #6E7767;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        /* ================================================================ */
+        /* IMPORTS & VARIABLES                                             */
+        /* ================================================================ */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+        :root {
+            --ink:            #17241B;
+            --ink-soft:       #37453A;
+            --paper:          #F7F2E6;
+            --paper-alt:      #EFE6CE;
+            --paper-card:     #FFFDF7;
+            --moss:           #26432B;
+            --moss-deep:      #16281A;
+            --moss-mid:       #3E6B45;
+            --growlight:      #7C4FA3;
+            --growlight-deep: #5B3878;
+            --growlight-tint: rgba(124, 79, 163, 0.09);
+            --clay:           #BE5A2B;
+            --clay-tint:      rgba(190, 90, 43, 0.1);
+            --mist:           #6E7767;
+            --line:           #E1D8C0;
+            --line-on-dark:   rgba(247, 242, 230, 0.14);
+
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+            --shadow-sm: 0 2px 10px rgba(23, 36, 27, 0.05);
+            --shadow-md: 0 12px 32px rgba(23, 36, 27, 0.08);
+            --shadow-lg: 0 24px 64px rgba(23, 36, 27, 0.12);
+
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 22px;
+            --transition: 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--ink-soft);
+            background: var(--paper);
+            line-height: 1.65;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        img { max-width: 100%; height: auto; display: block; }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        ::selection { background: var(--growlight); color: #fff; }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--moss-mid);
+        }
+
+        .eyebrow::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--growlight);
+            flex-shrink: 0;
+        }
+
+        .eyebrow.on-dark { color: rgba(247, 242, 230, 0.7); }
+        .eyebrow.on-dark::before { background: #C89BE8; }
+
+        /* ================================================================ */
+        /* SPLIT SCREEN HERO — Image Left, Content Right                  */
+        /* ================================================================ */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: stretch;
+            overflow: hidden;
+            background: var(--paper-card);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            min-height: 80vh;
+        }
+
+        /* ─── Left: Image ─── */
+        .hero-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            background: var(--moss-deep);
+            height: 100%;
+            min-height: 400px;
+        }
+
+        .hero-image-wrapper .hero-slide-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity;
+            opacity: 0;
+        }
+
+        .hero-image-wrapper .hero-slide-bg.active {
+    opacity: 1;
+    /* animation: kenBurns 20s ease-in-out infinite alternate; */  /* ← COMMENT OUT or DELETE */
+}
+
+        @keyframes kenBurns {
+            0% { transform: scale(1) translate(0, 0); }
+            33% { transform: scale(1.04) translate(-1%, -0.5%); }
+            66% { transform: scale(1.07) translate(1%, 0.5%); }
+            100% { transform: scale(1.03) translate(0, -1%); }
+        }
+
+        /* ─── Right: Content ─── */
+        .hero-content-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 48px;
+            background: var(--paper-card);
+        }
+
+        .hero-content {
+            max-width: 520px;
+            width: 100%;
+        }
+
+        .hero-content .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            
+            
+            border-radius: 60px;
+            font-family: var(--font-mono);
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--growlight-deep);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 20px;
+        }
+
+        .hero-content .hero-badge .badge-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--growlight);
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-body);
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.04;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+
+        .hero-content h1 .highlight {
+            font-style: italic;
+            color: var(--moss);
+            position: relative;
+        }
+
+        .hero-content .hero-subtitle {
+            font-size: 1.05rem;
+            color: var(--ink-soft);
+            line-height: 1.5;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .hero-content .hero-description {
+            font-size: 0.9rem;
+            color: var(--mist);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            max-width: 460px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 28px;
+            background: var(--moss);
+            color: var(--paper);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 50px;
+            transition: all 0.35s var(--transition);
+            border: 1px solid var(--moss);
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--moss-deep);
+            border-color: var(--moss-deep);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(22, 40, 26, 0.25);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 28px;
+            background: transparent;
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 50px;
+            border: 1.5px solid var(--line);
+            transition: all 0.35s var(--transition);
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--growlight);
+            color: var(--growlight-deep);
+            background: var(--growlight-tint);
+        }
+
+        .btn-icon {
+            width: 17px;
+            height: 17px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        /* ─── Stats Row ─── */
+        .hero-stats {
+            display: flex;
+            gap: 28px;
+            padding-top: 18px;
+            border-top: 1px solid var(--line);
+        }
+
+        .hero-stats .stat-item {
+            text-align: left;
+        }
+
+        .hero-stats .stat-number {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--ink);
+            display: block;
+            line-height: 1.1;
+        }
+
+        .hero-stats .stat-number .stat-accent {
+            color: var(--growlight-deep);
+        }
+
+        .hero-stats .stat-label {
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: var(--mist);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* ================================================================ */
+        /* CONSOLIDATED FACT STRIP                                         */
+        /* ================================================================ */
+        .fact-strip {
+            position: relative;
+            background: var(--moss-deep);
+            overflow-x: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .fact-strip-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+        }
+
+        .fact {
+            padding: 22px 22px;
+            border-left: 1px solid var(--line-on-dark);
+        }
+
+        .fact:first-child { border-left: none; }
+
+        .fact .fact-label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(247, 242, 230, 0.5);
+            margin-bottom: 6px;
+        }
+
+        .fact .fact-value {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.98rem;
+            font-weight: 500;
+            color: var(--paper);
+            letter-spacing: -0.2px;
+        }
+
+        .fact .fact-value .accent { color: #C89BE8; }
+
+        /* ================================================================ */
+        /* SECTION COMMON                                                   */
+        /* ================================================================ */
+        .section { padding: 96px 0; }
+
+        .section-header {
+            margin-bottom: 52px;
+            max-width: 640px;
+        }
+
+        .section-header.centered { margin-left: auto; margin-right: auto; text-align: center; }
+
+        .section-header h2 {
+            font-family: var(--font-body);
+            font-size: 2.7rem;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.02em;
+            line-height: 1.12;
+            margin-top: 10px;
+        }
+
+        .section-header h2 .highlight { font-style: italic; color: var(--moss); font-weight: 500; }
+        .section-header h2 .highlight.purple { color: var(--growlight-deep); }
+
+        .section-header p {
+            color: var(--mist);
+            font-size: 1.02rem;
+            margin-top: 14px;
+        }
+
+        .section-alt { background: var(--paper-alt); }
+
+        /* ================================================================ */
+        /* FEATURE CARDS ("Why It Matters")                                 */
+        /* ================================================================ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--line);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .feature-card {
+            background: var(--paper-card);
+            padding: 40px 32px 36px;
+            transition: all 0.4s var(--transition);
+            position: relative;
+            height: 80vh;
+            gap: 5rem;
+        }
+
+        .feature-card:hover { background: var(--growlight-tint); }
+
+        .feature-card .feature-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 22px;
+            border: 1.5px solid var(--moss);
+            color: var(--moss);
+            transition: all 0.35s var(--transition);
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--moss);
+            color: var(--paper);
+            transform: scale(1.06);
+        }
+
+        .feature-card .feature-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+
+        .feature-card .feature-kicker {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--clay);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .feature-card h3 {
+            font-family: var(--font-body);
+            font-size: 1.28rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .feature-card p { color: var(--mist); font-size: 0.92rem; line-height: 1.7; margin: 0; }
+
+        /* ================================================================ */
+        /* DOING CARDS ("What JKUAT Is Doing")                              */
+        /* ================================================================ */
+        .doing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .doing-card {
+            background: var(--paper-card);
+            border-radius: var(--radius-md);
+            padding: 28px 26px;
+            border: 1px solid var(--line);
+            transition: all 0.4s var(--transition);
+            position: relative;
+        }
+
+        .doing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--growlight);
+        }
+
+        .doing-card .doing-code {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 26px;
+            padding: 0 8px;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            color: var(--paper);
+            background: var(--moss);
+            border-radius: 5px;
+            margin-bottom: 14px;
+        }
+
+        .doing-card h4 {
+            font-family: var(--font-body);
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+
+        .doing-card p { color: var(--mist); font-size: 0.87rem; line-height: 1.7; margin: 0; }
+
+        /* ================================================================ */
+        /* COUNTERS ("Progress in the field")                               */
+        /* ================================================================ */
+        .counters-section {
+            background: var(--moss-deep);
+            padding: 64px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .counters-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(247,242,230,0.05) 1px, transparent 1px),
+                               linear-gradient(90deg, rgba(247,242,230,0.05) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        .counters-header { position: relative; margin-bottom: 40px; }
+
+        .counters-grid {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1px;
+            background: var(--line-on-dark);
+            border: 1px solid var(--line-on-dark);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .counter-item { background: var(--moss-deep); padding: 22px 16px; text-align: left; }
+
+        .counter-item .counter-number {
+            font-family: var(--font-mono);
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: var(--paper);
+            display: block;
+            line-height: 1.1;
+            letter-spacing: -1px;
+        }
+
+        .counter-item .counter-number .counter-suffix { font-size: 1.3rem; font-weight: 500; color: #C89BE8; }
+
+        .counter-item .counter-label {
+            color: rgba(247, 242, 230, 0.55);
+            font-size: 0.72rem;
+            font-weight: 500;
+            margin-top: 6px;
+            display: block;
+        }
+
+        /* ================================================================ */
+        /* ACTIVITIES & EVENTS                                              */
+        /* ================================================================ */
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 56px;
+        }
+
+        .col-heading { margin-bottom: 26px; }
+        .col-heading h2 {
+            font-family: var(--font-body);
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-top: 6px;
+        }
+        .col-heading h2 .accent { font-style: italic; color: var(--moss); }
+        .col-heading h2 .accent.purple { color: var(--growlight-deep); }
+
+        .activity-item {
+            display: flex;
+            gap: 18px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--line);
+            align-items: flex-start;
+            transition: all 0.3s var(--transition);
+        }
+
+        .activity-item:first-child { padding-top: 0; }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-item:hover { padding-left: 6px; }
+
+        .activity-item .activity-img {
+            width: 76px;
+            height: 76px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            flex-shrink: 0;
+            background: var(--paper-alt);
+        }
+
+        .activity-item .activity-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        .activity-item .activity-img .placeholder {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
+            letter-spacing: 0.04em; color: var(--paper);
+            background: var(--moss);
+        }
+
+        .activity-item .activity-meta {
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;
+        }
+
+        .activity-item .activity-meta .date {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--mist);
+            font-weight: 500;
+        }
+
+        .activity-item .activity-meta .tag {
+            display: inline-block;
+            font-family: var(--font-mono);
+            background: var(--growlight-tint);
+            color: var(--growlight-deep);
+            padding: 2px 9px;
+            border-radius: 4px;
+            font-size: 0.58rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .activity-item h4 {
+            font-family: var(--font-body);
+            font-size: 1.02rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 3px;
+        }
+        .activity-item p { color: var(--mist); font-size: 0.85rem; line-height: 1.6; margin: 0; }
+
+        .event-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 15px 18px;
+            background: var(--paper-card);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            transition: all 0.3s var(--transition);
+            border: 1px solid var(--line);
+        }
+
+        .event-item:hover { border-color: var(--growlight); box-shadow: var(--shadow-sm); transform: translateX(4px); }
+
+        .event-item .event-date {
+            text-align: center;
+            background: var(--moss);
+            color: var(--paper);
+            padding: 7px 12px;
+            border-radius: var(--radius-sm);
+            min-width: 50px;
+            flex-shrink: 0;
+            font-family: var(--font-mono);
+        }
+
+        .event-item .event-date .day { font-size: 1.05rem; font-weight: 600; display: block; line-height: 1.1; }
+        .event-item .event-date .month { font-size: 0.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; display: block; }
+
+        .event-item .event-info { flex: 1; }
+        .event-item .event-info h5 {
+            font-family: var(--font-body);
+            font-size: 0.94rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin: 0;
+        }
+        .event-item .event-info p { color: var(--mist); font-size: 0.78rem; margin: 0; }
+
+        .event-item .event-status {
+            font-family: var(--font-mono);
+            font-size: 0.56rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 4px 12px;
+            border-radius: 50px;
+            background: var(--moss-mid);
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .event-item .event-status.soon { background: var(--clay); }
+
+        .view-all {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 18px;
+            color: var(--moss);
+            font-weight: 600;
+            font-size: 0.88rem;
+            text-decoration: none;
+            transition: all 0.3s var(--transition);
+        }
+
+        .view-all:hover { gap: 10px; color: var(--growlight-deep); }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                       */
+        /* ================================================================ */
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            .hero-image-wrapper {
+                min-height: 320px;
+                max-height: 420px;
+            }
+
+            .hero-content-wrapper {
+                padding: 40px 24px;
+            }
+
+            .hero-content h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero-stats {
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+
+            .hero-stats .stat-number {
+                font-size: 1.2rem;
+            }
+
+            .features-grid { grid-template-columns: 1fr; }
+            .doing-grid { grid-template-columns: repeat(2, 1fr); }
+            .two-col-grid { grid-template-columns: 1fr; gap: 44px; }
+            .counters-grid { grid-template-columns: repeat(3, 1fr); }
+            .section-header h2 { font-size: 2.2rem; }
+            .fact-strip-inner { grid-template-columns: repeat(3, 1fr); }
+            .fact:nth-child(4) { border-left: none; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 64px; }
+
+            .hero { min-height: auto; }
+
+            .hero-image-wrapper {
+                min-height: 240px;
+                max-height: 300px;
+            }
+
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-content .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-content .hero-description {
+                font-size: 0.9rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .hero-buttons .btn-primary,
+            .hero-buttons .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hero-stats {
+                gap: 16px;
+                padding-top: 16px;
+            }
+
+            .hero-stats .stat-number {
+                font-size: 1rem;
+            }
+
+            .hero-stats .stat-label {
+                font-size: 0.6rem;
+            }
+
+            .fact-strip-inner { grid-template-columns: repeat(2, 1fr); }
+            .fact:nth-child(2n+1) { border-left: none; }
+            .fact { border-bottom: 1px solid var(--line-on-dark); }
+
+            .section { padding: 60px 0; }
+            .section-header h2 { font-size: 1.9rem; }
+            .doing-grid { grid-template-columns: 1fr; }
+            .counters-grid { grid-template-columns: repeat(2, 1fr); }
+            .counter-item .counter-number { font-size: 1.8rem; }
+            .activity-item { flex-direction: column; gap: 12px; }
+            .activity-item .activity-img { width: 100%; height: 150px; }
+            .event-item { flex-wrap: wrap; }
+            .event-item .event-status { width: 100%; text-align: center; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 { font-size: 1.8rem; }
+            .hero-content .hero-subtitle { font-size: 0.9rem; }
+            .hero-content .hero-description { font-size: 0.85rem; }
+            .hero-stats { gap: 12px; }
+            .hero-stats .stat-number { font-size: 0.9rem; }
+            .fact-strip-inner { grid-template-columns: repeat(2, 1fr); }
+            .counters-grid { grid-template-columns: repeat(2, 1fr); }
+            .feature-card { padding: 30px 22px; }
+            .doing-card { padding: 24px 20px; }
+        }
+
+        /* ================================================================ */
+        /* ACCESSIBILITY                                                    */
+        /* ================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+            .hero-image-wrapper .hero-slide-bg { transition: none !important; animation: none !important; }
+        }
+
+        .btn-primary:focus-visible,
+        .btn-secondary:focus-visible,
+        .view-all:focus-visible {
+            outline: 2px solid var(--growlight);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-contrast: high) {
+            .feature-card, .doing-card, .event-item { border: 2px solid var(--line); }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                        */
+        /* ================================================================ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--paper-alt); }
+        ::-webkit-scrollbar-thumb { background: var(--moss-mid); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--moss); }
+    </style>
+</head>
+<body>
+    <!-- ============================================================ -->
+    <!-- LOADING OVERLAY - Prevents FOUC                              -->
+    <!-- ============================================================ -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+        <p>Loading</p>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- HEADER (included)                                               -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT                                                    -->
+    <!-- ================================================================ -->
+    <main>
+
+        <!-- ============================================================ -->
+        <!-- SPLIT SCREEN HERO — Single Latest Image                     -->
+        <!-- ============================================================ -->
+        <section class="hero" id="heroSection">
+            <div class="hero-grid">
+
+                <!-- Left: Single Latest Image -->
+                <div class="hero-image-wrapper" id="heroImageWrapper">
+                    <div id="heroSlidesContainer">
+                        <!-- Single image populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Right: Content -->
+                <div class="hero-content-wrapper">
+                    <div class="hero-content">
+                        <span class="hero-badge">
+                            
+                            Horizon Europe Project
+                        </span>
+
+                        <h1>
+                            BRIDGE&#8209;AI<br>
+                            <span class="highlight">Kenya at JKUAT</span>
+                        </h1>
+
+                        <p class="hero-subtitle">
+                            GenAI, IoT &amp; digital skills for climate-smart farming.
+                        </p>
+
+                        <p class="hero-description">
+                            Exploring how AI, sensor data, and inclusive training help farmers, youth, and SMEs adopt practical digital agriculture solutions.
+                        </p>
+
+                        <div class="hero-buttons">
+                            <a href="{{ url_for('public.smart_mushrooms') }}" class="btn-primary">
+                                <svg class="btn-icon" viewBox="0 0 24 24">
+                                    <path d="M12 2C8 4 4 7 4 12c0 4 2 7 8 7s8-3 8-7c0-5-4-8-8-10z"/>
+                                    <path d="M12 12c-2 0-3-1-3-2s1-2 3-2 3 1 3 2-1 2-3 2z"/>
+                                    <path d="M12 14v4"/>
+                                    <path d="M10 16h4"/>
+                                </svg>
+                                Smart-Mushrooms Pilot
+                            </a>
+                            <a href="{{ url_for('public.training_wp5') }}" class="btn-secondary">
+                                <svg class="btn-icon" viewBox="0 0 24 24">
+                                    <path d="M12 6v7m0 0l-2-2m2 2l2-2M4 4v16h16V4H4z"/>
+                                    <path d="M8 12h8"/>
+                                </svg>
+                                Training
+                            </a>
+                        </div>
+
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">36 <span class="stat-accent">Months</span></span>
+                                <span class="stat-label">Duration</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">3 <span class="stat-accent">Countries</span></span>
+                                <span class="stat-label">KE · TN · NG</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">8 <span class="stat-accent">Partners</span></span>
+                                <span class="stat-label">Consortium</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- CONSOLIDATED FACT STRIP                                     -->
+        <!-- ============================================================ -->
+        <div class="fact-strip">
+            <div class="fact-strip-inner">
+                <div class="fact">
+                    <span class="fact-label">Duration</span>
+                    <span class="fact-value">36 <span class="accent">Months</span></span>
+                </div>
+                <div class="fact">
+                    <span class="fact-label">Countries</span>
+                    <span class="fact-value">KE <span class="accent">&middot;</span> TN <span class="accent">&middot;</span> NG</span>
+                </div>
+                <div class="fact">
+                    <span class="fact-label">Capacity Lead</span>
+                    <span class="fact-value">JKUAT <span class="accent">(WP5)</span></span>
+                </div>
+                <div class="fact">
+                    <span class="fact-label">Pilot Site</span>
+                    <span class="fact-value">Smart Farm Zone</span>
+                </div>
+                <div class="fact">
+                    <span class="fact-label">Partners</span>
+                    <span class="fact-value">8 <span class="accent">Consortium</span></span>
+                </div>
+                <div class="fact">
+                    <span class="fact-label">Farmers Reached</span>
+                    <span class="fact-value">400K<span class="accent">+</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- WHY IT MATTERS — FEATURE CARDS                               -->
+        <!-- ============================================================ -->
+        <section class="section" id="why-it-matters">
+            <div class="container">
+                <div class="section-header centered">
+                    <span class="eyebrow" style="justify-content:center;">Why It Matters</span>
+                    <h2>Transforming agriculture with AI</span></h2>
+                    <p>BRIDGE-AI Kenya addresses three critical areas for sustainable development.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 3c-4 2-8 5-8 10 0 4 3 6.5 8 6.5s8-2.5 8-6.5c0-5-4-8-8-10z"/><path d="M9 12.5c0-1 1.3-1.8 3-1.8s3 .8 3 1.8-1.3 1.8-3 1.8-3-.8-3-1.8z"/><path d="M12 14.3V19"/></svg>
+                        </div>
+                        <span class="feature-kicker">Farm Systems</span>
+                        <h3>Climate-smart mushroom farming</h3>
+                        <p>IoT sensors, GenAI analytics and digital shadows optimise growing conditions, reduce waste and increase yields for Kenyan mushroom farmers.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>
+                        </div>
+                        <span class="feature-kicker">People &amp; Skills</span>
+                        <h3>Inclusive digital skills</h3>
+                        <p>Hands-on training in AI, IoT and digital agriculture empowers youth, women and smallholder farmers building capacity for the future.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.2"/><circle cx="19" cy="6" r="2.2"/><circle cx="12" cy="18" r="2.2"/><path d="M6.8 7.6L10.5 16M17.2 7.6L13.5 16M7.2 6h9.6"/></svg>
+                        </div>
+                        <span class="feature-kicker">Regional Capacity</span>
+                        <h3>African GenAI capacity</h3>
+                        <p>Local expertise in generative AI for agriculture creates a replicable model that scales across East Africa and beyond.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- WHAT JKUAT IS DOING                                          -->
+        <!-- ============================================================ -->
+        <section class="section section-alt" id="jkuat-doing">
+            <div class="container">
+                <div class="section-header centered">
+                    <span class="eyebrow" style="justify-content:center;">JKUAT's Role</span>
+                    <h2>What JKUAT <span class="highlight purple">is doing</span></h2>
+                    <p>Leading the Smart Mushroom pilot and WP5 capacity building in Kenya.</p>
+                </div>
+                <div class="doing-grid">
+                    <div class="doing-card">
+                        <span class="doing-code">PILOT</span>
+                        <h4>Smart Mushroom Pilot</h4>
+                        <p>GenAI-assisted monitoring, anomaly detection, digital shadows, IoT sensing and farmer advisory tools for mushroom grow rooms at JKUAT Smart Farm Zone.</p>
+                    </div>
+                    <div class="doing-card">
+                        <span class="doing-code">LAB</span>
+                        <h4>Kenya Living Lab</h4>
+                        <p>Co-design and feedback activities with farmers, researchers, youth, women, advisors and SMEs to ensure solutions meet local needs.</p>
+                    </div>
+                    <div class="doing-card">
+                        <span class="doing-code">TRAIN</span>
+                        <h4>Training &amp; Bootcamps</h4>
+                        <p>Hands-on training programs, bootcamps and SME mentoring build digital skills and enable replication across East Africa.</p>
+                    </div>
+                    <div class="doing-card">
+                        <span class="doing-code">MENTOR</span>
+                        <h4>SME Mentoring</h4>
+                        <p>Supporting agricultural SMEs to adopt, adapt and scale smart farming solutions through mentoring and technical assistance.</p>
+                    </div>
+                    <div class="doing-card">
+                        <span class="doing-code">SCALE</span>
+                        <h4>Replication Toolkit</h4>
+                        <p>Playbooks, training materials and open repositories enable replication of the Smart Mushroom model across East Africa.</p>
+                    </div>
+                    <div class="doing-card">
+                        <span class="doing-code">WP5</span>
+                        <h4>WP5 Leadership</h4>
+                        <p>Leading Work Package 5: Capacity Building and Replication, building African expertise in GenAI solutions for agriculture.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- PROGRESS COUNTERS                                            -->
+        <!-- ============================================================ -->
+        <section class="counters-section">
+            <div class="container">
+                <div class="counters-header">
+                    <span class="eyebrow on-dark">Progress in the Field</span>
+                </div>
+                <div class="counters-grid">
+                    <div class="counter-item">
+                        <span class="counter-number" data-count="12">0<span class="counter-suffix">+</span></span>
+                        <span class="counter-label">Activities</span>
+                    </div>
+                    <div class="counter-item">
+                        <span class="counter-number" data-count="150">0<span class="counter-suffix">+</span></span>
+                        <span class="counter-label">Participants Trained</span>
+                    </div>
+                    <div class="counter-item">
+                        <span class="counter-number" data-count="45">0<span class="counter-suffix">%</span></span>
+                        <span class="counter-label">Women / Youth Reached</span>
+                    </div>
+                    <div class="counter-item">
+                        <span class="counter-number" data-count="8">0<span class="counter-suffix">+</span></span>
+                        <span class="counter-label">Events</span>
+                    </div>
+                    <div class="counter-item">
+                        <span class="counter-number" data-count="15">0<span class="counter-suffix">+</span></span>
+                        <span class="counter-label">Resources</span>
+                    </div>
+                    <div class="counter-item">
+                        <span class="counter-number" data-count="10">0<span class="counter-suffix">+</span></span>
+                        <span class="counter-label">SMEs Mentored</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- LATEST ACTIVITIES & UPCOMING EVENTS                          -->
+        <!-- ============================================================ -->
+        <section class="section" id="latest">
+            <div class="container">
+                <div class="two-col-grid">
+
+                    <!-- Activities -->
+                    <div>
+                        <div class="col-heading">
+                            <span class="eyebrow">Updates</span>
+                            <h2>Latest <span class="accent">activities</span></h2>
+                        </div>
+
+                        {% if activities %}
+                            {% for activity in activities[:3] %}
+                            <div class="activity-item">
+                                <div class="activity-img">
+                                    {% if activity.featured_image %}
+                                        <img src="{{ url_for('static', filename=activity.featured_image) }}" alt="{{ activity.title }}" loading="lazy">
+                                    {% else %}
+                                        <div class="placeholder">UPD</div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <div class="activity-meta">
+                                        <span class="date">{{ activity.date[:10] if activity.date else 'Coming Soon' }}</span>
+                                        {% if activity.wp_tag %}
+                                            <span class="tag">{{ activity.wp_tag }}</span>
+                                        {% endif %}
+                                        {% if activity.activity_type %}
+                                            <span class="tag">{{ activity.activity_type|replace('_', ' ')|title }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <h4>{{ activity.title }}</h4>
+                                    <p>{{ activity.summary[:120] + '...' if activity.summary and activity.summary|length > 120 else activity.summary }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="activity-item">
+                                <div class="activity-img"><div class="placeholder">UPD</div></div>
+                                <div>
+                                    <div class="activity-meta"><span class="date">Coming Soon</span></div>
+                                    <h4>Activities Loading</h4>
+                                    <p>Check back soon for updates from BRIDGE-AI Kenya activities.</p>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-img"><div class="placeholder">SMP</div></div>
+                                <div>
+                                    <div class="activity-meta"><span class="date">Coming Soon</span></div>
+                                    <h4>Smart Mushroom Pilot</h4>
+                                    <p>Updates on the Smart Mushroom pilot at JKUAT Smart Farm Zone.</p>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-img"><div class="placeholder">TRN</div></div>
+                                <div>
+                                    <div class="activity-meta"><span class="date">Coming Soon</span></div>
+                                    <h4>Training Workshops</h4>
+                                    <p>Information on upcoming training and capacity building events.</p>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <a href="{{ url_for('public.activities') }}" class="view-all">
+                            View all activities
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Events -->
+                    <div>
+                        <div class="col-heading">
+                            <span class="eyebrow">Events</span>
+                            <h2>Upcoming <span class="accent purple">training</span></h2>
+                        </div>
+
+                        {% if events %}
+                            {% for event in events[:3] %}
+                            <div class="event-item">
+                                <div class="event-date">
+                                    <span class="day">{{ event.date[8:10] if event.date and event.date|length >= 10 else 'TBA' }}</span>
+                                    <span class="month">{{ event.date[5:7] if event.date and event.date|length >= 7 else 'TBA' }}</span>
+                                </div>
+                                <div class="event-info">
+                                    <h5>{{ event.title }}</h5>
+                                    <p>{{ event.location or 'Location TBD' }}</p>
+                                </div>
+                                <span class="event-status {% if event.status == 'soon' %}soon{% endif %}">
+                                    {% if event.status == 'upcoming' %}Register Now{% elif event.status == 'soon' %}Soon{% else %}{{ event.status|title }}{% endif %}
+                                </span>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="event-item">
+                                <div class="event-date"><span class="day">TBA</span><span class="month">TBA</span></div>
+                                <div class="event-info"><h5>Bootcamp Coming Soon</h5><p>East Africa / Kenya Bootcamp</p></div>
+                                <span class="event-status soon">Coming Soon</span>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-date"><span class="day">TBA</span><span class="month">TBA</span></div>
+                                <div class="event-info"><h5>SME Mentoring Program</h5><p>Applications opening soon</p></div>
+                                <span class="event-status soon">Coming Soon</span>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-date"><span class="day">TBA</span><span class="month">TBA</span></div>
+                                <div class="event-info"><h5>Farmer Training Workshop</h5><p>Smart Mushroom Monitoring</p></div>
+                                <span class="event-status soon">Coming Soon</span>
+                            </div>
+                        {% endif %}
+
+                        <a href="{{ url_for('public.training_wp5') }}" class="view-all">
+                            View all training
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER (included)                                               -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT — Single Latest Image                 -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // SINGLE LATEST IMAGE — Loads the newest image from /uploads/activities/
+            // ================================================================
+
+            const container = document.getElementById('heroSlidesContainer');
+
+            function loadLatestImage() {
+                if (!container) return;
+
+                // Show loading state
+                container.innerHTML = `<div class="hero-slide-bg active" style="background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Crect width="100" height="100" fill="%2316281A"/%3E%3C/svg%3E');"></div>`;
+
+                fetch('/api/activities/images/', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) {
+                    if (!response.ok) throw new Error('Failed to fetch images');
+                    return response.json();
+                })
+                .then(function(data) {
+                    var images = data.images || [];
+
+                    if (images.length > 0) {
+                        // Sort by timestamp (newest first)
+                        images.sort(function(a, b) {
+                            var tsA = a.match(/^(\d{8}_\d{6})/);
+                            var tsB = b.match(/^(\d{8}_\d{6})/);
+                            if (tsA && tsB) {
+                                return tsB[1].localeCompare(tsA[1]);
+                            }
+                            return 0;
+                        });
+
+                        // Get the latest image
+                        var latestImage = images[0];
+                        var imageUrl = '/static/uploads/activities/' + latestImage;
+
+                        // Replace with single image
+                        container.innerHTML = `
+                            <div class="hero-slide-bg active" style="background-image: url('${imageUrl}');"></div>
+                        `;
+                    } else {
+                        // Fallback if no images found
+                        container.innerHTML = `
+                            <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=1200&h=1200&fit=crop&crop=center&auto=format');"></div>
+                        `;
+                    }
+                })
+                .catch(function(error) {
+                    console.warn('Failed to load image, using fallback:', error);
+                    container.innerHTML = `
+                        <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=1200&h=1200&fit=crop&crop=center&auto=format');"></div>
+                    `;
+                });
+            }
+
+            // ================================================================
+            // COUNTER ANIMATION
+            // ================================================================
+
+            function animateCounters() {
+                var counters = document.querySelectorAll('.counter-number');
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            var counter = entry.target;
+                            var target = parseInt(counter.getAttribute('data-count')) || 0;
+                            var duration = 2000;
+                            var startTime = performance.now();
+
+                            function updateCounter(currentTime) {
+                                var elapsed = currentTime - startTime;
+                                var progress = Math.min(elapsed / duration, 1);
+                                var value = Math.floor(progress * target);
+
+                                var textNode = counter.childNodes[0];
+                                if (textNode) {
+                                    textNode.textContent = value;
+                                }
+
+                                if (progress < 1) {
+                                    requestAnimationFrame(updateCounter);
+                                } else {
+                                    if (textNode) {
+                                        textNode.textContent = target;
+                                    }
+                                }
+                            }
+
+                            requestAnimationFrame(updateCounter);
+                            observer.unobserve(counter);
+                        }
+                    });
+                }, { threshold: 0.3 });
+
+                counters.forEach(function(counter) {
+                    observer.observe(counter);
+                });
+            }
+
+            // ================================================================
+            // SMOOTH SCROLL
+            // ================================================================
+
+            document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    var targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    var targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        var header = document.querySelector('.site-header');
+                        var headerHeight = header ? header.offsetHeight : 72;
+                        var targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // ================================================================
+            // INIT
+            // ================================================================
+
+            // Load the image
+            loadLatestImage();
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', animateCounters);
+            } else {
+                animateCounters();
+            }
+
+            console.log('BRIDGE-AI Kenya Homepage initialized (Single Latest Image)');
+
+        })();
+    </script>
+
+    <script>
+    (function() {
+        'use strict';
+        var loader = document.getElementById('page-loader');
+        function hideLoader() {
+            if (loader) {
+                loader.classList.add('hidden');
+                setTimeout(function() {
+                    if (loader && loader.parentNode) {
+                        loader.parentNode.removeChild(loader);
+                    }
+                }, 700);
+            }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 3000);
+    })();
+    </script>
+</body>
+</html>

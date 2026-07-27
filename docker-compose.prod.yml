@@ -1,0 +1,99 @@
+# ================================================================
+# BRIDGE-AI KENYA - Docker Compose (Production - JSON Version)
+# ================================================================
+# This docker-compose file sets up the production environment
+# with Gunicorn, Nginx, and JSON file storage.
+# No database required!
+# ================================================================
+
+version: '3.8'
+
+services:
+  # ================================================================
+  # Web Application Service (Gunicorn)
+  # ================================================================
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: bridge_ai_web_prod
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY}
+      - DATA_FOLDER=app/data
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@jkuat.ac.ke}
+      - MAIL_SUPPRESS_SEND=${MAIL_SUPPRESS_SEND:-False}
+      - MAIL_SERVER=${MAIL_SERVER}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USE_TLS=${MAIL_USE_TLS}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_DEFAULT_SENDER=${MAIL_DEFAULT_SENDER}
+      - MAIL_RECIPIENT=${MAIL_RECIPIENT}
+      - GUNICORN_WORKERS=${GUNICORN_WORKERS:-4}
+      - GUNICORN_TIMEOUT=${GUNICORN_TIMEOUT:-30}
+      - GUNICORN_LOG_LEVEL=${GUNICORN_LOG_LEVEL:-info}
+    volumes:
+      - json_data:/app/app/data                    # ✅ JSON data storage
+      - uploads_data:/app/app/static/images/uploads
+      - gallery_data:/app/app/static/images/gallery
+      - hero_data:/app/app/static/images/hero
+      - logs_data:/app/logs
+    networks:
+      - bridge_ai_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # ================================================================
+  # Nginx Web Server (Reverse Proxy & Static Files)
+  # ================================================================
+  nginx:
+    image: nginx:alpine
+    container_name: bridge_ai_nginx
+    ports:
+      - "${NGINX_HTTP_PORT:-80}:80"
+      - "${NGINX_HTTPS_PORT:-443}:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_data:/static:ro
+      - uploads_data:/uploads:ro
+      - gallery_data:/gallery:ro
+      - hero_data:/hero:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - web
+    networks:
+      - bridge_ai_network
+    restart: unless-stopped
+
+# ================================================================
+# Networks
+# ================================================================
+networks:
+  bridge_ai_network:
+    driver: bridge
+    name: bridge_ai_network_prod
+
+# ================================================================
+# Volumes
+# ================================================================
+volumes:
+  json_data:          # ✅ Persistent JSON data
+    driver: local
+  static_data:
+    driver: local
+  uploads_data:
+    driver: local
+  gallery_data:
+    driver: local
+  hero_data:          # ✅ Hero images
+    driver: local
+  logs_data:
+    driver: local

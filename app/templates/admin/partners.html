@@ -1,0 +1,2226 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - ADMIN PARTNERS MANAGEMENT                     -->
+<!-- ================================================================ -->
+<!-- Extends: admin/layout.html                                     -->
+<!-- Content: List · Add · Edit · Delete · View Partners           -->
+<!-- Features: Logo Upload · Type Filter · Search · Drag & Drop    -->
+<!-- CSS: Fully self-contained in this file                         -->
+<!-- Rules: No emojis · No decorative symbols · No colons           -->
+<!--        No slashes · No hyphens · Clean typography              -->
+<!-- ================================================================ -->
+
+{% extends "admin/layout.html" %}
+
+{% block title %}Partners - BRIDGE-AI Kenya Admin{% endblock %}
+
+{% block page_title %}Partner <span class="highlight">Management</span>{% endblock %}
+
+{% block page_subtitle %}Manage consortium partners and local ecosystem partners{% endblock %}
+
+{% block content %}
+
+<!-- ================================================================ -->
+<!-- TOAST NOTIFICATIONS CONTAINER                                   -->
+<!-- ================================================================ -->
+<div id="toastContainer"></div>
+
+<!-- ================================================================ -->
+<!-- LOADER OVERLAY                                                  -->
+<!-- ================================================================ -->
+<div id="loaderOverlay">
+    <div class="loader-spinner"></div>
+    <p class="loader-text">Loading partners...</p>
+</div>
+
+<!-- ================================================================ -->
+<!-- CSS - Self-contained for this page                              -->
+<!-- ================================================================ -->
+<style>
+    /* ================================================================ */
+    /* CSS VARIABLES                                                   */
+    /* ================================================================ */
+    :root {
+        --primary-dark: #061420;
+        --primary: #0F2B3D;
+        --primary-light: #1A4A6B;
+        --gold: #D4A843;
+        --gold-light: #F5D77E;
+        --text-dark: #081A28;
+        --text-body: #1A2A3A;
+        --text-muted: #5A6A7A;
+        --text-light: #8A9AAA;
+        --bg-white: #FFFFFF;
+        --bg-light: #F5F8FA;
+        --bg-lighter: #FAFCFE;
+        --border-light: #E4EAF0;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+        --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+        --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    /* ================================================================ */
+    /* LOADER OVERLAY                                                  */
+    /* ================================================================ */
+    #loaderOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.92);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.5s ease;
+    }
+
+    #loaderOverlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .loader-spinner {
+        width: 48px;
+        height: 48px;
+        border: 3px solid var(--border-light);
+        border-top-color: var(--primary-light);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-bottom: 16px;
+    }
+
+    .loader-text {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        font-weight: 400;
+        letter-spacing: 0.02em;
+        font-family: var(--font-sans);
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* ================================================================ */
+    /* TABS                                                           */
+    /* ================================================================ */
+    .partner-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 24px;
+        padding: 4px 0;
+        border-bottom: 2px solid #E4EAF0;
+        background: #FFFFFF;
+    }
+
+    .partner-tabs .tab-btn {
+        padding: 8px 18px;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #5A6A7A;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 0;
+        margin-bottom: -2px;
+    }
+
+    .partner-tabs .tab-btn:hover {
+        color: #1A2A3A;
+        background: #F5F8FA;
+    }
+
+    .partner-tabs .tab-btn.active {
+        color: #1A4A6B;
+        border-bottom-color: #D4A843;
+    }
+
+    .partner-tabs .tab-btn .tab-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 7px;
+        border-radius: 60px;
+        font-size: 0.55rem;
+        font-weight: 700;
+        background: #F5F8FA;
+        color: #5A6A7A;
+    }
+
+    .partner-tabs .tab-btn.active .tab-count {
+        background: #F5ECD7;
+        color: #D4A843;
+    }
+
+    /* ================================================================ */
+    /* TOOLBAR                                                         */
+    /* ================================================================ */
+    .partner-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .partner-toolbar .toolbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .partner-toolbar .toolbar-left .search-input {
+        padding: 8px 14px;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        color: #1A2A3A;
+        background: #FFFFFF;
+        outline: none;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        min-width: 200px;
+    }
+
+    .partner-toolbar .toolbar-left .search-input:focus {
+        border-color: #1A4A6B;
+        box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+    }
+
+    .btn-add {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        background: #D4A843;
+        color: #061420;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        box-shadow: 0 4px 16px rgba(212, 168, 67, 0.12);
+    }
+
+    .btn-add:hover {
+        background: #F5D77E;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.2);
+    }
+
+    /* ================================================================ */
+    /* TABLE                                                           */
+    /* ================================================================ */
+    .table-container {
+        background: #FFFFFF;
+        border: 1px solid #E4EAF0;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .table-container table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .table-container table thead {
+        background: #F5F8FA;
+        border-bottom: 1px solid #E4EAF0;
+    }
+
+    .table-container table thead th {
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 600;
+        color: #5A6A7A;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .table-container table tbody tr {
+        border-bottom: 1px solid #E4EAF0;
+        transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .table-container table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table-container table tbody tr:hover {
+        background: #FAFCFE;
+    }
+
+    .table-container table tbody td {
+        padding: 12px 16px;
+        color: #1A2A3A;
+        vertical-align: middle;
+    }
+
+    /* ─── Logo Preview ─── */
+    .table-container table tbody td .logo-preview {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        border-radius: 6px;
+        background: var(--bg-light);
+        border: 1px solid var(--border-light);
+        padding: 4px;
+        display: block;
+    }
+
+    .table-container table tbody td .no-logo {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-light);
+        border: 1px dashed var(--border-light);
+        border-radius: 6px;
+        font-size: 0.55rem;
+        color: var(--text-light);
+        font-weight: 500;
+        letter-spacing: 0.04em;
+    }
+
+    /* ─── Type Badges ─── */
+    .type-badge {
+        display: inline-block;
+        padding: 2px 12px;
+        border-radius: 60px;
+        font-size: 0.6rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .type-badge.consortium {
+        background: #D4E8F5;
+        color: #1A4A6B;
+    }
+
+    .type-badge.local {
+        background: #D6F0E0;
+        color: #1A6A4A;
+    }
+
+    /* ─── Status Badges ─── */
+    .status-badge {
+        display: inline-block;
+        padding: 2px 12px;
+        border-radius: 60px;
+        font-size: 0.6rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .status-badge.published {
+        background: #D6F0E0;
+        color: #1A6A4A;
+    }
+
+    .status-badge.draft {
+        background: #F5E8D6;
+        color: #9E6A2A;
+    }
+
+    /* ─── Action Buttons ─── */
+    .table-container table tbody td .actions {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+
+    .table-container table tbody td .actions button,
+    .table-container table tbody td .actions a {
+        padding: 4px 10px;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .btn-view-sm {
+        background: #E8F0F8;
+        color: #1A4A6B;
+    }
+
+    .btn-view-sm:hover {
+        background: #1A4A6B;
+        color: #FFFFFF;
+        transform: translateY(-1px);
+    }
+
+    .btn-edit-sm {
+        background: #F5ECD7;
+        color: #D4A843;
+    }
+
+    .btn-edit-sm:hover {
+        background: #D4A843;
+        color: #061420;
+        transform: translateY(-1px);
+    }
+
+    .btn-delete-sm {
+        background: #F5E6E6;
+        color: #9E2A2A;
+    }
+
+    .btn-delete-sm:hover {
+        background: #9E2A2A;
+        color: #FFFFFF;
+        transform: translateY(-1px);
+    }
+
+    /* ─── Empty State ─── */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #5A6A7A;
+    }
+
+    .empty-state h4 {
+        font-size: 1.1rem;
+        color: #081A28;
+        margin-bottom: 4px;
+    }
+
+    .empty-state p {
+        font-size: 0.9rem;
+    }
+
+    /* ================================================================ */
+    /* MODAL                                                           */
+    /* ================================================================ */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(6, 20, 32, 0.6);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal {
+        background: #FFFFFF;
+        border-radius: 20px;
+        max-width: 720px;
+        width: 100%;
+        max-height: 92vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-lg);
+        animation: slideUp 0.3s ease;
+    }
+
+    .modal::-webkit-scrollbar {
+        width: 4px;
+    }
+    .modal::-webkit-scrollbar-track {
+        background: #F5F8FA;
+        border-radius: 4px;
+    }
+    .modal::-webkit-scrollbar-thumb {
+        background: #1A4A6B;
+        border-radius: 4px;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px) scale(0.96); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 24px 28px 16px;
+        border-bottom: 1px solid #E4EAF0;
+        position: sticky;
+        top: 0;
+        background: #FFFFFF;
+        z-index: 10;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .modal-header h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #081A28;
+    }
+
+    .modal-header h3 .gold {
+        color: #D4A843;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        font-weight: 300;
+        color: #8A9AAA;
+        cursor: pointer;
+        padding: 4px 8px;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        line-height: 1;
+    }
+
+    .modal-close:hover {
+        color: #081A28;
+        transform: rotate(90deg);
+    }
+
+    .modal-body {
+        padding: 24px 28px 28px;
+    }
+
+    /* ─── View Modal ─── */
+    .detail-view .detail-row {
+        display: flex;
+        padding: 8px 0;
+        border-bottom: 1px solid #F5F8FA;
+    }
+
+    .detail-view .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-view .detail-label {
+        font-weight: 600;
+        color: #5A6A7A;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        width: 120px;
+        flex-shrink: 0;
+        padding-top: 2px;
+    }
+
+    .detail-view .detail-value {
+        color: #1A2A3A;
+        font-size: 0.9rem;
+        word-break: break-word;
+        flex: 1;
+    }
+
+    .detail-view .detail-value a {
+        color: #1A4A6B;
+        text-decoration: none;
+        word-break: break-all;
+    }
+
+    .detail-view .detail-value a:hover {
+        text-decoration: underline;
+    }
+
+    .detail-view .detail-value .logo-preview-lg {
+        max-width: 120px;
+        max-height: 80px;
+        object-fit: contain;
+        border: 1px solid var(--border-light);
+        border-radius: 6px;
+        padding: 8px;
+        background: var(--bg-light);
+    }
+
+    .detail-view .detail-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #E4EAF0;
+    }
+
+    .detail-view .btn-modal-close {
+        padding: 8px 24px;
+        background: #F5F8FA;
+        color: #5A6A7A;
+        border: 1px solid #E4EAF0;
+        border-radius: 60px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+    }
+
+    .detail-view .btn-modal-close:hover {
+        background: #E4EAF0;
+        color: #1A2A3A;
+    }
+
+    /* ─── Form ─── */
+    .modal-body .form-group {
+        margin-bottom: 16px;
+    }
+
+    .modal-body .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #1A2A3A;
+        margin-bottom: 4px;
+    }
+
+    .modal-body .form-group label .required {
+        color: #9E2A2A;
+    }
+
+    .modal-body .form-group input,
+    .modal-body .form-group select,
+    .modal-body .form-group textarea {
+        width: 100%;
+        padding: 9px 14px;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #1A2A3A;
+        background: #FAFCFE;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        outline: none;
+    }
+
+    .modal-body .form-group input:focus,
+    .modal-body .form-group select:focus,
+    .modal-body .form-group textarea:focus {
+        border-color: #1A4A6B;
+        box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+        background: #FFFFFF;
+    }
+
+    .modal-body .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .modal-body .form-group .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .modal-body .form-group .type-toggle {
+        display: flex;
+        gap: 12px;
+        padding: 4px 0;
+    }
+
+    .modal-body .form-group .type-toggle label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-body);
+        cursor: pointer;
+        padding: 6px 16px;
+        border: 2px solid var(--border-light);
+        border-radius: 60px;
+        transition: all var(--transition);
+    }
+
+    .modal-body .form-group .type-toggle label:hover {
+        border-color: var(--primary-light);
+    }
+
+    .modal-body .form-group .type-toggle input[type="radio"] {
+        display: none;
+    }
+
+    .modal-body .form-group .type-toggle input[type="radio"]:checked+span {
+        color: var(--primary-light);
+        font-weight: 600;
+    }
+
+    .modal-body .form-group .type-toggle label:has(input:checked) {
+        border-color: var(--primary-light);
+        background: #F5F8FC;
+    }
+
+    /* ─── Tags Input ─── */
+    .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 6px 10px;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        background: #FAFCFE;
+        min-height: 44px;
+        align-items: center;
+        transition: border-color var(--transition);
+    }
+
+    .tags-container:focus-within {
+        border-color: #1A4A6B;
+        box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+    }
+
+    .tags-container .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 10px;
+        background: #1A4A6B;
+        color: #FFFFFF;
+        border-radius: 60px;
+        font-size: 0.7rem;
+        font-weight: 500;
+    }
+
+    .tags-container .tag .tag-remove {
+        background: none;
+        border: none;
+        color: rgba(255,255,255,0.6);
+        cursor: pointer;
+        font-size: 0.8rem;
+        padding: 0 2px;
+        font-family: var(--font-sans);
+        transition: color var(--transition);
+    }
+
+    .tags-container .tag .tag-remove:hover {
+        color: #FFFFFF;
+    }
+
+    .tags-container .tag-input {
+        flex: 1;
+        border: none;
+        background: none;
+        padding: 4px 0;
+        font-size: 0.85rem;
+        color: #1A2A3A;
+        outline: none;
+        font-family: var(--font-sans);
+        min-width: 80px;
+    }
+
+    /* ─── File Upload ─── */
+    .file-upload-area {
+        border: 2px dashed #E4EAF0;
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        transition: all var(--transition);
+        cursor: pointer;
+        position: relative;
+        background: #FAFCFE;
+    }
+
+    .file-upload-area:hover {
+        border-color: #1A4A6B;
+        background: #F5F8FA;
+    }
+
+    .file-upload-area.dragover {
+        border-color: #D4A843;
+        background: #F5ECD7;
+    }
+
+    .file-upload-area .upload-icon {
+        font-size: 2rem;
+        color: #8A9AAA;
+        display: block;
+        margin-bottom: 4px;
+        font-weight: 200;
+    }
+
+    .file-upload-area .upload-text {
+        font-size: 0.9rem;
+        color: #5A6A7A;
+    }
+
+    .file-upload-area .upload-text strong {
+        color: #1A4A6B;
+    }
+
+    .file-upload-area .upload-hint {
+        font-size: 0.7rem;
+        color: #8A9AAA;
+        margin-top: 4px;
+    }
+
+    .file-upload-area input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* ─── Logo Preview in Form ─── */
+    .logo-preview-container {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 10px;
+        padding: 12px 16px;
+        background: #F5F8FA;
+        border-radius: 8px;
+        border: 1px solid #E4EAF0;
+    }
+
+    .logo-preview-container .logo-img {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        border-radius: 6px;
+        background: #FFFFFF;
+        border: 1px solid #E4EAF0;
+        padding: 4px;
+    }
+
+    .logo-preview-container .logo-info {
+        flex: 1;
+        font-size: 0.82rem;
+        color: #1A2A3A;
+    }
+
+    .logo-preview-container .logo-info .logo-size {
+        font-size: 0.7rem;
+        color: #8A9AAA;
+        display: block;
+    }
+
+    .logo-preview-container .btn-remove-logo {
+        padding: 4px 14px;
+        background: #F5E6E6;
+        color: #9E2A2A;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+    }
+
+    .logo-preview-container .btn-remove-logo:hover {
+        background: #9E2A2A;
+        color: #FFFFFF;
+    }
+
+    /* ─── Form Actions ─── */
+    .modal-body .form-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 8px;
+        padding-top: 16px;
+        border-top: 1px solid #E4EAF0;
+    }
+
+    .btn-modal-save {
+        padding: 10px 28px;
+        background: #D4A843;
+        color: #061420;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+        box-shadow: 0 4px 16px rgba(212, 168, 67, 0.12);
+    }
+
+    .btn-modal-save:hover {
+        background: #F5D77E;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.2);
+    }
+
+    .btn-modal-cancel {
+        padding: 10px 24px;
+        background: #F5F8FA;
+        color: #5A6A7A;
+        border: 1px solid #E4EAF0;
+        border-radius: 60px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+    }
+
+    .btn-modal-cancel:hover {
+        background: #E4EAF0;
+        color: #1A2A3A;
+    }
+
+    /* ================================================================ */
+    /* TOAST NOTIFICATIONS                                             */
+    /* ================================================================ */
+    #toastContainer {
+        position: fixed;
+        top: 90px;
+        right: 20px;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 380px;
+        width: 100%;
+        pointer-events: none;
+    }
+
+    .toast {
+        pointer-events: auto;
+        background: #FFFFFF;
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+        border-left: 4px solid;
+        animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .toast.hiding {
+        animation: slideOutRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    .toast-success { border-left-color: #1A6A4A; }
+    .toast-error { border-left-color: #9E2A2A; }
+    .toast-warning { border-left-color: #D4A843; }
+    .toast-info { border-left-color: #1A4A6B; }
+
+    .toast-icon {
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-weight: 700;
+    }
+
+    .toast-success .toast-icon { color: #1A6A4A; }
+    .toast-error .toast-icon { color: #9E2A2A; }
+    .toast-warning .toast-icon { color: #D4A843; }
+    .toast-info .toast-icon { color: #1A4A6B; }
+
+    .toast-content { flex: 1; }
+    .toast-title { font-weight: 600; font-size: 0.9rem; color: #081A28; }
+    .toast-message { font-size: 0.8rem; color: #5A6A7A; margin-top: 2px; }
+
+    .toast-close {
+        background: none;
+        border: none;
+        color: #8A9AAA;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0 4px;
+        line-height: 1;
+        font-weight: 300;
+        transition: color 0.3s ease;
+        font-family: var(--font-sans);
+    }
+
+    .toast-close:hover { color: #081A28; }
+
+    .toast-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        background: #E4EAF0;
+        overflow: hidden;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .toast-progress-bar {
+        height: 100%;
+        background: #D4A843;
+        border-radius: 0 0 12px 12px;
+        animation: progressBar 4s linear forwards;
+        width: 100%;
+    }
+
+    .toast-error .toast-progress-bar { background: #9E2A2A; }
+    .toast-success .toast-progress-bar { background: #1A6A4A; }
+    .toast-warning .toast-progress-bar { background: #D4A843; }
+    .toast-info .toast-progress-bar { background: #1A4A6B; }
+
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(40px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideOutRight {
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(40px); }
+    }
+
+    @keyframes progressBar {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
+
+    /* ================================================================ */
+    /* RESPONSIVE                                                      */
+    /* ================================================================ */
+    @media (max-width: 768px) {
+        .partner-tabs {
+            gap: 2px;
+        }
+
+        .partner-tabs .tab-btn {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+
+        .partner-tabs .tab-btn .tab-count {
+            min-width: 16px;
+            height: 16px;
+            font-size: 0.5rem;
+            padding: 0 5px;
+        }
+
+        .partner-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .partner-toolbar .toolbar-left .search-input {
+            min-width: 100%;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table-container table {
+            font-size: 0.75rem;
+            min-width: 700px;
+        }
+
+        .table-container table thead th,
+        .table-container table tbody td {
+            padding: 8px 10px;
+        }
+
+        .modal {
+            max-width: 100%;
+            margin: 10px;
+            max-height: 95vh;
+        }
+
+        .modal-header {
+            padding: 18px 20px 12px;
+        }
+
+        .modal-body {
+            padding: 16px 20px 20px;
+        }
+
+        .modal-body .form-group .form-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .modal-body .form-group .type-toggle {
+            flex-wrap: wrap;
+        }
+
+        .detail-view .detail-row {
+            flex-direction: column;
+            padding: 6px 0;
+        }
+
+        .detail-view .detail-label {
+            width: 100%;
+            font-size: 0.7rem;
+            padding-bottom: 2px;
+        }
+
+        .detail-view .detail-value {
+            font-size: 0.85rem;
+        }
+
+        .detail-view .detail-actions {
+            flex-wrap: wrap;
+        }
+
+        #toastContainer {
+            top: 80px;
+            right: 10px;
+            left: 10px;
+            max-width: none;
+        }
+        .toast { padding: 14px 16px; }
+    }
+
+    @media (max-width: 480px) {
+        .partner-tabs .tab-btn {
+            padding: 4px 10px;
+            font-size: 0.6rem;
+        }
+
+        .partner-tabs .tab-btn .tab-count {
+            min-width: 14px;
+            height: 14px;
+            font-size: 0.45rem;
+            padding: 0 4px;
+        }
+
+        .btn-add {
+            font-size: 0.75rem;
+            padding: 6px 16px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .modal-body .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-modal-save,
+        .btn-modal-cancel {
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .file-upload-area {
+            padding: 16px;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 1.8rem;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 0.8rem;
+        }
+
+        .logo-preview-container {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+
+    /* ================================================================ */
+    /* SCROLLBAR                                                       */
+    /* ================================================================ */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #F5F8FA;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #1A4A6B;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #0F2B3D;
+    }
+</style>
+
+<!-- ================================================================ -->
+<!-- CONTENT                                                         -->
+<!-- ================================================================ -->
+
+<!-- Tabs -->
+<div class="partner-tabs" id="partnerTabs">
+    <!-- Dynamically generated by JavaScript -->
+</div>
+
+<!-- Toolbar -->
+<div class="partner-toolbar">
+    <div class="toolbar-left">
+        <input type="text" class="search-input" id="partnerSearch" placeholder="Search partners..." onkeyup="filterTable()">
+    </div>
+    <button class="btn-add" onclick="openModal(null)">Add Partner</button>
+</div>
+
+<!-- Table -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Logo</th>
+                <th>Name</th>
+                <th>Short</th>
+                <th>Country</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="partnersTableBody"></tbody>
+    </table>
+</div>
+
+<!-- ================================================================ -->
+<!-- MODAL - Add/Edit Form                                           -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modalTitle">Add <span class="gold">Partner</span></h3>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <!-- Dynamic form content -->
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- VIEW MODAL - Detail View                                        -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="viewModalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="viewModalTitle">View <span class="gold">Partner</span></h3>
+            <button class="modal-close" onclick="closeViewModal()">×</button>
+        </div>
+        <div class="modal-body" id="viewModalBody">
+            <div class="detail-view" id="viewModalContent">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- JAVASCRIPT                                                      -->
+<!-- ================================================================ -->
+<script>
+    (function() {
+        'use strict';
+
+        // ================================================================
+        // STATE
+        // ================================================================
+
+        var allPartners = [];
+        var editingItem = null;
+        var currentFilterType = 'all';
+        var currentTags = [];
+
+        // ================================================================
+        // DOM REFS
+        // ================================================================
+
+        var tabsContainer = document.getElementById('partnerTabs');
+        var tableBody = document.getElementById('partnersTableBody');
+        var modalOverlay = document.getElementById('modalOverlay');
+        var modalTitle = document.getElementById('modalTitle');
+        var modalBody = document.getElementById('modalBody');
+        var viewModalOverlay = document.getElementById('viewModalOverlay');
+        var viewModalTitle = document.getElementById('viewModalTitle');
+        var viewModalContent = document.getElementById('viewModalContent');
+        var loaderOverlay = document.getElementById('loaderOverlay');
+
+        // ================================================================
+        // LOAD DATA
+        // ================================================================
+
+        function loadData() {
+            showLoader();
+
+            fetch('/api/partners/', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Network error');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                allPartners = data;
+                renderTabs(data);
+                renderTable(data);
+                hideLoader();
+            })
+            .catch(function(error) {
+                console.error('Error loading partners:', error);
+                allPartners = [];
+                renderTabs([]);
+                renderTable([]);
+                hideLoader();
+                showToast('Error', 'Failed to load partners. Please refresh the page.', 'error');
+            });
+        }
+
+        // ================================================================
+        // RENDER TABS
+        // ================================================================
+
+        function renderTabs(data) {
+            if (!tabsContainer) return;
+
+            var counts = {
+                all: data.length,
+                consortium: 0,
+                local: 0
+            };
+
+            data.forEach(function(item) {
+                if (item.is_consortium) {
+                    counts.consortium++;
+                } else {
+                    counts.local++;
+                }
+            });
+
+            var html = '';
+            var tabs = [
+                { type: 'all', label: 'All', count: counts.all },
+                { type: 'consortium', label: 'Consortium', count: counts.consortium },
+                { type: 'local', label: 'Local', count: counts.local }
+            ];
+
+            tabs.forEach(function(tab) {
+                var active = currentFilterType === tab.type ? 'active' : '';
+                html += `
+                    <button class="tab-btn ${active}" onclick="filterByType('${tab.type}', this)">
+                        ${tab.label}
+                        <span class="tab-count">${tab.count}</span>
+                    </button>
+                `;
+            });
+
+            tabsContainer.innerHTML = html;
+        }
+
+        // ================================================================
+        // FILTER BY TYPE
+        // ================================================================
+
+        window.filterByType = function(type, button) {
+            currentFilterType = type;
+
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            if (button) {
+                button.classList.add('active');
+            }
+
+            var filtered = getFilteredData();
+            renderTable(filtered);
+        };
+
+        // ================================================================
+        // GET FILTERED DATA
+        // ================================================================
+
+        function getFilteredData() {
+            var filtered = allPartners;
+
+            if (currentFilterType === 'consortium') {
+                filtered = filtered.filter(function(item) {
+                    return item.is_consortium === true;
+                });
+            } else if (currentFilterType === 'local') {
+                filtered = filtered.filter(function(item) {
+                    return item.is_consortium === false;
+                });
+            }
+
+            return filtered;
+        }
+
+        // ================================================================
+        // RENDER TABLE
+        // ================================================================
+
+        function renderTable(data) {
+            if (!tableBody) return;
+
+            var filtered = data || getFilteredData();
+
+            if (!filtered || filtered.length === 0) {
+                var emptyMessage = currentFilterType === 'all' ?
+                    'No partners found. Click "Add Partner" to create your first partner.' :
+                    'No partners found for this type.';
+
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <h4>No partners found</h4>
+                                <p>${emptyMessage}</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            var html = '';
+            filtered.forEach(function(item) {
+                var logoHtml = '';
+                if (item.logo) {
+                    logoHtml = `<img src="/static/${escapeHtml(item.logo)}" alt="${escapeHtml(item.short_name)}" class="logo-preview">`;
+                } else {
+                    logoHtml = `<div class="no-logo">No logo</div>`;
+                }
+
+                var typeClass = item.is_consortium ? 'consortium' : 'local';
+                var typeLabel = item.is_consortium ? 'Consortium' : 'Local';
+                var statusClass = item.is_published !== false ? 'published' : 'draft';
+                var statusLabel = item.is_published !== false ? 'Published' : 'Draft';
+
+                html += `
+                    <tr>
+                        <td>${logoHtml}</td>
+                        <td><strong>${escapeHtml(item.name)}</strong></td>
+                        <td>${escapeHtml(item.short_name)}</td>
+                        <td>${escapeHtml(item.country)}</td>
+                        <td><span class="type-badge ${typeClass}">${typeLabel}</span></td>
+                        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn-view-sm" onclick="viewItem(${item.id})">View</button>
+                                <button class="btn-edit-sm" onclick="editItem(${item.id})">Edit</button>
+                                <button class="btn-delete-sm" onclick="deleteItem(${item.id})">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tableBody.innerHTML = html;
+        }
+
+        // ================================================================
+        // FILTER TABLE (Search)
+        // ================================================================
+
+        window.filterTable = function() {
+            var searchInput = document.getElementById('partnerSearch');
+            var searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            var rows = tableBody ? tableBody.querySelectorAll('tr') : [];
+
+            rows.forEach(function(row) {
+                var text = row.textContent.toLowerCase();
+                row.style.display = text.indexOf(searchTerm) > -1 ? '' : 'none';
+            });
+        };
+
+        // ================================================================
+        // OPEN MODAL
+        // ================================================================
+
+        window.openModal = function(id) {
+            editingItem = id;
+            currentTags = [];
+
+            if (id) {
+                modalTitle.innerHTML = 'Edit <span class="gold">Partner</span>';
+                fetch('/api/partners/' + id, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.tags) {
+                        currentTags = data.tags;
+                    }
+                    modalBody.innerHTML = buildForm(data);
+                    modalOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    setupFileUpload();
+                    updateTagsDisplay();
+                })
+                .catch(function() {
+                    modalBody.innerHTML = buildForm(null);
+                    modalOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    setupFileUpload();
+                    updateTagsDisplay();
+                });
+            } else {
+                modalTitle.innerHTML = 'Add <span class="gold">Partner</span>';
+                modalBody.innerHTML = buildForm(null);
+                modalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                setupFileUpload();
+                updateTagsDisplay();
+            }
+        };
+
+        // ================================================================
+        // EDIT ITEM
+        // ================================================================
+
+        window.editItem = function(id) {
+            openModal(id);
+        };
+
+        // ================================================================
+        // BUILD FORM
+        // ================================================================
+
+        function buildForm(data) {
+            var isEdit = !!data;
+            var shortName = data ? data.short_name : '';
+            var name = data ? data.name : '';
+            var country = data ? data.country : '';
+            var role = data ? data.role : '';
+            var description = data ? data.description : '';
+            var website = data ? data.website : '';
+            var isConsortium = data ? data.is_consortium : true;
+            var isPublished = data ? (data.is_published !== false) : true;
+            var displayOrder = data ? data.display_order : 0;
+            var ecosystemImpact = data ? data.ecosystem_impact : '';
+            var logoPath = data ? data.logo : '';
+            var hasLogo = !!logoPath;
+
+            var countries = [
+                'Spain', 'Kenya', 'Tunisia', 'Nigeria', 'Austria',
+                'United Kingdom', 'France', 'Germany', 'Italy', 'Netherlands',
+                'Switzerland', 'South Africa', 'Ghana', 'Uganda', 'Tanzania'
+            ];
+
+            var countryOptions = countries.map(function(c) {
+                return `<option value="${c}" ${c === country ? 'selected' : ''}>${c}</option>`;
+            }).join('');
+
+            var consortiumChecked = isConsortium ? 'checked' : '';
+            var localChecked = !isConsortium ? 'checked' : '';
+            var publishedChecked = isPublished ? 'checked' : '';
+
+            var existingLogoHtml = '';
+            if (hasLogo) {
+                var fileName = logoPath.split('/').pop();
+                existingLogoHtml = `
+                    <div class="logo-preview-container" id="existingLogoContainer">
+                        <img src="/static/${escapeHtml(logoPath)}" alt="${escapeHtml(shortName)}" class="logo-img">
+                        <div class="logo-info">
+                            ${escapeHtml(fileName)}
+                            <span class="logo-size">Current logo</span>
+                        </div>
+                        <button type="button" class="btn-remove-logo" onclick="removeExistingLogo()">Remove</button>
+                    </div>
+                    <input type="hidden" id="removeLogoFlag" value="false">
+                `;
+            }
+
+            return `
+                <form id="partnerForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>Partner Type <span class="required">*</span></label>
+                        <div class="type-toggle">
+                            <label>
+                                <input type="radio" name="partner_type" value="consortium" ${consortiumChecked} onchange="togglePartnerType()">
+                                <span>Official Consortium</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="partner_type" value="local" ${localChecked} onchange="togglePartnerType()">
+                                <span>Local Ecosystem Partner</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label>Short Name <span class="required">*</span></label>
+                                <input type="text" id="formShortName" value="${escapeHtml(shortName)}" placeholder="e.g. EURECAT" required>
+                            </div>
+                            <div>
+                                <label>Full Name <span class="required">*</span></label>
+                                <input type="text" id="formName" value="${escapeHtml(name)}" placeholder="Full legal name" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label>Country <span class="required">*</span></label>
+                                <select id="formCountry" required>
+                                    <option value="">Select country</option>
+                                    ${countryOptions}
+                                </select>
+                            </div>
+                            <div>
+                                <label>Role</label>
+                                <input type="text" id="formRole" value="${escapeHtml(role)}" placeholder="e.g. Coordinator, Beneficiary">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="formDescription" placeholder="Partner description">${escapeHtml(description)}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label>Website</label>
+                                <input type="url" id="formWebsite" value="${escapeHtml(website)}" placeholder="https://...">
+                            </div>
+                            <div>
+                                <label>Display Order</label>
+                                <input type="number" id="formDisplayOrder" value="${displayOrder}" placeholder="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="localFields" style="${isConsortium ? 'display:none;' : ''}">
+                        <label>Tags (for Local Partners)</label>
+                        <div class="tags-container" id="tagsContainer">
+                            <div id="tagsList"></div>
+                            <input type="text" class="tag-input" id="tagInput" placeholder="Add tag..." onkeydown="handleTagInput(event)">
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="ecosystemField" style="${isConsortium ? 'display:none;' : ''}">
+                        <label>Ecosystem Impact</label>
+                        <textarea id="formEcosystemImpact" placeholder="Describe the ecosystem impact">${escapeHtml(ecosystemImpact)}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Logo</label>
+                        <div class="file-upload-area" id="logoUploadArea">
+                            <span class="upload-icon">↑</span>
+                            <div class="upload-text">
+                                <strong>Click to upload</strong> or drag and drop
+                            </div>
+                            <div class="upload-hint">SVG, PNG, JPG, WEBP (Max 5MB)</div>
+                            <input type="file" id="logoFile" accept=".svg,.png,.jpg,.jpeg,.webp">
+                        </div>
+                        <div id="logoPreview" style="display:none;"></div>
+                        ${existingLogoHtml}
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.9rem;">
+                            <input type="checkbox" id="formIsPublic" ${publishedChecked}>
+                            Published
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+                        <button type="button" class="btn-modal-save" onclick="saveItem()">Save Partner</button>
+                    </div>
+                </form>
+            `;
+        }
+
+        // ================================================================
+        // TOGGLE PARTNER TYPE
+        // ================================================================
+
+        window.togglePartnerType = function() {
+            var consortiumRadio = document.querySelector('input[name="partner_type"][value="consortium"]');
+            var isConsortium = consortiumRadio ? consortiumRadio.checked : true;
+
+            var localFields = document.getElementById('localFields');
+            var ecosystemField = document.getElementById('ecosystemField');
+
+            if (localFields) {
+                localFields.style.display = isConsortium ? 'none' : 'block';
+            }
+            if (ecosystemField) {
+                ecosystemField.style.display = isConsortium ? 'none' : 'block';
+            }
+        };
+
+        // ================================================================
+        // TAGS INPUT
+        // ================================================================
+
+        function updateTagsDisplay() {
+            var tagsList = document.getElementById('tagsList');
+            if (!tagsList) return;
+
+            var html = '';
+            currentTags.forEach(function(tag, index) {
+                html += `
+                    <span class="tag">
+                        ${escapeHtml(tag)}
+                        <button type="button" class="tag-remove" onclick="removeTag(${index})">×</button>
+                    </span>
+                `;
+            });
+            tagsList.innerHTML = html;
+        }
+
+        window.handleTagInput = function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                var input = document.getElementById('tagInput');
+                var tag = input.value.trim();
+                if (tag && !currentTags.includes(tag)) {
+                    currentTags.push(tag);
+                    updateTagsDisplay();
+                    input.value = '';
+                }
+            }
+        };
+
+        window.removeTag = function(index) {
+            currentTags.splice(index, 1);
+            updateTagsDisplay();
+        };
+
+        // ================================================================
+        // SETUP FILE UPLOAD
+        // ================================================================
+
+        function setupFileUpload() {
+            var fileInput = document.getElementById('logoFile');
+            var uploadArea = document.getElementById('logoUploadArea');
+
+            if (!fileInput || !uploadArea) return;
+
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    var file = this.files[0];
+                    var previewContainer = document.getElementById('logoPreview');
+                    var existingContainer = document.getElementById('existingLogoContainer');
+
+                    if (existingContainer) {
+                        existingContainer.style.display = 'none';
+                    }
+
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewContainer.innerHTML = `
+                            <div class="logo-preview-container">
+                                <img src="${e.target.result}" alt="Logo preview" class="logo-img">
+                                <div class="logo-info">
+                                    ${escapeHtml(file.name)}
+                                    <span class="logo-size">${formatFileSize(file.size)}</span>
+                                </div>
+                                <button type="button" class="btn-remove-logo" onclick="removeNewLogo()">Remove</button>
+                            </div>
+                        `;
+                        previewContainer.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    fileInput.files = e.dataTransfer.files;
+                    fileInput.dispatchEvent(new Event('change'));
+                }
+            });
+        }
+
+        // ================================================================
+        // REMOVE LOGO
+        // ================================================================
+
+        window.removeExistingLogo = function() {
+            var container = document.getElementById('existingLogoContainer');
+            var removeFlag = document.getElementById('removeLogoFlag');
+            if (container) {
+                container.style.display = 'none';
+            }
+            if (removeFlag) {
+                removeFlag.value = 'true';
+            }
+        };
+
+        window.removeNewLogo = function() {
+            var fileInput = document.getElementById('logoFile');
+            var previewContainer = document.getElementById('logoPreview');
+            fileInput.value = '';
+            previewContainer.style.display = 'none';
+            previewContainer.innerHTML = '';
+        };
+
+        // ================================================================
+        // SAVE ITEM
+        // ================================================================
+
+        window.saveItem = function() {
+            var formDataToSend = new FormData();
+
+            var shortName = document.getElementById('formShortName').value.trim();
+            var name = document.getElementById('formName').value.trim();
+            var country = document.getElementById('formCountry').value;
+            var role = document.getElementById('formRole').value.trim();
+            var description = document.getElementById('formDescription').value.trim();
+            var website = document.getElementById('formWebsite').value.trim();
+            var displayOrder = document.getElementById('formDisplayOrder').value || 0;
+            var ecosystemImpact = document.getElementById('formEcosystemImpact') ? document.getElementById('formEcosystemImpact').value.trim() : '';
+            var isPublished = document.getElementById('formIsPublic').checked;
+
+            var consortiumRadio = document.querySelector('input[name="partner_type"][value="consortium"]');
+            var isConsortium = consortiumRadio ? consortiumRadio.checked : true;
+
+            if (!shortName) {
+                showToast('Validation Error', 'Short Name is required.', 'error');
+                return;
+            }
+            if (!name) {
+                showToast('Validation Error', 'Full Name is required.', 'error');
+                return;
+            }
+            if (!country) {
+                showToast('Validation Error', 'Country is required.', 'error');
+                return;
+            }
+
+            formDataToSend.append('short_name', shortName);
+            formDataToSend.append('name', name);
+            formDataToSend.append('country', country);
+            formDataToSend.append('role', role);
+            formDataToSend.append('description', description);
+            formDataToSend.append('website', website);
+            formDataToSend.append('is_consortium', isConsortium ? 'true' : 'false');
+            formDataToSend.append('display_order', displayOrder);
+            formDataToSend.append('is_published', isPublished ? 'true' : 'false');
+            formDataToSend.append('ecosystem_impact', ecosystemImpact);
+
+            if (currentTags.length > 0) {
+                formDataToSend.append('tags', currentTags.join(','));
+            }
+
+            var fileInput = document.getElementById('logoFile');
+            if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                formDataToSend.append('logo', fileInput.files[0]);
+            }
+
+            var removeFlag = document.getElementById('removeLogoFlag');
+            if (removeFlag && removeFlag.value === 'true') {
+                formDataToSend.append('remove_logo', 'true');
+            }
+
+            var endpoint = '/api/partners/';
+            var method = 'POST';
+
+            if (editingItem) {
+                endpoint = '/api/partners/' + editingItem;
+                method = 'PUT';
+            }
+
+            var csrfToken = getCsrfToken();
+
+            fetch(endpoint, {
+                method: method,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                },
+                body: formDataToSend
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    closeModal();
+                    loadData();
+                    var action = editingItem ? 'updated' : 'created';
+                    showToast('Partner ' + action, result.message || 'Partner ' + action + ' successfully', 'success');
+                } else {
+                    showToast('Error', result.message || result.error || 'Error saving partner. Please try again.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error saving:', error);
+                showToast('Error', 'An error occurred. Please try again.', 'error');
+            });
+        };
+
+        // ================================================================
+        // VIEW ITEM
+        // ================================================================
+
+        window.viewItem = function(id) {
+            fetch('/api/partners/' + id, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                var html = buildDetailView(data);
+                viewModalContent.innerHTML = html;
+                viewModalTitle.innerHTML = 'View <span class="gold">Partner</span>';
+                viewModalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            })
+            .catch(function(error) {
+                console.error('Error loading partner:', error);
+                showToast('Error', 'Could not load partner details.', 'error');
+            });
+        };
+
+        // ================================================================
+        // BUILD DETAIL VIEW
+        // ================================================================
+
+        function buildDetailView(data) {
+            var typeClass = data.is_consortium ? 'consortium' : 'local';
+            var typeLabel = data.is_consortium ? 'Consortium' : 'Local';
+            var statusClass = data.is_published !== false ? 'published' : 'draft';
+            var statusLabel = data.is_published !== false ? 'Published' : 'Draft';
+
+            var logoHtml = '';
+            if (data.logo) {
+                logoHtml = `<img src="/static/${escapeHtml(data.logo)}" alt="${escapeHtml(data.short_name)}" class="logo-preview-lg">`;
+            } else {
+                logoHtml = '<span style="color:var(--text-light);font-size:0.85rem;">No logo uploaded</span>';
+            }
+
+            var tagsHtml = '';
+            if (data.tags && data.tags.length > 0) {
+                tagsHtml = data.tags.map(function(tag) {
+                    return `<span class="tag" style="display:inline-block;margin:2px 4px 2px 0;background:#1A4A6B;color:#FFFFFF;padding:2px 12px;border-radius:60px;font-size:0.7rem;font-weight:500;">${escapeHtml(tag)}</span>`;
+                }).join('');
+            } else {
+                tagsHtml = '<span style="color:var(--text-light);font-size:0.85rem;">No tags</span>';
+            }
+
+            return `
+                <div class="detail-row">
+                    <span class="detail-label">Short Name</span>
+                    <span class="detail-value"><strong>${escapeHtml(data.short_name)}</strong></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Full Name</span>
+                    <span class="detail-value">${escapeHtml(data.name)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Country</span>
+                    <span class="detail-value">${escapeHtml(data.country)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Role</span>
+                    <span class="detail-value">${escapeHtml(data.role || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Type</span>
+                    <span class="detail-value"><span class="type-badge ${typeClass}">${typeLabel}</span></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value"><span class="status-badge ${statusClass}">${statusLabel}</span></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Description</span>
+                    <span class="detail-value">${escapeHtml(data.description || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Website</span>
+                    <span class="detail-value">${data.website ? `<a href="${escapeHtml(data.website)}" target="_blank" rel="noopener">${escapeHtml(data.website)}</a>` : '-'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Display Order</span>
+                    <span class="detail-value">${data.display_order || 0}</span>
+                </div>
+                ${data.tags && data.tags.length > 0 ? `
+                    <div class="detail-row">
+                        <span class="detail-label">Tags</span>
+                        <span class="detail-value">${tagsHtml}</span>
+                    </div>
+                ` : ''}
+                ${data.ecosystem_impact ? `
+                    <div class="detail-row">
+                        <span class="detail-label">Ecosystem Impact</span>
+                        <span class="detail-value">${escapeHtml(data.ecosystem_impact)}</span>
+                    </div>
+                ` : ''}
+                <div class="detail-row">
+                    <span class="detail-label">Logo</span>
+                    <span class="detail-value">${logoHtml}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Created</span>
+                    <span class="detail-value">${formatDate(data.created_at)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Updated</span>
+                    <span class="detail-value">${formatDate(data.updated_at)}</span>
+                </div>
+                <div class="detail-actions">
+                    <button class="btn-modal-close" onclick="closeViewModal()">Close</button>
+                    <button class="btn-modal-save" onclick="closeViewModal();editItem(${data.id});">Edit Partner</button>
+                </div>
+            `;
+        }
+
+        // ================================================================
+        // DELETE ITEM
+        // ================================================================
+
+        window.deleteItem = function(id) {
+            if (!confirm('Are you sure you want to delete this partner? This action cannot be undone.')) return;
+
+            var csrfToken = getCsrfToken();
+
+            fetch('/api/partners/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    loadData();
+                    showToast('Partner deleted', result.message || 'Partner deleted successfully', 'success');
+                } else {
+                    showToast('Error', result.message || result.error || 'Error deleting partner.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error deleting:', error);
+                showToast('Error', 'An error occurred. Please try again.', 'error');
+            });
+        };
+
+        // ================================================================
+        // CLOSE MODAL
+        // ================================================================
+
+        window.closeModal = function() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            editingItem = null;
+            currentTags = [];
+        };
+
+        window.closeViewModal = function() {
+            viewModalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        viewModalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeViewModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeViewModal();
+            }
+        });
+
+        // ================================================================
+        // CSRF TOKEN
+        // ================================================================
+
+        function getCsrfToken() {
+            if (window.getCsrfToken && typeof window.getCsrfToken === 'function') {
+                return window.getCsrfToken();
+            }
+            var metaTag = document.querySelector('meta[name="csrf-token"]');
+            if (metaTag) {
+                return metaTag.getAttribute('content');
+            }
+            var cookieValue = document.cookie.match(/csrf_token=([^;]+)/);
+            if (cookieValue) {
+                return cookieValue[1];
+            }
+            return '';
+        }
+
+        // ================================================================
+        // LOADER
+        // ================================================================
+
+        function showLoader() {
+            if (loaderOverlay) {
+                loaderOverlay.classList.remove('hidden');
+                loaderOverlay.style.display = 'flex';
+            }
+        }
+
+        function hideLoader() {
+            if (loaderOverlay) {
+                loaderOverlay.classList.add('hidden');
+                setTimeout(function() {
+                    loaderOverlay.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        // ================================================================
+        // TOAST NOTIFICATIONS
+        // ================================================================
+
+        function showToast(title, message, type, duration) {
+            type = type || 'success';
+            duration = duration || 4000;
+
+            var container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            var icons = {
+                'success': '✓',
+                'error': '✗',
+                'warning': '⚠',
+                'info': 'ℹ'
+            };
+
+            var toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || 'ℹ'}</span>
+                <div class="toast-content">
+                    <div class="toast-title">${escapeHtml(title)}</div>
+                    <div class="toast-message">${escapeHtml(message)}</div>
+                </div>
+                <button class="toast-close" onclick="dismissToast(this.parentElement)">✕</button>
+                <div class="toast-progress"><div class="toast-progress-bar" style="animation-duration:${duration}ms;"></div></div>
+            `;
+
+            container.appendChild(toast);
+
+            var timeout = setTimeout(function() {
+                dismissToast(toast);
+            }, duration);
+
+            toast.addEventListener('mouseenter', function() {
+                clearTimeout(timeout);
+                var progressBar = toast.querySelector('.toast-progress-bar');
+                if (progressBar) {
+                    progressBar.style.animationPlayState = 'paused';
+                }
+            });
+
+            toast.addEventListener('mouseleave', function() {
+                var progressBar = toast.querySelector('.toast-progress-bar');
+                if (progressBar) {
+                    progressBar.style.animationPlayState = 'running';
+                }
+                timeout = setTimeout(function() {
+                    dismissToast(toast);
+                }, duration);
+            });
+        }
+
+        window.dismissToast = function(toast) {
+            if (!toast || toast.classList.contains('hiding')) return;
+            toast.classList.add('hiding');
+            setTimeout(function() {
+                if (toast.parentElement) {
+                    toast.parentElement.removeChild(toast);
+                }
+            }, 400);
+        };
+
+        // ================================================================
+        // HELPERS
+        // ================================================================
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            try {
+                var d = new Date(dateStr);
+                return d.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        // ================================================================
+        // INITIALIZE
+        // ================================================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            console.log('BRIDGE-AI Kenya Partners Admin initialized');
+        });
+
+    })();
+</script>
+
+{% endblock %}

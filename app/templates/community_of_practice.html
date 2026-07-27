@@ -1,0 +1,2024 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - COMMUNITY OF PRACTICE                         -->
+<!-- ================================================================ -->
+<!-- Modern Glassmorphism + Gradient Style                            -->
+<!-- Premium · Unique · Sophisticated                                -->
+<!-- Features: Glass hero · Gradient cards · Smooth animations      -->
+<!-- Clean typography · No emojis · No decorative symbols           -->
+<!-- Fully responsive · Modern design                               -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- CSRF Token for JavaScript -->
+{% if csrf_token %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+{% endif %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community of Practice - BRIDGE-AI Kenya</title>
+    <meta name="description" content="Join the BRIDGE-AI Community of Practice - a network of innovators building the future of African agriculture.">
+
+    <style>
+        /* ================================================================ */
+        /* CSS VARIABLES                                                   */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #061420;
+            --primary: #0F2B3D;
+            --primary-light: #1A4A6B;
+            --primary-lighter: #2A6A8B;
+            --gold: #D4A843;
+            --gold-light: #F5D77E;
+            --gold-pale: #F5ECD7;
+            --gold-glow: rgba(212, 168, 67, 0.08);
+            --text-dark: #081A28;
+            --text-body: #1A2A3A;
+            --text-muted: #5A6A7A;
+            --text-light: #8A9AAA;
+            --bg-white: #FFFFFF;
+            --bg-light: #F5F8FA;
+            --bg-lighter: #FAFCFE;
+            --border-light: #E4EAF0;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 16px 56px rgba(0, 0, 0, 0.08);
+            --shadow-xl: 0 24px 80px rgba(0, 0, 0, 0.12);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-body);
+            background: var(--bg-white);
+            line-height: 1.7;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ================================================================ */
+        /* PAGE LOADER                                                     */
+        /* ================================================================ */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0a0e14;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        #page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.06);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: loaderSpin 0.8s linear infinite;
+        }
+        @keyframes loaderSpin { to { transform: rotate(360deg); } }
+        #page-loader p {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.25);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+        }
+
+        /* ================================================================ */
+        /* CONTAINER                                                       */
+        /* ================================================================ */
+        .page-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ================================================================ */
+        /* HERO - Glassmorphism + Gradient                                */
+        /* ================================================================ */
+        /* ================================================================ */
+/* HERO - With Background Image                                    */
+/* ================================================================ */
+.hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--primary-dark);
+}
+
+/* ─── Background Image ─── */
+.hero-section .hero-bg-image {
+    position: absolute;
+    inset: 0;
+    background-image: url('/static/uploads/events/DSC_7162.jpg');
+    background-size: cover;
+    background-position: center;
+   
+    z-index: 0;
+    transition: transform 20s ease;
+}
+
+
+
+/* ─── Gradients Overlay ─── */
+.hero-section .hero-gradients {
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(ellipse at 20% 30%, rgba(212, 168, 67, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(26, 74, 107, 0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 50%, rgba(212, 168, 67, 0.03) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.hero-accent-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 2;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+    opacity: 0.6;
+}
+
+        .hero-accent-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            z-index: 2;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            opacity: 0.6;
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1280px;
+            width: 100%;
+            padding: 40px 24px;
+            margin: 0 auto;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+            min-height: 65vh;
+        }
+
+        .hero-content {
+            max-width: 100%;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 4px 18px;
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+             margin-top: 30px;
+            margin-bottom: 20px;
+            background: rgba(212, 168, 67, 0.04);
+            
+        }
+
+        .hero-title {
+            font-size: 4.2rem;
+            font-weight: 800;
+            line-height: 1.04;
+            letter-spacing: -0.04em;
+            margin: 0 0 8px;
+            color: #ffffff;
+        }
+
+        .hero-title .gold {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 40%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 560px;
+            line-height: 1.7;
+            margin: 0 0 6px;
+            letter-spacing: 0.01em;
+        }
+
+        .hero-desc {
+            font-size: 1rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.45);
+            max-width: 520px;
+            line-height: 1.8;
+            margin: 0 0 28px;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 36px;
+            background: var(--gold);
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all var(--transition);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            font-family: var(--font-sans);
+            box-shadow: 0 8px 32px rgba(212, 168, 67, 0.12);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 16px 48px rgba(212, 168, 67, 0.2);
+        }
+
+        .btn-arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+
+        .btn-primary:hover .btn-arrow {
+            transform: translateX(6px);
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            cursor: pointer;
+            
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* ─── Glass Stats ─── */
+        .hero-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .stats-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-sm);
+            padding: 20px 24px;
+            text-align: center;
+            transition: all var(--transition);
+        }
+
+        .stats-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(212, 168, 67, 0.12);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .stats-card .stats-number {
+            display: block;
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: var(--gold);
+            line-height: 1.1;
+        }
+
+        .stats-card .stats-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.35);
+            margin-top: 2px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        /* ================================================================ */
+        /* WHY JOIN SECTION                                                */
+        /* ================================================================ */
+        .why-join-section {
+            padding: 60px 0;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header .section-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .section-header h2 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+        }
+
+        .section-header h2 .gold {
+            color: var(--gold);
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 640px;
+            margin: 8px auto 0;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .why-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 28px 24px;
+            text-align: center;
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .why-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .why-card:hover::before {
+            opacity: 0.6;
+        }
+
+        .why-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(212, 168, 67, 0.1);
+        }
+
+        .why-card .why-icon {
+            width: 44px;
+            height: 44px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            background: var(--gold-pale);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .why-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .why-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* ================================================================ */
+        /* SECTION TOOLBAR                                                 */
+        /* ================================================================ */
+        .section-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .section-toolbar .section-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .section-toolbar .section-title-group .section-label-sm {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gold);
+        }
+
+        .section-toolbar .section-title-group h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+        }
+
+        .section-toolbar .section-title-group h3 .gold {
+            color: var(--gold);
+        }
+
+        /* ================================================================ */
+        /* REPOSITORIES SECTION                                            */
+        /* ================================================================ */
+        .repos-section {
+            padding: 60px 0;
+            background: var(--bg-lighter);
+        }
+
+        .repos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .repo-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 22px 24px;
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .repo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .repo-card:hover::before {
+            opacity: 0.6;
+        }
+
+        .repo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(212, 168, 67, 0.1);
+        }
+
+        .repo-card .repo-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .repo-card .repo-header h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .repo-card .repo-lang {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            background: #D4E8F5;
+            color: #1A4A6B;
+            letter-spacing: 0.03em;
+        }
+
+        .repo-card .repo-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 10px;
+            min-height: 40px;
+        }
+
+        .repo-card .repo-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.68rem;
+            color: var(--text-light);
+            padding-top: 10px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .repo-card .repo-meta .stars {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .repo-card .repo-meta .license {
+            margin-left: auto;
+        }
+
+        .repo-card .repo-click-hint {
+            font-size: 0.55rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 6px;
+            opacity: 0.3;
+            transition: opacity var(--transition);
+        }
+
+        .repo-card:hover .repo-click-hint {
+            opacity: 0.7;
+        }
+
+        /* ================================================================ */
+        /* EVENTS SECTION                                                  */
+        /* ================================================================ */
+        .events-section {
+            padding: 60px 0;
+            background: var(--bg-white);
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .event-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 22px 24px;
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .event-card:hover::before {
+            opacity: 0.6;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(212, 168, 67, 0.1);
+        }
+
+        .event-card .event-status {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 8px;
+        }
+
+        .event-card .event-status.upcoming {
+            background: #D4E8F5;
+            color: #1A4A6B;
+        }
+
+        .event-card .event-status.ongoing {
+            background: #F5ECD7;
+            color: #9E6A2A;
+        }
+
+        .event-card .event-status.completed {
+            background: #E8E8E8;
+            color: #6A7A8A;
+        }
+
+        .event-card h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .event-card .event-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 16px;
+            margin-bottom: 4px;
+        }
+
+        .event-card .event-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 10px;
+            min-height: 40px;
+        }
+
+        .event-card .event-click-hint {
+            font-size: 0.55rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 6px;
+            opacity: 0.3;
+            transition: opacity var(--transition);
+        }
+
+        .event-card:hover .event-click-hint {
+            opacity: 0.7;
+        }
+
+        /* ================================================================ */
+        /* JOIN FORM SECTION                                               */
+        /* ================================================================ */
+        .join-section {
+            padding: 60px 0 70px;
+            background: var(--bg-lighter);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .join-container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 40px 44px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .join-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+        }
+
+        .join-container .join-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .join-container .join-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 2px;
+        }
+
+        .join-container .join-header h2 .gold {
+            color: var(--gold);
+        }
+
+        .join-container .join-header p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        /* ─── Flash Message ─── */
+        .form-flash-message {
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+            border-left: 3px solid transparent;
+            animation: flashSlideDown 0.4s ease forwards;
+            line-height: 1.6;
+        }
+
+        .form-flash-message.flash-success {
+            background: #E6F5EE;
+            color: #1A6A4A;
+            border-left-color: #1A7A4A;
+        }
+
+        .form-flash-message.flash-error {
+            background: #F5E6E6;
+            color: #9E2A2A;
+            border-left-color: #9E2A2A;
+        }
+
+        @keyframes flashSlideDown {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── Form ─── */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-body);
+            margin-bottom: 3px;
+        }
+
+        .form-group label .required {
+            color: #9E2A2A;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            color: var(--text-body);
+            background: var(--bg-lighter);
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(26, 74, 107, 0.04);
+            background: var(--bg-white);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-group .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .btn-submit {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 40px;
+            background: var(--gold);
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.92rem;
+            border: none;
+            border-radius: 4px;
+            transition: all var(--transition);
+            cursor: pointer;
+            font-family: var(--font-sans);
+            box-shadow: 0 8px 32px rgba(212, 168, 67, 0.12);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-submit:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 16px 48px rgba(212, 168, 67, 0.2);
+        }
+
+        .btn-submit .btn-arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+
+        .btn-submit:hover .btn-arrow {
+            transform: translateX(6px);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ================================================================ */
+        /* BACK SECTION                                                    */
+        /* ================================================================ */
+        .back-section {
+            padding: 30px 24px 50px;
+            text-align: center;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .back-section .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all var(--transition);
+            padding: 10px 24px;
+            border-radius: 4px;
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+        }
+
+        .back-section .back-link:hover {
+            gap: 16px;
+            color: var(--primary-light);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+
+        /* ================================================================ */
+        /* MODAL                                                           */
+        /* ================================================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(6, 20, 32, 0.7);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal {
+            background: var(--bg-white);
+            border-radius: var(--radius-sm);
+            max-width: 640px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s ease;
+            position: relative;
+        }
+
+        .modal::-webkit-scrollbar { width: 4px; }
+        .modal::-webkit-scrollbar-track { background: var(--bg-light); border-radius: 4px; }
+        .modal::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+
+        .modal-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 24px 28px 16px;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            background: var(--bg-white);
+            z-index: 10;
+        }
+
+        .modal-header .modal-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 4px;
+        }
+
+        .modal-header .modal-badge.repository {
+            background: #D4E8F5;
+            color: #1A4A6B;
+        }
+
+        .modal-header .modal-badge.event {
+            background: var(--gold-pale);
+            color: var(--gold);
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--text-dark);
+            transform: rotate(90deg);
+        }
+
+        .modal-body { padding: 24px 28px 28px; }
+
+        .modal-body .modal-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .modal-body .modal-meta .meta-item {
+            background: var(--bg-light);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .modal-body .modal-meta .meta-item .meta-label {
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .modal-body .modal-meta .meta-item .meta-value {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-body);
+            display: block;
+            margin-top: 1px;
+        }
+
+        .modal-body .modal-description {
+            font-size: 0.92rem;
+            color: var(--text-body);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .modal-body .modal-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 28px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: var(--primary-light);
+            text-decoration: none;
+            transition: all var(--transition);
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            margin-top: 8px;
+        }
+
+        .modal-body .modal-action:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 74, 107, 0.15);
+        }
+
+        .modal-body .modal-action .action-arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+
+        .modal-body .modal-action:hover .action-arrow {
+            transform: translateX(4px);
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                      */
+        /* ================================================================ */
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                min-height: auto;
+            }
+            .hero-title { font-size: 3.2rem; }
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .why-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 64px; }
+
+            .hero-section { min-height: auto; }
+            .hero-container { padding: 40px 20px; }
+            .hero-title { font-size: 2.4rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .hero-desc { font-size: 0.9rem; }
+
+            .hero-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-primary,
+            .btn-outline {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .stats-card {
+                padding: 14px 16px;
+            }
+            .stats-card .stats-number {
+                font-size: 1.8rem;
+            }
+            .stats-card .stats-label {
+                font-size: 0.6rem;
+            }
+
+            .why-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+            .section-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .section-toolbar .section-title-group h3 {
+                font-size: 1.4rem;
+            }
+
+            .repos-grid,
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .join-container {
+                padding: 24px 20px;
+            }
+            .join-container .join-header h2 {
+                font-size: 1.4rem;
+            }
+            .form-group .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .modal {
+                max-width: 100%;
+                margin: 10px;
+                max-height: 95vh;
+            }
+            .modal-header {
+                padding: 20px 20px 12px;
+            }
+            .modal-body {
+                padding: 16px 20px 24px;
+            }
+            .modal-body .modal-meta {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .modal-header h3 {
+                font-size: 1.1rem;
+            }
+            .modal-body .modal-description {
+                font-size: 0.85rem;
+            }
+
+            .back-section {
+                padding: 24px 16px 36px;
+            }
+            .back-section .back-link {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            .hero-badge {
+                font-size: 0.45rem;
+                padding: 3px 14px;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .stats-card {
+                padding: 10px 12px;
+            }
+            .stats-card .stats-number {
+                font-size: 1.4rem;
+            }
+            .stats-card .stats-label {
+                font-size: 0.5rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.4rem;
+            }
+            .section-header p {
+                font-size: 0.85rem;
+            }
+            .section-toolbar .section-title-group h3 {
+                font-size: 1.2rem;
+            }
+
+            .repo-card,
+            .event-card {
+                padding: 16px 16px;
+            }
+
+            .join-container {
+                padding: 16px 14px;
+            }
+            .join-container .join-header h2 {
+                font-size: 1.2rem;
+            }
+
+            .form-flash-message {
+                font-size: 0.75rem;
+                padding: 10px 12px;
+            }
+
+            .modal-body .modal-meta {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .modal-body .modal-meta .meta-item {
+                padding: 6px 10px;
+            }
+            .modal-body .modal-meta .meta-item .meta-value {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-light); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        ::selection { background: var(--gold-pale); color: var(--text-dark); }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADER                                                          -->
+    <!-- ================================================================ -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+        <p>Loading community...</p>
+    </div>
+
+    <script>
+        (function() {
+            function hideLoader() {
+                var loader = document.getElementById('page-loader');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    setTimeout(function() {
+                        if (loader.parentNode) loader.parentNode.removeChild(loader);
+                    }, 700);
+                }
+            }
+            if (document.readyState === 'complete') {
+                hideLoader();
+            } else {
+                window.addEventListener('load', hideLoader);
+                setTimeout(hideLoader, 3000);
+            }
+        })();
+    </script>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT                                                    -->
+    <!-- ================================================================ -->
+    <main>
+
+        <!-- ============================================================ -->
+        <!-- HERO SECTION                                                  -->
+        <!-- ============================================================ -->
+        <section class="hero-section" id="hero">
+            <div class="hero-bg-image"></div>
+            <div class="hero-gradients"></div>
+            <div class="hero-accent-line"></div>
+
+            <div class="hero-container">
+                <div class="hero-grid">
+                    <div class="hero-content">
+                        <span class="hero-badge">WP5 · Community of Practice</span>
+                        <h1 class="hero-title">
+                            Community of <span class="gold">Practice</span>
+                        </h1>
+                        <p class="hero-subtitle">Collaborative Innovation for African Agriculture</p>
+                        <p class="hero-desc">
+                            A network of developers, researchers and agritech innovators
+                            sharing knowledge and building solutions together.
+                        </p>
+                        <div class="hero-actions">
+                            <a href="#join-form" class="btn-primary">
+                                Join Now
+                                <span class="btn-arrow">→</span>
+                            </a>
+                            <a href="#repositories" class="btn-outline">
+                                Explore Repositories
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stats-card">
+                            <span class="stats-number" id="statsMembers">52</span>
+                            <span class="stats-label">Community Members</span>
+                        </div>
+                        <div class="stats-card">
+                            <span class="stats-number" id="statsRepos">0</span>
+                            <span class="stats-label">Repositories</span>
+                        </div>
+                        <div class="stats-card">
+                            <span class="stats-number" id="statsEvents">0</span>
+                            <span class="stats-label">Community Events</span>
+                        </div>
+                        <div class="stats-card">
+                            <span class="stats-number" id="statsCountries">8+</span>
+                            <span class="stats-label">Countries Reached</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- WHY JOIN SECTION                                              -->
+        <!-- ============================================================ -->
+        <section class="why-join-section">
+            <div class="page-container">
+                <div class="section-header">
+                    <span class="section-label">Get Involved</span>
+                    <h2>Why Join the <span class="gold">Community</span></h2>
+                    <p>Connect, learn and contribute to the future of African agriculture</p>
+                </div>
+
+                <div class="why-grid">
+                    <div class="why-card">
+                        <div class="why-icon">01</div>
+                        <h4>Connect</h4>
+                        <p>Build meaningful connections with researchers, developers and agritech innovators across Africa.</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-icon">02</div>
+                        <h4>Learn</h4>
+                        <p>Access knowledge, resources and expertise to grow your skills in digital agriculture and AI.</p>
+                    </div>
+                    <div class="why-card">
+                        <div class="why-icon">03</div>
+                        <h4>Contribute</h4>
+                        <p>Share your expertise, contribute to open-source projects and shape the future of agritech.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- REPOSITORIES SECTION                                         -->
+        <!-- ============================================================ -->
+        <section class="repos-section" id="repositories">
+            <div class="page-container">
+                <div class="section-toolbar">
+                    <div class="section-title-group">
+                        <span class="section-label-sm">Open Source</span>
+                        <h3>Community <span class="gold">Repositories</span></h3>
+                    </div>
+                </div>
+
+                <div class="repos-grid" id="reposGrid">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- EVENTS SECTION                                                -->
+        <!-- ============================================================ -->
+        <section class="events-section" id="events">
+            <div class="page-container">
+                <div class="section-toolbar">
+                    <div class="section-title-group">
+                        <span class="section-label-sm">Upcoming & Past</span>
+                        <h3>Community <span class="gold">Events</span></h3>
+                    </div>
+                </div>
+
+                <div class="events-grid" id="eventsGrid">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- JOIN FORM SECTION                                            -->
+        <!-- ============================================================ -->
+        <section class="join-section" id="join-form">
+            <div class="page-container">
+                <div class="join-container">
+                    <div class="join-header">
+                        <h2>Join the <span class="gold">Community</span></h2>
+                        <p>Become part of a network of innovators shaping African agriculture</p>
+                    </div>
+
+                    <!-- Flash Message Container -->
+                    <div id="formFlashMessage" class="form-flash-message" style="display:none;"></div>
+
+                    <form id="joinForm" method="POST" action="{{ url_for('public.community_of_practice') }}" onsubmit="return submitForm(event)">
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div>
+                                    <label>Full Name <span class="required">*</span></label>
+                                    <input type="text" name="name" placeholder="Your full name" required>
+                                </div>
+                                <div>
+                                    <label>Email Address <span class="required">*</span></label>
+                                    <input type="email" name="email" placeholder="your@email.com" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div>
+                                    <label>Role <span class="required">*</span></label>
+                                    <select name="role" required>
+                                        <option value="">Select your role</option>
+                                        <option value="developer">Developer</option>
+                                        <option value="researcher">Researcher</option>
+                                        <option value="sme">SME / Entrepreneur</option>
+                                        <option value="student">Student</option>
+                                        <option value="farmer">Farmer</option>
+                                        <option value="policy">Policy Maker</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Area of Interest <span class="required">*</span></label>
+                                    <select name="interest" required>
+                                        <option value="">Select your interest</option>
+                                        <option value="agritech">Agritech Innovation</option>
+                                        <option value="ai">Artificial Intelligence</option>
+                                        <option value="iot">IoT & Sensing</option>
+                                        <option value="genai">Generative AI</option>
+                                        <option value="data">Data Science</option>
+                                        <option value="policy">Policy & Scaling</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div>
+                                    <label>GitHub Profile</label>
+                                    <input type="url" name="github" placeholder="https://github.com/username">
+                                </div>
+                                <div>
+                                    <label>Message</label>
+                                    <input type="text" name="message" placeholder="Tell us why you'd like to join">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:0;">
+                            <button type="submit" class="btn-submit" id="submitBtn">
+                                Submit Application
+                                <span class="btn-arrow">→</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- BACK TO TRAINING                                              -->
+        <!-- ============================================================ -->
+        <section class="back-section">
+            <a href="{{ url_for('public.training_wp5') }}" class="back-link">
+                ← Back to Training and WP5
+            </a>
+        </section>
+
+    </main>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- MODAL CONTAINER                                                 -->
+    <!-- ================================================================ -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modalContent">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <span class="modal-badge" id="modalBadge">Repository</span>
+                    <h3 id="modalTitle">Modal Title</h3>
+                </div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT                                        -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // CSRF TOKEN HELPER
+            // ================================================================
+
+            function getCsrfToken() {
+                var token = '{{ csrf_token }}';
+                if (token) {
+                    return token;
+                }
+                var metaTag = document.querySelector('meta[name="csrf-token"]');
+                if (metaTag) {
+                    return metaTag.getAttribute('content');
+                }
+                var cookieValue = document.cookie.match(/csrf_token=([^;]+)/);
+                if (cookieValue) {
+                    return cookieValue[1];
+                }
+                return '';
+            }
+
+            // ================================================================
+            // DOM REFS
+            // ================================================================
+
+            var reposGrid = document.getElementById('reposGrid');
+            var eventsGrid = document.getElementById('eventsGrid');
+            var modalOverlay = document.getElementById('modalOverlay');
+            var modalBadge = document.getElementById('modalBadge');
+            var modalTitle = document.getElementById('modalTitle');
+            var modalBody = document.getElementById('modalBody');
+
+            // ================================================================
+            // LOAD DATA
+            // ================================================================
+
+            function loadData() {
+                // Load repositories
+                fetch('/api/repositories/', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    renderRepositories(data);
+                    document.getElementById('statsRepos').textContent = data.length;
+                })
+                .catch(function(error) {
+                    console.error('Error loading repositories:', error);
+                    renderRepositories([]);
+                });
+
+                // Load community events
+                fetch('/api/community-events/', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    renderEvents(data);
+                    document.getElementById('statsEvents').textContent = data.length;
+                })
+                .catch(function(error) {
+                    console.error('Error loading events:', error);
+                    renderEvents([]);
+                });
+            }
+
+            // ================================================================
+            // RENDER REPOSITORIES
+            // ================================================================
+
+            function renderRepositories(data) {
+                if (!reposGrid) return;
+
+                if (!data || data.length === 0) {
+                    reposGrid.innerHTML = `
+                        <div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text-muted);background:var(--bg-white);border-radius:var(--radius-md);border:1px solid var(--border-light);">
+                            <p>No repositories available at this time. Please check back later.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                var html = '';
+                data.forEach(function(item) {
+                    var lang = item.language || 'General';
+                    var stars = item.stars || 0;
+                    var license = item.license || '';
+                    var desc = item.description || 'No description available';
+
+                    html += `
+                        <div class="repo-card" onclick="openRepoModal(${item.id})">
+                            <div class="repo-header">
+                                <h4>${escapeHtml(item.name)}</h4>
+                                <span class="repo-lang">${escapeHtml(lang)}</span>
+                            </div>
+                            <p class="repo-desc">${escapeHtml(desc)}</p>
+                            <div class="repo-meta">
+                                <span class="stars">${stars} stars</span>
+                                ${license ? `<span class="license">${escapeHtml(license)}</span>` : ''}
+                            </div>
+                            <div class="repo-click-hint">Click for details</div>
+                        </div>
+                    `;
+                });
+                reposGrid.innerHTML = html;
+            }
+
+            // ================================================================
+            // RENDER EVENTS
+            // ================================================================
+
+            function renderEvents(data) {
+                if (!eventsGrid) return;
+
+                if (!data || data.length === 0) {
+                    eventsGrid.innerHTML = `
+                        <div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text-muted);background:var(--bg-white);border-radius:var(--radius-md);border:1px solid var(--border-light);">
+                            <p>No community events available at this time. Please check back later.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                var html = '';
+                data.forEach(function(item) {
+                    var statusClass = item.status || 'upcoming';
+                    var statusText = item.status || 'Upcoming';
+                    var date = item.date || 'TBD';
+                    var location = item.location || '';
+
+                    html += `
+                        <div class="event-card" onclick="openEventModal(${item.id})">
+                            <span class="event-status ${statusClass}">${escapeHtml(statusText)}</span>
+                            <h4>${escapeHtml(item.title)}</h4>
+                            <div class="event-meta">
+                                <span>${escapeHtml(date)}</span>
+                                ${location ? `<span>${escapeHtml(location)}</span>` : ''}
+                            </div>
+                            <p class="event-desc">${escapeHtml(item.description || 'No description available')}</p>
+                            <div class="event-click-hint">Click for details</div>
+                        </div>
+                    `;
+                });
+                eventsGrid.innerHTML = html;
+            }
+
+            // ================================================================
+            // MODAL FUNCTIONS
+            // ================================================================
+
+            function openModal(badgeText, badgeClass, title, contentHtml) {
+                modalBadge.textContent = badgeText;
+                modalBadge.className = 'modal-badge ' + badgeClass;
+                modalTitle.textContent = title;
+                modalBody.innerHTML = contentHtml;
+                modalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            window.closeModal = function() {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeModal();
+            });
+
+            // ================================================================
+            // REPOSITORY MODAL
+            // ================================================================
+
+            window.openRepoModal = function(id) {
+                fetch('/api/repositories/' + id, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    var html = '';
+
+                    // Meta data
+                    html += '<div class="modal-meta">';
+                    html += '<div class="meta-item"><span class="meta-label">Language</span><span class="meta-value">' + escapeHtml(data.language || 'General') + '</span></div>';
+                    html += '<div class="meta-item"><span class="meta-label">License</span><span class="meta-value">' + escapeHtml(data.license || 'Not specified') + '</span></div>';
+                    html += '<div class="meta-item"><span class="meta-label">Stars</span><span class="meta-value">' + (data.stars || 0) + '</span></div>';
+                    html += '</div>';
+
+                    // Description
+                    html += '<p class="modal-description">' + escapeHtml(data.description || 'No description available') + '</p>';
+
+                    // Additional info
+                    if (data.forks) {
+                        html += '<p class="modal-description"><strong>Forks:</strong> ' + data.forks + '</p>';
+                    }
+                    if (data.created_at) {
+                        html += '<p class="modal-description"><strong>Created:</strong> ' + formatDate(data.created_at) + '</p>';
+                    }
+                    if (data.updated_at) {
+                        html += '<p class="modal-description"><strong>Last Updated:</strong> ' + formatDate(data.updated_at) + '</p>';
+                    }
+
+                    // Action button
+                    if (data.url) {
+                        html += '<a href="' + escapeHtml(data.url) + '" class="modal-action" target="_blank">View Repository <span class="action-arrow">→</span></a>';
+                    }
+
+                    openModal('Repository', 'repository', data.name || 'Repository', html);
+                })
+                .catch(function(error) {
+                    console.error('Error loading repository:', error);
+                });
+            };
+
+            // ================================================================
+            // EVENT MODAL
+            // ================================================================
+
+            window.openEventModal = function(id) {
+                fetch('/api/community-events/' + id, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    var html = '';
+
+                    // Meta data
+                    html += '<div class="modal-meta">';
+                    html += '<div class="meta-item"><span class="meta-label">Date</span><span class="meta-value">' + escapeHtml(data.date || 'TBD') + '</span></div>';
+                    html += '<div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">' + escapeHtml(data.type || 'General') + '</span></div>';
+                    html += '<div class="meta-item"><span class="meta-label">Status</span><span class="meta-value">' + escapeHtml(data.status || 'Upcoming') + '</span></div>';
+                    html += '</div>';
+
+                    // Location
+                    if (data.location) {
+                        html += '<p class="modal-description"><strong>Location:</strong> ' + escapeHtml(data.location) + '</p>';
+                    }
+
+                    // Description
+                    html += '<p class="modal-description">' + escapeHtml(data.description || 'No description available') + '</p>';
+
+                    // Additional info
+                    if (data.agenda) {
+                        html += '<p class="modal-description"><strong>Agenda:</strong><br>' + escapeHtml(data.agenda) + '</p>';
+                    }
+                    if (data.speakers) {
+                        html += '<p class="modal-description"><strong>Speakers:</strong><br>' + escapeHtml(data.speakers) + '</p>';
+                    }
+                    if (data.created_at) {
+                        html += '<p class="modal-description"><strong>Created:</strong> ' + formatDate(data.created_at) + '</p>';
+                    }
+
+                    // Action button
+                    if (data.register_url) {
+                        html += '<a href="' + escapeHtml(data.register_url) + '" class="modal-action" target="_blank">Register Now <span class="action-arrow">→</span></a>';
+                    }
+
+                    openModal('Event', 'event', data.title || 'Event', html);
+                })
+                .catch(function(error) {
+                    console.error('Error loading event:', error);
+                });
+            };
+
+            // ================================================================
+            // FORM SUBMISSION - AJAX (NO PAGE REFRESH)
+            // ================================================================
+
+            window.submitForm = function(event) {
+                event.preventDefault();
+
+                var form = document.getElementById('joinForm');
+                var formData = new FormData(form);
+                var flashContainer = document.getElementById('formFlashMessage');
+                var submitBtn = document.getElementById('submitBtn');
+
+                // Clear previous flash message
+                flashContainer.style.display = 'none';
+                flashContainer.className = 'form-flash-message';
+                flashContainer.innerHTML = '';
+
+                // Disable submit button
+                var originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Submitting...';
+
+                var csrfToken = getCsrfToken();
+
+                fetch('/api/community-join/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        name: formData.get('name'),
+                        email: formData.get('email'),
+                        role: formData.get('role'),
+                        interest: formData.get('interest'),
+                        github: formData.get('github') || '',
+                        message: formData.get('message') || ''
+                    })
+                })
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+
+                    if (data.success) {
+                        flashContainer.className = 'form-flash-message flash-success';
+                        flashContainer.innerHTML = 'You have successfully joined the Community of Practice! We will contact you with next steps.';
+                        flashContainer.style.display = 'block';
+                        form.reset();
+
+                        // Update member count
+                        var memberCount = document.getElementById('statsMembers');
+                        var currentCount = parseInt(memberCount.textContent) || 0;
+                        memberCount.textContent = currentCount + 1;
+
+                        setTimeout(function() {
+                            flashContainer.style.display = 'none';
+                        }, 5000);
+                    } else {
+                        flashContainer.className = 'form-flash-message flash-error';
+                        flashContainer.innerHTML = data.message || 'There was an error submitting your application. Please try again.';
+                        flashContainer.style.display = 'block';
+                    }
+                })
+                .catch(function(error) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+
+                    flashContainer.className = 'form-flash-message flash-error';
+                    flashContainer.innerHTML = 'An error occurred. Please try again.';
+                    flashContainer.style.display = 'block';
+                });
+
+                return false;
+            };
+
+            // ================================================================
+            // SMOOTH SCROLL REVEAL
+            // ================================================================
+
+            if ('IntersectionObserver' in window) {
+                var sections = document.querySelectorAll('.why-join-section, .repos-section, .events-section, .join-section');
+
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, {
+                    threshold: 0.08,
+                    rootMargin: '0px 0px -30px 0px'
+                });
+
+                sections.forEach(function(section) {
+                    section.style.opacity = '0';
+                    section.style.transform = 'translateY(30px)';
+                    section.style.transition = 'all 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
+                    observer.observe(section);
+                });
+            } else {
+                document.querySelectorAll('.why-join-section, .repos-section, .events-section, .join-section')
+                    .forEach(function(el) {
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                    });
+            }
+
+            // ================================================================
+            // HELPER FUNCTIONS
+            // ================================================================
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                var div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function formatDate(dateStr) {
+                if (!dateStr) return '';
+                try {
+                    var d = new Date(dateStr);
+                    return d.toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                } catch (e) {
+                    return dateStr;
+                }
+            }
+
+            // ================================================================
+            // SMOOTH SCROLL FOR JOIN BUTTON
+            // ================================================================
+
+            document.querySelector('.btn-primary[href="#join-form"]')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                var target = document.querySelector('#join-form');
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+
+            // ================================================================
+            // INITIALIZE
+            // ================================================================
+
+            loadData();
+
+            console.log('BRIDGE-AI Kenya Community of Practice page initialized');
+
+        })();
+    </script>
+
+</body>
+</html>

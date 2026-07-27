@@ -1,0 +1,718 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - ADMIN DASHBOARD                               -->
+<!-- ================================================================ -->
+<!-- Extends: admin/layout.html                                     -->
+<!-- Content: Statistics cards · Quick links · Overview             -->
+<!-- Features: Responsive grid · Status indicators · Count badges   -->
+<!-- CSS: Fully self-contained in this file                         -->
+<!-- Rules: SVG icons · Clean typography · Professional design     -->
+<!-- ================================================================ -->
+
+{% extends "admin/layout.html" %}
+
+{% block title %}Dashboard - BRIDGE-AI Kenya Admin{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block page_subtitle %}Overview of your BRIDGE-AI Kenya admin panel{% endblock %}
+
+{% block content %}
+
+<!-- ================================================================ -->
+<!-- CSS - Self-contained for this page                              -->
+<!-- ================================================================ -->
+<style>
+    /* ================================================================ */
+    /* CSS VARIABLES                                                   */
+    /* ================================================================ */
+    :root {
+        --primary-dark: #061420;
+        --primary: #0F2B3D;
+        --primary-light: #1A4A6B;
+        --gold: #D4A843;
+        --gold-light: #F5D77E;
+        --gold-pale: #F5ECD7;
+        --text-dark: #081A28;
+        --text-body: #1A2A3A;
+        --text-muted: #5A6A7A;
+        --text-light: #8A9AAA;
+        --bg-white: #FFFFFF;
+        --bg-light: #F5F8FA;
+        --bg-lighter: #FAFCFE;
+        --border-light: #E4EAF0;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+        --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+        --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    /* ================================================================ */
+    /* DASHBOARD STATS GRID                                            */
+    /* ================================================================ */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .stat-card {
+        background: var(--bg-white);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-md);
+        padding: 18px 20px 16px;
+        transition: all var(--transition);
+        text-decoration: none;
+        color: var(--text-body);
+        display: block;
+        box-shadow: var(--shadow-sm);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--primary-light);
+        opacity: 0;
+        transition: opacity var(--transition);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-light);
+    }
+
+    .stat-card:hover::before {
+        opacity: 1;
+    }
+
+    .stat-card .stat-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 4px;
+    }
+
+    .stat-card .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-dark);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+    }
+
+    .stat-card .stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .stat-card .stat-icon svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    /* Icon background colors */
+    .stat-card .stat-icon.gold { background: var(--gold-pale); color: var(--gold); }
+    .stat-card .stat-icon.green { background: #E6F0E6; color: #1A6A4A; }
+    .stat-card .stat-icon.blue { background: #E6EEF5; color: var(--primary-light); }
+    .stat-card .stat-icon.purple { background: #EDE6F5; color: #5A3A7A; }
+    .stat-card .stat-icon.orange { background: #F5EDE6; color: #9E6A2A; }
+    .stat-card .stat-icon.red { background: #F5E6E6; color: #9E2A2A; }
+    .stat-card .stat-icon.teal { background: #E6F0F0; color: #1A6A6A; }
+    .stat-card .stat-icon.gray { background: #EEEEF0; color: #5A6A7A; }
+
+    .stat-card .stat-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        letter-spacing: 0.02em;
+    }
+
+    .stat-card .stat-sub {
+        font-size: 0.7rem;
+        color: var(--text-light);
+        margin-top: 2px;
+    }
+
+    .stat-card .stat-sub .highlight {
+        color: var(--primary-light);
+        font-weight: 600;
+    }
+
+    .stat-card .stat-sub .highlight.gold {
+        color: var(--gold);
+    }
+
+    .stat-card .stat-sub .highlight.green {
+        color: #1A6A4A;
+    }
+
+    .stat-card .stat-sub .highlight.red {
+        color: #9E2A2A;
+    }
+
+    .stat-card .stat-sub .highlight.blue {
+        color: var(--primary-light);
+    }
+
+    .stat-card .stat-sub .highlight.teal {
+        color: #1A6A6A;
+    }
+
+    /* ─── Section Headers ─── */
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 28px 0 16px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid var(--border-light);
+    }
+
+    .section-header .section-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    .section-header .section-title .gold {
+        color: var(--gold);
+    }
+
+    .section-header .section-count {
+        font-size: 0.7rem;
+        color: var(--text-light);
+        font-weight: 500;
+    }
+
+    /* ================================================================ */
+    /* RESPONSIVE                                                      */
+    /* ================================================================ */
+
+    @media (max-width: 1024px) {
+        .stats-grid {
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .stat-card .stat-number {
+            font-size: 1.6rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .stat-card {
+            padding: 14px 14px 12px;
+        }
+
+        .stat-card .stat-number {
+            font-size: 1.4rem;
+        }
+
+        .stat-card .stat-icon {
+            width: 34px;
+            height: 34px;
+        }
+
+        .stat-card .stat-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.7rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .stat-card {
+            padding: 12px 12px 10px;
+        }
+
+        .stat-card .stat-number {
+            font-size: 1.2rem;
+        }
+
+        .stat-card .stat-icon {
+            width: 28px;
+            height: 28px;
+        }
+
+        .stat-card .stat-icon svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.6rem;
+        }
+
+        .stat-card .stat-sub {
+            font-size: 0.55rem;
+        }
+
+        .section-header .section-title {
+            font-size: 0.7rem;
+        }
+
+        .section-header .section-count {
+            font-size: 0.55rem;
+        }
+    }
+
+    /* ================================================================ */
+    /* SCROLLBAR                                                       */
+    /* ================================================================ */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: var(--bg-light);
+    }
+    ::-webkit-scrollbar-thumb {
+        background: var(--primary-light);
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
+    }
+</style>
+
+<!-- ================================================================ -->
+<!-- STATS GRID                                                      -->
+<!-- ================================================================ -->
+
+<!-- Section: Content -->
+<div class="section-header">
+    <span class="section-title">Content <span class="gold">Management</span></span>
+    <span class="section-count">{{ stats.activities + stats.events + stats.resources + stats.partners }} items</span>
+</div>
+
+<div class="stats-grid">
+    <!-- Activities -->
+    <a href="{{ url_for('admin.admin_activities') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.activities }}</span>
+            <span class="stat-icon gold">
+                <svg viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">Activities</div>
+        <div class="stat-sub">
+            <span class="highlight green">{{ stats.published_activities }}</span> published
+        </div>
+    </a>
+
+    <!-- Events -->
+    <a href="{{ url_for('admin.admin_events') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.events }}</span>
+            <span class="stat-icon blue">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                    <circle cx="12" cy="15" r="1"/>
+                    <circle cx="16" cy="15" r="1"/>
+                    <circle cx="8" cy="15" r="1"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">Events</div>
+        <div class="stat-sub">
+            <span class="highlight gold">{{ stats.upcoming_events }}</span> upcoming
+        </div>
+    </a>
+
+    <!-- Resources -->
+    <a href="{{ url_for('admin.admin_resources') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.resources }}</span>
+            <span class="stat-icon green">
+                <svg viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="12" y1="18" x2="12" y2="12"/>
+                    <line x1="9" y1="15" x2="15" y2="15"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">Resources</div>
+        <div class="stat-sub">
+            <span class="highlight blue">{{ stats.resources }}</span> total
+        </div>
+    </a>
+
+    <!-- Partners -->
+    <a href="{{ url_for('admin.admin_partners') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.partners }}</span>
+            <span class="stat-icon purple">
+                <svg viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4-4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">Partners</div>
+        <div class="stat-sub">
+            <span class="highlight blue">{{ stats.partners }}</span> total
+        </div>
+    </a>
+</div>
+
+<!-- Section: Team & Media -->
+<div class="section-header">
+    <span class="section-title">Team <span class="gold">&amp;</span> Media</span>
+    <span class="section-count">{{ stats.team + stats.albums + stats.faqs + stats.submissions }} items</span>
+</div>
+
+<div class="stats-grid">
+    <!-- Team -->
+    <a href="{{ url_for('admin.admin_team') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.team }}</span>
+            <span class="stat-icon teal">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">Team Members</div>
+        <div class="stat-sub">
+            <span class="highlight green">{{ stats.team }}</span> total
+        </div>
+    </a>
+
+    <!-- Gallery -->
+    <a href="{{ url_for('admin.admin_gallery') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.albums }}</span>
+            <span class="stat-icon orange">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">Gallery Albums</div>
+        <div class="stat-sub">
+            <span class="highlight blue">{{ stats.gallery_images }}</span> images
+        </div>
+    </a>
+
+    <!-- FAQs -->
+    <a href="{{ url_for('admin.admin_faqs') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.faqs }}</span>
+            <span class="stat-icon gray">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <circle cx="12" cy="16" r="1" fill="currentColor"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">FAQs</div>
+        <div class="stat-sub">
+            <span class="highlight green">{{ stats.faqs }}</span> total
+        </div>
+    </a>
+
+    <!-- Submissions -->
+    <a href="{{ url_for('admin.admin_submissions') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.submissions }}</span>
+            <span class="stat-icon red">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">Submissions</div>
+        <div class="stat-sub">
+            <span class="highlight red">{{ stats.unread_submissions }}</span> unread
+        </div>
+    </a>
+</div>
+
+<!-- Section: WP5 & Capacity -->
+<div class="section-header">
+    <span class="section-title">WP5 <span class="gold">&amp;</span> Capacity Building</span>
+    <span class="section-count">{{ stats.training_materials + stats.challenges + stats.hackathons + stats.stories + stats.repositories + stats.community_events + stats.replication_resources + stats.replication_templates + stats.replication_lessons }} items</span>
+</div>
+
+<div class="stats-grid">
+    <!-- Training Materials -->
+    <a href="{{ url_for('admin.admin_training_materials') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.training_materials }}</span>
+            <span class="stat-icon blue">
+                <svg viewBox="0 0 24 24">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">Training Materials</div>
+        <div class="stat-sub">
+            <span class="highlight blue">{{ stats.training_materials }}</span> total
+        </div>
+    </a>
+
+    <!-- SME - Challenges + Hackathons + Stories -->
+    <a href="{{ url_for('admin.admin_sme') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.challenges + stats.hackathons + stats.stories }}</span>
+            <span class="stat-icon gold">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">SME</div>
+        <div class="stat-sub">
+            <span class="highlight gold">{{ stats.challenges }}</span> challenges ·
+            <span class="highlight blue">{{ stats.hackathons }}</span> hackathons ·
+            <span class="highlight green">{{ stats.stories }}</span> stories
+        </div>
+    </a>
+
+    <!-- SME Submissions -->
+    <a href="{{ url_for('admin.admin_sme') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.sme_submissions }}</span>
+            <span class="stat-icon orange">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">SME Submissions</div>
+        <div class="stat-sub">
+            <span class="highlight blue">{{ stats.sme_submissions }}</span> total
+        </div>
+    </a>
+
+    <!-- Community -->
+    <a href="{{ url_for('admin.admin_community') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.repositories + stats.community_events }}</span>
+            <span class="stat-icon teal">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 4h16v16H4z"/>
+                    <line x1="8" y1="8" x2="16" y2="8"/>
+                    <line x1="8" y1="12" x2="16" y2="12"/>
+                    <line x1="8" y1="16" x2="12" y2="16"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">Community</div>
+        <div class="stat-sub">
+            <span class="highlight blue">{{ stats.repositories }}</span> repos ·
+            <span class="highlight gold">{{ stats.community_events }}</span> events ·
+            <span class="highlight red">{{ stats.community_submissions }}</span> submissions
+        </div>
+    </a>
+</div>
+
+<!-- Section: Replication -->
+<div class="section-header">
+    <span class="section-title">Replication <span class="gold">Toolkit</span></span>
+    <span class="section-count">{{ stats.replication_resources + stats.replication_templates + stats.replication_lessons }} items</span>
+</div>
+
+<div class="stats-grid">
+    <!-- Replication Resources -->
+    <a href="{{ url_for('admin.admin_replication') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.replication_resources }}</span>
+            <span class="stat-icon blue">
+                <svg viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="8" y1="16" x2="16" y2="16"/>
+                    <line x1="8" y1="12" x2="16" y2="12"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">Resources</div>
+        <div class="stat-sub">
+            <span class="highlight blue">{{ stats.replication_resources }}</span> total
+        </div>
+    </a>
+
+    <!-- Replication Templates -->
+    <a href="{{ url_for('admin.admin_replication') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.replication_templates }}</span>
+            <span class="stat-icon gold">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="3" y1="9" x2="21" y2="9"/>
+                    <line x1="3" y1="15" x2="21" y2="15"/>
+                    <line x1="9" y1="21" x2="9" y2="9"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">Templates</div>
+        <div class="stat-sub">
+            <span class="highlight gold">{{ stats.replication_templates }}</span> total
+        </div>
+    </a>
+
+    <!-- Replication Lessons -->
+    <a href="{{ url_for('admin.admin_replication') }}" class="stat-card">
+        <div class="stat-top">
+            <span class="stat-number">{{ stats.replication_lessons }}</span>
+            <span class="stat-icon green">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+            </span>
+        </div>
+        <div class="stat-label">Lessons</div>
+        <div class="stat-sub">
+            <span class="highlight green">{{ stats.replication_lessons }}</span> total
+        </div>
+    </a>
+</div>
+
+<!-- ================================================================ -->
+<!-- FOOTER SUMMARY                                                   -->
+<!-- ================================================================ -->
+<div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+    <span style="font-size: 0.7rem; color: var(--text-light);">
+        Total items: <strong style="color: var(--text-dark);">{{ 
+            stats.activities + stats.events + stats.resources + stats.partners + 
+            stats.team + stats.albums + stats.faqs + stats.submissions + 
+            stats.training_materials + stats.challenges + stats.hackathons + stats.stories + 
+            stats.sme_submissions + stats.repositories + stats.community_events + 
+            stats.community_submissions + stats.replication_resources + 
+            stats.replication_templates + stats.replication_lessons 
+        }}</strong>
+    </span>
+    <span style="font-size: 0.7rem; color: var(--text-light);">
+        Last updated: <strong style="color: var(--text-dark);">{{ now|default('Just now') }}</strong>
+    </span>
+</div>
+
+<!-- ================================================================ -->
+<!-- JAVASCRIPT                                                      -->
+<!-- ================================================================ -->
+<script>
+    (function() {
+        'use strict';
+
+        // ================================================================
+        // ANIMATE STAT NUMBERS ON LOAD
+        // ================================================================
+
+        function animateNumbers() {
+            var cards = document.querySelectorAll('.stat-card');
+
+            cards.forEach(function(card) {
+                var numberEl = card.querySelector('.stat-number');
+                if (!numberEl) return;
+
+                var target = parseInt(numberEl.textContent, 10);
+                if (isNaN(target) || target === 0) return;
+
+                var duration = 600;
+                var startTime = null;
+                var startValue = 0;
+
+                function animate(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    var progress = Math.min((timestamp - startTime) / duration, 1);
+
+                    // Ease out cubic
+                    var eased = 1 - Math.pow(1 - progress, 3);
+                    var current = Math.round(startValue + (target - startValue) * eased);
+
+                    numberEl.textContent = current;
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        numberEl.textContent = target;
+                    }
+                }
+
+                // Use Intersection Observer to trigger animation when visible
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            // Reset to start value
+                            numberEl.textContent = '0';
+                            requestAnimationFrame(animate);
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.3 });
+
+                observer.observe(card);
+            });
+        }
+
+        // ================================================================
+        // INITIALIZE
+        // ================================================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            animateNumbers();
+            console.log('BRIDGE-AI Kenya Admin Dashboard initialized');
+        });
+
+    })();
+</script>
+
+{% endblock %}

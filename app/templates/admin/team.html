@@ -1,0 +1,1999 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - ADMIN TEAM MANAGEMENT                         -->
+<!-- ================================================================ -->
+<!-- Extends: admin/layout.html                                     -->
+<!-- Content: List · Add · Edit · Delete · View Team Members       -->
+<!-- Features: Photo Upload · Consent Status · Visibility Filter    -->
+<!-- CSS: Fully self-contained in this file                         -->
+<!-- Rules: No emojis · No decorative symbols · No colons           -->
+<!--        No slashes · No hyphens · Clean typography              -->
+<!-- ================================================================ -->
+
+{% extends "admin/layout.html" %}
+
+{% block title %}Team - BRIDGE-AI Kenya Admin{% endblock %}
+
+{% block page_title %}Team <span class="highlight">Management</span>{% endblock %}
+
+{% block page_subtitle %}Manage JKUAT and JHUB Africa project team members{% endblock %}
+
+{% block content %}
+
+<!-- ================================================================ -->
+<!-- TOAST NOTIFICATIONS CONTAINER                                   -->
+<!-- ================================================================ -->
+<div id="toastContainer"></div>
+
+<!-- ================================================================ -->
+<!-- LOADER OVERLAY                                                  -->
+<!-- ================================================================ -->
+<div id="loaderOverlay">
+    <div class="loader-spinner"></div>
+    <p class="loader-text">Loading team members...</p>
+</div>
+
+<!-- ================================================================ -->
+<!-- CSS - Self-contained for this page                              -->
+<!-- ================================================================ -->
+<style>
+    /* ================================================================ */
+    /* CSS VARIABLES                                                   */
+    /* ================================================================ */
+    :root {
+        --primary-dark: #061420;
+        --primary: #0F2B3D;
+        --primary-light: #1A4A6B;
+        --gold: #D4A843;
+        --gold-light: #F5D77E;
+        --text-dark: #081A28;
+        --text-body: #1A2A3A;
+        --text-muted: #5A6A7A;
+        --text-light: #8A9AAA;
+        --bg-white: #FFFFFF;
+        --bg-light: #F5F8FA;
+        --bg-lighter: #FAFCFE;
+        --border-light: #E4EAF0;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+        --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+        --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    /* ================================================================ */
+    /* LOADER OVERLAY                                                  */
+    /* ================================================================ */
+    #loaderOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.92);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.5s ease;
+    }
+
+    #loaderOverlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .loader-spinner {
+        width: 48px;
+        height: 48px;
+        border: 3px solid var(--border-light);
+        border-top-color: var(--primary-light);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-bottom: 16px;
+    }
+
+    .loader-text {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        font-weight: 400;
+        letter-spacing: 0.02em;
+        font-family: var(--font-sans);
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* ================================================================ */
+    /* TABS                                                           */
+    /* ================================================================ */
+    .team-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 24px;
+        padding: 4px 0;
+        border-bottom: 2px solid #E4EAF0;
+        background: #FFFFFF;
+    }
+
+    .team-tabs .tab-btn {
+        padding: 8px 18px;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #5A6A7A;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 0;
+        margin-bottom: -2px;
+    }
+
+    .team-tabs .tab-btn:hover {
+        color: #1A2A3A;
+        background: #F5F8FA;
+    }
+
+    .team-tabs .tab-btn.active {
+        color: #1A4A6B;
+        border-bottom-color: #D4A843;
+    }
+
+    .team-tabs .tab-btn .tab-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 7px;
+        border-radius: 60px;
+        font-size: 0.55rem;
+        font-weight: 700;
+        background: #F5F8FA;
+        color: #5A6A7A;
+    }
+
+    .team-tabs .tab-btn.active .tab-count {
+        background: #F5ECD7;
+        color: #D4A843;
+    }
+
+    /* ================================================================ */
+    /* TOOLBAR                                                         */
+    /* ================================================================ */
+    .team-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .team-toolbar .toolbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .team-toolbar .toolbar-left .search-input {
+        padding: 8px 14px;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        color: #1A2A3A;
+        background: #FFFFFF;
+        outline: none;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        min-width: 200px;
+    }
+
+    .team-toolbar .toolbar-left .search-input:focus {
+        border-color: #1A4A6B;
+        box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+    }
+
+    .btn-add {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        background: #D4A843;
+        color: #061420;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        box-shadow: 0 4px 16px rgba(212, 168, 67, 0.12);
+    }
+
+    .btn-add:hover {
+        background: #F5D77E;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.2);
+    }
+
+    /* ================================================================ */
+    /* TABLE                                                           */
+    /* ================================================================ */
+    .table-container {
+        background: #FFFFFF;
+        border: 1px solid #E4EAF0;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .table-container table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .table-container table thead {
+        background: #F5F8FA;
+        border-bottom: 1px solid #E4EAF0;
+    }
+
+    .table-container table thead th {
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 600;
+        color: #5A6A7A;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .table-container table tbody tr {
+        border-bottom: 1px solid #E4EAF0;
+        transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .table-container table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table-container table tbody tr:hover {
+        background: #FAFCFE;
+    }
+
+    .table-container table tbody td {
+        padding: 12px 16px;
+        color: #1A2A3A;
+        vertical-align: middle;
+    }
+
+    /* ─── Photo Preview ─── */
+    .table-container table tbody td .photo-preview {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid var(--border-light);
+        background: var(--bg-light);
+        display: block;
+    }
+
+    .table-container table tbody td .no-photo {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-light);
+        border: 2px dashed var(--border-light);
+        border-radius: 50%;
+        font-size: 0.5rem;
+        color: var(--text-light);
+        font-weight: 500;
+        text-align: center;
+        line-height: 1.2;
+        padding: 4px;
+    }
+
+    /* ─── Consent Badges ─── */
+    .consent-badge {
+        display: inline-block;
+        padding: 2px 12px;
+        border-radius: 60px;
+        font-size: 0.55rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .consent-badge.approved {
+        background: #D6F0E0;
+        color: #1A6A4A;
+    }
+
+    .consent-badge.pending {
+        background: #F5E8D6;
+        color: #9E6A2A;
+    }
+
+    .consent-badge.not_consented {
+        background: #F5E6E6;
+        color: #9E2A2A;
+    }
+
+    /* ─── Visibility Badges ─── */
+    .visibility-badge {
+        display: inline-block;
+        padding: 2px 12px;
+        border-radius: 60px;
+        font-size: 0.55rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .visibility-badge.visible {
+        background: #D4E8F5;
+        color: #1A4A6B;
+    }
+
+    .visibility-badge.hidden {
+        background: #E8E8E8;
+        color: #6A6A7A;
+    }
+
+    /* ─── Action Buttons ─── */
+    .table-container table tbody td .actions {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+
+    .table-container table tbody td .actions button {
+        padding: 4px 10px;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .btn-view-sm {
+        background: #E8F0F8;
+        color: #1A4A6B;
+    }
+
+    .btn-view-sm:hover {
+        background: #1A4A6B;
+        color: #FFFFFF;
+        transform: translateY(-1px);
+    }
+
+    .btn-edit-sm {
+        background: #F5ECD7;
+        color: #D4A843;
+    }
+
+    .btn-edit-sm:hover {
+        background: #D4A843;
+        color: #061420;
+        transform: translateY(-1px);
+    }
+
+    .btn-delete-sm {
+        background: #F5E6E6;
+        color: #9E2A2A;
+    }
+
+    .btn-delete-sm:hover {
+        background: #9E2A2A;
+        color: #FFFFFF;
+        transform: translateY(-1px);
+    }
+
+    /* ─── Empty State ─── */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #5A6A7A;
+    }
+
+    .empty-state h4 {
+        font-size: 1.1rem;
+        color: #081A28;
+        margin-bottom: 4px;
+    }
+
+    .empty-state p {
+        font-size: 0.9rem;
+    }
+
+    /* ================================================================ */
+    /* MODAL                                                           */
+    /* ================================================================ */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(6, 20, 32, 0.6);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal {
+        background: #FFFFFF;
+        border-radius: 20px;
+        max-width: 720px;
+        width: 100%;
+        max-height: 92vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-lg);
+        animation: slideUp 0.3s ease;
+    }
+
+    .modal::-webkit-scrollbar {
+        width: 4px;
+    }
+    .modal::-webkit-scrollbar-track {
+        background: #F5F8FA;
+        border-radius: 4px;
+    }
+    .modal::-webkit-scrollbar-thumb {
+        background: #1A4A6B;
+        border-radius: 4px;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px) scale(0.96); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 24px 28px 16px;
+        border-bottom: 1px solid #E4EAF0;
+        position: sticky;
+        top: 0;
+        background: #FFFFFF;
+        z-index: 10;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .modal-header h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #081A28;
+    }
+
+    .modal-header h3 .gold {
+        color: #D4A843;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        font-weight: 300;
+        color: #8A9AAA;
+        cursor: pointer;
+        padding: 4px 8px;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        line-height: 1;
+    }
+
+    .modal-close:hover {
+        color: #081A28;
+        transform: rotate(90deg);
+    }
+
+    .modal-body {
+        padding: 24px 28px 28px;
+    }
+
+    /* ─── Form ─── */
+    .modal-body .form-group {
+        margin-bottom: 16px;
+    }
+
+    .modal-body .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #1A2A3A;
+        margin-bottom: 4px;
+    }
+
+    .modal-body .form-group label .required {
+        color: #9E2A2A;
+    }
+
+    .modal-body .form-group input,
+    .modal-body .form-group select,
+    .modal-body .form-group textarea {
+        width: 100%;
+        padding: 9px 14px;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #1A2A3A;
+        background: #FAFCFE;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        outline: none;
+    }
+
+    .modal-body .form-group input:focus,
+    .modal-body .form-group select:focus,
+    .modal-body .form-group textarea:focus {
+        border-color: #1A4A6B;
+        box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+        background: #FFFFFF;
+    }
+
+    .modal-body .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .modal-body .form-group .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    /* ─── File Upload ─── */
+    .file-upload-area {
+        border: 2px dashed #E4EAF0;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all var(--transition);
+        cursor: pointer;
+        position: relative;
+        background: #FAFCFE;
+    }
+
+    .file-upload-area:hover {
+        border-color: #1A4A6B;
+        background: #F5F8FA;
+    }
+
+    .file-upload-area.dragover {
+        border-color: #D4A843;
+        background: #F5ECD7;
+    }
+
+    .file-upload-area .upload-icon {
+        font-size: 1.8rem;
+        color: #8A9AAA;
+        display: block;
+        margin-bottom: 2px;
+        font-weight: 200;
+    }
+
+    .file-upload-area .upload-text {
+        font-size: 0.85rem;
+        color: #5A6A7A;
+    }
+
+    .file-upload-area .upload-text strong {
+        color: #1A4A6B;
+    }
+
+    .file-upload-area .upload-hint {
+        font-size: 0.7rem;
+        color: #8A9AAA;
+        margin-top: 2px;
+    }
+
+    .file-upload-area input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* ─── Photo Preview in Form ─── */
+    .photo-preview-container {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 10px;
+        padding: 12px 16px;
+        background: #F5F8FA;
+        border-radius: 8px;
+        border: 1px solid #E4EAF0;
+        flex-wrap: wrap;
+    }
+
+    .photo-preview-container .preview-img {
+        width: 64px;
+        height: 64px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #E4EAF0;
+        background: #FFFFFF;
+    }
+
+    .photo-preview-container .preview-info {
+        flex: 1;
+        font-size: 0.82rem;
+        color: #1A2A3A;
+    }
+
+    .photo-preview-container .preview-info .file-size {
+        font-size: 0.7rem;
+        color: #8A9AAA;
+        display: block;
+    }
+
+    .photo-preview-container .btn-remove-photo {
+        padding: 4px 14px;
+        background: #F5E6E6;
+        color: #9E2A2A;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+    }
+
+    .photo-preview-container .btn-remove-photo:hover {
+        background: #9E2A2A;
+        color: #FFFFFF;
+    }
+
+    /* ─── Consent Status Select ─── */
+    .modal-body .form-group select.consent-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235A6A7A' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 36px;
+    }
+
+    /* ─── Form Actions ─── */
+    .modal-body .form-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 8px;
+        padding-top: 16px;
+        border-top: 1px solid #E4EAF0;
+    }
+
+    .btn-modal-save {
+        padding: 10px 28px;
+        background: #D4A843;
+        color: #061420;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+        box-shadow: 0 4px 16px rgba(212, 168, 67, 0.12);
+    }
+
+    .btn-modal-save:hover {
+        background: #F5D77E;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.2);
+    }
+
+    .btn-modal-cancel {
+        padding: 10px 24px;
+        background: #F5F8FA;
+        color: #5A6A7A;
+        border: 1px solid #E4EAF0;
+        border-radius: 60px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+    }
+
+    .btn-modal-cancel:hover {
+        background: #E4EAF0;
+        color: #1A2A3A;
+    }
+
+    /* ─── View Modal ─── */
+    .detail-view .detail-row {
+        display: flex;
+        padding: 8px 0;
+        border-bottom: 1px solid #F5F8FA;
+    }
+
+    .detail-view .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-view .detail-label {
+        font-weight: 600;
+        color: #5A6A7A;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        width: 130px;
+        flex-shrink: 0;
+        padding-top: 2px;
+    }
+
+    .detail-view .detail-value {
+        color: #1A2A3A;
+        font-size: 0.9rem;
+        word-break: break-word;
+        flex: 1;
+    }
+
+    .detail-view .detail-value .photo-lg {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid var(--border-light);
+        display: block;
+    }
+
+    .detail-view .detail-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #E4EAF0;
+    }
+
+    .detail-view .btn-modal-close {
+        padding: 8px 24px;
+        background: #F5F8FA;
+        color: #5A6A7A;
+        border: 1px solid #E4EAF0;
+        border-radius: 60px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+    }
+
+    .detail-view .btn-modal-close:hover {
+        background: #E4EAF0;
+        color: #1A2A3A;
+    }
+
+    /* ================================================================ */
+    /* TOAST NOTIFICATIONS                                             */
+    /* ================================================================ */
+    #toastContainer {
+        position: fixed;
+        top: 90px;
+        right: 20px;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 380px;
+        width: 100%;
+        pointer-events: none;
+    }
+
+    .toast {
+        pointer-events: auto;
+        background: #FFFFFF;
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+        border-left: 4px solid;
+        animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .toast.hiding {
+        animation: slideOutRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    .toast-success { border-left-color: #1A6A4A; }
+    .toast-error { border-left-color: #9E2A2A; }
+    .toast-warning { border-left-color: #D4A843; }
+    .toast-info { border-left-color: #1A4A6B; }
+
+    .toast-icon {
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-weight: 700;
+    }
+
+    .toast-success .toast-icon { color: #1A6A4A; }
+    .toast-error .toast-icon { color: #9E2A2A; }
+    .toast-warning .toast-icon { color: #D4A843; }
+    .toast-info .toast-icon { color: #1A4A6B; }
+
+    .toast-content { flex: 1; }
+    .toast-title { font-weight: 600; font-size: 0.9rem; color: #081A28; }
+    .toast-message { font-size: 0.8rem; color: #5A6A7A; margin-top: 2px; }
+
+    .toast-close {
+        background: none;
+        border: none;
+        color: #8A9AAA;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0 4px;
+        line-height: 1;
+        font-weight: 300;
+        transition: color 0.3s ease;
+        font-family: var(--font-sans);
+    }
+
+    .toast-close:hover { color: #081A28; }
+
+    .toast-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        background: #E4EAF0;
+        overflow: hidden;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .toast-progress-bar {
+        height: 100%;
+        background: #D4A843;
+        border-radius: 0 0 12px 12px;
+        animation: progressBar 4s linear forwards;
+        width: 100%;
+    }
+
+    .toast-error .toast-progress-bar { background: #9E2A2A; }
+    .toast-success .toast-progress-bar { background: #1A6A4A; }
+    .toast-warning .toast-progress-bar { background: #D4A843; }
+    .toast-info .toast-progress-bar { background: #1A4A6B; }
+
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(40px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideOutRight {
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(40px); }
+    }
+
+    @keyframes progressBar {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
+
+    /* ================================================================ */
+    /* RESPONSIVE                                                      */
+    /* ================================================================ */
+    @media (max-width: 768px) {
+        .team-tabs {
+            gap: 2px;
+        }
+
+        .team-tabs .tab-btn {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+
+        .team-tabs .tab-btn .tab-count {
+            min-width: 16px;
+            height: 16px;
+            font-size: 0.5rem;
+            padding: 0 5px;
+        }
+
+        .team-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .team-toolbar .toolbar-left .search-input {
+            min-width: 100%;
+        }
+
+        .btn-add {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table-container table {
+            font-size: 0.75rem;
+            min-width: 700px;
+        }
+
+        .table-container table thead th,
+        .table-container table tbody td {
+            padding: 8px 10px;
+        }
+
+        .modal {
+            max-width: 100%;
+            margin: 10px;
+            max-height: 95vh;
+        }
+
+        .modal-header {
+            padding: 18px 20px 12px;
+        }
+
+        .modal-body {
+            padding: 16px 20px 20px;
+        }
+
+        .modal-body .form-group .form-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .detail-view .detail-row {
+            flex-direction: column;
+            padding: 6px 0;
+        }
+
+        .detail-view .detail-label {
+            width: 100%;
+            font-size: 0.7rem;
+            padding-bottom: 2px;
+        }
+
+        .detail-view .detail-value {
+            font-size: 0.85rem;
+        }
+
+        .detail-view .detail-actions {
+            flex-wrap: wrap;
+        }
+
+        .detail-view .detail-actions button {
+            flex: 1;
+            min-width: 80px;
+            justify-content: center;
+        }
+
+        #toastContainer {
+            top: 80px;
+            right: 10px;
+            left: 10px;
+            max-width: none;
+        }
+        .toast { padding: 14px 16px; }
+    }
+
+    @media (max-width: 480px) {
+        .team-tabs .tab-btn {
+            padding: 4px 10px;
+            font-size: 0.6rem;
+        }
+
+        .team-tabs .tab-btn .tab-count {
+            min-width: 14px;
+            height: 14px;
+            font-size: 0.45rem;
+            padding: 0 4px;
+        }
+
+        .btn-add {
+            font-size: 0.75rem;
+            padding: 6px 16px;
+        }
+
+        .modal-body .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-modal-save,
+        .btn-modal-cancel {
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .file-upload-area {
+            padding: 14px;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 1.5rem;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 0.75rem;
+        }
+    }
+
+    /* ================================================================ */
+    /* SCROLLBAR                                                       */
+    /* ================================================================ */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #F5F8FA;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #1A4A6B;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #0F2B3D;
+    }
+</style>
+
+<!-- ================================================================ -->
+<!-- CONTENT                                                         -->
+<!-- ================================================================ -->
+
+<!-- Tabs -->
+<div class="team-tabs" id="teamTabs">
+    <!-- Dynamically generated by JavaScript -->
+</div>
+
+<!-- Toolbar -->
+<div class="team-toolbar">
+    <div class="toolbar-left">
+        <input type="text" class="search-input" id="teamSearch" placeholder="Search team members..." onkeyup="filterTable()">
+    </div>
+    <button class="btn-add" onclick="openModal(null)">Add Team Member</button>
+</div>
+
+<!-- Table -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Affiliation</th>
+                <th>Consent</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="teamTableBody"></tbody>
+    </table>
+</div>
+
+<!-- ================================================================ -->
+<!-- MODAL - Add/Edit Form                                           -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modalTitle">Add <span class="gold">Team Member</span></h3>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <!-- Dynamic form content -->
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- VIEW MODAL - Detail View                                        -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="viewModalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="viewModalTitle">View <span class="gold">Team Member</span></h3>
+            <button class="modal-close" onclick="closeViewModal()">×</button>
+        </div>
+        <div class="modal-body" id="viewModalBody">
+            <div class="detail-view" id="viewModalContent">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- JAVASCRIPT                                                      -->
+<!-- ================================================================ -->
+<script>
+    (function() {
+        'use strict';
+
+        // ================================================================
+        // STATE
+        // ================================================================
+
+        var allTeam = [];
+        var editingItem = null;
+        var currentFilterStatus = 'all';
+
+        // ================================================================
+        // DOM REFS
+        // ================================================================
+
+        var tabsContainer = document.getElementById('teamTabs');
+        var tableBody = document.getElementById('teamTableBody');
+        var modalOverlay = document.getElementById('modalOverlay');
+        var modalTitle = document.getElementById('modalTitle');
+        var modalBody = document.getElementById('modalBody');
+        var viewModalOverlay = document.getElementById('viewModalOverlay');
+        var viewModalTitle = document.getElementById('viewModalTitle');
+        var viewModalContent = document.getElementById('viewModalContent');
+        var loaderOverlay = document.getElementById('loaderOverlay');
+
+        // ================================================================
+        // LOAD DATA
+        // ================================================================
+
+        function loadData() {
+            showLoader();
+
+            fetch('/api/team/', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Network error');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                allTeam = data;
+                renderTabs(data);
+                renderTable(data);
+                hideLoader();
+            })
+            .catch(function(error) {
+                console.error('Error loading team:', error);
+                allTeam = [];
+                renderTabs([]);
+                renderTable([]);
+                hideLoader();
+                showToast('Error', 'Failed to load team members. Please refresh the page.', 'error');
+            });
+        }
+
+        // ================================================================
+        // RENDER TABS
+        // ================================================================
+
+        function renderTabs(data) {
+            if (!tabsContainer) return;
+
+            var counts = {
+                all: data.length,
+                visible: 0,
+                hidden: 0
+            };
+
+            data.forEach(function(item) {
+                if (item.is_visible) {
+                    counts.visible++;
+                } else {
+                    counts.hidden++;
+                }
+            });
+
+            var html = '';
+            var tabs = [
+                { type: 'all', label: 'All', count: counts.all },
+                { type: 'visible', label: 'Visible', count: counts.visible },
+                { type: 'hidden', label: 'Hidden', count: counts.hidden }
+            ];
+
+            tabs.forEach(function(tab) {
+                var active = currentFilterStatus === tab.type ? 'active' : '';
+                html += `
+                    <button class="tab-btn ${active}" onclick="filterByStatus('${tab.type}', this)">
+                        ${tab.label}
+                        <span class="tab-count">${tab.count}</span>
+                    </button>
+                `;
+            });
+
+            tabsContainer.innerHTML = html;
+        }
+
+        // ================================================================
+        // FILTER BY STATUS
+        // ================================================================
+
+        window.filterByStatus = function(status, button) {
+            currentFilterStatus = status;
+
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            if (button) {
+                button.classList.add('active');
+            }
+
+            var filtered = getFilteredData();
+            renderTable(filtered);
+        };
+
+        // ================================================================
+        // GET FILTERED DATA
+        // ================================================================
+
+        function getFilteredData() {
+            var filtered = allTeam;
+
+            if (currentFilterStatus === 'visible') {
+                filtered = filtered.filter(function(item) {
+                    return item.is_visible === true;
+                });
+            } else if (currentFilterStatus === 'hidden') {
+                filtered = filtered.filter(function(item) {
+                    return item.is_visible === false;
+                });
+            }
+
+            return filtered;
+        }
+
+        // ================================================================
+        // RENDER TABLE
+        // ================================================================
+
+        function renderTable(data) {
+            if (!tableBody) return;
+
+            var filtered = data || getFilteredData();
+
+            if (!filtered || filtered.length === 0) {
+                var emptyMessage = currentFilterStatus === 'all' ?
+                    'No team members found. Click "Add Team Member" to create your first team member.' :
+                    'No team members found for this status.';
+
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <h4>No team members found</h4>
+                                <p>${emptyMessage}</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            var html = '';
+            filtered.forEach(function(item) {
+                var photoHtml = '';
+                if (item.photo) {
+                    photoHtml = `<img src="/static/${escapeHtml(item.photo)}" alt="${escapeHtml(item.name)}" class="photo-preview">`;
+                } else {
+                    photoHtml = `<div class="no-photo">No photo</div>`;
+                }
+
+                var consentClass = item.consent_status || 'pending';
+                var consentLabel = consentClass === 'approved' ? 'Approved' : 
+                                   consentClass === 'pending' ? 'Pending' : 'Not Consented';
+                var visibilityClass = item.is_visible ? 'visible' : 'hidden';
+                var visibilityLabel = item.is_visible ? 'Visible' : 'Hidden';
+
+                html += `
+                    <tr>
+                        <td>${photoHtml}</td>
+                        <td><strong>${escapeHtml(item.name)}</strong></td>
+                        <td>${escapeHtml(item.role)}</td>
+                        <td>${escapeHtml(item.affiliation || '-')}</td>
+                        <td><span class="consent-badge ${consentClass}">${escapeHtml(consentLabel)}</span></td>
+                        <td><span class="visibility-badge ${visibilityClass}">${escapeHtml(visibilityLabel)}</span></td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn-view-sm" onclick="viewItem(${item.id})">View</button>
+                                <button class="btn-edit-sm" onclick="editItem(${item.id})">Edit</button>
+                                <button class="btn-delete-sm" onclick="deleteItem(${item.id})">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tableBody.innerHTML = html;
+        }
+
+        // ================================================================
+        // FILTER TABLE (Search)
+        // ================================================================
+
+        window.filterTable = function() {
+            var searchInput = document.getElementById('teamSearch');
+            var searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            var rows = tableBody ? tableBody.querySelectorAll('tr') : [];
+
+            rows.forEach(function(row) {
+                var text = row.textContent.toLowerCase();
+                row.style.display = text.indexOf(searchTerm) > -1 ? '' : 'none';
+            });
+        };
+
+        // ================================================================
+        // OPEN MODAL
+        // ================================================================
+
+        window.openModal = function(id) {
+            editingItem = id;
+
+            if (id) {
+                modalTitle.innerHTML = 'Edit <span class="gold">Team Member</span>';
+                fetch('/api/team/' + id, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    modalBody.innerHTML = buildForm(data);
+                    modalOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    setupFileUpload();
+                })
+                .catch(function() {
+                    modalBody.innerHTML = buildForm(null);
+                    modalOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    setupFileUpload();
+                });
+            } else {
+                modalTitle.innerHTML = 'Add <span class="gold">Team Member</span>';
+                modalBody.innerHTML = buildForm(null);
+                modalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                setupFileUpload();
+            }
+        };
+
+        // ================================================================
+        // EDIT ITEM
+        // ================================================================
+
+        window.editItem = function(id) {
+            openModal(id);
+        };
+
+        // ================================================================
+        // BUILD FORM
+        // ================================================================
+
+        function buildForm(data) {
+            var isEdit = !!data;
+            var name = data ? data.name : '';
+            var role = data ? data.role : '';
+            var affiliation = data ? data.affiliation : '';
+            var bio = data ? data.bio : '';
+            var email = data ? data.email : '';
+            var display_order = data ? data.display_order : 0;
+            var is_visible = data ? data.is_visible : true;
+            var consent_status = data ? data.consent_status : 'pending';
+            var photo = data ? data.photo : '';
+            var hasPhoto = !!photo;
+
+            var consentOptions = [
+                { value: 'approved', label: 'Approved' },
+                { value: 'pending', label: 'Pending' },
+                { value: 'not_consented', label: 'Not Consented' }
+            ];
+            var consentSelect = consentOptions.map(function(c) {
+                return `<option value="${c.value}" ${c.value === consent_status ? 'selected' : ''}>${c.label}</option>`;
+            }).join('');
+
+            var existingPhotoHtml = '';
+            if (hasPhoto) {
+                var fileName = photo.split('/').pop();
+                existingPhotoHtml = `
+                    <div class="photo-preview-container" id="existingPhotoContainer">
+                        <img src="/static/${escapeHtml(photo)}" alt="${escapeHtml(name)}" class="preview-img">
+                        <div class="preview-info">
+                            ${escapeHtml(fileName)}
+                            <span class="file-size">Current photo</span>
+                        </div>
+                        <button type="button" class="btn-remove-photo" onclick="removeExistingPhoto()">Remove</button>
+                    </div>
+                    <input type="hidden" id="removePhotoFlag" value="false">
+                `;
+            }
+
+            return `
+                <form id="teamForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label>Full Name <span class="required">*</span></label>
+                                <input type="text" id="formName" value="${escapeHtml(name)}" placeholder="Enter full name" required>
+                            </div>
+                            <div>
+                                <label>Role <span class="required">*</span></label>
+                                <input type="text" id="formRole" value="${escapeHtml(role)}" placeholder="e.g. Project Lead" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label>Affiliation</label>
+                                <input type="text" id="formAffiliation" value="${escapeHtml(affiliation)}" placeholder="e.g. JKUAT, JHUB Africa">
+                            </div>
+                            <div>
+                                <label>Email</label>
+                                <input type="email" id="formEmail" value="${escapeHtml(email)}" placeholder="email@example.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bio</label>
+                        <textarea id="formBio" placeholder="Short biography">${escapeHtml(bio)}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label>Display Order</label>
+                                <input type="number" id="formDisplayOrder" value="${display_order}" placeholder="0">
+                            </div>
+                            <div>
+                                <label>Consent Status</label>
+                                <select id="formConsentStatus" class="consent-select">
+                                    ${consentSelect}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.9rem;">
+                            <input type="checkbox" id="formIsVisible" ${is_visible ? 'checked' : ''}>
+                            Visible on Public Page
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Profile Photo</label>
+                        <div class="file-upload-area" id="photoUploadArea">
+                            <span class="upload-icon">↑</span>
+                            <div class="upload-text">
+                                <strong>Click to upload</strong> or drag and drop
+                            </div>
+                            <div class="upload-hint">PNG, JPG, JPEG, GIF, WEBP (Max 5MB)</div>
+                            <input type="file" id="profilePhoto" accept=".png,.jpg,.jpeg,.gif,.webp">
+                        </div>
+                        <div id="photoPreview" style="display:none;"></div>
+                        ${existingPhotoHtml}
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+                        <button type="button" class="btn-modal-save" onclick="saveItem()">Save Team Member</button>
+                    </div>
+                </form>
+            `;
+        }
+
+        // ================================================================
+        // REMOVE EXISTING PHOTO
+        // ================================================================
+
+        window.removeExistingPhoto = function() {
+            var container = document.getElementById('existingPhotoContainer');
+            var removeFlag = document.getElementById('removePhotoFlag');
+            if (container) {
+                container.style.display = 'none';
+            }
+            if (removeFlag) {
+                removeFlag.value = 'true';
+            }
+        };
+
+        // ================================================================
+        // SETUP FILE UPLOAD
+        // ================================================================
+
+        function setupFileUpload() {
+            var fileInput = document.getElementById('profilePhoto');
+            var uploadArea = document.getElementById('photoUploadArea');
+
+            if (!fileInput || !uploadArea) return;
+
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    var file = this.files[0];
+                    var previewContainer = document.getElementById('photoPreview');
+                    var existingContainer = document.getElementById('existingPhotoContainer');
+
+                    if (existingContainer) {
+                        existingContainer.style.display = 'none';
+                    }
+
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewContainer.innerHTML = `
+                            <div class="photo-preview-container">
+                                <img src="${e.target.result}" alt="Photo preview" class="preview-img">
+                                <div class="preview-info">
+                                    ${escapeHtml(file.name)}
+                                    <span class="file-size">${formatFileSize(file.size)}</span>
+                                </div>
+                                <button type="button" class="btn-remove-photo" onclick="removeNewPhoto()">Remove</button>
+                            </div>
+                        `;
+                        previewContainer.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    fileInput.files = e.dataTransfer.files;
+                    fileInput.dispatchEvent(new Event('change'));
+                }
+            });
+        }
+
+        // ================================================================
+        // REMOVE NEW PHOTO
+        // ================================================================
+
+        window.removeNewPhoto = function() {
+            var fileInput = document.getElementById('profilePhoto');
+            var previewContainer = document.getElementById('photoPreview');
+            fileInput.value = '';
+            previewContainer.style.display = 'none';
+            previewContainer.innerHTML = '';
+        };
+
+        // ================================================================
+        // SAVE ITEM
+        // ================================================================
+
+        window.saveItem = function() {
+            var formData = new FormData();
+
+            var name = document.getElementById('formName').value.trim();
+            var role = document.getElementById('formRole').value.trim();
+            var affiliation = document.getElementById('formAffiliation').value.trim();
+            var bio = document.getElementById('formBio').value.trim();
+            var email = document.getElementById('formEmail').value.trim();
+            var display_order = document.getElementById('formDisplayOrder').value || 0;
+            var is_visible = document.getElementById('formIsVisible').checked;
+            var consent_status = document.getElementById('formConsentStatus').value;
+
+            if (!name) {
+                showToast('Validation Error', 'Name is required.', 'error');
+                return;
+            }
+            if (!role) {
+                showToast('Validation Error', 'Role is required.', 'error');
+                return;
+            }
+
+            formData.append('name', name);
+            formData.append('role', role);
+            if (affiliation) formData.append('affiliation', affiliation);
+            if (bio) formData.append('bio', bio);
+            if (email) formData.append('email', email);
+            formData.append('display_order', display_order);
+            formData.append('is_visible', is_visible ? 'true' : 'false');
+            formData.append('consent_status', consent_status);
+
+            var photoFile = document.getElementById('profilePhoto');
+            if (photoFile && photoFile.files && photoFile.files.length > 0) {
+                formData.append('photo', photoFile.files[0]);
+            }
+
+            var removeFlag = document.getElementById('removePhotoFlag');
+            if (removeFlag && removeFlag.value === 'true') {
+                formData.append('remove_photo', 'true');
+            }
+
+            var endpoint = '/api/team/';
+            var method = 'POST';
+
+            if (editingItem) {
+                endpoint = '/api/team/' + editingItem;
+                method = 'PUT';
+            }
+
+            var csrfToken = getCsrfToken();
+
+            fetch(endpoint, {
+                method: method,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                },
+                body: formData
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    closeModal();
+                    loadData();
+                    var action = editingItem ? 'updated' : 'created';
+                    showToast('Team member ' + action, result.message || 'Team member ' + action + ' successfully', 'success');
+                } else {
+                    showToast('Error', result.message || result.error || 'Error saving team member. Please try again.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error saving:', error);
+                showToast('Error', 'An error occurred. Please try again.', 'error');
+            });
+        };
+
+        // ================================================================
+        // VIEW ITEM
+        // ================================================================
+
+        window.viewItem = function(id) {
+            fetch('/api/team/' + id, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                var html = buildDetailView(data);
+                viewModalContent.innerHTML = html;
+                viewModalTitle.innerHTML = 'View <span class="gold">Team Member</span>';
+                viewModalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            })
+            .catch(function(error) {
+                console.error('Error loading team member:', error);
+                showToast('Error', 'Could not load team member details.', 'error');
+            });
+        };
+
+        // ================================================================
+        // BUILD DETAIL VIEW
+        // ================================================================
+
+        function buildDetailView(data) {
+            var consentClass = data.consent_status || 'pending';
+            var consentLabel = consentClass === 'approved' ? 'Approved' : 
+                               consentClass === 'pending' ? 'Pending' : 'Not Consented';
+            var visibilityClass = data.is_visible ? 'visible' : 'hidden';
+            var visibilityLabel = data.is_visible ? 'Visible' : 'Hidden';
+
+            var photoHtml = '';
+            if (data.photo) {
+                photoHtml = `<img src="/static/${escapeHtml(data.photo)}" alt="${escapeHtml(data.name)}" class="photo-lg">`;
+            } else {
+                photoHtml = '<span style="color:var(--text-light);font-size:0.85rem;">No photo uploaded</span>';
+            }
+
+            return `
+                <div class="detail-row">
+                    <span class="detail-label">Name</span>
+                    <span class="detail-value"><strong>${escapeHtml(data.name)}</strong></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Role</span>
+                    <span class="detail-value">${escapeHtml(data.role)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Affiliation</span>
+                    <span class="detail-value">${escapeHtml(data.affiliation || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value">${escapeHtml(data.email || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Bio</span>
+                    <span class="detail-value">${escapeHtml(data.bio || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Display Order</span>
+                    <span class="detail-value">${data.display_order || 0}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Consent</span>
+                    <span class="detail-value"><span class="consent-badge ${consentClass}">${escapeHtml(consentLabel)}</span></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Visibility</span>
+                    <span class="detail-value"><span class="visibility-badge ${visibilityClass}">${escapeHtml(visibilityLabel)}</span></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Photo</span>
+                    <span class="detail-value">${photoHtml}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Created</span>
+                    <span class="detail-value">${formatDate(data.created_at)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Updated</span>
+                    <span class="detail-value">${formatDate(data.updated_at)}</span>
+                </div>
+                <div class="detail-actions">
+                    <button class="btn-modal-close" onclick="closeViewModal()">Close</button>
+                    <button class="btn-modal-save" onclick="closeViewModal();editItem(${data.id});">Edit Team Member</button>
+                </div>
+            `;
+        }
+
+        // ================================================================
+        // DELETE ITEM
+        // ================================================================
+
+        window.deleteItem = function(id) {
+            if (!confirm('Are you sure you want to delete this team member? This action cannot be undone.')) return;
+
+            var csrfToken = getCsrfToken();
+
+            fetch('/api/team/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    loadData();
+                    showToast('Team member deleted', result.message || 'Team member deleted successfully', 'success');
+                } else {
+                    showToast('Error', result.message || result.error || 'Error deleting team member.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error deleting:', error);
+                showToast('Error', 'An error occurred. Please try again.', 'error');
+            });
+        };
+
+        // ================================================================
+        // CLOSE MODAL
+        // ================================================================
+
+        window.closeModal = function() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            editingItem = null;
+        };
+
+        window.closeViewModal = function() {
+            viewModalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        viewModalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeViewModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeViewModal();
+            }
+        });
+
+        // ================================================================
+        // CSRF TOKEN
+        // ================================================================
+
+        function getCsrfToken() {
+            if (window.getCsrfToken && typeof window.getCsrfToken === 'function') {
+                return window.getCsrfToken();
+            }
+            var metaTag = document.querySelector('meta[name="csrf-token"]');
+            if (metaTag) {
+                return metaTag.getAttribute('content');
+            }
+            var cookieValue = document.cookie.match(/csrf_token=([^;]+)/);
+            if (cookieValue) {
+                return cookieValue[1];
+            }
+            return '';
+        }
+
+        // ================================================================
+        // LOADER
+        // ================================================================
+
+        function showLoader() {
+            if (loaderOverlay) {
+                loaderOverlay.classList.remove('hidden');
+                loaderOverlay.style.display = 'flex';
+            }
+        }
+
+        function hideLoader() {
+            if (loaderOverlay) {
+                loaderOverlay.classList.add('hidden');
+                setTimeout(function() {
+                    loaderOverlay.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        // ================================================================
+        // TOAST NOTIFICATIONS
+        // ================================================================
+
+        function showToast(title, message, type, duration) {
+            type = type || 'success';
+            duration = duration || 4000;
+
+            var container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            var icons = {
+                'success': '✓',
+                'error': '✗',
+                'warning': '⚠',
+                'info': 'ℹ'
+            };
+
+            var toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || 'ℹ'}</span>
+                <div class="toast-content">
+                    <div class="toast-title">${escapeHtml(title)}</div>
+                    <div class="toast-message">${escapeHtml(message)}</div>
+                </div>
+                <button class="toast-close" onclick="dismissToast(this.parentElement)">✕</button>
+                <div class="toast-progress"><div class="toast-progress-bar" style="animation-duration:${duration}ms;"></div></div>
+            `;
+
+            container.appendChild(toast);
+
+            var timeout = setTimeout(function() {
+                dismissToast(toast);
+            }, duration);
+
+            toast.addEventListener('mouseenter', function() {
+                clearTimeout(timeout);
+                var progressBar = toast.querySelector('.toast-progress-bar');
+                if (progressBar) {
+                    progressBar.style.animationPlayState = 'paused';
+                }
+            });
+
+            toast.addEventListener('mouseleave', function() {
+                var progressBar = toast.querySelector('.toast-progress-bar');
+                if (progressBar) {
+                    progressBar.style.animationPlayState = 'running';
+                }
+                timeout = setTimeout(function() {
+                    dismissToast(toast);
+                }, duration);
+            });
+        }
+
+        window.dismissToast = function(toast) {
+            if (!toast || toast.classList.contains('hiding')) return;
+            toast.classList.add('hiding');
+            setTimeout(function() {
+                if (toast.parentElement) {
+                    toast.parentElement.removeChild(toast);
+                }
+            }, 400);
+        };
+
+        // ================================================================
+        // HELPERS
+        // ================================================================
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            try {
+                var d = new Date(dateStr);
+                return d.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        // ================================================================
+        // INITIALIZE
+        // ================================================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            console.log('BRIDGE-AI Kenya Team Admin initialized');
+        });
+
+    })();
+</script>
+
+{% endblock %}

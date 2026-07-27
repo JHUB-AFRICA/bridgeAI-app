@@ -1,0 +1,33 @@
+# ================================================================
+# BRIDGE-AI Kenya - Development Dependencies (JSON Version)
+# ================================================================
+
+# Include all production dependencies
+-r requirements.txt
+
+# ================================================================
+# Testing
+# ================================================================
+
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-flask==1.2.0
+pytest-xdist==3.5.0              # Parallel test execution
+
+# ================================================================
+# Development Tools
+# ================================================================
+
+Flask-DebugToolbar==0.13.1
+ipython==8.17.2                  # Interactive shell
+python-dotenv==1.0.0
+
+# ================================================================
+# Code Quality
+# ================================================================
+
+black==23.11.0                   # Code formatter
+flake8==6.1.0                    # Linter
+isort==5.12.0                    # Import sorter
+mypy==1.7.0                      # Static type checking
+pre-commit==3.6.0                # Git hooks

@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Smart Mushroom Farming Workshop for Youth",
+    "slug": "smart-mushroom-farming-workshop-for-youth",
+    "date": "2026-07-02",
+    "type": "webinar",
+    "description": "A practical workshop introducing young innovators and students to smart mushroom farming, IoT technologies, AI-powered monitoring systems, and sustainable agribusiness opportunities.",
+    "location": "JKUAT Smart Farm Zone, Juja, Kenya",
+    "status": "upcoming",
+    "agenda": "Welcome • Introduction to Smart Mushroom Farming • IoT Demonstration • Hands-on Mushroom Bag Preparation • AI Dashboard Demonstration • Networking & Q&A",
+    "speakers": "Dr. Peter Ochieng (WP5 Lead), Eng. Brian Mwangi (IoT Engineer), BRIDGE-AI Kenya Technical Team",
+    "register_url": "https://bridge-ai.jkuat.ac.ke/events/youth-workshop",
+    "created_at": "2026-07-07T20:39:53.239206",
+    "updated_at": "2026-07-07T20:39:53.239215",
+    "id": 1
+  }
+]

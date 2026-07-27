@@ -1,0 +1,1771 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - ACTIVITY DETAIL                               -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ activity.title }} - BRIDGE-AI Kenya</title>
+    <meta name="description" content="{{ activity.summary or activity.title }}">
+
+    <style>
+        /* ================================================================ */
+/* PAGE LOADER - Prevents FOUC                                     */
+/* ================================================================ */
+#page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#page-loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e4eaf0;
+    border-top-color: #1a4a6b;
+    border-radius: 50%;
+    animation: loaderSpin 0.8s linear infinite;
+}
+
+@keyframes loaderSpin {
+    to { transform: rotate(360deg); }
+}
+
+#page-loader p {
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: #5a6a7a;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+}
+        /* ================================================================ */
+        /* CSS VARIABLES                                                   */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #061420;
+            --primary: #0F2B3D;
+            --primary-light: #1A4A6B;
+            --primary-lighter: #2A6A8B;
+            --gold: #D4A843;
+            --gold-light: #F5D77E;
+            --gold-pale: #F5ECD7;
+            --text-dark: #081A28;
+            --text-body: #1A2A3A;
+            --text-muted: #5A6A7A;
+            --text-light: #8A9AAA;
+            --bg-white: #FFFFFF;
+            --bg-light: #F5F8FA;
+            --bg-lighter: #FAFCFE;
+            --border-light: #E4EAF0;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 16px 56px rgba(0, 0, 0, 0.08);
+            --shadow-xl: 0 24px 80px rgba(0, 0, 0, 0.12);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-body);
+            background: var(--bg-white);
+            line-height: 1.7;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ================================================================ */
+        /* CONTAINER                                                       */
+        /* ================================================================ */
+        .detail-container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+
+        /* ================================================================ */
+        /* BREADCRUMB                                                      */
+        /* ================================================================ */
+        .breadcrumb {
+            padding: 28px 0 20px;
+            font-size: 0.78rem;
+            color: var(--text-light);
+            letter-spacing: 0.02em;
+            font-weight: 450;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color var(--transition);
+            font-weight: 450;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-light);
+        }
+
+        .breadcrumb .sep {
+            color: var(--border-light);
+            margin: 0 8px;
+            font-weight: 300;
+        }
+
+        .breadcrumb .current {
+            color: var(--text-body);
+            font-weight: 500;
+        }
+
+        /* ================================================================ */
+        /* ARTICLE HEADER                                                  */
+        /* ================================================================ */
+        .article-header {
+            margin-bottom: 28px;
+        }
+
+        .article-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .article-tag {
+            display: inline-block;
+            padding: 3px 16px;
+            border-radius: 50px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: var(--bg-light);
+            color: var(--text-muted);
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+        }
+
+        .article-tag:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .article-tag.wp {
+            background: #D4E8F5;
+            color: var(--primary-light);
+            border-color: #B8D4E8;
+        }
+
+        .article-tag.audience {
+            background: #ECE4F5;
+            color: #5A3A7A;
+            border-color: #D8CCE8;
+        }
+
+        .article-tag.type {
+            background: #E6F0E6;
+            color: #1A6A4A;
+            border-color: #CCE0CC;
+        }
+
+        .article-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.03em;
+            line-height: 1.08;
+            margin-bottom: 14px;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 450;
+        }
+
+        .article-meta .meta-divider {
+            width: 3px;
+            height: 3px;
+            background: var(--border-light);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .article-meta .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ================================================================ */
+        /* FEATURED IMAGE - Hero                                           */
+        /* ================================================================ */
+        .article-featured-image {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 40px;
+            background: var(--bg-light);
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow var(--transition);
+        }
+
+        .article-featured-image:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .article-featured-image img {
+            width: 100%;
+            height: auto;
+            max-height: 520px;
+            object-fit: cover;
+            display: block;
+            transition: transform var(--transition-slow);
+        }
+
+        .article-featured-image:hover img {
+            transform: scale(1.01);
+        }
+
+        /* ================================================================ */
+        /* ARTICLE BODY - Story-Driven Scattered Layout                   */
+        /* ================================================================ */
+        .article-body {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: var(--text-body);
+            font-weight: 400;
+        }
+
+        .article-body p {
+            margin-bottom: 24px;
+        }
+
+        .article-body h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 44px 0 16px;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .article-body h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 32px 0 12px;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+
+        .article-body h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 24px 0 10px;
+        }
+
+        .article-body ul,
+        .article-body ol {
+            margin: 0 0 24px 24px;
+            padding: 0;
+        }
+
+        .article-body li {
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        .article-body blockquote {
+            border-left: 4px solid var(--gold);
+            padding: 18px 24px 18px 28px;
+            margin: 32px 0;
+            background: var(--bg-light);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 1.02rem;
+        }
+
+        .article-body blockquote strong {
+            color: var(--text-dark);
+            display: block;
+            margin-top: 10px;
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        /* ================================================================ */
+        /* SCATTERED GALLERY IMAGES - Story-Driven Layout                 */
+        /* ================================================================ */
+
+        /* Full Width Image Block */
+        .scattered-image {
+            margin: 40px 0 32px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--bg-light);
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .scattered-image:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .scattered-image img {
+            width: 100%;
+            height: auto;
+            max-height: 480px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+            transition: transform var(--transition-slow);
+        }
+
+        .scattered-image:hover img {
+            transform: scale(1.01);
+        }
+
+        .scattered-image .image-caption {
+            padding: 14px 24px 18px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-weight: 400;
+            line-height: 1.6;
+            border-top: 1px solid var(--border-light);
+            background: var(--bg-lighter);
+        }
+
+        .scattered-image .image-caption .caption-label {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-light);
+            margin-right: 6px;
+        }
+
+        /* Two-Column Image Grid */
+        .scattered-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 40px 0 32px;
+        }
+
+        .scattered-grid-2 .grid-item {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--bg-light);
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .scattered-grid-2 .grid-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .scattered-grid-2 .grid-item img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+            transition: transform var(--transition-slow);
+        }
+
+        .scattered-grid-2 .grid-item:hover img {
+            transform: scale(1.02);
+        }
+
+        .scattered-grid-2 .grid-item .grid-caption {
+            padding: 10px 16px 14px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-weight: 400;
+            line-height: 1.5;
+            border-top: 1px solid var(--border-light);
+            background: var(--bg-lighter);
+        }
+
+        .scattered-grid-2 .grid-item .grid-caption .caption-label {
+            display: inline-block;
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-light);
+            margin-right: 6px;
+        }
+
+        /* Three-Column Image Grid */
+        .scattered-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+            margin: 40px 0 32px;
+        }
+
+        .scattered-grid-3 .grid-item {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--bg-light);
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .scattered-grid-3 .grid-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .scattered-grid-3 .grid-item img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+            transition: transform var(--transition-slow);
+        }
+
+        .scattered-grid-3 .grid-item:hover img {
+            transform: scale(1.02);
+        }
+
+        .scattered-grid-3 .grid-item .grid-caption {
+            padding: 8px 12px 12px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-weight: 400;
+            line-height: 1.4;
+            border-top: 1px solid var(--border-light);
+            background: var(--bg-lighter);
+        }
+
+        .scattered-grid-3 .grid-item .grid-caption .caption-label {
+            display: inline-block;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-light);
+            margin-right: 4px;
+        }
+
+        /* Pull Quote + Image Combination */
+        .scattered-pullquote {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin: 40px 0 32px;
+            align-items: center;
+        }
+
+        .scattered-pullquote .pullquote-image {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--bg-light);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition);
+        }
+
+        .scattered-pullquote .pullquote-image:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .scattered-pullquote .pullquote-image img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+            transition: transform var(--transition-slow);
+        }
+
+        .scattered-pullquote .pullquote-image:hover img {
+            transform: scale(1.02);
+        }
+
+        .scattered-pullquote .pullquote-text {
+            padding: 20px 0;
+        }
+
+        .scattered-pullquote .pullquote-text blockquote {
+            margin: 0;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+            border-left: 3px solid var(--gold);
+            padding-left: 20px;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .scattered-pullquote .pullquote-text blockquote cite {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            font-style: normal;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .scattered-pullquote .pullquote-text .pullquote-caption {
+            margin-top: 12px;
+            font-size: 0.78rem;
+            color: var(--text-light);
+            text-align: left;
+        }
+
+        /* ================================================================ */
+        /* LIGHTBOX - Full Screen Image Viewer                           */
+        /* ================================================================ */
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .lightbox-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-overlay .lightbox-close {
+            position: absolute;
+            top: 24px;
+            right: 32px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 2.4rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            line-height: 1;
+            padding: 4px 12px;
+            border-radius: 8px;
+        }
+
+        .lightbox-overlay .lightbox-close:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.06);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-overlay .lightbox-image-container {
+            max-width: 90vw;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .lightbox-overlay .lightbox-image-container img {
+            max-width: 90vw;
+            max-height: 75vh;
+            object-fit: contain;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .lightbox-overlay .lightbox-caption {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            text-align: center;
+            max-width: 600px;
+            font-weight: 300;
+            letter-spacing: 0.02em;
+        }
+
+        .lightbox-overlay .lightbox-counter {
+            position: absolute;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .lightbox-overlay .lightbox-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.3);
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-sans);
+            line-height: 1;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .lightbox-overlay .lightbox-arrow:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .lightbox-overlay .lightbox-arrow.prev {
+            left: 32px;
+        }
+
+        .lightbox-overlay .lightbox-arrow.next {
+            right: 32px;
+        }
+
+        /* ================================================================ */
+        /* ARTICLE FOOTER                                                  */
+        /* ================================================================ */
+        .article-footer {
+            margin-top: 48px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+        }
+
+        .back-link:hover {
+            color: var(--primary-light);
+            gap: 12px;
+        }
+
+        .back-link .back-arrow {
+            display: inline-block;
+            transition: transform var(--transition);
+        }
+
+        .back-link:hover .back-arrow {
+            transform: translateX(-4px);
+        }
+
+        .article-status {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-light);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 4px 16px;
+            background: var(--bg-light);
+            border-radius: 50px;
+            border: 1px solid var(--border-light);
+        }
+
+        .article-status .status-label {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .article-status .status-value {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                     */
+        /* ================================================================ */
+
+        @media (max-width: 1024px) {
+            .detail-container {
+                max-width: 720px;
+                padding: 0 20px 50px;
+            }
+            .article-title {
+                font-size: 2.4rem;
+            }
+            .article-body {
+                font-size: 1rem;
+            }
+            .scattered-grid-2 {
+                gap: 14px;
+            }
+            .scattered-grid-2 .grid-item img {
+                height: 180px;
+            }
+            .scattered-grid-3 {
+                gap: 12px;
+            }
+            .scattered-grid-3 .grid-item img {
+                height: 130px;
+            }
+            .scattered-pullquote {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .scattered-pullquote .pullquote-image img {
+                height: 220px;
+            }
+            .scattered-pullquote .pullquote-text blockquote {
+                font-size: 1.1rem;
+            }
+            .lightbox-overlay .lightbox-arrow {
+                width: 44px;
+                height: 44px;
+                font-size: 1.2rem;
+            }
+            .lightbox-overlay .lightbox-arrow.prev {
+                left: 16px;
+            }
+            .lightbox-overlay .lightbox-arrow.next {
+                right: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 64px;
+            }
+
+            .detail-container {
+                padding: 0 16px 40px;
+            }
+
+            .breadcrumb {
+                padding: 20px 0 16px;
+                font-size: 0.72rem;
+                margin-bottom: 24px;
+            }
+
+            .breadcrumb .sep {
+                margin: 0 4px;
+            }
+
+            .article-title {
+                font-size: 1.8rem;
+                letter-spacing: -0.02em;
+            }
+
+            .article-meta {
+                font-size: 0.78rem;
+                gap: 8px;
+            }
+
+            .article-tags {
+                gap: 6px;
+            }
+
+            .article-tag {
+                font-size: 0.55rem;
+                padding: 2px 12px;
+            }
+
+            .article-featured-image img {
+                max-height: 300px;
+            }
+
+            .scattered-image {
+                margin: 28px 0 24px;
+            }
+
+            .scattered-image img {
+                max-height: 300px;
+            }
+
+            .scattered-image .image-caption {
+                padding: 10px 16px 14px;
+                font-size: 0.78rem;
+            }
+
+            .scattered-grid-2 {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin: 28px 0 24px;
+            }
+
+            .scattered-grid-2 .grid-item img {
+                height: 200px;
+            }
+
+            .scattered-grid-3 {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin: 28px 0 24px;
+            }
+
+            .scattered-grid-3 .grid-item img {
+                height: 140px;
+            }
+
+            .scattered-pullquote {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin: 28px 0 24px;
+            }
+
+            .scattered-pullquote .pullquote-image img {
+                height: 180px;
+            }
+
+            .scattered-pullquote .pullquote-text blockquote {
+                font-size: 1rem;
+                padding-left: 16px;
+            }
+
+            .article-body {
+                font-size: 0.95rem;
+                line-height: 1.8;
+            }
+
+            .article-body h2 {
+                font-size: 1.4rem;
+                margin: 30px 0 12px;
+            }
+
+            .article-body h3 {
+                font-size: 1.1rem;
+                margin: 22px 0 10px;
+            }
+
+            .article-body blockquote {
+                padding: 14px 16px 14px 20px;
+                font-size: 0.95rem;
+                margin: 20px 0;
+            }
+
+            .article-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                margin-top: 32px;
+                padding-top: 20px;
+            }
+
+            .article-status {
+                font-size: 0.65rem;
+                padding: 3px 14px;
+            }
+
+            .lightbox-overlay .lightbox-image-container img {
+                max-height: 60vh;
+            }
+
+            .lightbox-overlay .lightbox-close {
+                top: 16px;
+                right: 20px;
+                font-size: 2rem;
+            }
+
+            .lightbox-overlay .lightbox-arrow {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            .lightbox-overlay .lightbox-arrow.prev {
+                left: 8px;
+            }
+
+            .lightbox-overlay .lightbox-arrow.next {
+                right: 8px;
+            }
+
+            .lightbox-overlay .lightbox-caption {
+                font-size: 0.78rem;
+                max-width: 90%;
+            }
+
+            .lightbox-overlay .lightbox-counter {
+                font-size: 0.6rem;
+                bottom: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-top: 56px;
+            }
+
+            .detail-container {
+                padding: 0 12px 30px;
+            }
+
+            .breadcrumb {
+                padding: 14px 0 12px;
+                font-size: 0.65rem;
+                margin-bottom: 18px;
+            }
+
+            .article-title {
+                font-size: 1.4rem;
+                line-height: 1.15;
+            }
+
+            .article-meta {
+                font-size: 0.7rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .article-meta .meta-divider {
+                display: none;
+            }
+
+            .article-featured-image img {
+                max-height: 200px;
+            }
+
+            .scattered-image {
+                margin: 20px 0 16px;
+            }
+
+            .scattered-image img {
+                max-height: 200px;
+            }
+
+            .scattered-image .image-caption {
+                padding: 8px 12px 12px;
+                font-size: 0.7rem;
+            }
+
+            .scattered-grid-2 {
+                gap: 10px;
+                margin: 20px 0 16px;
+            }
+
+            .scattered-grid-2 .grid-item img {
+                height: 160px;
+            }
+
+            .scattered-grid-2 .grid-item .grid-caption {
+                padding: 6px 10px 10px;
+                font-size: 0.65rem;
+            }
+
+            .scattered-grid-3 {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin: 20px 0 16px;
+            }
+
+            .scattered-grid-3 .grid-item img {
+                height: 100px;
+            }
+
+            .scattered-grid-3 .grid-item .grid-caption {
+                padding: 4px 8px 8px;
+                font-size: 0.6rem;
+            }
+
+            .scattered-pullquote {
+                gap: 10px;
+                margin: 20px 0 16px;
+            }
+
+            .scattered-pullquote .pullquote-image img {
+                height: 140px;
+            }
+
+            .scattered-pullquote .pullquote-text blockquote {
+                font-size: 0.9rem;
+                padding-left: 12px;
+            }
+
+            .scattered-pullquote .pullquote-text .pullquote-caption {
+                font-size: 0.65rem;
+            }
+
+            .article-body {
+                font-size: 0.88rem;
+                line-height: 1.7;
+            }
+
+            .article-body h2 {
+                font-size: 1.2rem;
+                margin: 24px 0 10px;
+            }
+
+            .article-body h3 {
+                font-size: 1rem;
+                margin: 18px 0 8px;
+            }
+
+            .article-body ul,
+            .article-body ol {
+                margin-left: 16px;
+            }
+
+            .article-body blockquote {
+                padding: 12px 14px 12px 16px;
+                font-size: 0.88rem;
+                margin: 16px 0;
+            }
+
+            .article-footer {
+                margin-top: 24px;
+                padding-top: 16px;
+                gap: 10px;
+            }
+
+            .back-link {
+                font-size: 0.82rem;
+            }
+
+            .article-status {
+                font-size: 0.6rem;
+                padding: 2px 12px;
+            }
+
+            .lightbox-overlay .lightbox-image-container img {
+                max-height: 50vh;
+                max-width: 95vw;
+            }
+
+            .lightbox-overlay .lightbox-close {
+                top: 12px;
+                right: 16px;
+                font-size: 1.6rem;
+            }
+
+            .lightbox-overlay .lightbox-arrow {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+
+            .lightbox-overlay .lightbox-arrow.prev {
+                left: 4px;
+            }
+
+            .lightbox-overlay .lightbox-arrow.next {
+                right: 4px;
+            }
+
+            .lightbox-overlay .lightbox-caption {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        ::selection {
+            background: var(--gold-pale);
+            color: var(--text-dark);
+        }
+
+        /* ================================================================ */
+        /* PRINT STYLES                                                    */
+        /* ================================================================ */
+        @media print {
+            body {
+                padding-top: 0;
+                background: #ffffff;
+            }
+
+            .breadcrumb {
+                border-bottom: 1px solid #ddd;
+            }
+
+            .article-featured-image {
+                box-shadow: none;
+            }
+
+            .scattered-image,
+            .scattered-grid-2 .grid-item,
+            .scattered-grid-3 .grid-item,
+            .scattered-pullquote .pullquote-image {
+                border: 1px solid #ddd;
+                background: #f9f9f9;
+            }
+
+            .scattered-image {
+                break-inside: avoid;
+            }
+
+            .scattered-grid-2 {
+                break-inside: avoid;
+            }
+
+            .scattered-grid-3 {
+                break-inside: avoid;
+            }
+
+            .scattered-pullquote {
+                break-inside: avoid;
+            }
+
+            .lightbox-overlay {
+                display: none !important;
+            }
+
+            .article-footer {
+                border-top: 1px solid #ddd;
+            }
+
+            .back-link {
+                display: none;
+            }
+
+            .article-status {
+                border: 1px solid #ddd;
+                background: #f5f5f5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================================ -->
+<!-- LOADING OVERLAY - Prevents FOUC                             -->
+<!-- ============================================================ -->
+<div id="page-loader">
+    <div class="loader-spinner"></div>
+    <p>Loading...</p>
+</div>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT                                                    -->
+    <!-- ================================================================ -->
+    <main>
+
+        <div class="detail-container">
+
+            <!-- ============================================================ -->
+            <!-- BREADCRUMB                                                    -->
+            <!-- ============================================================ -->
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="{{ url_for('public.index') }}">Home</a>
+                <span class="sep">·</span>
+                <a href="{{ url_for('public.activities') }}">Activities</a>
+                <span class="sep">·</span>
+                <span class="current">{{ activity.title }}</span>
+            </nav>
+
+            <!-- ============================================================ -->
+            <!-- ARTICLE                                                     -->
+            <!-- ============================================================ -->
+            <article>
+
+                <!-- Header -->
+                <header class="article-header">
+                    <div class="article-tags">
+                        {% if activity.wp_tag %}
+                            <span class="article-tag wp">{{ activity.wp_tag }}</span>
+                        {% endif %}
+                        {% if activity.activity_type %}
+                            <span class="article-tag type">{{ activity.activity_type|replace('_', ' ')|title }}</span>
+                        {% endif %}
+                        {% if activity.audience %}
+                            <span class="article-tag audience">{{ activity.audience|title }}</span>
+                        {% endif %}
+                    </div>
+
+                    <h1 class="article-title">{{ activity.title }}</h1>
+
+                    <div class="article-meta">
+                        {% if activity.date %}
+                            <span class="meta-item">{{ activity.date[:10] }}</span>
+                        {% endif %}
+                        {% if activity.location %}
+                            <span class="meta-divider"></span>
+                            <span class="meta-item">{{ activity.location }}</span>
+                        {% endif %}
+                        {% if activity.author %}
+                            <span class="meta-divider"></span>
+                            <span class="meta-item">{{ activity.author }}</span>
+                        {% endif %}
+                    </div>
+                </header>
+
+                <!-- Featured Image - Hero -->
+                {% if activity.featured_image %}
+                    <div class="article-featured-image">
+                        <img src="{{ url_for('static', filename=activity.featured_image) }}"
+                             alt="{{ activity.title }}"
+                             loading="lazy"
+                             decoding="async">
+                    </div>
+                {% endif %}
+
+                <!-- ============================================================ -->
+                <!-- ARTICLE BODY - Story-Driven Scattered Layout               -->
+                <!-- ============================================================ -->
+                <div class="article-body" id="articleBody">
+                    {{ activity.body|safe }}
+                </div>
+
+                <!-- Footer -->
+                <footer class="article-footer">
+                    <a href="{{ url_for('public.activities') }}" class="back-link">
+                        <span class="back-arrow">←</span>
+                        Back to Activities
+                    </a>
+                    {% if activity.evidence_status %}
+                        <span class="article-status">
+                            <span class="status-label">Status </span>
+                            <span class="status-value">{{ activity.evidence_status|title }}</span>
+                        </span>
+                    {% endif %}
+                </footer>
+
+            </article>
+
+        </div>
+
+    </main>
+
+    <!-- ================================================================ -->
+    <!-- LIGHTBOX - Full Screen Image Viewer                            -->
+    <!-- ================================================================ -->
+    <div class="lightbox-overlay" id="lightboxOverlay">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Close lightbox">✕</button>
+
+        <button class="lightbox-arrow prev" id="lightboxPrev" aria-label="Previous image">‹</button>
+        <button class="lightbox-arrow next" id="lightboxNext" aria-label="Next image">›</button>
+
+        <div class="lightbox-image-container" id="lightboxContainer">
+            <img id="lightboxImage" src="" alt="">
+            <p class="lightbox-caption" id="lightboxCaption"></p>
+        </div>
+
+        <span class="lightbox-counter" id="lightboxCounter"></span>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- HIDDEN DATA CONTAINER FOR GALLERY IMAGES                        -->
+    <!-- ================================================================ -->
+    <div id="gallery-data" style="display:none;" 
+         data-images='{{ activity.gallery_images|tojson if activity.gallery_images else "[]" }}'>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT                                        -->
+    <!-- ================================================================ -->
+    <script>
+    (function() {
+        'use strict';
+
+        // ================================================================
+        // GET GALLERY IMAGES FROM DATA ATTRIBUTE
+        // ================================================================
+
+        var galleryImages = [];
+        var dataContainer = document.getElementById('gallery-data');
+        
+        if (dataContainer && dataContainer.dataset.images) {
+            try {
+                galleryImages = JSON.parse(dataContainer.dataset.images);
+            } catch (e) {
+                console.warn('Failed to parse gallery data:', e);
+                galleryImages = [];
+            }
+        }
+
+        var articleBody = document.getElementById('articleBody');
+
+        if (articleBody && galleryImages.length > 0) {
+            // Get all paragraph elements and heading elements
+            var contentNodes = articleBody.children;
+            var textBlocks = [];
+
+            // Collect all text-containing elements
+            for (var i = 0; i < contentNodes.length; i++) {
+                var node = contentNodes[i];
+                var tagName = node.tagName.toLowerCase();
+                if (['p', 'h2', 'h3', 'h4', 'blockquote', 'ul', 'ol'].indexOf(tagName) !== -1) {
+                    textBlocks.push(node);
+                }
+            }
+
+            var totalBlocks = textBlocks.length;
+            var totalImages = galleryImages.length;
+
+            if (totalBlocks >= 2 && totalImages >= 1) {
+                var imageIndex = 0;
+                var positions = [];
+                var gap = Math.floor(totalBlocks / (totalImages + 1));
+
+                for (var i = 1; i <= totalImages; i++) {
+                    var pos = i * gap;
+                    if (pos >= totalBlocks) {
+                        pos = totalBlocks - 1;
+                    }
+                    if (positions.indexOf(pos) === -1 && pos < totalBlocks) {
+                        positions.push(pos);
+                    }
+                }
+
+                while (positions.length < totalImages && positions.length < totalBlocks) {
+                    var lastPos = positions.length > 0 ? positions[positions.length - 1] : -1;
+                    var newPos = lastPos + 1;
+                    if (newPos < totalBlocks && positions.indexOf(newPos) === -1) {
+                        positions.push(newPos);
+                    } else {
+                        break;
+                    }
+                }
+
+                positions.sort(function(a, b) { return a - b; });
+
+                for (var i = positions.length - 1; i >= 0; i--) {
+                    var pos = positions[i];
+                    if (pos < totalBlocks && imageIndex < totalImages) {
+                        var imageData = galleryImages[imageIndex];
+                        var imgUrl = "{{ url_for('static', filename='') }}" + imageData.image_path;
+                        var caption = imageData.caption || '';
+
+                        var imageWrapper = document.createElement('div');
+                        imageWrapper.className = 'scattered-image';
+                        imageWrapper.setAttribute('data-image-id', imageData.id);
+
+                        var remaining = galleryImages.length - imageIndex;
+
+                        if (remaining >= 2 && imageIndex < totalImages - 1 && i % 2 === 0) {
+                            var gridWrapper = document.createElement('div');
+                            gridWrapper.className = 'scattered-grid-2';
+
+                            var item1 = document.createElement('div');
+                            item1.className = 'grid-item';
+                            item1.innerHTML = `
+                                <img src="${imgUrl}" alt="${caption || 'Gallery image'}" class="lightbox-trigger" data-index="${imageIndex}">
+                                <div class="grid-caption">
+                                    <span class="caption-label">Image</span>
+                                    ${caption}
+                                </div>
+                            `;
+                            gridWrapper.appendChild(item1);
+
+                            imageIndex++;
+                            if (imageIndex < totalImages) {
+                                var nextImage = galleryImages[imageIndex];
+                                var nextImgUrl = "{{ url_for('static', filename='') }}" + nextImage.image_path;
+                                var nextCaption = nextImage.caption || '';
+
+                                var item2 = document.createElement('div');
+                                item2.className = 'grid-item';
+                                item2.innerHTML = `
+                                    <img src="${nextImgUrl}" alt="${nextCaption || 'Gallery image'}" class="lightbox-trigger" data-index="${imageIndex}">
+                                    <div class="grid-caption">
+                                        <span class="caption-label">Image</span>
+                                        ${nextCaption}
+                                    </div>
+                                `;
+                                gridWrapper.appendChild(item2);
+                            }
+
+                            var parent = articleBody;
+                            var refNode = textBlocks[pos];
+                            parent.insertBefore(gridWrapper, refNode);
+
+                        } else if (remaining >= 3 && imageIndex < totalImages - 2 && i % 3 === 0) {
+                            var gridWrapper = document.createElement('div');
+                            gridWrapper.className = 'scattered-grid-3';
+
+                            var item1 = document.createElement('div');
+                            item1.className = 'grid-item';
+                            item1.innerHTML = `
+                                <img src="${imgUrl}" alt="${caption || 'Gallery image'}" class="lightbox-trigger" data-index="${imageIndex}">
+                                <div class="grid-caption">
+                                    <span class="caption-label">Image</span>
+                                    ${caption}
+                                </div>
+                            `;
+                            gridWrapper.appendChild(item1);
+
+                            imageIndex++;
+                            if (imageIndex < totalImages) {
+                                var nextImage = galleryImages[imageIndex];
+                                var nextImgUrl = "{{ url_for('static', filename='') }}" + nextImage.image_path;
+                                var nextCaption = nextImage.caption || '';
+
+                                var item2 = document.createElement('div');
+                                item2.className = 'grid-item';
+                                item2.innerHTML = `
+                                    <img src="${nextImgUrl}" alt="${nextCaption || 'Gallery image'}" class="lightbox-trigger" data-index="${imageIndex}">
+                                    <div class="grid-caption">
+                                        <span class="caption-label">Image</span>
+                                        ${nextCaption}
+                                    </div>
+                                `;
+                                gridWrapper.appendChild(item2);
+                            }
+
+                            imageIndex++;
+                            if (imageIndex < totalImages) {
+                                var nextImage = galleryImages[imageIndex];
+                                var nextImgUrl = "{{ url_for('static', filename='') }}" + nextImage.image_path;
+                                var nextCaption = nextImage.caption || '';
+
+                                var item3 = document.createElement('div');
+                                item3.className = 'grid-item';
+                                item3.innerHTML = `
+                                    <img src="${nextImgUrl}" alt="${nextCaption || 'Gallery image'}" class="lightbox-trigger" data-index="${imageIndex}">
+                                    <div class="grid-caption">
+                                        <span class="caption-label">Image</span>
+                                        ${nextCaption}
+                                    </div>
+                                `;
+                                gridWrapper.appendChild(item3);
+                            }
+
+                            var parent = articleBody;
+                            var refNode = textBlocks[pos];
+                            parent.insertBefore(gridWrapper, refNode);
+
+                        } else {
+                            imageWrapper.innerHTML = `
+                                <img src="${imgUrl}" alt="${caption || 'Gallery image'}" class="lightbox-trigger" data-index="${imageIndex}">
+                                <div class="image-caption">
+                                    <span class="caption-label">Image</span>
+                                    ${caption}
+                                </div>
+                            `;
+
+                            var parent = articleBody;
+                            var refNode = textBlocks[pos];
+                            parent.insertBefore(imageWrapper, refNode);
+                        }
+
+                        imageIndex++;
+                        if (imageIndex >= totalImages) break;
+                    }
+                }
+
+                while (imageIndex < totalImages) {
+                    var imageData = galleryImages[imageIndex];
+                    var imgUrl = "{{ url_for('static', filename='') }}" + imageData.image_path;
+                    var caption = imageData.caption || '';
+
+                    var imageWrapper = document.createElement('div');
+                    imageWrapper.className = 'scattered-image';
+                    imageWrapper.innerHTML = `
+                        <img src="${imgUrl}" alt="${caption || 'Gallery image'}" class="lightbox-trigger" data-index="${imageIndex}">
+                        <div class="image-caption">
+                            <span class="caption-label">Image</span>
+                            ${caption}
+                        </div>
+                    `;
+
+                    articleBody.appendChild(imageWrapper);
+                    imageIndex++;
+                }
+            } else {
+                for (var i = 0; i < galleryImages.length; i++) {
+                    var imageData = galleryImages[i];
+                    var imgUrl = "{{ url_for('static', filename='') }}" + imageData.image_path;
+                    var caption = imageData.caption || '';
+
+                    var imageWrapper = document.createElement('div');
+                    imageWrapper.className = 'scattered-image';
+                    imageWrapper.innerHTML = `
+                        <img src="${imgUrl}" alt="${caption || 'Gallery image'}" class="lightbox-trigger" data-index="${i}">
+                        <div class="image-caption">
+                            <span class="caption-label">Image</span>
+                            ${caption}
+                        </div>
+                    `;
+
+                    articleBody.appendChild(imageWrapper);
+                }
+            }
+        }
+
+        // ================================================================
+        // LIGHTBOX - Event Delegation
+        // ================================================================
+
+        var lightboxOverlay = document.getElementById('lightboxOverlay');
+        var lightboxImage = document.getElementById('lightboxImage');
+        var lightboxCaption = document.getElementById('lightboxCaption');
+        var lightboxCounter = document.getElementById('lightboxCounter');
+        var lightboxPrev = document.getElementById('lightboxPrev');
+        var lightboxNext = document.getElementById('lightboxNext');
+        var lightboxClose = document.getElementById('lightboxClose');
+        var lightboxIndex = 0;
+        var lightboxImages = [];
+        var lightboxCaptions = [];
+        var isLightboxOpen = false;
+
+        document.querySelectorAll('.lightbox-trigger').forEach(function(img) {
+            var src = img.getAttribute('src');
+            var caption = '';
+            var parent = img.closest('.scattered-image, .grid-item');
+            if (parent) {
+                var captionEl = parent.querySelector('.image-caption, .grid-caption');
+                if (captionEl) {
+                    caption = captionEl.textContent.trim().replace(/^Image\s*/, '');
+                }
+            }
+            lightboxImages.push(src);
+            lightboxCaptions.push(caption);
+        });
+
+        document.addEventListener('click', function(e) {
+            var img = e.target.closest('.lightbox-trigger');
+            if (img) {
+                var index = parseInt(img.dataset.index);
+                if (!isNaN(index) && index < lightboxImages.length) {
+                    openLightbox(index);
+                }
+            }
+        });
+
+        function openLightbox(index) {
+            if (lightboxImages.length === 0) return;
+            lightboxIndex = index || 0;
+            updateLightbox();
+            lightboxOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            isLightboxOpen = true;
+        }
+
+        function closeLightbox(e) {
+            if (e && e.target !== e.currentTarget && e.target !== lightboxClose &&
+                !e.target.closest('.lightbox-arrow') && !e.target.closest('.lightbox-image-container')) {
+                return;
+            }
+            lightboxOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            isLightboxOpen = false;
+        }
+
+        function updateLightbox() {
+            if (lightboxImages.length === 0) return;
+            lightboxImage.src = lightboxImages[lightboxIndex];
+            lightboxCaption.textContent = lightboxCaptions[lightboxIndex] || '';
+            lightboxCounter.textContent = (lightboxIndex + 1) + ' of ' + lightboxImages.length;
+
+            if (lightboxPrev) {
+                lightboxPrev.style.display = lightboxImages.length > 1 ? 'flex' : 'none';
+            }
+            if (lightboxNext) {
+                lightboxNext.style.display = lightboxImages.length > 1 ? 'flex' : 'none';
+            }
+        }
+
+        if (lightboxOverlay) {
+            lightboxOverlay.addEventListener('click', closeLightbox);
+        }
+
+        if (lightboxClose) {
+            lightboxClose.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeLightbox(e);
+            });
+        }
+
+        if (lightboxPrev) {
+            lightboxPrev.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (lightboxIndex > 0) {
+                    lightboxIndex--;
+                    updateLightbox();
+                }
+            });
+        }
+
+        if (lightboxNext) {
+            lightboxNext.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (lightboxIndex < lightboxImages.length - 1) {
+                    lightboxIndex++;
+                    updateLightbox();
+                }
+            });
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (!isLightboxOpen) return;
+
+            if (e.key === 'Escape') {
+                closeLightbox(e);
+            }
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (lightboxIndex > 0) {
+                    lightboxIndex--;
+                    updateLightbox();
+                }
+            }
+            if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                if (lightboxIndex < lightboxImages.length - 1) {
+                    lightboxIndex++;
+                    updateLightbox();
+                }
+            }
+        });
+
+        // ================================================================
+        // SMOOTH SCROLL FOR INTERNAL LINKS
+        // ================================================================
+        document.querySelectorAll('.article-body a[href^="#"]').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                var targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                var targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    var headerHeight = document.querySelector('.site-header')?.offsetHeight || 72;
+                    var targetPosition = targetElement.getBoundingClientRect().top +
+                                           window.pageYOffset -
+                                           headerHeight -
+                                           20;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ================================================================
+        // KEYBOARD NAVIGATION - Escape to go back
+        // ================================================================
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !isLightboxOpen) {
+                var backLink = document.querySelector('.back-link');
+                if (backLink) {
+                    window.location.href = backLink.getAttribute('href');
+                }
+            }
+        });
+
+        // ================================================================
+        // COPYRIGHT YEAR
+        // ================================================================
+        var yearElement = document.querySelector('.footer-year');
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
+        }
+
+        console.log('BRIDGE-AI Kenya Activity Detail page initialized');
+
+    })();
+    </script>
+<script>
+    (function() {
+        'use strict';
+        var loader = document.getElementById('page-loader');
+        function hideLoader() {
+            if (loader) {
+                loader.classList.add('hidden');
+                setTimeout(function() {
+                    if (loader && loader.parentNode) {
+                        loader.parentNode.removeChild(loader);
+                    }
+                }, 700);
+            }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 3000);
+    })();
+</script>
+</body>
+</html>

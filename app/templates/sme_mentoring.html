@@ -1,0 +1,1991 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - SME MENTORING                                 -->
+<!-- ================================================================ -->
+<!-- Editorial Magazine Style                                         -->
+<!-- Premium · Sophisticated · Unique                                -->
+<!-- Features: Full-width hero image · Modern typography            -->
+<!-- Content: Hero · Overview · Challenges · Hackathons · Stories   -->
+<!--          Expression of Interest Form · Back to Training        -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SME Mentoring - BRIDGE-AI Kenya</title>
+    <meta name="description" content="SME mentoring, challenges, hackathons, and success stories for agri-SMEs under BRIDGE-AI Kenya.">
+
+    <style>
+        /* ================================================================ */
+        /* CSS VARIABLES                                                   */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #061420;
+            --primary: #0F2B3D;
+            --primary-light: #1A4A6B;
+            --gold: #D4A843;
+            --gold-light: #F5D77E;
+            --gold-pale: #F5ECD7;
+            --text-dark: #0A1A2A;
+            --text-body: #1A2A3A;
+            --text-muted: #5A6A7A;
+            --text-light: #8A9AAA;
+            --bg-white: #FFFFFF;
+            --bg-light: #F6F8FA;
+            --bg-lighter: #FAFCFE;
+            --border-light: #E8ECF0;
+            --shadow-sm: 0 2px 12px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 40px rgba(0,0,0,0.06);
+            --shadow-lg: 0 16px 60px rgba(0,0,0,0.08);
+            --shadow-xl: 0 24px 80px rgba(0,0,0,0.12);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --transition: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --font-serif: 'Georgia', 'Times New Roman', serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-body);
+            background: var(--bg-white);
+            line-height: 1.7;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ================================================================ */
+        /* PAGE LOADER                                                     */
+        /* ================================================================ */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        #page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e4eaf0;
+            border-top-color: #1a4a6b;
+            border-radius: 50%;
+            animation: loaderSpin 0.8s linear infinite;
+        }
+        @keyframes loaderSpin { to { transform: rotate(360deg); } }
+        #page-loader p {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: #5a6a7a;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        /* ================================================================ */
+        /* CONTAINER                                                       */
+        /* ================================================================ */
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ================================================================ */
+        /* BREADCRUMB                                                      */
+        /* ================================================================ */
+        .breadcrumb-bar {
+            background: var(--bg-white);
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 72px;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255,255,255,0.92);
+        }
+        .breadcrumb-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+        .breadcrumb-container a {
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: color var(--transition);
+            font-weight: 500;
+        }
+        .breadcrumb-container a:hover { color: var(--gold); }
+        .breadcrumb-container .sep {
+            color: var(--text-light);
+            opacity: 0.3;
+            font-weight: 300;
+        }
+        .breadcrumb-container .current {
+            color: var(--text-body);
+            font-weight: 600;
+        }
+
+        /* ================================================================ */
+        /* HERO - Full Width Image with Overlay                          */
+        /* ================================================================ */
+        .hero-section {
+            position: relative;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: var(--primary-dark);
+        }
+
+        .hero-image-wrap {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.5;
+            transform: scale(1.02);
+            transition: transform 20s ease;
+        }
+
+        .hero-section:hover .hero-image-wrap img {
+            transform: scale(1);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(160deg,
+                rgba(6, 20, 32, 0.85) 0%,
+                rgba(15, 43, 61, 0.70) 50%,
+                rgba(26, 74, 107, 0.40) 100%
+            );
+        }
+
+        .hero-accent-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            z-index: 2;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            opacity: 0.6;
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            width: 100%;
+            padding: 40px 24px;
+            margin: 0 auto;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            min-height: 60vh;
+        }
+
+        .hero-content {
+            max-width: 100%;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 4px 20px;
+            border: 1px solid rgba(212, 168, 67, 0.25);
+            border-radius: 4px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+            background: rgba(212, 168, 67, 0.04);
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: 4.8rem;
+            font-weight: 700;
+            line-height: 1.02;
+            letter-spacing: -0.03em;
+            margin: 0 0 12px;
+            color: #ffffff;
+        }
+
+        .hero-title .gold {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 500px;
+            line-height: 1.8;
+            margin: 0 0 24px;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 34px;
+            background: var(--gold);
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all var(--transition);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            font-family: var(--font-sans);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(212, 168, 67, 0.25);
+        }
+
+        .btn-arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+        .btn-primary:hover .btn-arrow { transform: translateX(6px); }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            color: rgba(255, 255, 255, 0.6);
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* ─── Hero Stats ─── */
+        .hero-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-md);
+            padding: 28px 32px;
+            transition: all var(--transition);
+        }
+
+        .hero-stats:hover {
+            border-color: rgba(212, 168, 67, 0.12);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-stats .stat-item {
+            text-align: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .hero-stats .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .hero-stats .stat-item .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--gold);
+            display: block;
+            line-height: 1.1;
+            font-family: var(--font-serif);
+        }
+
+        .hero-stats .stat-item .stat-label {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .hero-stats .stat-item .stat-link {
+            display: inline-block;
+            margin-top: 2px;
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: var(--gold);
+            text-decoration: none;
+            opacity: 0;
+            transition: all var(--transition);
+        }
+
+        .hero-stats .stat-item:hover .stat-link {
+            opacity: 1;
+        }
+
+        /* ================================================================ */
+        /* OVERVIEW SECTION - Magazine Style                              */
+        /* ================================================================ */
+        .overview-section {
+            padding: 70px 0 50px;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .overview-header {
+            margin-bottom: 40px;
+        }
+
+        .overview-header .section-number {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold);
+            opacity: 0.15;
+            display: block;
+            line-height: 1;
+            margin-bottom: -8px;
+        }
+
+        .overview-header h2 {
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+        }
+
+        .overview-header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 640px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .overview-card {
+            border-top: 3px solid var(--gold);
+            padding: 24px 20px 16px;
+            transition: all var(--transition);
+            background: var(--bg-white);
+        }
+
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .overview-card .card-number {
+            font-family: var(--font-serif);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gold);
+            opacity: 0.4;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .overview-card h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .overview-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* ================================================================ */
+        /* CHALLENGES SECTION                                              */
+        /* ================================================================ */
+        .challenges-section {
+            padding: 60px 0 50px;
+            background: var(--bg-light);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-light);
+            flex-wrap: wrap;
+            gap: 8px 16px;
+        }
+
+        .section-header .section-title-group .section-number {
+            font-family: var(--font-serif);
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--gold);
+            opacity: 0.15;
+            display: block;
+            line-height: 1;
+        }
+
+        .section-header .section-title-group h2 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+        }
+
+        .section-header .section-title-group h2 .gold { color: var(--gold); }
+
+        .section-header .view-all {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding-bottom: 2px;
+            border-bottom: 2px solid transparent;
+        }
+
+        .section-header .view-all:hover {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+            gap: 10px;
+        }
+
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .challenge-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 22px 24px;
+            transition: all var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .challenge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 0;
+            background: var(--gold);
+            transition: height var(--transition);
+        }
+
+        .challenge-card:hover::before {
+            height: 100%;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(212, 168, 67, 0.1);
+        }
+
+        .challenge-card .challenge-status {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 8px;
+            background: #E6F0E6;
+            color: #1A6A4A;
+        }
+
+        .challenge-card .challenge-status.closed {
+            background: #F5E6E6;
+            color: #9E2A2A;
+        }
+
+        .challenge-card h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .challenge-card .challenge-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .challenge-card .challenge-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            color: var(--text-light);
+            padding-top: 10px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .challenge-card .challenge-meta .learn-link {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .challenge-card .challenge-meta .learn-link:hover {
+            color: var(--gold);
+            gap: 10px;
+        }
+
+        /* ================================================================ */
+        /* HACKATHONS SECTION                                              */
+        /* ================================================================ */
+        .hackathons-section {
+            padding: 60px 0 50px;
+            background: var(--bg-white);
+        }
+
+        .hackathons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .hackathon-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 20px 22px;
+            transition: all var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hackathon-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .hackathon-card:hover::after {
+            opacity: 0.6;
+        }
+
+        .hackathon-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(212, 168, 67, 0.1);
+        }
+
+        .hackathon-card .hackathon-status {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 8px;
+            background: #D4E8F5;
+            color: #1A4A6B;
+        }
+
+        .hackathon-card .hackathon-status.completed {
+            background: #E8E8E8;
+            color: #6A7A8A;
+        }
+
+        .hackathon-card h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .hackathon-card .hackathon-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+            margin-bottom: 4px;
+        }
+
+        .hackathon-card .hackathon-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .hackathon-card .hackathon-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .hackathon-card .hackathon-footer .view-link {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .hackathon-card .hackathon-footer .view-link:hover {
+            color: var(--gold);
+            gap: 10px;
+        }
+
+        /* ================================================================ */
+        /* SUCCESS STORIES SECTION                                         */
+        /* ================================================================ */
+        .stories-section {
+            padding: 60px 0 50px;
+            background: var(--bg-light);
+        }
+
+        .featured-story {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 0;
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin-bottom: 30px;
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+
+        .featured-story:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: rgba(212, 168, 67, 0.1);
+        }
+
+        .featured-story .story-image {
+            min-height: 220px;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg-light);
+        }
+
+        .featured-story .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition);
+            display: block;
+        }
+
+        .featured-story:hover .story-image img {
+            transform: scale(1.04);
+        }
+
+        .featured-story .story-image .image-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-light), #E8EDF2);
+            color: var(--text-light);
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            padding: 10px;
+            text-align: center;
+            letter-spacing: 0.04em;
+        }
+
+        .featured-story .story-content {
+            padding: 28px 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .featured-story .story-content .story-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 8px;
+            background: var(--gold-pale);
+            color: var(--gold);
+            width: fit-content;
+        }
+
+        .featured-story .story-content h4 {
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .featured-story .story-content .story-sme {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .featured-story .story-content .story-excerpt {
+            font-size: 0.95rem;
+            color: var(--text-body);
+            line-height: 1.7;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .featured-story .story-content .story-excerpt::before {
+            content: '"';
+            color: var(--gold);
+            opacity: 0.3;
+            font-size: 1.4rem;
+            font-style: normal;
+        }
+        .featured-story .story-content .story-excerpt::after {
+            content: '"';
+            color: var(--gold);
+            opacity: 0.3;
+            font-size: 1.4rem;
+            font-style: normal;
+        }
+
+        .featured-story .story-content .story-footer .read-link {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .featured-story .story-content .story-footer .read-link:hover {
+            color: var(--gold);
+            gap: 12px;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .story-card {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+
+        .story-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(212, 168, 67, 0.1);
+        }
+
+        .story-card .story-thumb {
+            height: 80px;
+            overflow: hidden;
+            background: var(--bg-light);
+            flex-shrink: 0;
+        }
+
+        .story-card .story-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition);
+        }
+
+        .story-card:hover .story-thumb img {
+            transform: scale(1.06);
+        }
+
+        .story-card .story-thumb .thumb-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-light), #E8EDF2);
+            color: var(--text-light);
+            font-size: 0.4rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            text-align: center;
+            padding: 4px;
+            letter-spacing: 0.04em;
+        }
+
+        .story-card .story-info {
+            padding: 14px 16px;
+            flex: 1;
+        }
+
+        .story-card .story-info h5 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .story-card .story-info .story-sme-small {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .story-card .story-info .story-desc-small {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .story-card .story-info .story-link {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .story-card .story-info .story-link:hover {
+            color: var(--gold);
+            gap: 10px;
+        }
+
+        /* ================================================================ */
+        /* FORM SECTION                                                    */
+        /* ================================================================ */
+        .form-section {
+            padding: 60px 0 70px;
+            background: var(--bg-white);
+        }
+
+        .form-container {
+            max-width: 640px;
+            margin: 0 auto;
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 40px 48px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+        }
+
+        .form-container .form-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .form-container .form-header h2 {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+        }
+
+        .form-container .form-header h2 .gold { color: var(--gold); }
+
+        .form-container .form-header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-flash-message {
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+            border-left: 4px solid transparent;
+            line-height: 1.6;
+        }
+
+        .form-flash-message.flash-success {
+            background: #E6F5EE;
+            color: #1A6A4A;
+            border-left-color: #1A7A4A;
+        }
+        .form-flash-message.flash-error {
+            background: #F5E6E6;
+            color: #9E2A2A;
+            border-left-color: #9E2A2A;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-body);
+            margin-bottom: 3px;
+        }
+
+        .form-group label .required { color: #9E2A2A; }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--text-body);
+            background: var(--bg-lighter);
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+            background: var(--bg-white);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .btn-submit {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 40px;
+            background: var(--gold);
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 4px;
+            transition: all var(--transition);
+            cursor: pointer;
+            font-family: var(--font-sans);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-submit:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(212, 168, 67, 0.2);
+        }
+
+        .btn-submit .btn-arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+        .btn-submit:hover .btn-arrow { transform: translateX(6px); }
+
+        /* ================================================================ */
+        /* BACK SECTION                                                    */
+        /* ================================================================ */
+        .back-section {
+            padding: 30px 24px 50px;
+            text-align: center;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .back-section .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all var(--transition);
+            padding: 10px 24px;
+            border-radius: 4px;
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+        }
+
+        .back-section .back-link:hover {
+            gap: 16px;
+            color: var(--primary-light);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+
+        /* ================================================================ */
+        /* MODAL                                                           */
+        /* ================================================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(6, 20, 32, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: var(--bg-white);
+            border-radius: var(--radius-sm);
+            max-width: 640px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s ease;
+            position: relative;
+        }
+
+        .modal::-webkit-scrollbar { width: 4px; }
+        .modal::-webkit-scrollbar-track { background: var(--bg-light); border-radius: 4px; }
+        .modal::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 24px 28px 16px;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            background: var(--bg-white);
+            z-index: 10;
+        }
+
+        .modal-header .modal-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 4px;
+        }
+
+        .modal-header .modal-badge.challenge { background: #E6F0E6; color: #1A6A4A; }
+        .modal-header .modal-badge.hackathon { background: #D4E8F5; color: #1A4A6B; }
+        .modal-header .modal-badge.story { background: var(--gold-pale); color: var(--gold); }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .modal-close:hover { color: var(--text-dark); transform: rotate(90deg); }
+
+        .modal-body { padding: 24px 28px 28px; }
+
+        .modal-body .modal-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .modal-body .modal-meta .meta-item {
+            background: var(--bg-light);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .modal-body .modal-meta .meta-item .meta-label {
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .modal-body .modal-meta .meta-item .meta-value {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-body);
+            display: block;
+            margin-top: 1px;
+        }
+
+        .modal-body .modal-description {
+            font-size: 0.92rem;
+            color: var(--text-body);
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .modal-body .modal-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 28px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: var(--primary-light);
+            text-decoration: none;
+            transition: all var(--transition);
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-sans);
+        }
+
+        .modal-body .modal-action:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 74, 107, 0.15);
+        }
+
+        .modal-body .modal-action .action-arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+        .modal-body .modal-action:hover .action-arrow { transform: translateX(4px); }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                      */
+        /* ================================================================ */
+        @media (max-width: 1024px) {
+            .hero-title { font-size: 3.6rem; }
+            .hero-grid { gap: 40px; }
+            .featured-story { grid-template-columns: 200px 1fr; }
+            .overview-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 64px; }
+            .breadcrumb-bar { top: 64px; padding: 10px 16px; }
+
+            .hero-section { min-height: auto; }
+            .hero-container { padding: 30px 20px; }
+            .hero-grid { grid-template-columns: 1fr; gap: 24px; min-height: auto; }
+            .hero-title { font-size: 2.6rem; }
+            .hero-subtitle { font-size: 0.95rem; max-width: 100%; }
+
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
+                padding: 20px;
+            }
+
+            .hero-stats .stat-item .stat-number { font-size: 1.6rem; }
+
+            .hero-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            .btn-primary, .btn-outline {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 20px;
+            }
+
+            .overview-section { padding: 40px 0 30px; }
+            .overview-grid { grid-template-columns: 1fr; gap: 16px; }
+            .overview-header h2 { font-size: 1.6rem; }
+
+            .challenges-section { padding: 40px 0 30px; }
+            .challenges-grid { grid-template-columns: 1fr; }
+
+            .hackathons-section { padding: 40px 0 30px; }
+            .hackathons-grid { grid-template-columns: 1fr; }
+
+            .stories-section { padding: 40px 0 30px; }
+            .featured-story {
+                grid-template-columns: 1fr;
+            }
+            .featured-story .story-image {
+                min-height: 160px;
+                max-height: 200px;
+            }
+            .featured-story .story-content { padding: 18px 20px; }
+            .featured-story .story-content h4 { font-size: 1.1rem; }
+            .stories-grid { grid-template-columns: 1fr; }
+
+            .form-container { padding: 24px 20px; }
+
+            .section-header .section-title-group h2 { font-size: 1.4rem; }
+
+            .modal-body .modal-meta {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .back-section { padding: 20px 16px 36px; }
+            .back-section .back-link { width: 100%; justify-content: center; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 1.8rem; }
+            .hero-badge { font-size: 0.5rem; padding: 3px 14px; }
+
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px;
+                padding: 14px 16px;
+            }
+            .hero-stats .stat-item .stat-number { font-size: 1.3rem; }
+            .hero-stats .stat-item .stat-label { font-size: 0.55rem; }
+
+            .overview-card { padding: 16px 16px 12px; }
+            .overview-card h4 { font-size: 1rem; }
+
+            .story-card .story-info h5 { font-size: 0.8rem; }
+
+            .featured-story .story-content .story-excerpt { font-size: 0.82rem; }
+
+            .form-container { padding: 16px 14px; }
+            .form-container .form-header h2 { font-size: 1.2rem; }
+
+            .modal-body .modal-meta {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .modal-body .modal-meta .meta-item { padding: 6px 10px; }
+            .modal-body .modal-meta .meta-item .meta-value { font-size: 0.75rem; }
+
+            .challenge-card { padding: 16px 16px; }
+            .hackathon-card { padding: 16px 16px; }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-light); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        ::selection { background: var(--gold-pale); color: var(--text-dark); }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADER                                                          -->
+    <!-- ================================================================ -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+        <p>Loading SME Mentoring...</p>
+    </div>
+
+    <script>
+        (function() {
+            function hideLoader() {
+                var loader = document.getElementById('page-loader');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    setTimeout(function() {
+                        if (loader.parentNode) loader.parentNode.removeChild(loader);
+                    }, 700);
+                }
+            }
+            if (document.readyState === 'complete') {
+                hideLoader();
+            } else {
+                window.addEventListener('load', hideLoader);
+                setTimeout(hideLoader, 3000);
+            }
+        })();
+    </script>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- BREADCRUMB                                                      -->
+    <!-- ================================================================ -->
+    <div class="breadcrumb-bar">
+        <div class="breadcrumb-container">
+            <a href="{{ url_for('public.index') }}">Home</a>
+            <span class="sep">·</span>
+            <a href="{{ url_for('public.training_wp5') }}">Training and WP5</a>
+            <span class="sep">·</span>
+            <span class="current">SME Mentoring</span>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- HERO - Full Width Image                                         -->
+    <!-- ================================================================ -->
+    <section class="hero-section">
+        <div class="hero-image-wrap">
+            <img src="{{ url_for('static', filename='uploads/events/DSC_7205.jpg') }}" alt="SME Mentoring" loading="eager">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-accent-line"></div>
+
+        <div class="hero-container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <span class="hero-badge">WP5 · SME Mentoring</span>
+                    <h1 class="hero-title">
+                        SME <span class="gold">Mentoring</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Empowering African agri-SMEs through mentorship and digital innovation.
+                        Join a network of innovators and changemakers.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#challenges" class="btn-primary">
+                            Explore Challenges
+                            <span class="btn-arrow">→</span>
+                        </a>
+                        <a href="#form" class="btn-outline">
+                            Apply Now
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">{{ hackathons|length if hackathons else 0 }}</span>
+                        <span class="stat-label">Hackathons</span>
+                        <a href="#hackathons" class="stat-link">Explore →</a>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ stories|length if stories else 0 }}</span>
+                        <span class="stat-label">Success Stories</span>
+                        <a href="#stories" class="stat-link">Read →</a>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ challenges|selectattr('status', 'equalto', 'open')|list|length if challenges else 0 }}</span>
+                        <span class="stat-label">Open Challenges</span>
+                        <a href="#challenges" class="stat-link">View →</a>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">45+</span>
+                        <span class="stat-label">SMEs Mentored</span>
+                        <span class="stat-link" style="opacity:0.3;">Growing</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- OVERVIEW SECTION                                                -->
+    <!-- ================================================================ -->
+    <section class="overview-section">
+        <div class="page-container">
+            <div class="overview-header">
+                
+                <h2>How the <span style="color:var(--gold);">Program</span> Works</h2>
+                <p>Three pillars that drive our SME mentoring program and create lasting impact.</p>
+            </div>
+
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <span class="card-number">01</span>
+                    <h4>Mentorship</h4>
+                    <p>One-on-one guidance from industry experts to help SMEs navigate challenges and seize opportunities.</p>
+                </div>
+                <div class="overview-card">
+                    <span class="card-number">02</span>
+                    <h4>Challenges</h4>
+                    <p>Real-world agritech challenges that encourage innovation and practical problem-solving for SMEs.</p>
+                </div>
+                <div class="overview-card">
+                    <span class="card-number">03</span>
+                    <h4>Community</h4>
+                    <p>Join a growing network of innovators, entrepreneurs and changemakers in African agriculture.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- CHALLENGES SECTION                                              -->
+    <!-- ================================================================ -->
+    <section class="challenges-section" id="challenges">
+        <div class="page-container">
+            <div class="section-header">
+                <div class="section-title-group">
+                    
+                    <h2>Open <span class="gold">Challenges</span></h2>
+                </div>
+                {% if challenges and challenges|selectattr('status', 'equalto', 'open')|list|length > 6 %}
+                    <a href="#" class="view-all">View All →</a>
+                {% endif %}
+            </div>
+
+            <div class="challenges-grid" id="challengesGrid">
+                {% if challenges %}
+                    {% set open_challenges = challenges|selectattr('status', 'equalto', 'open')|list %}
+                    {% set display_challenges = open_challenges[:6] %}
+                    {% for challenge in display_challenges %}
+                        <div class="challenge-card" onclick="openChallengeModal('{{ challenge.id }}')">
+                            <span class="challenge-status">Open</span>
+                            <h4>{{ challenge.title }}</h4>
+                            <p class="challenge-desc">{{ challenge.description|truncate(120) if challenge.description else 'No description available' }}</p>
+                            <div class="challenge-meta">
+                                <span>Deadline: {{ challenge.deadline if challenge.deadline else 'TBD' }}</span>
+                                <span class="learn-link">Learn More <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text-muted);">
+                        <p>No open challenges available at this time. Please check back later.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- HACKATHONS SECTION                                              -->
+    <!-- ================================================================ -->
+    <section class="hackathons-section" id="hackathons">
+        <div class="page-container">
+            <div class="section-header">
+                <div class="section-title-group">
+                    
+                    <h2><span class="gold">Hackathons</span></h2>
+                </div>
+                {% if hackathons and hackathons|length > 6 %}
+                    <a href="#" class="view-all">View All →</a>
+                {% endif %}
+            </div>
+
+            <div class="hackathons-grid" id="hackathonsGrid">
+                {% if hackathons %}
+                    {% set display_hackathons = hackathons[:6] %}
+                    {% for hackathon in display_hackathons %}
+                        <div class="hackathon-card" onclick="openHackathonModal('{{ hackathon.id }}')">
+                            <span class="hackathon-status {% if hackathon.status == 'completed' %}completed{% endif %}">
+                                {{ hackathon.status|title if hackathon.status else 'Upcoming' }}
+                            </span>
+                            <h4>{{ hackathon.title }}</h4>
+                            <div class="hackathon-meta">
+                                <span>{{ hackathon.date if hackathon.date else 'Date TBD' }}</span>
+                                <span>{{ hackathon.location if hackathon.location else 'Location TBD' }}</span>
+                            </div>
+                            <p class="hackathon-desc">{{ hackathon.description|truncate(100) if hackathon.description else 'No description available' }}</p>
+                            <div class="hackathon-footer">
+                                <span style="font-size:0.65rem;color:var(--text-light);">{{ hackathon.participants or 'Open to all' }}</span>
+                                <span class="view-link">View <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text-muted);">
+                        <p>No hackathons available at this time. Please check back later.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- SUCCESS STORIES SECTION                                         -->
+    <!-- ================================================================ -->
+    <section class="stories-section" id="stories">
+        <div class="page-container">
+            <div class="section-header">
+                <div class="section-title-group">
+                    
+                    <h2>Success <span class="gold">Stories</span></h2>
+                </div>
+                {% if stories and stories|length > 4 %}
+                    <a href="#" class="view-all">View All →</a>
+                {% endif %}
+            </div>
+
+            {% if stories %}
+                {% set display_stories = stories[:4] %}
+                {% set featured = display_stories[0] if display_stories|length > 0 else null %}
+                {% set remaining = display_stories[1:] if display_stories|length > 1 else [] %}
+
+                {% if featured %}
+                    <div class="featured-story" onclick="openStoryModal('{{ featured.id }}')">
+                        <div class="story-image">
+                            {% if featured.image %}
+                                <img src="/static/{{ featured.image }}" alt="{{ featured.title }}" loading="lazy">
+                            {% else %}
+                                <div class="image-placeholder">No Image</div>
+                            {% endif %}
+                        </div>
+                        <div class="story-content">
+                            <span class="story-badge">Featured</span>
+                            <h4>{{ featured.title }}</h4>
+                            <p class="story-sme">{{ featured.sme_name if featured.sme_name else 'SME Name' }} · {{ featured.industry if featured.industry else 'Agriculture' }}</p>
+                            <p class="story-excerpt">{{ featured.story|truncate(180) if featured.story else 'No story available' }}</p>
+                            <div class="story-footer">
+                                <span style="font-size:0.65rem;color:var(--text-light);">{{ featured.date if featured.date else '' }}</span>
+                                <span class="read-link">Read Full Story <span class="arrow">→</span></span>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if remaining|length > 0 %}
+                    <div class="stories-grid">
+                        {% for story in remaining %}
+                            <div class="story-card" onclick="openStoryModal('{{ story.id }}')">
+                                <div class="story-thumb">
+                                    {% if story.image %}
+                                        <img src="/static/{{ story.image }}" alt="{{ story.title }}" loading="lazy">
+                                    {% else %}
+                                        <div class="thumb-placeholder">No Image</div>
+                                    {% endif %}
+                                </div>
+                                <div class="story-info">
+                                    <h5>{{ story.title }}</h5>
+                                    <p class="story-sme-small">{{ story.sme_name if story.sme_name else 'SME Name' }}</p>
+                                    <p class="story-desc-small">{{ story.story|truncate(55) if story.story else 'No story available' }}</p>
+                                    <span class="story-link">Read <span class="arrow">→</span></span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% else %}
+                <div style="text-align:center;padding:40px 20px;color:var(--text-muted);background:var(--bg-white);border:1px solid var(--border-light);border-radius:var(--radius-sm);">
+                    <p>No success stories available at this time. Please check back later.</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- EXPRESSION OF INTEREST FORM                                     -->
+    <!-- ================================================================ -->
+    <section class="form-section" id="form">
+        <div class="page-container">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Apply for <span class="gold">SME Mentoring</span></h2>
+                    <p>Tell us about your agri-business and how we can support your growth</p>
+                </div>
+
+                <div id="formFlashMessage" class="form-flash-message"></div>
+
+                <form id="smeForm" method="POST" action="{{ url_for('public.sme_mentoring') }}" onsubmit="return submitForm(event)">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="form-group">
+                        <label>Full Name <span class="required">*</span></label>
+                        <input type="text" name="name" placeholder="Your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address <span class="required">*</span></label>
+                        <input type="email" name="email" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Organisation <span class="required">*</span></label>
+                        <input type="text" name="organisation" placeholder="Your organisation name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Industry <span class="required">*</span></label>
+                        <select name="industry" required>
+                            <option value="">Select your industry</option>
+                            <option value="agriculture">Agriculture</option>
+                            <option value="agritech">Agritech</option>
+                            <option value="food_processing">Food Processing</option>
+                            <option value="logistics">Logistics</option>
+                            <option value="retail">Retail</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Area of Interest <span class="required">*</span></label>
+                        <select name="interest" required>
+                            <option value="">Select your interest</option>
+                            <option value="mentorship">Mentorship</option>
+                            <option value="challenges">Challenges</option>
+                            <option value="hackathons">Hackathons</option>
+                            <option value="funding">Funding Opportunities</option>
+                            <option value="networking">Networking</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea name="message" placeholder="Tell us more about your business and what you hope to achieve..."></textarea>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <button type="submit" class="btn-submit">
+                            Submit Application
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- BACK TO TRAINING                                                -->
+    <!-- ================================================================ -->
+    <section class="back-section">
+        <a href="{{ url_for('public.training_wp5') }}" class="back-link">
+            ← Back to Training and WP5
+        </a>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- MODAL                                                           -->
+    <!-- ================================================================ -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div>
+                    <span class="modal-badge challenge" id="modalBadge">Challenge</span>
+                    <h3 id="modalTitle">Modal Title</h3>
+                </div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- JAVASCRIPT                                                      -->
+    <!-- ================================================================ -->
+    <script>
+    (function() {
+        'use strict';
+
+        var challengesData = JSON.parse('{{ challenges|tojson|safe }}');
+        var hackathonsData = JSON.parse('{{ hackathons|tojson|safe }}');
+        var storiesData = JSON.parse('{{ stories|tojson|safe }}');
+
+        var modalOverlay = document.getElementById('modalOverlay');
+        var modalBadge = document.getElementById('modalBadge');
+        var modalTitle = document.getElementById('modalTitle');
+        var modalBody = document.getElementById('modalBody');
+
+        // ================================================================
+        // FORM SUBMISSION
+        // ================================================================
+        window.submitForm = function(event) {
+            event.preventDefault();
+            var form = document.getElementById('smeForm');
+            var formData = new FormData(form);
+            var flash = document.getElementById('formFlashMessage');
+            var submitBtn = form.querySelector('.btn-submit');
+            var originalText = submitBtn.innerHTML;
+
+            flash.style.display = 'none';
+            flash.className = 'form-flash-message';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Submitting...';
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                if (data.success) {
+                    flash.className = 'form-flash-message flash-success';
+                    flash.innerHTML = data.message || 'Your application has been submitted successfully! We will contact you soon.';
+                    flash.style.display = 'block';
+                    form.reset();
+                    setTimeout(function() { flash.style.display = 'none'; }, 6000);
+                } else {
+                    flash.className = 'form-flash-message flash-error';
+                    flash.innerHTML = data.message || 'There was an error submitting your application. Please try again.';
+                    flash.style.display = 'block';
+                }
+            })
+            .catch(function() {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                flash.className = 'form-flash-message flash-error';
+                flash.innerHTML = 'An error occurred. Please try again.';
+                flash.style.display = 'block';
+            });
+
+            return false;
+        };
+
+        // ================================================================
+        // MODAL
+        // ================================================================
+        function openModal(badgeText, badgeClass, title, contentHtml) {
+            modalBadge.textContent = badgeText;
+            modalBadge.className = 'modal-badge ' + badgeClass;
+            modalTitle.textContent = title;
+            modalBody.innerHTML = contentHtml;
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.closeModal = function() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ================================================================
+        // CHALLENGE MODAL
+        // ================================================================
+        window.openChallengeModal = function(id) {
+            var challenge = challengesData.find(function(c) { return c.id == id; });
+            if (!challenge) return;
+
+            var html = '';
+            html += '<div class="modal-meta">';
+            html += '<div class="meta-item"><span class="meta-label">Status</span><span class="meta-value">' + (challenge.status || 'Open') + '</span></div>';
+            html += '<div class="meta-item"><span class="meta-label">Deadline</span><span class="meta-value">' + (challenge.deadline || 'TBD') + '</span></div>';
+            html += '<div class="meta-item"><span class="meta-label">Category</span><span class="meta-value">' + (challenge.category || 'General') + '</span></div>';
+            html += '</div>';
+            html += '<p class="modal-description">' + (challenge.full_description || challenge.description || 'No description available') + '</p>';
+            html += '<a href="/contact/" class="modal-action">Contact Us to Apply <span class="action-arrow">→</span></a>';
+
+            openModal('Challenge', 'challenge', challenge.title, html);
+        };
+
+        // ================================================================
+        // HACKATHON MODAL
+        // ================================================================
+        window.openHackathonModal = function(id) {
+            var hackathon = hackathonsData.find(function(h) { return h.id == id; });
+            if (!hackathon) return;
+
+            var html = '';
+            html += '<div class="modal-meta">';
+            html += '<div class="meta-item"><span class="meta-label">Date</span><span class="meta-value">' + (hackathon.date || 'TBD') + '</span></div>';
+            html += '<div class="meta-item"><span class="meta-label">Location</span><span class="meta-value">' + (hackathon.location || 'TBD') + '</span></div>';
+            html += '<div class="meta-item"><span class="meta-label">Status</span><span class="meta-value">' + (hackathon.status || 'Upcoming') + '</span></div>';
+            html += '</div>';
+            html += '<p class="modal-description">' + (hackathon.full_description || hackathon.description || 'No description available') + '</p>';
+            if (hackathon.agenda) {
+                html += '<p class="modal-description"><strong>Agenda</strong><br>' + hackathon.agenda + '</p>';
+            }
+            if (hackathon.speakers) {
+                html += '<p class="modal-description"><strong>Speakers</strong><br>' + hackathon.speakers + '</p>';
+            }
+            html += '<a href="/contact/" class="modal-action">Contact Us <span class="action-arrow">→</span></a>';
+
+            openModal('Hackathon', 'hackathon', hackathon.title, html);
+        };
+
+        // ================================================================
+        // STORY MODAL
+        // ================================================================
+        window.openStoryModal = function(id) {
+            var story = storiesData.find(function(s) { return s.id == id; });
+            if (!story) return;
+
+            var html = '';
+            html += '<div style="margin-bottom:14px;">';
+            html += '<p style="font-size:0.85rem;color:var(--text-muted);margin:0;">' + (story.sme_name || 'SME Name') + ' · ' + (story.industry || 'Agriculture') + '</p>';
+            if (story.date) {
+                html += '<p style="font-size:0.7rem;color:var(--text-light);margin:0;">' + story.date + '</p>';
+            }
+            html += '</div>';
+            html += '<p class="modal-description">' + (story.full_story || story.story || 'No story available') + '</p>';
+            if (story.tags && story.tags.length > 0) {
+                html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">';
+                story.tags.forEach(function(tag) {
+                    html += '<span style="padding:2px 12px;border-radius:4px;font-size:0.55rem;font-weight:500;background:var(--bg-light);color:var(--text-muted);">' + tag + '</span>';
+                });
+                html += '</div>';
+            }
+
+            openModal('Success Story', 'story', story.title, html);
+        };
+
+        console.log('BRIDGE-AI Kenya SME Mentoring page initialized (Editorial Magazine Style)');
+    })();
+    </script>
+
+</body>
+</html>

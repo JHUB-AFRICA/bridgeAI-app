@@ -1,0 +1,303 @@
+[
+  {
+    "title": "AI-Powered Smart Mushroom Farming Training Workshop",
+    "slug": "ai-powered-smart-mushroom-farming-training-workshop",
+    "date": "2026-07-01",
+    "location": "JKUAT Smart Farm Zone, Juja, Kenya",
+    "description": "A practical training workshop where students, researchers, and farmers learned how AI, IoT sensors, and digital monitoring technologies can improve mushroom production and sustainable agriculture.",
+    "is_published": true,
+    "consent_confirmed": true,
+    "tags": [
+      "training"
+    ],
+    "images": [
+      {
+        "id": 1,
+        "image_path": "images/gallery/album_1/20260708_225421_ChatGPT_Image_Jul_3_2026_07_22_00_PM.png",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": true,
+        "display_order": 0
+      },
+      {
+        "id": 2,
+        "image_path": "images/gallery/album_2/20260708_225421_ChatGPT_Image_Jul_3_2026_06_54_51_PM.png",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 1
+      },
+      {
+        "id": 3,
+        "image_path": "images/gallery/album_3/20260708_225421_ChatGPT_Image_Jul_3_2026_06_56_28_PM.png",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 2
+      },
+      {
+        "id": 4,
+        "image_path": "images/gallery/album_4/20260708_225421_ChatGPT_Image_Jul_3_2026_07_03_18_PM.png",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 3
+      },
+      {
+        "id": 5,
+        "image_path": "images/gallery/album_5/20260708_225421_ChatGPT_Image_Jul_3_2026_06_47_13_PM.png",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 4
+      },
+      {
+        "id": 6,
+        "image_path": "images/gallery/album_6/20260708_225421_ChatGPT_Image_Jul_3_2026_06_37_03_PM.png",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 5
+      },
+      {
+        "id": 7,
+        "image_path": "images/gallery/album_7/20260708_225421_ChatGPT_Image_Jul_3_2026_07_27_45_PM.png",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 6
+      }
+    ],
+    "created_at": "2026-07-08T22:54:21.948323",
+    "updated_at": "2026-07-08T22:54:21.948400",
+    "id": 1
+  },
+  {
+    "title": "Mushroom Incubation Preparation Field Activity",
+    "slug": "mushroom-incubation-preparation-field-activity",
+    "date": "2026-07-02",
+    "location": "JKUAT Smart Farm Zone, Juja, Kenya",
+    "description": "Participants joined experienced mushroom farmers to prepare substrate bags, learn incubation techniques, and observe best practices for contamination prevention and quality production.",
+    "is_published": true,
+    "consent_confirmed": true,
+    "tags": [
+      "training"
+    ],
+    "images": [
+      {
+        "id": 1,
+        "image_path": "images/gallery/album_8/20260708_234413_mush4.jpeg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": true,
+        "display_order": 0
+      },
+      {
+        "id": 2,
+        "image_path": "images/gallery/album_9/20260708_234413_mush3.jpeg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 1
+      },
+      {
+        "id": 3,
+        "image_path": "images/gallery/album_10/20260708_234413_mush2.jpeg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 2
+      },
+      {
+        "id": 4,
+        "image_path": "images/gallery/album_11/20260708_234413_mush1.jpeg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 3
+      },
+      {
+        "id": 5,
+        "image_path": "images/gallery/album_12/20260708_234413_mush5.jpeg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 4
+      },
+      {
+        "id": 6,
+        "image_path": "images/gallery/album_13/20260708_234413_mush6.jpeg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 5
+      }
+    ],
+    "created_at": "2026-07-08T23:44:13.702089",
+    "updated_at": "2026-07-08T23:44:13.702119",
+    "id": 2
+  },
+  {
+    "title": "Smart Mushroom Planting and Farm Demonstration",
+    "slug": "smart-mushroom-planting-and-farm-demonstration",
+    "date": "2026-07-02",
+    "location": "JKUAT Smart Farm Zone, Juja, Kenya",
+    "description": "Demonstration session showcasing mushroom planting techniques, substrate preparation, environmental monitoring, and collaborative learning between researchers and farmers.",
+    "is_published": true,
+    "consent_confirmed": true,
+    "tags": [
+      "training"
+    ],
+    "images": [
+      {
+        "id": 1,
+        "image_path": "images/gallery/album_14/20260708_235205_DSC_7241.jpg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": true,
+        "display_order": 0
+      },
+      {
+        "id": 2,
+        "image_path": "images/gallery/album_15/20260708_235205_DSC_7245.jpg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 1
+      },
+      {
+        "id": 3,
+        "image_path": "images/gallery/album_16/20260708_235205_DSC_7244.jpg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 2
+      },
+      {
+        "id": 4,
+        "image_path": "images/gallery/album_17/20260708_235205_DSC_7238_1.jpg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 3
+      }
+    ],
+    "created_at": "2026-07-08T23:52:05.832671",
+    "updated_at": "2026-07-08T23:52:05.832823",
+    "id": 3
+  },
+  {
+    "title": "IoT Sensor Installation and Microcontroller Demonstration",
+    "slug": "iot-sensor-installation-and-microcontroller-demonstration",
+    "date": "2026-07-01",
+    "location": "JKUAT Smart Farm Zone, Juja, Kenya",
+    "description": "Engineers demonstrated ESP32 microcontrollers, environmental sensors, and smart monitoring systems used to automate mushroom farm operations and collect real-time environmental data.",
+    "is_published": true,
+    "consent_confirmed": true,
+    "tags": [
+      "training"
+    ],
+    "images": [
+      {
+        "id": 1,
+        "image_path": "images/gallery/album_18/20260708_235318_DSC_7245.jpg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": true,
+        "display_order": 0
+      },
+      {
+        "id": 2,
+        "image_path": "images/gallery/album_19/20260708_235318_sandra.jpeg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 1
+      },
+      {
+        "id": 3,
+        "image_path": "images/gallery/album_20/20260708_235318_smarttmushroom.jpeg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 2
+      },
+      {
+        "id": 4,
+        "image_path": "images/gallery/album_21/20260708_235318_DSC_7248.jpg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 3
+      }
+    ],
+    "created_at": "2026-07-08T23:53:18.947228",
+    "updated_at": "2026-07-08T23:53:18.947278",
+    "id": 4
+  },
+  {
+    "title": "BRIDGE-AI Kenya Stakeholder Engagement Forum",
+    "slug": "bridge-ai-kenya-stakeholder-engagement-forum",
+    "date": "2026-07-03",
+    "location": "JKUAT Smart Farm Zone, Juja, Kenya",
+    "description": "Stakeholders from academia, government, industry, and farming communities met to discuss project progress, collaboration opportunities, and AI-driven agricultural innovation.",
+    "is_published": true,
+    "consent_confirmed": true,
+    "tags": [
+      "field_demo"
+    ],
+    "images": [
+      {
+        "id": 1,
+        "image_path": "images/gallery/album_22/20260709_000121_mush3.jpeg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": true,
+        "display_order": 0
+      },
+      {
+        "id": 2,
+        "image_path": "images/gallery/album_23/20260709_000121_mush2.jpeg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 1
+      },
+      {
+        "id": 3,
+        "image_path": "images/gallery/album_24/20260709_000121_mush1.jpeg",
+        "caption": "",
+        "alt_text": "",
+        "is_approved": true,
+        "is_featured": false,
+        "display_order": 2
+      }
+    ],
+    "created_at": "2026-07-09T00:01:21.228201",
+    "updated_at": "2026-07-09T00:01:21.228279",
+    "id": 5
+  }
+]

@@ -1,0 +1,66 @@
+# ================================================================
+# BRIDGE-AI KENYA - Docker Compose (Development - JSON Version)
+# ================================================================
+# This docker-compose file sets up the development environment
+# with Flask hot-reload and JSON file storage.
+# No database required!
+# ================================================================
+
+version: '3.8'
+
+services:
+  # ================================================================
+  # Web Application Service
+  # ================================================================
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bridge_ai_web_dev
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - SECRET_KEY=dev-secret-key-change-in-production
+      - DATA_FOLDER=app/data
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin123
+      - ADMIN_EMAIL=admin@jkuat.ac.ke
+      - MAIL_SUPPRESS_SEND=True
+    volumes:
+      - ./app:/app/app
+      - ./app/data:/app/app/data          # ✅ Persistent JSON data
+      - ./app/static/images/uploads:/app/app/static/images/uploads  # ✅ Uploaded files
+      - ./app/static/images/gallery:/app/app/static/images/gallery  # ✅ Gallery images
+      - ./app/static/images/hero:/app/app/static/images/hero        # ✅ Hero images
+      - ./logs:/app/logs
+    networks:
+      - bridge_ai_network
+    restart: unless-stopped
+
+  # ================================================================
+  # (Optional) Nginx for local development
+  # ================================================================
+  # Uncomment if you want to test with Nginx locally
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: bridge_ai_nginx_dev
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./app/static:/static
+  #   depends_on:
+  #     - web
+  #   networks:
+  #     - bridge_ai_network
+  #   restart: unless-stopped
+
+# ================================================================
+# Networks
+# ================================================================
+networks:
+  bridge_ai_network:
+    driver: bridge
+    name: bridge_ai_network

@@ -1,0 +1,2178 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - EVENT DETAIL                                  -->
+<!-- ================================================================ -->
+<!-- Split hero layout: Text left · Image right                     -->
+<!-- Gallery: All event images in responsive grid + Lightbox        -->
+<!-- Speakers: Centered aligned                                      -->
+<!-- Training Gallery redirect link                                 -->
+<!-- Clean typography · No emojis · No colons · No slashes          -->
+<!-- Fully responsive · Premium styling                             -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ event.title }} - BRIDGE-AI Kenya</title>
+    <meta name="description" content="{{ event.summary or event.title }}">
+
+    <style>
+        /* ================================================================ */
+        /* CSS VARIABLES                                                   */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #061420;
+            --primary: #0F2B3D;
+            --primary-light: #1A4A6B;
+            --primary-lighter: #2A6A8B;
+            --gold: #D4A843;
+            --gold-light: #F5D77E;
+            --gold-pale: #F5ECD7;
+            --text-dark: #081A28;
+            --text-body: #1A2A3A;
+            --text-muted: #5A6A7A;
+            --text-light: #8A9AAA;
+            --bg-white: #FFFFFF;
+            --bg-light: #F5F8FA;
+            --bg-lighter: #FAFCFE;
+            --border-light: #E4EAF0;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 16px 56px rgba(0, 0, 0, 0.08);
+            --shadow-xl: 0 24px 80px rgba(0, 0, 0, 0.12);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+            --status-upcoming: #28a745;
+            --status-ongoing: #D4A843;
+            --status-completed: #6c757d;
+            --status-cancelled: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-body);
+            background: var(--bg-white);
+            line-height: 1.7;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ================================================================ */
+        /* ANIMATIONS                                                      */
+        /* ================================================================ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(212, 168, 67, 0.10); }
+            50% { box-shadow: 0 0 40px rgba(212, 168, 67, 0.20); }
+        }
+
+        @keyframes goldLinePulse {
+            0%, 100% { opacity: 0.15; transform: scaleX(1); }
+            50% { opacity: 0.30; transform: scaleX(1.05); }
+        }
+
+        @keyframes meshPulse {
+            0% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.03); }
+            100% { opacity: 0.6; transform: scale(1); }
+        }
+
+        @keyframes lightboxFade {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .animate-on-scroll.delay-1 { transition-delay: 0.05s; }
+        .animate-on-scroll.delay-2 { transition-delay: 0.10s; }
+        .animate-on-scroll.delay-3 { transition-delay: 0.15s; }
+
+        /* ================================================================ */
+        /* PAGE LOADER                                                     */
+        /* ================================================================ */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        #page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e4eaf0;
+            border-top-color: #1a4a6b;
+            border-radius: 50%;
+            animation: loaderSpin 0.8s linear infinite;
+        }
+
+        @keyframes loaderSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        #page-loader p {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: #5a6a7a;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        /* ================================================================ */
+        /* BREADCRUMB                                                      */
+        /* ================================================================ */
+        .breadcrumb-bar {
+            background: var(--bg-white);
+            padding: 14px 24px;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 72px;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.92);
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .breadcrumb-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-container a {
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: color var(--transition);
+            font-weight: 500;
+        }
+
+        .breadcrumb-container a:hover {
+            color: var(--gold);
+        }
+
+        .breadcrumb-container .sep {
+            color: var(--text-light);
+            opacity: 0.3;
+            font-weight: 300;
+        }
+
+        .breadcrumb-container .current {
+            color: var(--text-body);
+            font-weight: 600;
+        }
+
+        /* ================================================================ */
+        /* HERO SECTION - Split Layout: Text Left · Image Right          */
+        /* ================================================================ */
+        .hero-detail {
+            position: relative;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: var(--primary-dark);
+        }
+
+        .hero-detail .hero-left {
+            position: relative;
+            z-index: 3;
+            width: 55%;
+            padding: 60px 24px 50px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 70vh;
+        }
+
+        .hero-detail .hero-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+                /* Right side - Image background */
+        .hero-detail .hero-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero-detail .hero-right .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.95;  /* ← CLEARER */
+            transform: scale(1.02);  /* ← LESS ZOOM */
+            transition: transform 20s ease;
+        }
+
+        .hero-detail:hover .hero-image {
+            transform: scale(1);
+        }
+
+        .hero-detail .hero-right .hero-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                rgba(6, 20, 32, 0.10) 0%,
+                rgba(15, 43, 61, 0.05) 50%,
+                transparent 100%
+            );
+        }
+        .hero-detail .hero-mesh {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+                radial-gradient(ellipse at 15% 40%, rgba(212, 168, 67, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 30%, rgba(26, 74, 107, 0.05) 0%, transparent 45%);
+            animation: meshPulse 15s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .hero-detail .hero-accent-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+            opacity: 0.20;
+            z-index: 2;
+            animation: goldLinePulse 4s ease-in-out infinite;
+        }
+
+        .hero-detail .hero-left-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background: linear-gradient(135deg,
+                rgba(6, 20, 32, 0.92) 0%,
+                rgba(15, 43, 61, 0.75) 50%,
+                transparent 100%
+            );
+        }
+
+        .hero-detail .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 580px;
+            width: 100%;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .hero-detail .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 6px 22px 6px 16px;
+            border-radius: 50px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 24px;
+            animation: fadeInScale 0.8s ease 0.2s both;
+        }
+
+        .hero-detail .status-badge .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .hero-detail .status-badge .status-dot.upcoming {
+            background: var(--status-upcoming);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        .hero-detail .status-badge .status-dot.ongoing {
+            background: var(--status-ongoing);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        .hero-detail .status-badge .status-dot.completed {
+            background: var(--status-completed);
+        }
+        .hero-detail .status-badge .status-dot.cancelled {
+            background: var(--status-cancelled);
+        }
+
+        .hero-detail .hero-title {
+            font-size: 3.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.04em;
+            line-height: 1.02;
+            margin-bottom: 16px;
+            animation: fadeInScale 0.8s ease 0.1s both;
+        }
+
+        .hero-detail .hero-title .gold {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 40%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-detail .hero-tagline {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.45);
+            max-width: 500px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-weight: 300;
+            animation: fadeInScale 0.8s ease 0.15s both;
+        }
+
+        .hero-detail .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 18px;
+            margin-bottom: 28px;
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            max-width: 520px;
+            animation: fadeInScale 0.8s ease 0.2s both;
+        }
+
+        .hero-detail .hero-meta .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 450;
+        }
+
+        .hero-detail .hero-meta .meta-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            opacity: 0.4;
+        }
+
+        .hero-detail .hero-meta .meta-sep {
+            color: rgba(255, 255, 255, 0.12);
+            font-weight: 300;
+            font-size: 1.2rem;
+        }
+
+        .hero-detail .hero-actions-right {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: flex-start;
+            animation: fadeInScale 0.8s ease 0.3s both;
+            margin-top: 4px;
+        }
+
+        .hero-detail .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 38px;
+            background: var(--gold);
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border-radius: 60px;
+            transition: all var(--transition);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            font-family: var(--font-sans);
+            box-shadow: 0 8px 32px rgba(212, 168, 67, 0.15);
+        }
+
+        .hero-detail .btn-primary:hover {
+            background: var(--gold-light);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 48px rgba(212, 168, 67, 0.3);
+        }
+
+        .hero-detail .btn-arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+
+        .hero-detail .btn-primary:hover .btn-arrow {
+            transform: translateX(6px);
+        }
+
+        .hero-detail .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 34px;
+            color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .hero-detail .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            transform: translateY(-3px);
+        }
+
+        .hero-detail .btn-disabled {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.9rem;
+            font-weight: 400;
+            padding: 14px 0;
+        }
+
+        /* ================================================================ */
+        /* MAIN CONTENT                                                   */
+        /* ================================================================ */
+        .detail-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
+        }
+
+        /* ================================================================ */
+        /* OVERVIEW SECTION                                                */
+        /* ================================================================ */
+        .overview-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            padding-bottom: 48px;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 48px;
+        }
+
+        .overview-text .overview-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .overview-text h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .overview-text p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .overview-stat {
+            background: var(--bg-lighter);
+            padding: 16px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .overview-stat .stat-number {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--gold);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .overview-stat .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 450;
+        }
+
+        .overview-right {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .overview-card {
+            background: var(--bg-lighter);
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .overview-card .card-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--gold-pale);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .overview-card .card-icon svg {
+            width: 18px;
+            height: 18px;
+            color: var(--gold);
+        }
+
+        .overview-card .card-content .card-label {
+            font-size: 0.65rem;
+            color: var(--text-light);
+            font-weight: 450;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: block;
+        }
+
+        .overview-card .card-content .card-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* ================================================================ */
+        /* AGENDA SECTION                                                  */
+        /* ================================================================ */
+        .agenda-section {
+            padding-bottom: 48px;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 48px;
+        }
+
+        .agenda-section .section-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .agenda-section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 24px;
+        }
+
+        .agenda-item {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 16px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-light);
+            transition: all var(--transition);
+        }
+
+        .agenda-item:last-child {
+            border-bottom: none;
+        }
+
+        .agenda-item:hover {
+            padding-left: 12px;
+            background: var(--bg-lighter);
+            border-radius: var(--radius-sm);
+            padding-right: 12px;
+        }
+
+        .agenda-item .agenda-time {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--gold);
+            padding-top: 2px;
+        }
+
+        .agenda-item .agenda-content .agenda-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .agenda-item .agenda-content .agenda-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ================================================================ */
+/* SPEAKERS SECTION - CENTERED ALIGNED (Flexbox)                  */
+/* ================================================================ */
+.speakers-section {
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 48px;
+    text-align: center;
+}
+
+.speakers-section .section-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.speakers-section h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 24px;
+}
+
+.speakers-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.speaker-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 24px 20px 20px;
+    transition: all var(--transition);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    flex: 0 1 200px;
+    min-width: 160px;
+    max-width: 280px;
+}
+
+.speaker-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--gold);
+}
+
+.speaker-card .speaker-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--bg-light);
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--border-light);
+    transition: border-color var(--transition);
+    font-size: 1.6rem;
+    color: var(--text-light);
+    font-weight: 300;
+}
+
+.speaker-card:hover .speaker-avatar {
+    border-color: var(--gold);
+}
+
+.speaker-card .speaker-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.speaker-card .speaker-role {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.speaker-card .speaker-org {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+        /* ================================================================ */
+/* GALLERY SECTION                                                 */
+/* ================================================================ */
+.gallery-section {
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 48px;
+    text-align: center;
+}
+
+.gallery-section .section-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.gallery-section h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 6px;
+}
+
+.gallery-section .gallery-subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+}
+
+.gallery-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+}
+
+.gallery-grid .gallery-item {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    aspect-ratio: 1;
+    background: var(--bg-light);
+    cursor: pointer;
+    transition: all var(--transition);
+    border: 1px solid var(--border-light);
+    flex: 0 1 280px;
+    max-width: 350px;
+    min-width: 160px;
+}
+
+.gallery-grid .gallery-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--gold);
+}
+
+.gallery-grid .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+}
+
+.gallery-grid .gallery-item:hover img {
+    transform: scale(1.06);
+}
+
+.gallery-grid .gallery-item .gallery-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 14px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 450;
+    opacity: 0;
+    transition: opacity var(--transition);
+    text-align: center;
+}
+
+.gallery-grid .gallery-item:hover .gallery-caption {
+    opacity: 1;
+}
+        /* ================================================================ */
+        /* LIGHTBOX                                                       */
+        /* ================================================================ */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            animation: lightboxFade 0.3s ease;
+        }
+
+        .lightbox-overlay.active {
+            display: flex;
+        }
+
+        .lightbox-overlay .lightbox-close {
+            position: absolute;
+            top: 24px;
+            right: 32px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 2.2rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            line-height: 1;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 300;
+        }
+
+        .lightbox-overlay .lightbox-close:hover {
+            color: #ffffff;
+            transform: rotate(90deg);
+        }
+
+        .lightbox-overlay .lightbox-content {
+            max-width: 90vw;
+            max-height: 85vh;
+            position: relative;
+        }
+
+        .lightbox-overlay .lightbox-content img {
+            width: 100%;
+            height: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .lightbox-overlay .lightbox-caption {
+            position: absolute;
+            bottom: -48px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        .lightbox-overlay .lightbox-counter {
+            position: absolute;
+            top: 24px;
+            left: 32px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .lightbox-overlay .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            font-weight: 300;
+        }
+
+        .lightbox-overlay .lightbox-nav:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .lightbox-overlay .lightbox-nav.prev {
+            left: 20px;
+        }
+
+        .lightbox-overlay .lightbox-nav.next {
+            right: 20px;
+        }
+
+        /* ================================================================ */
+        /* TRAINING GALLERY REDIRECT                                       */
+        /* ================================================================ */
+        .gallery-redirect {
+            background: var(--bg-lighter);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 32px 40px;
+            text-align: center;
+            margin-bottom: 48px;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition);
+        }
+
+        .gallery-redirect::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(212, 168, 67, 0.03), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .gallery-redirect:hover {
+            border-color: rgba(212, 168, 67, 0.15);
+            box-shadow: var(--shadow-md);
+        }
+
+        .gallery-redirect .redirect-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .gallery-redirect h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+
+        .gallery-redirect p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 550px;
+            margin: 0 auto 16px;
+            line-height: 1.7;
+        }
+
+        .gallery-redirect .btn-gallery {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 32px;
+            background: transparent;
+            color: var(--primary-light);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border-radius: 60px;
+            border: 1.5px solid var(--primary-light);
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            cursor: pointer;
+        }
+
+        .gallery-redirect .btn-gallery:hover {
+            background: var(--primary-light);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 74, 107, 0.15);
+        }
+
+        .gallery-redirect .btn-gallery .arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+
+        .gallery-redirect .btn-gallery:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        /* ================================================================ */
+        /* REGISTER SECTION                                                */
+        /* ================================================================ */
+        .register-section {
+            background: var(--bg-lighter);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 40px 48px;
+            text-align: center;
+            margin-bottom: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212, 168, 67, 0.04), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .register-section .register-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .register-section h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .register-section p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto 24px;
+            line-height: 1.7;
+        }
+
+        .register-section .btn-gold {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 44px;
+            background: var(--gold);
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            border-radius: 60px;
+            transition: all var(--transition);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            font-family: var(--font-sans);
+            box-shadow: 0 8px 32px rgba(212, 168, 67, 0.15);
+        }
+
+        .register-section .btn-gold:hover {
+            background: var(--gold-light);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 48px rgba(212, 168, 67, 0.3);
+        }
+
+        .register-section .btn-gold .btn-arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+
+        .register-section .btn-gold:hover .btn-arrow {
+            transform: translateX(6px);
+        }
+
+        /* ================================================================ */
+        /* BACK SECTION                                                    */
+        /* ================================================================ */
+        .back-section {
+            text-align: center;
+            padding-top: 12px;
+        }
+
+        .back-section .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all var(--transition);
+            padding: 10px 24px;
+            border-radius: 50px;
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .back-section .back-link:hover {
+            gap: 16px;
+            color: var(--primary-light);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .back-section .back-link svg {
+            transition: transform var(--transition);
+        }
+
+        .back-section .back-link:hover svg {
+            transform: translateX(-4px);
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                      */
+        /* ================================================================ */
+
+        @media (max-width: 1024px) {
+            .hero-detail .hero-left {
+                width: 60%;
+                padding: 50px 20px 40px 40px;
+            }
+            .hero-detail .hero-right {
+                width: 45%;
+            }
+            .hero-detail .hero-title {
+                font-size: 2.8rem;
+            }
+            .hero-detail .hero-tagline {
+                font-size: 0.95rem;
+            }
+            .overview-section {
+                gap: 32px;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 64px;
+            }
+
+            .breadcrumb-bar {
+                top: 64px;
+                padding: 10px 16px;
+            }
+
+            .hero-detail {
+                min-height: auto;
+                flex-direction: column;
+            }
+
+            .hero-detail .hero-left {
+                width: 100%;
+                padding: 40px 20px 32px;
+                min-height: auto;
+                position: relative;
+                z-index: 2;
+            }
+
+            .hero-detail .hero-left-overlay {
+                background: linear-gradient(135deg,
+                    rgba(6, 20, 32, 0.92) 0%,
+                    rgba(15, 43, 61, 0.85) 100%
+                );
+            }
+
+            .hero-detail .hero-right {
+                position: relative;
+                width: 100%;
+                height: 200px;
+                order: -1;
+            }
+
+            .hero-detail .hero-right .hero-image {
+                opacity: 0.5;
+            }
+
+            .hero-detail .hero-right .hero-image-overlay {
+                background: linear-gradient(180deg,
+                    rgba(6, 20, 32, 0.40) 0%,
+                    rgba(15, 43, 61, 0.20) 100%
+                );
+            }
+
+            .hero-detail .hero-content {
+                max-width: 100%;
+            }
+
+            .hero-detail .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-detail .hero-tagline {
+                font-size: 0.9rem;
+                max-width: 100%;
+            }
+
+            .hero-detail .hero-meta {
+                padding: 12px 16px;
+                gap: 4px 12px;
+                max-width: 100%;
+            }
+
+            .hero-detail .hero-meta .meta-item {
+                font-size: 0.78rem;
+            }
+
+            .hero-detail .hero-actions-right {
+                flex-direction: column;
+                width: 100%;
+                align-items: stretch;
+            }
+
+            .hero-detail .btn-primary,
+            .hero-detail .btn-outline {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hero-detail .btn-disabled {
+                text-align: center;
+            }
+
+            .hero-detail .hero-accent-line {
+                width: 60%;
+            }
+
+            .detail-content {
+                padding: 24px 16px 40px;
+            }
+
+            .overview-section {
+                grid-template-columns: 1fr;
+                gap: 28px;
+                padding-bottom: 32px;
+                margin-bottom: 32px;
+            }
+
+            .overview-text h2 {
+                font-size: 1.5rem;
+            }
+
+            .overview-text p {
+                font-size: 0.95rem;
+            }
+
+            .overview-stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .overview-stat .stat-number {
+                font-size: 1.3rem;
+            }
+
+            .overview-stat .stat-label {
+                font-size: 0.6rem;
+            }
+
+            .overview-card {
+                padding: 12px 16px;
+            }
+
+            .agenda-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .agenda-item {
+                grid-template-columns: 1fr;
+                gap: 4px;
+                padding: 12px 0;
+            }
+
+            .agenda-item .agenda-time {
+                font-size: 0.8rem;
+            }
+
+            .speakers-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .speakers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 14px;
+            }
+
+            .speaker-card .speaker-avatar {
+                width: 56px;
+                height: 56px;
+                font-size: 1.2rem;
+            }
+
+            .gallery-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .gallery-grid .gallery-item .gallery-caption {
+                opacity: 1;
+                font-size: 0.65rem;
+                padding: 6px 10px;
+            }
+
+            .gallery-redirect {
+                padding: 24px 20px;
+            }
+
+            .gallery-redirect h3 {
+                font-size: 1.2rem;
+            }
+
+            .gallery-redirect p {
+                font-size: 0.85rem;
+            }
+
+            .gallery-redirect .btn-gallery {
+                font-size: 0.82rem;
+                padding: 10px 24px;
+            }
+
+            .register-section {
+                padding: 28px 20px;
+            }
+
+            .register-section h2 {
+                font-size: 1.3rem;
+            }
+
+            .register-section .btn-gold {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .lightbox-overlay {
+                padding: 20px;
+            }
+
+            .lightbox-overlay .lightbox-close {
+                top: 16px;
+                right: 20px;
+                font-size: 1.8rem;
+            }
+
+            .lightbox-overlay .lightbox-counter {
+                top: 16px;
+                left: 20px;
+                font-size: 0.7rem;
+            }
+
+            .lightbox-overlay .lightbox-nav {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            .lightbox-overlay .lightbox-nav.prev {
+                left: 8px;
+            }
+
+            .lightbox-overlay .lightbox-nav.next {
+                right: 8px;
+            }
+
+            .lightbox-overlay .lightbox-caption {
+                bottom: -36px;
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-detail .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .hero-detail .status-badge {
+                font-size: 0.55rem;
+                padding: 4px 14px 4px 12px;
+            }
+
+            .hero-detail .hero-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .hero-detail .hero-meta .meta-sep {
+                display: none;
+            }
+
+            .hero-detail .hero-right {
+                height: 160px;
+            }
+
+            .overview-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .overview-stat .stat-number {
+                font-size: 1.1rem;
+            }
+
+            .speakers-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .speaker-card {
+                padding: 14px 12px;
+            }
+
+            .speaker-card .speaker-avatar {
+                width: 48px;
+                height: 48px;
+                font-size: 1rem;
+            }
+
+            .speaker-card .speaker-name {
+                font-size: 0.85rem;
+            }
+
+            .speaker-card .speaker-role {
+                font-size: 0.7rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .gallery-grid .gallery-item .gallery-caption {
+                font-size: 0.55rem;
+                padding: 4px 8px;
+            }
+
+            .gallery-redirect h3 {
+                font-size: 1rem;
+            }
+
+            .gallery-redirect p {
+                font-size: 0.8rem;
+            }
+
+            .gallery-redirect .btn-gallery {
+                font-size: 0.75rem;
+                padding: 8px 18px;
+            }
+
+            .register-section {
+                padding: 20px 16px;
+            }
+
+            .register-section h2 {
+                font-size: 1.1rem;
+            }
+
+            .register-section p {
+                font-size: 0.85rem;
+            }
+
+            .register-section .btn-gold {
+                font-size: 0.85rem;
+                padding: 14px 28px;
+            }
+
+            .back-section .back-link {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .lightbox-overlay .lightbox-content {
+                max-width: 100vw;
+                max-height: 80vh;
+            }
+
+            .lightbox-overlay .lightbox-nav {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+
+            .lightbox-overlay .lightbox-nav.prev {
+                left: 4px;
+            }
+
+            .lightbox-overlay .lightbox-nav.next {
+                right: 4px;
+            }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+
+        ::selection {
+            background: var(--gold-pale);
+            color: var(--text-dark);
+        }
+
+        /* ================================================================ */
+        /* REDUCED MOTION                                                  */
+        /* ================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+            .hero-detail .hero-mesh {
+                animation: none !important;
+            }
+            .hero-detail .hero-accent-line {
+                animation: none !important;
+            }
+            .hero-detail .hero-image {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADER - Prevents FOUC                                          -->
+    <!-- ================================================================ -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+        <p>Loading event details...</p>
+    </div>
+
+    <script>
+        // Hide loader when page is ready
+        (function() {
+            function hideLoader() {
+                var loader = document.getElementById('page-loader');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    setTimeout(function() {
+                        if (loader.parentNode) {
+                            loader.parentNode.removeChild(loader);
+                        }
+                    }, 700);
+                }
+            }
+
+            if (document.readyState === 'complete') {
+                hideLoader();
+            } else {
+                window.addEventListener('load', hideLoader);
+                // Fallback: hide after 3 seconds
+                setTimeout(hideLoader, 3000);
+            }
+        })();
+    </script>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- BREADCRUMB                                                      -->
+    <!-- ================================================================ -->
+    <div class="breadcrumb-bar">
+        <div class="breadcrumb-container">
+            <a href="{{ url_for('public.index') }}">Home</a>
+            <span class="sep">·</span>
+            <a href="{{ url_for('public.training_wp5') }}">Training and WP5</a>
+            <span class="sep">·</span>
+            <a href="{{ url_for('public.training_events') }}">Training Events</a>
+            <span class="sep">·</span>
+            <span class="current">{{ event.title }}</span>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- HERO SECTION - Split Layout: Text Left · Image Right           -->
+    <!-- ================================================================ -->
+    <section class="hero-detail" id="heroSection">
+
+        <!-- Left Side - Text Content -->
+        <div class="hero-left">
+            <div class="hero-left-overlay"></div>
+            <div class="hero-mesh"></div>
+            <div class="hero-accent-line"></div>
+
+            <div class="hero-content">
+                <!-- Status Badge -->
+                <div class="status-badge">
+                    <span class="status-dot {{ event.status or 'upcoming' }}"></span>
+                    {{ event.status or 'Upcoming' }}
+                </div>
+
+                <!-- Title -->
+                <h1 class="hero-title">
+                    {{ event.title }}
+                </h1>
+
+                <!-- Tagline -->
+                <p class="hero-tagline">
+                    {% if event.summary %}
+                        {{ event.summary }}
+                    {% else %}
+                        A training event hosted by JKUAT's Smart Farm Zone
+                    {% endif %}
+                </p>
+
+                <!-- Meta Info -->
+                <div class="hero-meta">
+                    {% if event.location %}
+                    <span class="meta-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        {{ event.location }}
+                    </span>
+                    {% endif %}
+
+                    {% if event.date %}
+                    <span class="meta-sep">·</span>
+                    <span class="meta-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        {{ event.date[:10] if event.date else 'Date TBD' }}
+                    </span>
+                    {% endif %}
+
+                    {% if event.audience %}
+                    <span class="meta-sep">·</span>
+                    <span class="meta-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        {{ event.audience|title if event.audience else 'All Audiences' }}
+                    </span>
+                    {% endif %}
+
+                    {% if event.speakers %}
+                    <span class="meta-sep">·</span>
+                    <span class="meta-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        {{ event.speakers }}
+                    </span>
+                    {% endif %}
+                </div>
+
+                <!-- Actions - Buttons on the right side -->
+                <!-- Actions - Buttons on the right side -->
+                <div class="hero-actions-right">
+                    {% if event.status == 'upcoming' or event.status == 'ongoing' %}
+                    <a href="{{ url_for('public.contact') }}?type=training&event={{ event.title|urlencode }}&date={{ event.date[:10] if event.date else '' }}&location={{ event.location|urlencode }}" class="btn-primary">
+                        Register Now
+                        <span class="btn-arrow">→</span>
+                    </a>
+                    {% else %}
+                    <span class="btn-disabled">This event has {{ event.status }}</span>
+                    {% endif %}
+                    <a href="{{ url_for('public.training_events') }}" class="btn-outline">
+                        View All Events
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Image Background -->
+        <div class="hero-right">
+            {% if event.featured_image %}
+                <img src="/static/{{ event.featured_image }}"
+                     alt="{{ event.title }}"
+                     class="hero-image"
+                     loading="lazy">
+            {% else %}
+                <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1200&h=800&fit=crop&crop=center&auto=format"
+                     alt="{{ event.title }}"
+                     class="hero-image"
+                     loading="lazy">
+            {% endif %}
+            <div class="hero-image-overlay"></div>
+        </div>
+
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- DETAIL CONTENT                                                  -->
+    <!-- ================================================================ -->
+    <div class="detail-content">
+
+        <!-- ============================================================ -->
+        <!-- OVERVIEW SECTION                                             -->
+        <!-- ============================================================ -->
+        <section class="overview-section animate-on-scroll">
+            <div class="overview-text">
+                <span class="overview-label">Overview</span>
+                <h2>About This Event</h2>
+                <p>{{ event.summary or event.description or 'Join us for this training event hosted by JKUAT\'s Smart Farm Zone.' }}</p>
+                {% if event.body %}
+                <p>{{ event.body }}</p>
+                {% endif %}
+
+                <div class="overview-stats">
+                    {% if event.capacity %}
+                    <div class="overview-stat">
+                        <span class="stat-number">{{ event.capacity }}</span>
+                        <span class="stat-label">Capacity</span>
+                    </div>
+                    {% endif %}
+                    <div class="overview-stat">
+                        <span class="stat-number">3+</span>
+                        <span class="stat-label">Sessions</span>
+                    </div>
+                    <div class="overview-stat">
+                        <span class="stat-number">6+</span>
+                        <span class="stat-label">Hours</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overview-right">
+                {% if event.location %}
+                <div class="overview-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">Location</span>
+                        <span class="card-value">{{ event.location }}</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if event.date %}
+                <div class="overview-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">Date</span>
+                        <span class="card-value">{{ event.date[:10] if event.date else 'Date TBD' }}</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if event.audience %}
+                <div class="overview-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">Audience</span>
+                        <span class="card-value">{{ event.audience|title if event.audience else 'All Audiences' }}</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- AGENDA SECTION                                               -->
+        <!-- ============================================================ -->
+        {% if event.agenda %}
+        <section class="agenda-section animate-on-scroll delay-1">
+            <span class="section-label">Schedule</span>
+            <h2>Event Agenda</h2>
+
+            {% if event.agenda is iterable and event.agenda is not string %}
+                {% for item in event.agenda %}
+                <div class="agenda-item">
+                    <div class="agenda-time">{{ item.time }}</div>
+                    <div class="agenda-content">
+                        <div class="agenda-title">{{ item.title }}</div>
+                        {% if item.description %}
+                        <div class="agenda-desc">{{ item.description }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="agenda-item">
+                    <div class="agenda-time">Full Day</div>
+                    <div class="agenda-content">
+                        <div class="agenda-title">{{ event.agenda }}</div>
+                    </div>
+                </div>
+            {% endif %}
+        </section>
+        {% endif %}
+
+        <!-- ============================================================ -->
+        <!-- SPEAKERS SECTION - CENTERED ALIGNED                         -->
+        <!-- ============================================================ -->
+        {% if event.speakers %}
+        <section class="speakers-section animate-on-scroll delay-2">
+            <span class="section-label">Speakers</span>
+            <h2>Meet the Speakers</h2>
+
+            <div class="speakers-grid">
+                {% if event.speakers is iterable and event.speakers is not string %}
+                    {% for speaker in event.speakers %}
+                    <div class="speaker-card">
+                        <div class="speaker-avatar">
+                            {{ speaker.name[:1] if speaker.name else 'S' }}
+                        </div>
+                        <div class="speaker-name">{{ speaker.name }}</div>
+                        <div class="speaker-role">{{ speaker.role or 'Speaker' }}</div>
+                        <div class="speaker-org">{{ speaker.organisation or '' }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="speaker-card">
+                        <div class="speaker-avatar">{{ event.speakers[:1] }}</div>
+                        <div class="speaker-name">{{ event.speakers }}</div>
+                        <div class="speaker-role">Speaker</div>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- ============================================================ -->
+        <!-- GALLERY SECTION - ALL EVENT IMAGES                          -->
+        <!-- ============================================================ -->
+        {% if event.gallery_images and event.gallery_images|length > 0 %}
+        <section class="gallery-section animate-on-scroll delay-2">
+            <span class="section-label">Gallery</span>
+            <h2>Event Gallery</h2>
+            <p class="gallery-subtitle">View training sessions and capacity building programs from this event</p>
+
+            <div class="gallery-grid" id="eventGallery">
+                {% for image in event.gallery_images %}
+                    {% if image.image_path %}
+                    <div class="gallery-item" data-index="{{ loop.index0 }}" onclick="openLightbox({{ loop.index0 }})">
+                        <img src="/static/{{ image.image_path }}" alt="{{ image.caption or event.title }}" loading="lazy">
+                        {% if image.caption %}
+                        <div class="gallery-caption">{{ image.caption }}</div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- ============================================================ -->
+        <!-- TRAINING GALLERY REDIRECT                                   -->
+        <!-- ============================================================ -->
+        <section class="gallery-redirect animate-on-scroll delay-3">
+            <span class="redirect-label">Explore More</span>
+            <h3>Training Gallery</h3>
+            <p>
+                View training sessions, bootcamps, and capacity building programs
+                from BRIDGE-AI Kenya.
+            </p>
+            <a href="{{ url_for('public.gallery') }}" class="btn-gallery">
+                Explore Gallery
+                <span class="arrow">→</span>
+            </a>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- REGISTER SECTION                                             -->
+        <!-- ============================================================ -->
+        
+        <section class="register-section animate-on-scroll delay-3">
+            <span class="register-label">Get Involved</span>
+            <h2>Ready to Join?</h2>
+            <p>
+                Register now to secure your spot. Build your digital agriculture
+                skills and connect with innovators in the field.
+            </p>
+            <a href="{{ url_for('public.contact') }}?type=training&event={{ event.title|urlencode }}&date={{ event.date[:10] if event.date else '' }}&location={{ event.location|urlencode }}" class="btn-gold">
+                Register Now
+                <span class="btn-arrow">→</span>
+            </a>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- BACK SECTION                                                 -->
+        <!-- ============================================================ -->
+        <section class="back-section">
+            <a href="{{ url_for('public.training_events') }}" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+                Back to All Events
+            </a>
+        </section>
+
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- LIGHTBOX                                                        -->
+    <!-- ================================================================ -->
+    <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox(event)">
+        <button class="lightbox-close" onclick="closeLightbox(event)">×</button>
+        <span class="lightbox-counter" id="lightboxCounter"></span>
+        <button class="lightbox-nav prev" onclick="navigateLightbox(-1, event)">‹</button>
+        <button class="lightbox-nav next" onclick="navigateLightbox(1, event)">›</button>
+        <div class="lightbox-content">
+            <img id="lightboxImage" src="" alt="">
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT                                        -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // SCROLL REVEAL ANIMATIONS
+            // ================================================================
+
+            function observeElements() {
+                var elements = document.querySelectorAll('.animate-on-scroll:not(.visible)');
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.05,
+                    rootMargin: '0px 0px -30px 0px'
+                });
+
+                elements.forEach(function(el) { observer.observe(el); });
+            }
+
+            setTimeout(observeElements, 200);
+
+            // ================================================================
+            // LIGHTBOX - Show all gallery images
+            // ================================================================
+
+            var galleryImages = [];
+            var currentLightboxIndex = 0;
+
+            // Collect all gallery images
+            document.querySelectorAll('#eventGallery .gallery-item').forEach(function(item, index) {
+                var img = item.querySelector('img');
+                var caption = item.querySelector('.gallery-caption');
+                galleryImages.push({
+                    src: img ? img.getAttribute('src') : '',
+                    alt: img ? img.getAttribute('alt') : '',
+                    caption: caption ? caption.textContent.trim() : ''
+                });
+            });
+
+            // Open lightbox
+            window.openLightbox = function(index) {
+                if (!galleryImages.length || index >= galleryImages.length) return;
+                currentLightboxIndex = index;
+                updateLightbox();
+                document.getElementById('lightboxOverlay').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+
+            // Close lightbox
+            window.closeLightbox = function(event) {
+                if (event) {
+                    event.stopPropagation();
+                }
+                document.getElementById('lightboxOverlay').classList.remove('active');
+                document.body.style.overflow = '';
+            };
+
+            // Navigate lightbox
+            window.navigateLightbox = function(direction, event) {
+                if (event) {
+                    event.stopPropagation();
+                }
+                var newIndex = currentLightboxIndex + direction;
+                if (newIndex < 0) newIndex = galleryImages.length - 1;
+                if (newIndex >= galleryImages.length) newIndex = 0;
+                currentLightboxIndex = newIndex;
+                updateLightbox();
+            };
+
+            // Update lightbox content
+            function updateLightbox() {
+                var image = galleryImages[currentLightboxIndex];
+                if (!image) return;
+
+                document.getElementById('lightboxImage').src = image.src;
+                document.getElementById('lightboxImage').alt = image.alt;
+                document.getElementById('lightboxCaption').textContent = image.caption || '';
+                document.getElementById('lightboxCounter').textContent =
+                    (currentLightboxIndex + 1) + ' / ' + galleryImages.length;
+            }
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (!document.getElementById('lightboxOverlay').classList.contains('active')) return;
+                if (e.key === 'Escape') {
+                    closeLightbox(e);
+                } else if (e.key === 'ArrowLeft') {
+                    navigateLightbox(-1, e);
+                } else if (e.key === 'ArrowRight') {
+                    navigateLightbox(1, e);
+                }
+            });
+
+            // ================================================================
+            // CONSOLE LOG
+            // ================================================================
+
+            console.log('BRIDGE-AI Kenya Event Detail page initialized');
+            if (galleryImages.length > 0) {
+                console.log('Gallery images loaded:', galleryImages.length);
+            }
+
+        })();
+    </script>
+
+</body>
+</html>

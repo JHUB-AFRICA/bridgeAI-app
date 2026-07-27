@@ -1,0 +1,30 @@
+{
+  "settings": {
+    "site_title": "BRIDGE-AI Kenya",
+    "site_description": "AI for African Agriculture - GenAI, IoT and digital skills for climate-smart mushroom farming",
+    "site_tagline": "Generative AI, IoT sensing and digital skills for climate-smart mushroom farming and rural innovation.",
+    "footer_text": "© 2026 BRIDGE-AI Kenya | JKUAT - Jomo Kenyatta University of Agriculture and Technology",
+    "eu_funding_statement": "This project has received funding from the European Union's Horizon Europe research and innovation programme under grant agreement No. 101299050.",
+    "eu_disclaimer": "Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or the European Health and Digital Executive Agency. Neither the European Union nor the granting authority can be held responsible for them.",
+    "counters": {
+      "activities": 0,
+      "participants_trained": 0,
+      "women_youth_percentage": 0,
+      "events": 0,
+      "resources": 0,
+      "smes_mentored": 0
+    },
+    "social_links": {
+      "linkedin": "https://linkedin.com/company/bridge-ai",
+      "youtube": "https://youtube.com/@bridge-ai",
+      "twitter": "https://twitter.com/bridge_ai",
+      "facebook": "https://facebook.com/bridge-ai"
+    },
+    "contact": {
+      "email": "bridge-ai@jkuat.ac.ke",
+      "phone": "+254-XXX-XXXX",
+      "address": "JKUAT Smart Farm Zone, Juja, Kenya"
+    },
+    "updated_at": "2026-06-25T10:00:00"
+  }
+}

@@ -1,0 +1,711 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - ADMIN LOGIN                                    -->
+<!-- ================================================================ -->
+<!-- Login page for administrators                                   -->
+<!-- Features: Password toggle · Clean design · CSRF protected        -->
+<!-- CSS: Fully self-contained in this file                          -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - BRIDGE-AI Kenya</title>
+    <meta name="csrf-token" content="{{ csrf_token() if csrf_token else '' }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ================================================================ */
+        /* CSS VARIABLES                                                   */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #061420;
+            --primary: #0F2B3D;
+            --primary-light: #1A4A6B;
+            --gold: #D4A843;
+            --gold-light: #F5D77E;
+            --gold-pale: #F5ECD7;
+            --text-dark: #081A28;
+            --text-body: #1A2A3A;
+            --text-muted: #5A6A7A;
+            --text-light: #8A9AAA;
+            --bg-white: #FFFFFF;
+            --bg-light: #F5F8FA;
+            --border-light: #E4EAF0;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+            --shadow-xl: 0 16px 56px rgba(0,0,0,0.10);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(135deg, var(--bg-light) 0%, #E8EEF4 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ================================================================ */
+        /* BACKGROUND DECORATION                                           */
+        /* ================================================================ */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -40%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(212, 168, 67, 0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -30%;
+            left: -15%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(26, 74, 107, 0.03) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ================================================================ */
+        /* LOGIN CONTAINER                                                 */
+        /* ================================================================ */
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            padding: 44px 40px 36px;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition);
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: -200% 0; }
+            50% { background-position: 200% 0; }
+        }
+
+        /* ─── Decorative Corner Elements ─── */
+        .login-card .corner-deco {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 1px solid rgba(212, 168, 67, 0.06);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .login-card .corner-deco-1 {
+            top: -20px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+        }
+
+        .login-card .corner-deco-2 {
+            bottom: -30px;
+            left: -30px;
+            width: 120px;
+            height: 120px;
+            border-color: rgba(26, 74, 107, 0.04);
+        }
+
+        /* ─── Brand ─── */
+        .login-brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-brand .brand-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            border-radius: var(--radius-md);
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--primary-dark);
+            letter-spacing: 0.04em;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 24px rgba(212, 168, 67, 0.15);
+        }
+
+        .login-brand .brand-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+        }
+
+        .login-brand .brand-title .gold {
+            color: var(--gold);
+        }
+
+        .login-brand .brand-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        /* ─── Flash Messages ─── */
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .flash-message {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid;
+            background: var(--bg-light);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.85rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        .flash-message .flash-icon {
+            flex-shrink: 0;
+            font-weight: 300;
+        }
+
+        .flash-message .flash-body {
+            flex: 1;
+            color: var(--text-body);
+        }
+
+        .flash-message.flash-success {
+            border-left-color: #1A6A4A;
+        }
+        .flash-message.flash-success .flash-icon { color: #1A6A4A; }
+
+        .flash-message.flash-danger {
+            border-left-color: #C0392B;
+        }
+        .flash-message.flash-danger .flash-icon { color: #C0392B; }
+
+        .flash-message.flash-warning {
+            border-left-color: #D4A843;
+        }
+        .flash-message.flash-warning .flash-icon { color: #D4A843; }
+
+        .flash-message.flash-info {
+            border-left-color: #1A4A6B;
+        }
+        .flash-message.flash-info .flash-icon { color: #1A4A6B; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── Form ─── */
+        .login-form .form-group {
+            margin-bottom: 18px;
+        }
+
+        .login-form .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-body);
+            margin-bottom: 5px;
+        }
+
+        /* ─── Password Field with Toggle ─── */
+        .login-form .password-wrapper {
+            position: relative;
+        }
+
+        .login-form .password-wrapper input[type="password"],
+        .login-form .password-wrapper input[type="text"] {
+            width: 100%;
+            padding: 11px 44px 11px 14px;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--text-body);
+            background: var(--bg-white);
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            outline: none;
+        }
+
+        .login-form .password-wrapper input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+        }
+
+        .login-form .password-wrapper input::placeholder {
+            color: var(--text-light);
+        }
+
+        .login-form .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+        }
+
+        .login-form .password-toggle:hover {
+            color: var(--text-dark);
+            background: var(--bg-light);
+        }
+
+        .login-form .password-toggle svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ─── Username Field ─── */
+        .login-form .form-group input[type="text"] {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--text-body);
+            background: var(--bg-white);
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            outline: none;
+        }
+
+        .login-form .form-group input[type="text"]:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+        }
+
+        .login-form .form-group input[type="text"]::placeholder {
+            color: var(--text-light);
+        }
+
+        /* ─── Remember Me ─── */
+        .login-form .form-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 4px 0 24px;
+        }
+
+        .login-form .form-options .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .login-form .form-options .remember input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary-light);
+            cursor: pointer;
+            flex-shrink: 0;
+            border-radius: 4px;
+        }
+
+        .login-form .form-options .forgot-link {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color var(--transition);
+        }
+
+        .login-form .form-options .forgot-link:hover {
+            color: var(--primary-light);
+        }
+
+        /* ─── Submit Button ─── */
+        .login-form .btn-submit {
+            width: 100%;
+            padding: 13px 24px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--primary-dark);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            box-shadow: 0 4px 16px rgba(212, 168, 67, 0.15);
+            letter-spacing: 0.02em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-form .btn-submit::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 100%);
+            pointer-events: none;
+        }
+
+        .login-form .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(212, 168, 67, 0.25);
+        }
+
+        .login-form .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        /* ─── Footer ─── */
+        .login-footer {
+            text-align: center;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .login-footer .footer-text {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            letter-spacing: 0.02em;
+        }
+
+        .login-footer .footer-text .highlight {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .login-footer .footer-divider {
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            margin: 12px auto 0;
+            border-radius: 2px;
+            opacity: 0.3;
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                      */
+        /* ================================================================ */
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 28px 20px 24px;
+                border-radius: var(--radius-lg);
+            }
+
+            .login-brand .brand-title {
+                font-size: 1.1rem;
+            }
+
+            .login-brand .brand-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 0.85rem;
+            }
+
+            .login-form .form-options {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .login-form .btn-submit {
+                font-size: 0.9rem;
+                padding: 11px 20px;
+            }
+
+            .flash-message {
+                font-size: 0.8rem;
+                padding: 10px 14px;
+            }
+
+            .login-form .password-toggle svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            body::before,
+            body::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-card {
+                padding: 20px 14px 18px;
+            }
+
+            .login-brand .brand-title {
+                font-size: 1rem;
+            }
+
+            .login-brand .brand-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 0.7rem;
+            }
+
+            .login-form .form-group input[type="text"],
+            .login-form .password-wrapper input {
+                padding: 9px 12px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+
+            <!-- Decorative Elements -->
+            <div class="corner-deco corner-deco-1"></div>
+            <div class="corner-deco corner-deco-2"></div>
+
+            <!-- Brand -->
+            <div class="login-brand">
+                <div class="brand-icon">BA</div>
+                <h1 class="brand-title">BRIDGE<span class="gold">-AI</span></h1>
+                <p class="brand-subtitle">Admin Login</p>
+            </div>
+
+            <!-- Flash Messages -->
+            <div class="flash-messages">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}" role="alert">
+                                <span class="flash-icon">
+                                    {% if category == 'success' %}✓
+                                    {% elif category == 'danger' %}✗
+                                    {% elif category == 'warning' %}⚠
+                                    {% else %}ℹ{% endif %}
+                                </span>
+                                <span class="flash-body">{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- Login Form -->
+            <form class="login-form" method="POST" action="{{ url_for('admin.admin_login') }}" autocomplete="off">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <button type="button" class="password-toggle" id="passwordToggle" aria-label="Toggle password visibility">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember">
+                        <input type="checkbox" name="remember" value="y">
+                        Remember me
+                    </label>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn-submit">Sign In</button>
+            </form>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <p class="footer-text">
+                    BRIDGE-AI Kenya <span class="highlight">Admin</span> Panel
+                </p>
+                <div class="footer-divider"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- JAVASCRIPT                                                      -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // PASSWORD VISIBILITY TOGGLE
+            // ================================================================
+
+            var passwordInput = document.getElementById('password');
+            var toggleBtn = document.getElementById('passwordToggle');
+
+            if (passwordInput && toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    var isPassword = passwordInput.type === 'password';
+                    passwordInput.type = isPassword ? 'text' : 'password';
+
+                    // Update icon
+                    toggleBtn.innerHTML = isPassword ?
+                        `<svg viewBox="0 0 24 24">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>` :
+                        `<svg viewBox="0 0 24 24">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>`;
+
+                    // Update aria-label
+                    toggleBtn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+                });
+            }
+
+            // ================================================================
+            // AUTO-DISMISS FLASH MESSAGES
+            // ================================================================
+
+            var flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(msg) {
+                setTimeout(function() {
+                    msg.style.opacity = '0';
+                    msg.style.transform = 'translateY(-8px)';
+                    msg.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    setTimeout(function() {
+                        if (msg.parentElement) {
+                            msg.remove();
+                        }
+                    }, 400);
+                }, 4000);
+            });
+
+            // ================================================================
+            // FOCUS ON USERNAME FIELD (if no flash errors)
+            // ================================================================
+
+            var hasErrors = document.querySelectorAll('.flash-message.flash-danger').length > 0;
+            if (!hasErrors) {
+                var usernameField = document.getElementById('username');
+                if (usernameField) {
+                    usernameField.focus();
+                }
+            }
+
+            // ================================================================
+            // PRESS ESCAPE TO CLEAR PASSWORD FIELD
+            // ================================================================
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.activeElement === passwordInput) {
+                    passwordInput.value = '';
+                    passwordInput.type = 'password';
+                    toggleBtn.innerHTML = `
+                        <svg viewBox="0 0 24 24">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>`;
+                }
+            });
+
+            console.log('BRIDGE-AI Kenya Admin Login initialized');
+
+        })();
+    </script>
+
+</body>
+</html>

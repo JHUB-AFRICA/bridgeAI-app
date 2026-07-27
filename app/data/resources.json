@@ -1,0 +1,36 @@
+[
+  {
+    "title": "BRIDGE-AI Kenya Project Brochure",
+    "slug": "bridge-ai-kenya-project-brochure",
+    "description": "An overview of the BRIDGE-AI Kenya project, including project objectives, consortium partners, work packages, pilot activities, and expected outcomes.",
+    "resource_type": "open_source",
+    "wp_tag": "WP1",
+    "audience": "public",
+    "language": "English",
+    "is_public": true,
+    "download_count": 2,
+    "created_at": "2026-07-07T23:21:56.821033",
+    "updated_at": "2026-07-11T20:17:20.365663",
+    "file_path": "uploads/resources/20260707_232156_Bridge-AI_Smart_mushroom_Project_progress_report.pdf",
+    "external_url": "https://bridge-ai.jkuat.ac.ke/about",
+    "license": "All Rights Reserved",
+    "id": 2
+  },
+  {
+    "title": "Smart Agriculture Workshop Presentation",
+    "slug": "smart-agriculture-workshop-presentation",
+    "description": "Presentation slides used during the BRIDGE-AI Kenya Smart Agriculture Workshop, introducing AI, IoT, and smart mushroom farming technologies.",
+    "resource_type": "presentation",
+    "wp_tag": "WP5",
+    "audience": "media",
+    "language": "English",
+    "is_public": true,
+    "download_count": 6,
+    "created_at": "2026-07-07T23:37:44.784635",
+    "updated_at": "2026-07-08T19:23:05.316798",
+    "file_path": "uploads/resources/20260707_233744_BRIDGE-AI_Kenya_-_Smart_Mushroom_Farming_.pptx",
+    "external_url": "https://bridge-ai.jkuat.ac.ke/resources/workshop-presentation",
+    "license": "CC BY 4.0",
+    "id": 3
+  }
+]

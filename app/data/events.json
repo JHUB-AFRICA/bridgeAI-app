@@ -1,0 +1,29 @@
+[
+  {
+    "title": "AI-Powered Smart Mushroom Farming Workshop",
+    "slug": "ai-powered-smart-mushroom-farming-workshop",
+    "created_at": "2026-07-10T20:29:16.724013",
+    "updated_at": "2026-07-10T20:29:16.724028",
+    "status": "upcoming",
+    "date": "2026-07-03",
+    "time": "07:25",
+    "location": "JKUAT Smart Farm Zone, Juja, Kenya",
+    "venue": "Smart Mushroom Demonstration Centre",
+    "agenda": "Opening remarks, AI in agriculture, mushroom cultivation techniques, IoT sensor demonstration, practical field session, networking.",
+    "audience": "public",
+    "capacity": "80",
+    "speakers": "Dr. Lawrence Nderu, Dr. Jane Mwangi, Eng. Peter Ochieng",
+    "registration_link": "https://bridge-ai.eu/events/smart-mushroom-workshop",
+    "description": "A hands-on workshop introducing AI-powered mushroom farming technologies, IoT monitoring systems, and sustainable cultivation practices.",
+    "featured_image": "uploads/events/20260710_202916_DrLawrenceNderu-scaled.jpg",
+    "gallery_images": [
+      {
+        "id": 1,
+        "image_path": "uploads/events/20260710_202916_WhatsApp_Image_2026-07-10_at_8.28.42_PM.jpeg",
+        "caption": "",
+        "display_order": 0
+      }
+    ],
+    "id": 1
+  }
+]

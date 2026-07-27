@@ -1,0 +1,2008 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - ADMIN REPLICATION TOOLKIT MANAGEMENT          -->
+<!-- ================================================================ -->
+<!-- Extends: admin/layout.html                                     -->
+<!-- Content: Resources · Templates · Lessons                       -->
+<!-- Features: File Upload (Resources/Templates) · Tabs             -->
+<!-- CSS: Fully self-contained in this file                         -->
+<!-- Rules: No emojis · No decorative symbols · No colons           -->
+<!--        No slashes · No hyphens · Clean typography              -->
+<!-- ================================================================ -->
+
+{% extends "admin/layout.html" %}
+
+{% block title %}Replication - BRIDGE-AI Kenya Admin{% endblock %}
+
+{% block page_title %}Replication <span class="highlight">Toolkit</span>{% endblock %}
+
+{% block page_subtitle %}Manage replication resources, templates, and lessons learned{% endblock %}
+
+{% block content %}
+
+<!-- ================================================================ -->
+<!-- TOAST NOTIFICATIONS CONTAINER                                   -->
+<!-- ================================================================ -->
+<div id="toastContainer"></div>
+
+<!-- ================================================================ -->
+<!-- LOADER OVERLAY                                                  -->
+<!-- ================================================================ -->
+<div id="loaderOverlay">
+    <div class="loader-spinner"></div>
+    <p class="loader-text">Loading replication data...</p>
+</div>
+
+<!-- ================================================================ -->
+<!-- CSS - Self-contained for this page                              -->
+<!-- ================================================================ -->
+<style>
+    /* ================================================================ */
+    /* CSS VARIABLES                                                   */
+    /* ================================================================ */
+    :root {
+        --primary-dark: #061420;
+        --primary: #0F2B3D;
+        --primary-light: #1A4A6B;
+        --gold: #D4A843;
+        --gold-light: #F5D77E;
+        --text-dark: #081A28;
+        --text-body: #1A2A3A;
+        --text-muted: #5A6A7A;
+        --text-light: #8A9AAA;
+        --bg-white: #FFFFFF;
+        --bg-light: #F5F8FA;
+        --bg-lighter: #FAFCFE;
+        --border-light: #E4EAF0;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+        --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+        --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    /* ================================================================ */
+    /* LOADER OVERLAY                                                  */
+    /* ================================================================ */
+    #loaderOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.92);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.5s ease;
+    }
+
+    #loaderOverlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .loader-spinner {
+        width: 48px;
+        height: 48px;
+        border: 3px solid var(--border-light);
+        border-top-color: var(--primary-light);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-bottom: 16px;
+    }
+
+    .loader-text {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        font-weight: 400;
+        letter-spacing: 0.02em;
+        font-family: var(--font-sans);
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* ================================================================ */
+    /* TABS                                                           */
+    /* ================================================================ */
+    .replication-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 24px;
+        padding: 4px 0;
+        border-bottom: 2px solid #E4EAF0;
+        background: #FFFFFF;
+    }
+
+    .replication-tabs .tab-btn {
+        padding: 8px 18px;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #5A6A7A;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 0;
+        margin-bottom: -2px;
+    }
+
+    .replication-tabs .tab-btn:hover {
+        color: #1A2A3A;
+        background: #F5F8FA;
+    }
+
+    .replication-tabs .tab-btn.active {
+        color: #1A4A6B;
+        border-bottom-color: #D4A843;
+    }
+
+    .replication-tabs .tab-btn .tab-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 7px;
+        border-radius: 60px;
+        font-size: 0.55rem;
+        font-weight: 700;
+        background: #F5F8FA;
+        color: #5A6A7A;
+    }
+
+    .replication-tabs .tab-btn.active .tab-count {
+        background: #F5ECD7;
+        color: #D4A843;
+    }
+
+    /* ================================================================ */
+    /* TOOLBAR                                                         */
+    /* ================================================================ */
+    .replication-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .replication-toolbar .toolbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .replication-toolbar .toolbar-left .search-input {
+        padding: 8px 14px;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        color: #1A2A3A;
+        background: #FFFFFF;
+        outline: none;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        min-width: 200px;
+    }
+
+    .replication-toolbar .toolbar-left .search-input:focus {
+        border-color: #1A4A6B;
+        box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+    }
+
+    .btn-add {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        background: #D4A843;
+        color: #061420;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        box-shadow: 0 4px 16px rgba(212, 168, 67, 0.12);
+    }
+
+    .btn-add:hover {
+        background: #F5D77E;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.2);
+    }
+
+    /* ================================================================ */
+    /* TABLE                                                           */
+    /* ================================================================ */
+    .table-container {
+        background: #FFFFFF;
+        border: 1px solid #E4EAF0;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .table-container table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .table-container table thead {
+        background: #F5F8FA;
+        border-bottom: 1px solid #E4EAF0;
+    }
+
+    .table-container table thead th {
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 600;
+        color: #5A6A7A;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .table-container table tbody tr {
+        border-bottom: 1px solid #E4EAF0;
+        transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .table-container table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table-container table tbody tr:hover {
+        background: #FAFCFE;
+    }
+
+    .table-container table tbody td {
+        padding: 12px 16px;
+        color: #1A2A3A;
+        vertical-align: middle;
+    }
+
+    /* ─── File Type Icon ─── */
+    .file-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        font-size: 0.55rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        background: var(--bg-light);
+        border: 1px solid var(--border-light);
+        color: var(--text-muted);
+    }
+
+    .file-icon.pdf { background: #F5E6E6; color: #9E2A2A; }
+    .file-icon.docx { background: #D4E8F5; color: #1A4A6B; }
+    .file-icon.doc { background: #D4E8F5; color: #1A4A6B; }
+    .file-icon.pptx { background: #F5E8D6; color: #9E6A2A; }
+    .file-icon.ppt { background: #F5E8D6; color: #9E6A2A; }
+    .file-icon.xlsx { background: #D6F0E0; color: #1A6A4A; }
+    .file-icon.xls { background: #D6F0E0; color: #1A6A4A; }
+    .file-icon.zip { background: #E8E8E8; color: #5A5A6A; }
+    .file-icon.png, .file-icon.jpg, .file-icon.jpeg, .file-icon.gif, .file-icon.webp { background: #D6F0E0; color: #1A6A4A; }
+    .file-icon.svg { background: #E8D6F0; color: #5A3A7A; }
+
+    /* ─── Action Buttons ─── */
+    .table-container table tbody td .actions {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+
+    .table-container table tbody td .actions button {
+        padding: 4px 10px;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .btn-view-sm {
+        background: #E8F0F8;
+        color: #1A4A6B;
+    }
+
+    .btn-view-sm:hover {
+        background: #1A4A6B;
+        color: #FFFFFF;
+        transform: translateY(-1px);
+    }
+
+    .btn-edit-sm {
+        background: #F5ECD7;
+        color: #D4A843;
+    }
+
+    .btn-edit-sm:hover {
+        background: #D4A843;
+        color: #061420;
+        transform: translateY(-1px);
+    }
+
+    .btn-delete-sm {
+        background: #F5E6E6;
+        color: #9E2A2A;
+    }
+
+    .btn-delete-sm:hover {
+        background: #9E2A2A;
+        color: #FFFFFF;
+        transform: translateY(-1px);
+    }
+
+    /* ─── Empty State ─── */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #5A6A7A;
+    }
+
+    .empty-state h4 {
+        font-size: 1.1rem;
+        color: #081A28;
+        margin-bottom: 4px;
+    }
+
+    .empty-state p {
+        font-size: 0.9rem;
+    }
+
+    /* ================================================================ */
+    /* MODAL                                                           */
+    /* ================================================================ */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(6, 20, 32, 0.6);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal {
+        background: #FFFFFF;
+        border-radius: 20px;
+        max-width: 720px;
+        width: 100%;
+        max-height: 92vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-lg);
+        animation: slideUp 0.3s ease;
+    }
+
+    .modal::-webkit-scrollbar {
+        width: 4px;
+    }
+    .modal::-webkit-scrollbar-track {
+        background: #F5F8FA;
+        border-radius: 4px;
+    }
+    .modal::-webkit-scrollbar-thumb {
+        background: #1A4A6B;
+        border-radius: 4px;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px) scale(0.96); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 24px 28px 16px;
+        border-bottom: 1px solid #E4EAF0;
+        position: sticky;
+        top: 0;
+        background: #FFFFFF;
+        z-index: 10;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .modal-header h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #081A28;
+    }
+
+    .modal-header h3 .gold {
+        color: #D4A843;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        font-weight: 300;
+        color: #8A9AAA;
+        cursor: pointer;
+        padding: 4px 8px;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        line-height: 1;
+    }
+
+    .modal-close:hover {
+        color: #081A28;
+        transform: rotate(90deg);
+    }
+
+    .modal-body {
+        padding: 24px 28px 28px;
+    }
+
+    /* ─── Form ─── */
+    .modal-body .form-group {
+        margin-bottom: 16px;
+    }
+
+    .modal-body .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #1A2A3A;
+        margin-bottom: 4px;
+    }
+
+    .modal-body .form-group label .required {
+        color: #9E2A2A;
+    }
+
+    .modal-body .form-group input,
+    .modal-body .form-group select,
+    .modal-body .form-group textarea {
+        width: 100%;
+        padding: 9px 14px;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #1A2A3A;
+        background: #FAFCFE;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        outline: none;
+    }
+
+    .modal-body .form-group input:focus,
+    .modal-body .form-group select:focus,
+    .modal-body .form-group textarea:focus {
+        border-color: #1A4A6B;
+        box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+        background: #FFFFFF;
+    }
+
+    .modal-body .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .modal-body .form-group .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    /* ─── File Upload ─── */
+    .file-upload-area {
+        border: 2px dashed #E4EAF0;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all var(--transition);
+        cursor: pointer;
+        position: relative;
+        background: #FAFCFE;
+    }
+
+    .file-upload-area:hover {
+        border-color: #1A4A6B;
+        background: #F5F8FA;
+    }
+
+    .file-upload-area.dragover {
+        border-color: #D4A843;
+        background: #F5ECD7;
+    }
+
+    .file-upload-area .upload-icon {
+        font-size: 1.8rem;
+        color: #8A9AAA;
+        display: block;
+        margin-bottom: 2px;
+        font-weight: 200;
+    }
+
+    .file-upload-area .upload-text {
+        font-size: 0.85rem;
+        color: #5A6A7A;
+    }
+
+    .file-upload-area .upload-text strong {
+        color: #1A4A6B;
+    }
+
+    .file-upload-area .upload-hint {
+        font-size: 0.7rem;
+        color: #8A9AAA;
+        margin-top: 2px;
+    }
+
+    .file-upload-area input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* ─── File Preview in Form ─── */
+    .file-preview-container {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 10px;
+        padding: 12px 16px;
+        background: #F5F8FA;
+        border-radius: 8px;
+        border: 1px solid #E4EAF0;
+        flex-wrap: wrap;
+    }
+
+    .file-preview-container .file-icon-lg {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        font-size: 0.6rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        background: var(--bg-light);
+        border: 1px solid var(--border-light);
+        color: var(--text-muted);
+        flex-shrink: 0;
+    }
+
+    .file-preview-container .file-icon-lg.pdf { background: #F5E6E6; color: #9E2A2A; }
+    .file-preview-container .file-icon-lg.docx { background: #D4E8F5; color: #1A4A6B; }
+    .file-preview-container .file-icon-lg.doc { background: #D4E8F5; color: #1A4A6B; }
+    .file-preview-container .file-icon-lg.pptx { background: #F5E8D6; color: #9E6A2A; }
+    .file-preview-container .file-icon-lg.ppt { background: #F5E8D6; color: #9E6A2A; }
+    .file-preview-container .file-icon-lg.zip { background: #E8E8E8; color: #5A5A6A; }
+    .file-preview-container .file-icon-lg.png, .file-preview-container .file-icon-lg.jpg { background: #D6F0E0; color: #1A6A4A; }
+
+    .file-preview-container .file-info {
+        flex: 1;
+        font-size: 0.82rem;
+        color: #1A2A3A;
+    }
+
+    .file-preview-container .file-info .file-size {
+        font-size: 0.7rem;
+        color: #8A9AAA;
+        display: block;
+    }
+
+    .file-preview-container .btn-remove-file {
+        padding: 4px 14px;
+        background: #F5E6E6;
+        color: #9E2A2A;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+    }
+
+    .file-preview-container .btn-remove-file:hover {
+        background: #9E2A2A;
+        color: #FFFFFF;
+    }
+
+    /* ─── Form Actions ─── */
+    .modal-body .form-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 8px;
+        padding-top: 16px;
+        border-top: 1px solid #E4EAF0;
+    }
+
+    .btn-modal-save {
+        padding: 10px 28px;
+        background: #D4A843;
+        color: #061420;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+        box-shadow: 0 4px 16px rgba(212, 168, 67, 0.12);
+    }
+
+    .btn-modal-save:hover {
+        background: #F5D77E;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.2);
+    }
+
+    .btn-modal-cancel {
+        padding: 10px 24px;
+        background: #F5F8FA;
+        color: #5A6A7A;
+        border: 1px solid #E4EAF0;
+        border-radius: 60px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+    }
+
+    .btn-modal-cancel:hover {
+        background: #E4EAF0;
+        color: #1A2A3A;
+    }
+
+    /* ─── View Modal ─── */
+    .detail-view .detail-row {
+        display: flex;
+        padding: 8px 0;
+        border-bottom: 1px solid #F5F8FA;
+    }
+
+    .detail-view .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-view .detail-label {
+        font-weight: 600;
+        color: #5A6A7A;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        width: 130px;
+        flex-shrink: 0;
+        padding-top: 2px;
+    }
+
+    .detail-view .detail-value {
+        color: #1A2A3A;
+        font-size: 0.9rem;
+        word-break: break-word;
+        flex: 1;
+    }
+
+    .detail-view .detail-value .file-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 16px;
+        background: #F5F8FA;
+        border: 1px solid #E4EAF0;
+        border-radius: 6px;
+        color: #1A4A6B;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.85rem;
+        transition: all var(--transition);
+    }
+
+    .detail-view .detail-value .file-link:hover {
+        background: #1A4A6B;
+        color: #FFFFFF;
+        border-color: #1A4A6B;
+    }
+
+    .detail-view .detail-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #E4EAF0;
+    }
+
+    .detail-view .btn-modal-close {
+        padding: 8px 24px;
+        background: #F5F8FA;
+        color: #5A6A7A;
+        border: 1px solid #E4EAF0;
+        border-radius: 60px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+    }
+
+    .detail-view .btn-modal-close:hover {
+        background: #E4EAF0;
+        color: #1A2A3A;
+    }
+
+    /* ================================================================ */
+    /* TOAST NOTIFICATIONS                                             */
+    /* ================================================================ */
+    #toastContainer {
+        position: fixed;
+        top: 90px;
+        right: 20px;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 380px;
+        width: 100%;
+        pointer-events: none;
+    }
+
+    .toast {
+        pointer-events: auto;
+        background: #FFFFFF;
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+        border-left: 4px solid;
+        animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .toast.hiding {
+        animation: slideOutRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    .toast-success { border-left-color: #1A6A4A; }
+    .toast-error { border-left-color: #9E2A2A; }
+    .toast-warning { border-left-color: #D4A843; }
+    .toast-info { border-left-color: #1A4A6B; }
+
+    .toast-icon {
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-weight: 700;
+    }
+
+    .toast-success .toast-icon { color: #1A6A4A; }
+    .toast-error .toast-icon { color: #9E2A2A; }
+    .toast-warning .toast-icon { color: #D4A843; }
+    .toast-info .toast-icon { color: #1A4A6B; }
+
+    .toast-content { flex: 1; }
+    .toast-title { font-weight: 600; font-size: 0.9rem; color: #081A28; }
+    .toast-message { font-size: 0.8rem; color: #5A6A7A; margin-top: 2px; }
+
+    .toast-close {
+        background: none;
+        border: none;
+        color: #8A9AAA;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0 4px;
+        line-height: 1;
+        font-weight: 300;
+        transition: color 0.3s ease;
+        font-family: var(--font-sans);
+    }
+
+    .toast-close:hover { color: #081A28; }
+
+    .toast-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        background: #E4EAF0;
+        overflow: hidden;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .toast-progress-bar {
+        height: 100%;
+        background: #D4A843;
+        border-radius: 0 0 12px 12px;
+        animation: progressBar 4s linear forwards;
+        width: 100%;
+    }
+
+    .toast-error .toast-progress-bar { background: #9E2A2A; }
+    .toast-success .toast-progress-bar { background: #1A6A4A; }
+    .toast-warning .toast-progress-bar { background: #D4A843; }
+    .toast-info .toast-progress-bar { background: #1A4A6B; }
+
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(40px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideOutRight {
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(40px); }
+    }
+
+    @keyframes progressBar {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
+
+    /* ================================================================ */
+    /* RESPONSIVE                                                      */
+    /* ================================================================ */
+    @media (max-width: 768px) {
+        .replication-tabs {
+            gap: 2px;
+        }
+
+        .replication-tabs .tab-btn {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+
+        .replication-tabs .tab-btn .tab-count {
+            min-width: 16px;
+            height: 16px;
+            font-size: 0.5rem;
+            padding: 0 5px;
+        }
+
+        .replication-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .replication-toolbar .toolbar-left .search-input {
+            min-width: 100%;
+        }
+
+        .btn-add {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table-container table {
+            font-size: 0.75rem;
+            min-width: 600px;
+        }
+
+        .table-container table thead th,
+        .table-container table tbody td {
+            padding: 8px 10px;
+        }
+
+        .modal {
+            max-width: 100%;
+            margin: 10px;
+            max-height: 95vh;
+        }
+
+        .modal-header {
+            padding: 18px 20px 12px;
+        }
+
+        .modal-body {
+            padding: 16px 20px 20px;
+        }
+
+        .modal-body .form-group .form-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .detail-view .detail-row {
+            flex-direction: column;
+            padding: 6px 0;
+        }
+
+        .detail-view .detail-label {
+            width: 100%;
+            font-size: 0.7rem;
+            padding-bottom: 2px;
+        }
+
+        .detail-view .detail-value {
+            font-size: 0.85rem;
+        }
+
+        .detail-view .detail-actions {
+            flex-wrap: wrap;
+        }
+
+        .detail-view .detail-actions button {
+            flex: 1;
+            min-width: 80px;
+            justify-content: center;
+        }
+
+        #toastContainer {
+            top: 80px;
+            right: 10px;
+            left: 10px;
+            max-width: none;
+        }
+        .toast { padding: 14px 16px; }
+    }
+
+    @media (max-width: 480px) {
+        .replication-tabs .tab-btn {
+            padding: 4px 10px;
+            font-size: 0.6rem;
+        }
+
+        .replication-tabs .tab-btn .tab-count {
+            min-width: 14px;
+            height: 14px;
+            font-size: 0.45rem;
+            padding: 0 4px;
+        }
+
+        .btn-add {
+            font-size: 0.75rem;
+            padding: 6px 16px;
+        }
+
+        .modal-body .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-modal-save,
+        .btn-modal-cancel {
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .file-upload-area {
+            padding: 14px;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 1.5rem;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 0.75rem;
+        }
+    }
+
+    /* ================================================================ */
+    /* SCROLLBAR                                                       */
+    /* ================================================================ */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #F5F8FA;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #1A4A6B;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #0F2B3D;
+    }
+</style>
+
+<!-- ================================================================ -->
+<!-- CONTENT                                                         -->
+<!-- ================================================================ -->
+
+<!-- Tabs -->
+<div class="replication-tabs" id="replicationTabs">
+    <!-- Dynamically generated by JavaScript -->
+</div>
+
+<!-- Toolbar -->
+<div class="replication-toolbar">
+    <div class="toolbar-left">
+        <input type="text" class="search-input" id="replicationSearch" placeholder="Search..." onkeyup="filterTable()">
+    </div>
+    <button class="btn-add" id="addBtn" onclick="openModal(null)">Add</button>
+</div>
+
+<!-- Table -->
+<div class="table-container">
+    <table>
+        <thead id="replicationTableHead">
+            <!-- Dynamically generated by JavaScript -->
+        </thead>
+        <tbody id="replicationTableBody">
+            <!-- Dynamically generated by JavaScript -->
+        </tbody>
+    </table>
+</div>
+
+<!-- ================================================================ -->
+<!-- MODAL - Add/Edit Form                                           -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modalTitle">Add <span class="gold">Item</span></h3>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <!-- Dynamic form content -->
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- VIEW MODAL - Detail View                                        -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="viewModalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="viewModalTitle">View <span class="gold">Item</span></h3>
+            <button class="modal-close" onclick="closeViewModal()">×</button>
+        </div>
+        <div class="modal-body" id="viewModalBody">
+            <div class="detail-view" id="viewModalContent">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- JAVASCRIPT                                                      -->
+<!-- ================================================================ -->
+<script>
+    (function() {
+        'use strict';
+
+        // ================================================================
+        // STATE
+        // ================================================================
+
+        var allResources = [];
+        var allTemplates = [];
+        var allLessons = [];
+        var currentTab = 'resources';
+        var editingItem = null;
+
+        // ================================================================
+        // DOM REFS
+        // ================================================================
+
+        var tabsContainer = document.getElementById('replicationTabs');
+        var tableHead = document.getElementById('replicationTableHead');
+        var tableBody = document.getElementById('replicationTableBody');
+        var modalOverlay = document.getElementById('modalOverlay');
+        var modalTitle = document.getElementById('modalTitle');
+        var modalBody = document.getElementById('modalBody');
+        var viewModalOverlay = document.getElementById('viewModalOverlay');
+        var viewModalTitle = document.getElementById('viewModalTitle');
+        var viewModalContent = document.getElementById('viewModalContent');
+        var loaderOverlay = document.getElementById('loaderOverlay');
+        var addBtn = document.getElementById('addBtn');
+
+        // ================================================================
+        // LOAD DATA
+        // ================================================================
+
+        function loadData() {
+            showLoader();
+
+            var promises = [
+                fetch('/api/replication-resources/', { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).then(r => r.json()),
+                fetch('/api/replication-templates/', { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).then(r => r.json()),
+                fetch('/api/replication-lessons/', { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).then(r => r.json())
+            ];
+
+            Promise.all(promises)
+                .then(function(results) {
+                    allResources = results[0] || [];
+                    allTemplates = results[1] || [];
+                    allLessons = results[2] || [];
+                    renderTabs();
+                    renderTable();
+                    hideLoader();
+                })
+                .catch(function(error) {
+                    console.error('Error loading replication data:', error);
+                    allResources = [];
+                    allTemplates = [];
+                    allLessons = [];
+                    renderTabs();
+                    renderTable();
+                    hideLoader();
+                    showToast('Error', 'Failed to load replication data. Please refresh the page.', 'error');
+                });
+        }
+
+        // ================================================================
+        // RENDER TABS
+        // ================================================================
+
+        function renderTabs() {
+            if (!tabsContainer) return;
+
+            var tabs = [
+                { type: 'resources', label: 'Resources', count: allResources.length },
+                { type: 'templates', label: 'Templates', count: allTemplates.length },
+                { type: 'lessons', label: 'Lessons', count: allLessons.length }
+            ];
+
+            var html = '';
+            tabs.forEach(function(tab) {
+                var active = currentTab === tab.type ? 'active' : '';
+                html += `
+                    <button class="tab-btn ${active}" onclick="switchTab('${tab.type}', this)">
+                        ${tab.label}
+                        <span class="tab-count">${tab.count}</span>
+                    </button>
+                `;
+            });
+
+            tabsContainer.innerHTML = html;
+            updateAddButton();
+        }
+
+        // ================================================================
+        // SWITCH TAB
+        // ================================================================
+
+        window.switchTab = function(tab, button) {
+            currentTab = tab;
+
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            if (button) {
+                button.classList.add('active');
+            }
+
+            renderTable();
+            updateAddButton();
+        };
+
+        // ================================================================
+        // UPDATE ADD BUTTON
+        // ================================================================
+
+        function updateAddButton() {
+            if (!addBtn) return;
+
+            var labels = {
+                'resources': 'Add Resource',
+                'templates': 'Add Template',
+                'lessons': 'Add Lesson'
+            };
+
+            addBtn.textContent = labels[currentTab] || 'Add';
+        }
+
+        // ================================================================
+        // RENDER TABLE
+        // ================================================================
+
+        function renderTable() {
+            if (!tableBody || !tableHead) return;
+
+            var data = [];
+            var columns = [];
+
+            switch (currentTab) {
+                case 'resources':
+                    data = allResources;
+                    columns = [
+                        { key: 'file', label: 'File' },
+                        { key: 'title', label: 'Title' },
+                        { key: 'description', label: 'Description' }
+                    ];
+                    break;
+                case 'templates':
+                    data = allTemplates;
+                    columns = [
+                        { key: 'file', label: 'File' },
+                        { key: 'title', label: 'Title' },
+                        { key: 'description', label: 'Description' }
+                    ];
+                    break;
+                case 'lessons':
+                    data = allLessons;
+                    columns = [
+                        { key: 'title', label: 'Title' },
+                        { key: 'description', label: 'Description' },
+                        { key: 'subtext', label: 'Subtext' }
+                    ];
+                    break;
+            }
+
+            // Render table head
+            var headHtml = '<tr>';
+            columns.forEach(function(col) {
+                headHtml += `<th>${col.label}</th>`;
+            });
+            headHtml += '<th>Actions</th></tr>';
+            tableHead.innerHTML = headHtml;
+
+            // Render table body
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="${columns.length + 1}">
+                            <div class="empty-state">
+                                <h4>No items found</h4>
+                                <p>Click "Add" to create your first item.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            var bodyHtml = '';
+            data.forEach(function(item) {
+                var rowHtml = '<tr>';
+
+                columns.forEach(function(col) {
+                    var value = item[col.key] || '-';
+                    var display = '';
+
+                    if (col.key === 'file') {
+                        var fileExt = '';
+                        if (item.file_path) {
+                            var parts = item.file_path.split('.');
+                            fileExt = parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
+                            display = `<span class="file-icon ${fileExt}">${escapeHtml(fileExt)}</span>`;
+                        } else {
+                            display = `<span class="file-icon" style="font-size:0.45rem;">No file</span>`;
+                        }
+                    } else if (col.key === 'subtext') {
+                        display = escapeHtml(value);
+                    } else {
+                        display = escapeHtml(value);
+                    }
+
+                    rowHtml += `<td>${display}</td>`;
+                });
+
+                // Actions
+                rowHtml += `
+                    <td>
+                        <div class="actions">
+                            <button class="btn-view-sm" onclick="viewItem(${item.id})">View</button>
+                            <button class="btn-edit-sm" onclick="editItem(${item.id})">Edit</button>
+                            <button class="btn-delete-sm" onclick="deleteItem(${item.id})">Delete</button>
+                        </div>
+                    </td>
+                `;
+
+                rowHtml += '</tr>';
+                bodyHtml += rowHtml;
+            });
+
+            tableBody.innerHTML = bodyHtml;
+        }
+
+        // ================================================================
+        // FILTER TABLE (Search)
+        // ================================================================
+
+        window.filterTable = function() {
+            var searchInput = document.getElementById('replicationSearch');
+            var searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            var rows = tableBody ? tableBody.querySelectorAll('tr') : [];
+
+            rows.forEach(function(row) {
+                var text = row.textContent.toLowerCase();
+                row.style.display = text.indexOf(searchTerm) > -1 ? '' : 'none';
+            });
+        };
+
+        // ================================================================
+        // OPEN MODAL
+        // ================================================================
+
+        window.openModal = function(id) {
+            editingItem = id;
+
+            if (id) {
+                var endpoint = getApiEndpoint(currentTab) + id;
+                modalTitle.innerHTML = 'Edit <span class="gold">' + getLabel(currentTab) + '</span>';
+                fetch(endpoint, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        modalBody.innerHTML = buildForm(data);
+                        modalOverlay.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                        setupFileUpload();
+                    })
+                    .catch(function() {
+                        modalBody.innerHTML = buildForm(null);
+                        modalOverlay.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                        setupFileUpload();
+                    });
+            } else {
+                modalTitle.innerHTML = 'Add <span class="gold">' + getLabel(currentTab) + '</span>';
+                modalBody.innerHTML = buildForm(null);
+                modalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                setupFileUpload();
+            }
+        };
+
+        // ================================================================
+        // EDIT ITEM
+        // ================================================================
+
+        window.editItem = function(id) {
+            openModal(id);
+        };
+
+        // ================================================================
+        // HELPERS
+        // ================================================================
+
+        function getApiEndpoint(tab) {
+            var endpoints = {
+                'resources': '/api/replication-resources/',
+                'templates': '/api/replication-templates/',
+                'lessons': '/api/replication-lessons/'
+            };
+            return endpoints[tab] || '/api/replication-resources/';
+        }
+
+        function getLabel(tab) {
+            var labels = {
+                'resources': 'Resource',
+                'templates': 'Template',
+                'lessons': 'Lesson'
+            };
+            return labels[tab] || 'Item';
+        }
+
+        // ================================================================
+        // BUILD FORM
+        // ================================================================
+
+        function buildForm(data) {
+            var isEdit = !!data;
+            var tab = currentTab;
+
+            var html = `<form id="replicationForm" enctype="multipart/form-data">`;
+
+            // Title (common)
+            html += `
+                <div class="form-group">
+                    <label>Title <span class="required">*</span></label>
+                    <input type="text" id="formTitle" value="${escapeHtml(data ? data.title : '')}" placeholder="Enter title" required>
+                </div>
+            `;
+
+            if (tab === 'resources' || tab === 'templates') {
+                // Resources & Templates - with file upload
+                html += `
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="formDescription" placeholder="Enter description">${escapeHtml(data ? data.description : '')}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>File <span class="required">*</span></label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <span class="upload-icon">↑</span>
+                            <div class="upload-text">
+                                <strong>Click to upload</strong> or drag and drop
+                            </div>
+                            <div class="upload-hint">PDF, DOCX, DOC, PPT, PPTX, XLS, XLSX, ZIP, PNG, JPG, JPEG, GIF, WEBP, SVG (Max 20MB)</div>
+                            <input type="file" id="replicationFile" accept=".pdf,.docx,.doc,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.7z,.png,.jpg,.jpeg,.gif,.webp,.svg">
+                        </div>
+                        <div id="filePreview" style="display:none;"></div>
+                        ${data && data.file_path ? `
+                            <div class="file-preview-container" id="existingFileContainer">
+                                <span class="file-icon-lg ${data.file_path.split('.').pop().toLowerCase()}">${escapeHtml(data.file_path.split('.').pop().toLowerCase())}</span>
+                                <div class="file-info">
+                                    ${escapeHtml(data.file_path.split('/').pop())}
+                                    <span class="file-size">Current file</span>
+                                </div>
+                                <button type="button" class="btn-remove-file" onclick="removeExistingFile()">Remove</button>
+                            </div>
+                            <input type="hidden" id="removeFileFlag" value="false">
+                        ` : ''}
+                    </div>
+                `;
+            } else if (tab === 'lessons') {
+                // Lessons - text only
+                html += `
+                    <div class="form-group">
+                        <label>Description <span class="required">*</span></label>
+                        <textarea id="formDescription" placeholder="Enter description" required>${escapeHtml(data ? data.description : '')}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Content</label>
+                        <textarea id="formContent" placeholder="Enter detailed lesson content">${escapeHtml(data ? data.content : '')}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Subtext</label>
+                        <input type="text" id="formSubtext" value="${escapeHtml(data ? data.subtext : '')}" placeholder="Short summary or subtitle">
+                    </div>
+                `;
+            }
+
+            html += `
+                    <div class="form-actions">
+                        <button type="button" class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+                        <button type="button" class="btn-modal-save" onclick="saveItem()">Save</button>
+                    </div>
+                </form>
+            `;
+
+            return html;
+        }
+
+        // ================================================================
+        // REMOVE EXISTING FILE
+        // ================================================================
+
+        window.removeExistingFile = function() {
+            var container = document.getElementById('existingFileContainer');
+            var removeFlag = document.getElementById('removeFileFlag');
+            if (container) {
+                container.style.display = 'none';
+            }
+            if (removeFlag) {
+                removeFlag.value = 'true';
+            }
+        };
+
+        // ================================================================
+        // SETUP FILE UPLOAD
+        // ================================================================
+
+        function setupFileUpload() {
+            var fileInput = document.getElementById('replicationFile');
+            var uploadArea = document.getElementById('fileUploadArea');
+
+            if (!fileInput || !uploadArea) return;
+
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    var file = this.files[0];
+                    var previewContainer = document.getElementById('filePreview');
+                    var existingContainer = document.getElementById('existingFileContainer');
+
+                    if (existingContainer) {
+                        existingContainer.style.display = 'none';
+                    }
+
+                    var fileExt = '';
+                    var parts = file.name.split('.');
+                    fileExt = parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
+
+                    previewContainer.innerHTML = `
+                        <div class="file-preview-container">
+                            <span class="file-icon-lg ${fileExt}">${escapeHtml(fileExt)}</span>
+                            <div class="file-info">
+                                ${escapeHtml(file.name)}
+                                <span class="file-size">${formatFileSize(file.size)}</span>
+                            </div>
+                            <button type="button" class="btn-remove-file" onclick="removeNewFile()">Remove</button>
+                        </div>
+                    `;
+                    previewContainer.style.display = 'block';
+                }
+            });
+
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    fileInput.files = e.dataTransfer.files;
+                    fileInput.dispatchEvent(new Event('change'));
+                }
+            });
+        }
+
+        // ================================================================
+        // REMOVE NEW FILE
+        // ================================================================
+
+        window.removeNewFile = function() {
+            var fileInput = document.getElementById('replicationFile');
+            var previewContainer = document.getElementById('filePreview');
+            fileInput.value = '';
+            previewContainer.style.display = 'none';
+            previewContainer.innerHTML = '';
+        };
+
+        // ================================================================
+        // SAVE ITEM
+        // ================================================================
+
+        window.saveItem = function() {
+            var tab = currentTab;
+            var formData = new FormData();
+            var endpoint = getApiEndpoint(tab);
+            var method = 'POST';
+
+            if (editingItem) {
+                endpoint = endpoint + editingItem;
+                method = 'PUT';
+            }
+
+            // Common field: title
+            var title = document.getElementById('formTitle').value.trim();
+            if (!title) {
+                showToast('Validation Error', 'Title is required.', 'error');
+                return;
+            }
+            formData.append('title', title);
+
+            if (tab === 'resources' || tab === 'templates') {
+                // Resources & Templates - with file upload
+                var description = document.getElementById('formDescription').value.trim();
+                if (description) {
+                    formData.append('description', description);
+                }
+
+                var fileInput = document.getElementById('replicationFile');
+                if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                    formData.append('file', fileInput.files[0]);
+                }
+
+                // Check if file was removed
+                var removeFlag = document.getElementById('removeFileFlag');
+                if (removeFlag && removeFlag.value === 'true') {
+                    formData.append('remove_file', 'true');
+                }
+
+                // Validate: file is required for new items
+                if (!editingItem && (!fileInput || !fileInput.files || fileInput.files.length === 0)) {
+                    showToast('Validation Error', 'A file is required.', 'error');
+                    return;
+                }
+
+            } else if (tab === 'lessons') {
+                // Lessons - text only
+                var description = document.getElementById('formDescription').value.trim();
+                if (!description) {
+                    showToast('Validation Error', 'Description is required.', 'error');
+                    return;
+                }
+                formData.append('description', description);
+
+                var content = document.getElementById('formContent').value.trim();
+                if (content) {
+                    formData.append('content', content);
+                }
+
+                var subtext = document.getElementById('formSubtext').value.trim();
+                if (subtext) {
+                    formData.append('subtext', subtext);
+                }
+            }
+
+            var csrfToken = getCsrfToken();
+
+            fetch(endpoint, {
+                method: method,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                },
+                body: formData
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    closeModal();
+                    loadData();
+                    var action = editingItem ? 'updated' : 'created';
+                    showToast(getLabel(tab) + ' ' + action, result.message || getLabel(tab) + ' ' + action + ' successfully', 'success');
+                } else {
+                    showToast('Error', result.message || result.error || 'Error saving item. Please try again.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error saving:', error);
+                showToast('Error', 'An error occurred. Please try again.', 'error');
+            });
+        };
+
+        // ================================================================
+        // VIEW ITEM
+        // ================================================================
+
+        window.viewItem = function(id) {
+            var endpoint = getApiEndpoint(currentTab) + id;
+
+            fetch(endpoint, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                var html = buildDetailView(data);
+                viewModalContent.innerHTML = html;
+                viewModalTitle.innerHTML = 'View <span class="gold">' + getLabel(currentTab) + '</span>';
+                viewModalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            })
+            .catch(function(error) {
+                console.error('Error loading item:', error);
+                showToast('Error', 'Could not load item details.', 'error');
+            });
+        };
+
+        // ================================================================
+        // BUILD DETAIL VIEW
+        // ================================================================
+
+        function buildDetailView(data) {
+            var tab = currentTab;
+            var html = '';
+
+            if (tab === 'resources' || tab === 'templates') {
+                var fileHtml = '';
+                if (data.file_path) {
+                    var fileName = data.file_path.split('/').pop();
+                    var fileExt = '';
+                    var parts = data.file_path.split('.');
+                    fileExt = parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
+                    fileHtml = `
+                        <a href="/static/${escapeHtml(data.file_path)}" class="file-link" target="_blank" rel="noopener">
+                            Download File
+                            <span style="font-size:0.7rem;">${escapeHtml(fileName)}</span>
+                        </a>
+                    `;
+                } else {
+                    fileHtml = '<span style="color:var(--text-light);font-size:0.85rem;">No file uploaded</span>';
+                }
+
+                html = `
+                    <div class="detail-row">
+                        <span class="detail-label">Title</span>
+                        <span class="detail-value"><strong>${escapeHtml(data.title)}</strong></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Description</span>
+                        <span class="detail-value">${escapeHtml(data.description || '-')}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">File</span>
+                        <span class="detail-value">${fileHtml}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Created</span>
+                        <span class="detail-value">${formatDate(data.created_at)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Updated</span>
+                        <span class="detail-value">${formatDate(data.updated_at)}</span>
+                    </div>
+                `;
+            } else if (tab === 'lessons') {
+                html = `
+                    <div class="detail-row">
+                        <span class="detail-label">Title</span>
+                        <span class="detail-value"><strong>${escapeHtml(data.title)}</strong></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Description</span>
+                        <span class="detail-value">${escapeHtml(data.description || '-')}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Content</span>
+                        <span class="detail-value">${escapeHtml(data.content || '-')}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Subtext</span>
+                        <span class="detail-value">${escapeHtml(data.subtext || '-')}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Created</span>
+                        <span class="detail-value">${formatDate(data.created_at)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Updated</span>
+                        <span class="detail-value">${formatDate(data.updated_at)}</span>
+                    </div>
+                `;
+            }
+
+            html += `
+                <div class="detail-actions">
+                    <button class="btn-modal-close" onclick="closeViewModal()">Close</button>
+                    <button class="btn-modal-save" onclick="closeViewModal();editItem(${data.id});">Edit</button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // ================================================================
+        // DELETE ITEM
+        // ================================================================
+
+        window.deleteItem = function(id) {
+            if (!confirm('Are you sure you want to delete this item? This action cannot be undone.')) return;
+
+            var endpoint = getApiEndpoint(currentTab) + id;
+            var csrfToken = getCsrfToken();
+
+            fetch(endpoint, {
+                method: 'DELETE',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    loadData();
+                    showToast(getLabel(currentTab) + ' deleted', result.message || getLabel(currentTab) + ' deleted successfully', 'success');
+                } else {
+                    showToast('Error', result.message || result.error || 'Error deleting item.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error deleting:', error);
+                showToast('Error', 'An error occurred. Please try again.', 'error');
+            });
+        };
+
+        // ================================================================
+        // CLOSE MODAL
+        // ================================================================
+
+        window.closeModal = function() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            editingItem = null;
+        };
+
+        window.closeViewModal = function() {
+            viewModalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        viewModalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeViewModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeViewModal();
+            }
+        });
+
+        // ================================================================
+        // CSRF TOKEN
+        // ================================================================
+
+        function getCsrfToken() {
+            if (window.getCsrfToken && typeof window.getCsrfToken === 'function') {
+                return window.getCsrfToken();
+            }
+            var metaTag = document.querySelector('meta[name="csrf-token"]');
+            if (metaTag) {
+                return metaTag.getAttribute('content');
+            }
+            var cookieValue = document.cookie.match(/csrf_token=([^;]+)/);
+            if (cookieValue) {
+                return cookieValue[1];
+            }
+            return '';
+        }
+
+        // ================================================================
+        // LOADER
+        // ================================================================
+
+        function showLoader() {
+            if (loaderOverlay) {
+                loaderOverlay.classList.remove('hidden');
+                loaderOverlay.style.display = 'flex';
+            }
+        }
+
+        function hideLoader() {
+            if (loaderOverlay) {
+                loaderOverlay.classList.add('hidden');
+                setTimeout(function() {
+                    loaderOverlay.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        // ================================================================
+        // TOAST NOTIFICATIONS
+        // ================================================================
+
+        function showToast(title, message, type, duration) {
+            type = type || 'success';
+            duration = duration || 4000;
+
+            var container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            var icons = {
+                'success': '✓',
+                'error': '✗',
+                'warning': '⚠',
+                'info': 'ℹ'
+            };
+
+            var toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || 'ℹ'}</span>
+                <div class="toast-content">
+                    <div class="toast-title">${escapeHtml(title)}</div>
+                    <div class="toast-message">${escapeHtml(message)}</div>
+                </div>
+                <button class="toast-close" onclick="dismissToast(this.parentElement)">✕</button>
+                <div class="toast-progress"><div class="toast-progress-bar" style="animation-duration:${duration}ms;"></div></div>
+            `;
+
+            container.appendChild(toast);
+
+            var timeout = setTimeout(function() {
+                dismissToast(toast);
+            }, duration);
+
+            toast.addEventListener('mouseenter', function() {
+                clearTimeout(timeout);
+                var progressBar = toast.querySelector('.toast-progress-bar');
+                if (progressBar) {
+                    progressBar.style.animationPlayState = 'paused';
+                }
+            });
+
+            toast.addEventListener('mouseleave', function() {
+                var progressBar = toast.querySelector('.toast-progress-bar');
+                if (progressBar) {
+                    progressBar.style.animationPlayState = 'running';
+                }
+                timeout = setTimeout(function() {
+                    dismissToast(toast);
+                }, duration);
+            });
+        }
+
+        window.dismissToast = function(toast) {
+            if (!toast || toast.classList.contains('hiding')) return;
+            toast.classList.add('hiding');
+            setTimeout(function() {
+                if (toast.parentElement) {
+                    toast.parentElement.removeChild(toast);
+                }
+            }, 400);
+        };
+
+        // ================================================================
+        // HELPERS
+        // ================================================================
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            try {
+                var d = new Date(dateStr);
+                return d.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        // ================================================================
+        // INITIALIZE
+        // ================================================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            console.log('BRIDGE-AI Kenya Replication Admin initialized');
+        });
+
+    })();
+</script>
+
+{% endblock %}

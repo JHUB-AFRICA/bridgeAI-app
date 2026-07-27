@@ -1,0 +1,2146 @@
+<!-- ================================================================ -->
+<!-- SMART MUSHROOMS PAGE — BRIDGE-AI KENYA                          -->
+<!-- ================================================================ -->
+<!-- Purpose: Document the Kenya pilot and explain the solution      -->
+<!-- to farmers and technical audiences.                             -->
+<!-- Content: Problem statement, solution architecture, sensors,     -->
+<!-- digital shadows, training targets, pilot site, FAQs, gallery,  -->
+<!-- progress updates.                                              -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Mushrooms — BRIDGE-AI Kenya</title>
+    <meta name="description" content="Smart Mushroom pilot at JKUAT: GenAI, IoT sensors, and digital shadows for sustainable mushroom farming in Kenya.">
+
+    <style>
+        /* ================================================================ */
+        /* PAGE LOADER — "germinating" bloom, not a generic spinner        */
+        /* ================================================================ */
+        #page-loader {
+            position: fixed;
+            inset: 0;
+            background: #F7F2E6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        #page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-bloom {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader-bloom .bloom-core {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #7C4FA3;
+            z-index: 2;
+        }
+
+        .loader-bloom .bloom-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1.5px solid rgba(124, 79, 163, 0.55);
+            animation: bloomOut 1.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+        }
+
+        .loader-bloom .bloom-ring:nth-child(2) { animation-delay: 0s; }
+        .loader-bloom .bloom-ring:nth-child(3) { animation-delay: 0.6s; }
+        .loader-bloom .bloom-ring:nth-child(4) { animation-delay: 1.2s; }
+
+        @keyframes bloomOut {
+            0%   { transform: scale(0.15); opacity: 0.9; border-color: rgba(124, 79, 163, 0.7); }
+            80%  { opacity: 0.15; }
+            100% { transform: scale(1); opacity: 0; border-color: rgba(62, 107, 69, 0.4); }
+        }
+
+        #page-loader p {
+            margin-top: 22px;
+            font-size: 0.68rem;
+            color: #6E7767;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        #page-loader p::after {
+            content: '';
+            display: inline-block;
+            width: 1ch;
+            animation: loaderDots 1.4s steps(4) infinite;
+        }
+
+        @keyframes loaderDots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75%, 100% { content: '...'; }
+        }
+
+        /* ================================================================ */
+        /* IMPORTS & VARIABLES                                             */
+        /* ================================================================ */
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,380;0,9..144,520;0,9..144,600;1,9..144,420;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+        :root {
+            --ink:            #16211A;
+            --ink-soft:       #37453A;
+            --paper:          #F7F2E6;
+            --paper-alt:      #EFE6CE;
+            --paper-card:     #FFFDF7;
+            --moss:           #23402A;
+            --moss-deep:      #12201A;
+            --moss-mid:       #3E6B45;
+            --moss-bright:    #7CAE81;
+            --growlight:      #7C4FA3;
+            --growlight-deep: #4E3168;
+            --growlight-tint: rgba(124, 79, 163, 0.09);
+            --growlight-light: rgba(124, 79, 163, 0.045);
+            --spore:          #B85A2E;
+            --spore-tint:     rgba(184, 90, 46, 0.1);
+            --mist:           #6E7767;
+            --line:           #E3DAC5;
+            --line-soft:      #ECE3CC;
+            --line-on-dark:   rgba(247, 242, 230, 0.14);
+
+            --font-display: 'Fraunces', 'Iowan Old Style', serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+            --shadow-sm: 0 2px 10px rgba(18, 32, 26, 0.05);
+            --shadow-md: 0 14px 34px rgba(18, 32, 26, 0.09);
+            --shadow-lg: 0 28px 70px rgba(18, 32, 26, 0.14);
+
+            --radius-sm: 7px;
+            --radius-md: 14px;
+            --radius-lg: 24px;
+            --transition: 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--ink-soft);
+            background: var(--paper);
+            line-height: 1.65;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        img { max-width: 100%; height: auto; display: block; }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        ::selection { background: var(--growlight); color: #fff; }
+
+        /* ================================================================ */
+        /* SHARED MYCELIUM-THREAD MOTIF (signature element)                 */
+        /* A branching line-and-node pattern used sparingly as a watermark  */
+        /* — it echoes both the literal fungal network and the sensor mesh.*/
+        /* ================================================================ */
+        .thread-field {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .thread-field svg { width: 100%; height: 100%; }
+
+        /* ================================================================ */
+        /* EYEBROW                                                         */
+        /* ================================================================ */
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--moss-mid);
+        }
+
+        .eyebrow::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--growlight);
+            flex-shrink: 0;
+            box-shadow: 0 0 0 3px var(--growlight-light);
+        }
+
+        .eyebrow.centered { justify-content: center; }
+        .eyebrow.on-dark { color: rgba(247, 242, 230, 0.72); }
+        .eyebrow.on-dark::before { background: #C89BE8; box-shadow: 0 0 0 3px rgba(200, 155, 232, 0.15); }
+
+        /* ================================================================ */
+        /* SECTION COMMON                                                  */
+        /* ================================================================ */
+        .section { padding: 96px 0; position: relative; }
+        .section-alt { background: var(--paper-alt); }
+        .section-dark { background: var(--moss-deep); color: var(--paper); }
+
+        .section-header {
+            margin-bottom: 52px;
+            max-width: 720px;
+        }
+
+        .section-header.centered {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-display);
+            font-size: 2.75rem;
+            font-weight: 560;
+            font-optical-sizing: auto;
+            color: var(--ink);
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+            margin-top: 10px;
+        }
+
+        .section-header h2 .highlight { font-style: italic; font-weight: 420; color: var(--moss); }
+        .section-header h2 .highlight.purple { color: var(--growlight-deep); }
+        .section-header h2 .highlight.clay { color: var(--spore); }
+
+        .section-header p {
+            color: var(--mist);
+            font-size: 1.06rem;
+            margin-top: 14px;
+            line-height: 1.7;
+        }
+
+        .section-dark .section-header h2 { color: var(--paper); }
+        .section-dark .section-header p { color: rgba(247, 242, 230, 0.7); }
+
+        /* ================================================================ */
+        /* PAGE HERO — two true halves, image right, live readout strip   */
+        /* ================================================================ */
+        .page-hero {
+            position: relative;
+            padding: 0;
+            background: var(--paper-card);
+            border-bottom: 1px solid var(--line);
+            overflow: hidden;
+        }
+
+        .page-hero .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 640px;
+        }
+
+        .page-hero .hero-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 72px 56px 72px 24px;
+            max-width: 620px;
+            margin-left: auto;
+            z-index: 2;
+        }
+
+        .page-hero .hero-content h1 {
+            font-family: var(--font-display);
+            font-size: 3.6rem;
+            font-weight: 560;
+            font-optical-sizing: auto;
+            color: var(--ink);
+            line-height: 1.02;
+            letter-spacing: -0.015em;
+            margin: 14px 0 18px;
+        }
+
+        .page-hero .hero-content h1 .highlight { font-style: italic; font-weight: 420; color: var(--moss); }
+
+        .page-hero .hero-content .hero-description {
+            font-size: 1.08rem;
+            color: var(--ink-soft);
+            line-height: 1.65;
+            max-width: 480px;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 14px 30px;
+            background: var(--moss);
+            color: var(--paper);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 50px;
+            transition: all 0.35s var(--transition);
+            border: 1px solid var(--moss);
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--moss-deep);
+            border-color: var(--moss-deep);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(18, 32, 26, 0.25);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 14px 30px;
+            background: transparent;
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 50px;
+            border: 1.5px solid var(--line);
+            transition: all 0.35s var(--transition);
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--growlight);
+            color: var(--growlight-deep);
+            background: var(--growlight-tint);
+        }
+
+        .btn-outline-light {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 14px 32px;
+            background: transparent;
+            color: var(--paper);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 50px;
+            border: 1.5px solid rgba(247, 242, 230, 0.3);
+            transition: all 0.35s var(--transition);
+            cursor: pointer;
+        }
+
+        .btn-outline-light:hover {
+            border-color: var(--paper);
+            background: rgba(247, 242, 230, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            width: 17px;
+            height: 17px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        /* ─── Live readout strip: the hero's "thesis" — real sensor data,
+               not a decorative stat block ─── */
+        .hero-readout {
+            display: flex;
+            gap: 0;
+            border-top: 1px solid var(--line);
+            padding-top: 20px;
+            max-width: 480px;
+        }
+
+        .hero-readout .readout-item {
+            flex: 1;
+            padding-right: 18px;
+        }
+
+        .hero-readout .readout-item + .readout-item {
+            padding-left: 18px;
+            border-left: 1px solid var(--line);
+        }
+
+        .hero-readout .readout-label {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--mist);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .hero-readout .readout-label .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--moss-bright);
+            box-shadow: 0 0 0 2px rgba(124, 174, 129, 0.25);
+        }
+
+        .hero-readout .readout-value {
+            font-family: var(--font-mono);
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--ink);
+            margin-top: 4px;
+        }
+
+        .hero-readout .readout-value span {
+            font-size: 0.7rem;
+            color: var(--mist);
+            font-weight: 500;
+        }
+
+        /* ─── Hero Image half ─── */
+        .page-hero .hero-image {
+            position: relative;
+            overflow: hidden;
+            background: var(--moss-deep);
+            min-height: 420px;
+        }
+
+        .page-hero .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-height: 420px;
+            position: absolute;
+            inset: 0;
+        }
+
+        .page-hero .hero-image .image-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 30% 20%, rgba(124, 79, 163, 0.35), transparent 55%),
+                radial-gradient(circle at 75% 80%, rgba(62, 107, 69, 0.4), transparent 55%),
+                var(--moss-deep);
+            color: var(--paper);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.85;
+            position: relative;
+        }
+
+        .page-hero .hero-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(200deg, transparent 55%, rgba(18, 32, 26, 0.55) 100%);
+            pointer-events: none;
+        }
+
+        .hero-image-badge {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            z-index: 3;
+            background: rgba(18, 32, 26, 0.55);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(247, 242, 230, 0.2);
+            color: var(--paper);
+            padding: 10px 16px;
+            border-radius: 50px;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-image-badge .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #7ED957;
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* ================================================================ */
+        /* PROBLEM STATEMENT                                               */
+        /* ================================================================ */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 56px;
+            align-items: start;
+        }
+
+        .problem-text p {
+            font-size: 1.03rem;
+            line-height: 1.8;
+            margin-bottom: 16px;
+            color: var(--ink-soft);
+        }
+
+        .problem-text ul {
+            margin: 14px 0 18px 0;
+            list-style: none;
+        }
+
+        .problem-text ul li {
+            position: relative;
+            padding-left: 22px;
+            color: var(--ink-soft);
+            line-height: 1.9;
+        }
+
+        .problem-text ul li::before {
+            content: '';
+            position: absolute;
+            left: 2px;
+            top: 12px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--spore);
+        }
+
+        .problem-text .problem-highlight {
+            background: var(--growlight-light);
+            padding: 22px 26px;
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--growlight);
+            margin-top: 20px;
+        }
+
+        .problem-text .problem-highlight p {
+            margin-bottom: 0;
+            font-weight: 500;
+            color: var(--ink);
+        }
+
+        .problem-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .problem-stat {
+            background: var(--paper-card);
+            padding: 22px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--line);
+            text-align: center;
+            transition: border-color 0.3s var(--transition);
+        }
+
+        .problem-stat:hover { border-color: var(--growlight); }
+
+        .problem-stat .stat-number {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 560;
+            color: var(--moss);
+            display: block;
+            letter-spacing: -0.02em;
+        }
+
+        .problem-stat .stat-label {
+            font-size: 0.73rem;
+            color: var(--mist);
+            font-weight: 500;
+            margin-top: 6px;
+        }
+
+        .problem-stat .stat-number .accent { color: var(--growlight-deep); }
+
+        /* ================================================================ */
+        /* SOLUTION ARCHITECTURE — a connected pipeline (order carries      */
+        /* real meaning here, so numbering is justified)                    */
+        /* ================================================================ */
+        .architecture-flow {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0;
+            margin-bottom: 56px;
+            padding: 8px 0 28px;
+        }
+
+        .architecture-flow::before {
+            content: '';
+            position: absolute;
+            top: 32px;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: repeating-linear-gradient(90deg, var(--growlight) 0 6px, transparent 6px 12px);
+            opacity: 0.5;
+        }
+
+        .arch-step {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .arch-step .step-icon {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: var(--paper-card);
+            border: 1.5px solid var(--growlight);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--growlight-deep);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s var(--transition);
+        }
+
+        .arch-step:hover .step-icon {
+            background: var(--growlight);
+            color: #fff;
+            transform: scale(1.08);
+        }
+
+        .arch-step .step-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: 0.02em;
+            display: block;
+        }
+
+        .arch-step .step-desc {
+            font-size: 0.68rem;
+            color: var(--mist);
+            margin-top: 4px;
+        }
+
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .component-card {
+            background: var(--paper-card);
+            padding: 30px 26px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--line);
+            transition: all 0.3s var(--transition);
+        }
+
+        .component-card:hover {
+            border-color: var(--growlight);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-3px);
+        }
+
+        .component-card .comp-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: var(--growlight-tint);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            color: var(--growlight-deep);
+            font-weight: 600;
+            font-size: 0.68rem;
+            font-family: var(--font-mono);
+        }
+
+        .component-card h4 {
+            font-family: var(--font-display);
+            font-size: 1.12rem;
+            font-weight: 560;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .component-card p {
+            font-size: 0.88rem;
+            color: var(--mist);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* ================================================================ */
+        /* SENSORS GRID                                                    */
+        /* ================================================================ */
+        .sensors-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .sensor-card {
+            background: var(--paper-card);
+            padding: 26px 24px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--line);
+            transition: all 0.3s var(--transition);
+        }
+
+        .sensor-card:hover {
+            border-color: var(--spore);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sensor-card .sensor-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--spore-tint);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            color: var(--spore);
+            font-weight: 600;
+            font-size: 0.65rem;
+            font-family: var(--font-mono);
+        }
+
+        .sensor-card h4 {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 560;
+            color: var(--ink);
+            margin-bottom: 5px;
+        }
+
+        .sensor-card .sensor-range {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--growlight-deep);
+            font-weight: 500;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .sensor-card p {
+            font-size: 0.86rem;
+            color: var(--mist);
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        /* ================================================================ */
+        /* DIGITAL SHADOWS                                                 */
+        /* ================================================================ */
+        .shadow-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .shadow-card {
+            position: relative;
+            background: var(--paper-card);
+            padding: 34px 30px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--line);
+            transition: all 0.3s var(--transition);
+            overflow: hidden;
+        }
+
+        .shadow-card:hover {
+            border-color: var(--growlight);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
+        }
+
+        .shadow-card .shadow-badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 50px;
+            background: var(--growlight-tint);
+            color: var(--growlight-deep);
+            margin-bottom: 14px;
+        }
+
+        .shadow-card h4 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 560;
+            color: var(--ink);
+            margin-bottom: 10px;
+        }
+
+        .shadow-card p {
+            font-size: 0.92rem;
+            color: var(--mist);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .shadow-card .shadow-features {
+            list-style: none;
+            padding: 0;
+            margin-top: 16px;
+        }
+
+        .shadow-card .shadow-features li {
+            font-size: 0.86rem;
+            color: var(--ink-soft);
+            padding: 5px 0 5px 20px;
+            position: relative;
+        }
+
+        .shadow-card .shadow-features li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 13px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--growlight);
+        }
+
+        /* ================================================================ */
+        /* PILOT SITE                                                      */
+        /* ================================================================ */
+        .pilot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .pilot-image {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: var(--paper-alt);
+            min-height: 320px;
+        }
+
+        .pilot-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-height: 320px;
+        }
+
+        .pilot-image .image-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--moss-deep);
+            color: var(--paper);
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.55;
+        }
+
+        .pilot-info .eyebrow { margin-bottom: 12px; }
+
+        .pilot-info h3 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 560;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .pilot-info .pilot-address {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--mist);
+            margin-bottom: 18px;
+        }
+
+        .pilot-info p {
+            font-size: 0.97rem;
+            color: var(--ink-soft);
+            line-height: 1.75;
+            margin-bottom: 14px;
+        }
+
+        .pilot-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 7px 18px;
+            border-radius: 50px;
+            background: var(--moss-mid);
+            color: var(--paper);
+            margin-top: 6px;
+        }
+
+        .pilot-status .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #7ED957;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* ================================================================ */
+        /* TRAINING TARGETS — line-icon badges, not emoji                  */
+        /* ================================================================ */
+        .training-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .training-card {
+            background: var(--paper-card);
+            padding: 30px 24px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--line);
+            text-align: left;
+            transition: all 0.3s var(--transition);
+        }
+
+        .training-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--moss);
+        }
+
+        .training-card .training-icon {
+            width: 44px;
+            height: 44px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+            background: var(--growlight-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--moss);
+        }
+
+        .training-card .training-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .training-card h4 {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 560;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+
+        .training-card p {
+            font-size: 0.86rem;
+            color: var(--mist);
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        /* ================================================================ */
+        /* TIMELINE                                                        */
+        /* ================================================================ */
+        .timeline {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 4px;
+            bottom: 4px;
+            width: 1px;
+            background: var(--line);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 32px;
+            padding-left: 26px;
+        }
+
+        .timeline-item:last-child { padding-bottom: 0; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 6px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--paper-card);
+            border: 2px solid var(--growlight);
+        }
+
+        .timeline-item.tl-completed::before { border-color: var(--moss-mid); background: var(--moss-mid); }
+        .timeline-item.tl-active::before { border-color: var(--spore); }
+
+        .timeline-item .tl-period {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--growlight-deep);
+            display: block;
+        }
+
+        .timeline-item h4 {
+            font-family: var(--font-display);
+            font-size: 1.12rem;
+            font-weight: 560;
+            color: var(--ink);
+            margin: 3px 0 5px;
+        }
+
+        .timeline-item p {
+            font-size: 0.92rem;
+            color: var(--mist);
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .timeline-item .tl-status {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 3px 13px;
+            border-radius: 50px;
+            background: var(--growlight-tint);
+            color: var(--growlight-deep);
+            margin-top: 8px;
+        }
+
+        .timeline-item .tl-status.completed {
+            background: var(--moss-mid);
+            color: var(--paper);
+        }
+
+        .timeline-item .tl-status.active {
+            background: var(--spore);
+            color: var(--paper);
+        }
+
+        /* ================================================================ */
+        /* GALLERY SECTION                                                 */
+        /* ================================================================ */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .gallery-item {
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: var(--paper-alt);
+            aspect-ratio: 1/1;
+            transition: all 0.3s var(--transition);
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: var(--shadow-md);
+            z-index: 2;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item .gallery-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--moss-deep);
+            color: var(--paper);
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            opacity: 0.4;
+        }
+
+        /* ================================================================ */
+        /* FAQ ACCORDION                                                   */
+        /* ================================================================ */
+        .faq-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .faq-group-label {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--growlight-deep);
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .faq-item {
+            background: var(--paper-card);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--line);
+            overflow: hidden;
+            transition: all 0.3s var(--transition);
+        }
+
+        .faq-item:hover {
+            border-color: var(--growlight);
+        }
+
+        .faq-item.open {
+            border-color: var(--growlight);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 18px 22px;
+            background: none;
+            border: none;
+            text-align: left;
+            font-family: var(--font-body);
+            font-size: 0.96rem;
+            font-weight: 600;
+            color: var(--ink);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            transition: all 0.3s var(--transition);
+            position: relative;
+        }
+
+        .faq-question:hover {
+            color: var(--growlight-deep);
+        }
+
+        .faq-question .faq-toggle {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            color: var(--growlight);
+            transition: transform 0.3s var(--transition);
+            flex-shrink: 0;
+        }
+
+        .faq-item.open .faq-question .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .faq-answer-inner {
+            padding: 0 22px 20px;
+            font-size: 0.9rem;
+            color: var(--ink-soft);
+            line-height: 1.7;
+        }
+
+        .faq-answer-inner p { margin: 0; }
+
+        .faq-item.open .faq-answer {
+            max-height: 400px;
+        }
+
+        /* ================================================================ */
+        /* CTA SECTION                                                     */
+        /* ================================================================ */
+        .cta-section {
+            text-align: center;
+            padding: 96px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section .container { position: relative; z-index: 2; }
+
+        .cta-section h2 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 560;
+            color: var(--paper);
+            margin-bottom: 14px;
+        }
+
+        .cta-section p {
+            font-size: 1.06rem;
+            color: rgba(247, 242, 230, 0.7);
+            max-width: 520px;
+            margin: 0 auto 34px;
+        }
+
+        .cta-section .cta-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                       */
+        /* ================================================================ */
+        @media (max-width: 1024px) {
+            .page-hero .hero-grid {
+                grid-template-columns: 1fr;
+                min-height: 0;
+            }
+
+            .page-hero .hero-content {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 56px 24px 44px;
+            }
+
+            .page-hero .hero-image { order: -1; min-height: 300px; }
+            .page-hero .hero-image img,
+            .page-hero .hero-image .image-placeholder { min-height: 300px; }
+
+            .page-hero .hero-content h1 { font-size: 2.7rem; }
+
+            .problem-grid { grid-template-columns: 1fr; gap: 36px; }
+            .components-grid { grid-template-columns: repeat(2, 1fr); }
+            .sensors-grid { grid-template-columns: repeat(2, 1fr); }
+            .training-grid { grid-template-columns: repeat(2, 1fr); }
+            .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+            .faq-columns { grid-template-columns: 1fr; gap: 8px; }
+
+            .architecture-flow { grid-template-columns: repeat(3, 1fr); row-gap: 32px; }
+            .architecture-flow::before { display: none; }
+
+            .shadow-grid { grid-template-columns: 1fr; }
+            .pilot-grid { grid-template-columns: 1fr; gap: 28px; }
+
+            .section { padding: 68px 0; }
+            .section-header h2 { font-size: 2.2rem; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 64px; }
+
+            .page-hero .hero-content { padding: 44px 20px 36px; }
+            .page-hero .hero-content h1 { font-size: 2.1rem; }
+            .page-hero .hero-content .hero-description { font-size: 0.96rem; }
+            .hero-readout { max-width: 100%; }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .hero-buttons .btn-primary,
+            .hero-buttons .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .cta-section .cta-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .cta-section .cta-buttons .btn-primary,
+            .cta-section .cta-buttons .btn-outline-light {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .components-grid { grid-template-columns: 1fr; }
+            .sensors-grid { grid-template-columns: 1fr; }
+            .training-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+
+            .architecture-flow { grid-template-columns: 1fr 1fr; }
+
+            .problem-stats { grid-template-columns: 1fr 1fr; }
+
+            .section { padding: 52px 0; }
+            .section-header h2 { font-size: 1.8rem; }
+            .section-header p { font-size: 0.95rem; }
+
+            .timeline { padding-left: 24px; }
+            .timeline-item { padding-left: 18px; }
+
+            .faq-question { padding: 15px 18px; font-size: 0.92rem; }
+            .faq-answer-inner { padding: 0 18px 16px; font-size: 0.87rem; }
+
+            .cta-section h2 { font-size: 1.8rem; }
+        }
+
+        @media (max-width: 480px) {
+            .page-hero .hero-content h1 { font-size: 1.7rem; }
+            .page-hero .hero-content .hero-description { font-size: 0.9rem; }
+
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+            .problem-stats { grid-template-columns: 1fr; }
+            .architecture-flow { grid-template-columns: 1fr 1fr; gap: 24px 6px; }
+
+            .section-header h2 { font-size: 1.55rem; }
+
+            .cta-section h2 { font-size: 1.5rem; }
+            .cta-section p { font-size: 0.95rem; }
+        }
+
+        /* ================================================================ */
+        /* SCROLL REVEAL (subtle, deliberate — one motion idea, used once) */
+        /* ================================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ================================================================ */
+        /* ACCESSIBILITY                                                    */
+        /* ================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+            .reveal { opacity: 1; transform: none; }
+        }
+
+        .btn-primary:focus-visible,
+        .btn-secondary:focus-visible,
+        .btn-outline-light:focus-visible,
+        .faq-question:focus-visible {
+            outline: 2px solid var(--growlight);
+            outline-offset: 2px;
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                        */
+        /* ================================================================ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--paper-alt); }
+        ::-webkit-scrollbar-thumb { background: var(--moss-mid); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--moss); }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADING OVERLAY                                                  -->
+    <!-- ================================================================ -->
+    <div id="page-loader">
+        <div class="loader-bloom">
+            <div class="bloom-core"></div>
+            <div class="bloom-ring"></div>
+            <div class="bloom-ring"></div>
+            <div class="bloom-ring"></div>
+        </div>
+        <p>Cultivating view</p>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                           -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT                                                     -->
+    <!-- ================================================================ -->
+    <main>
+
+        <!-- ============================================================ -->
+        <!-- PAGE HERO                                                     -->
+        <!-- ============================================================ -->
+        <section class="page-hero">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <span class="eyebrow">Kenya Pilot · JKUAT Smart Farm Zone</span>
+                    <h1>Smart <span class="highlight">Mushrooms</span></h1>
+                    <p class="hero-description">
+                        Harnessing Generative AI, IoT sensors, and digital shadows so Kenyan mushroom farmers can grow more, with less risk.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#solution" class="btn-primary">
+                            <svg class="btn-icon" viewBox="0 0 24 24">
+                                <path d="M12 2C8 4 4 7 4 12c0 4 2 7 8 7s8-3 8-7c0-5-4-8-8-10z"/>
+                                <path d="M12 12c-2 0-3-1-3-2s1-2 3-2 3 1 3 2-1 2-3 2z"/>
+                                <path d="M12 14v4"/>
+                                <path d="M10 16h4"/>
+                            </svg>
+                            How It Works
+                        </a>
+                        <a href="{{ url_for('public.training_wp5') }}" class="btn-secondary">
+                            <svg class="btn-icon" viewBox="0 0 24 24">
+                                <path d="M12 6v7m0 0l-2-2m2 2l2-2M4 4v16h16V4H4z"/>
+                                <path d="M8 12h8"/>
+                            </svg>
+                            Our Training activities
+                        </a>
+                    </div>
+                    <div class="hero-readout">
+                        <div class="readout-item">
+                            <span class="readout-label"><span class="dot"></span>Temp</span>
+                            <div class="readout-value">24.6<span>°C</span></div>
+                        </div>
+                        <div class="readout-item">
+                            <span class="readout-label"><span class="dot"></span>Humidity</span>
+                            <div class="readout-value">89<span>%</span></div>
+                        </div>
+                        <div class="readout-item">
+                            <span class="readout-label"><span class="dot"></span>CO₂</span>
+                            <div class="readout-value">712<span>ppm</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    {% set hero_image = namespace(found=false) %}
+                    {% for activity in activities[:5] if not hero_image.found and activity.featured_image %}
+                        {% if 'mushroom' in activity.title.lower() or 'pilot' in activity.title.lower() %}
+                            <img src="{{ url_for('static', filename='uploads/smartmushrooms/DSC_2822-2.jpg') }}" 
+         alt="Smart Mushroom Pilot at JKUAT" 
+         loading="lazy">
+                            {% set hero_image.found = true %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if not hero_image.found %}
+                        <div class="image-placeholder">Smart Mushroom Pilot</div>
+                    {% endif %}
+                    <div class="hero-image-badge"><span class="status-dot"></span>Live at JKUAT</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- PROBLEM STATEMENT                                             -->
+        <!-- ============================================================ -->
+        <section class="section" id="problem">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="eyebrow">The Challenge</span>
+                    <h2>Why <span class="highlight">Smart Mushrooms</span></h2>
+                    <p>Understanding the problems facing Kenyan mushroom farmers.</p>
+                </div>
+                <div class="problem-grid">
+                    <div class="problem-text reveal">
+                        <p>
+                            <strong>Mushroom farming in Kenya is commercially attractive</strong> but highly sensitive to environmental control. Small-scale and peri-urban farms often rely on manual monitoring of temperature, humidity, carbon dioxide and light.
+                        </p>
+                        <p>
+                            This makes it difficult to detect microclimate drift, contamination risk, poor ventilation or conditions that reduce yield. Farmers face challenges with:
+                        </p>
+                        <ul>
+                            <li>Limited real-time data on growing conditions</li>
+                            <li>Early contamination detection</li>
+                            <li>Low adoption of precision tools</li>
+                            <li>Youth and women digital-skills gap</li>
+                            <li>Post-harvest losses</li>
+                        </ul>
+                        <div class="problem-highlight">
+                            <p>
+                                <strong>BRIDGE-AI Kenya is changing this.</strong> Through JKUAT's Smart Mushroom pilot, we're exploring how GenAI, IoT sensors, and digital shadows can help farmers grow more mushrooms with less risk.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="problem-stats reveal">
+                        <div class="problem-stat">
+                            <span class="stat-number">70<span class="accent">%</span></span>
+                            <span class="stat-label">Yield Loss from Poor Conditions</span>
+                        </div>
+                        <div class="problem-stat">
+                            <span class="stat-number">85<span class="accent">%</span></span>
+                            <span class="stat-label">Humidity Required for Growth</span>
+                        </div>
+                        <div class="problem-stat">
+                            <span class="stat-number">400K<span class="accent">+</span></span>
+                            <span class="stat-label">Farmers Reached</span>
+                        </div>
+                        <div class="problem-stat">
+                            <span class="stat-number">3<span class="accent">x</span></span>
+                            <span class="stat-label">Yield Increase Target</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- SOLUTION ARCHITECTURE                                         -->
+        <!-- ============================================================ -->
+        <section class="section section-alt" id="solution">
+            <div class="container">
+                <div class="section-header centered reveal">
+                    <span class="eyebrow centered">How It Works</span>
+                    <h2>Solution <span class="highlight purple">Architecture</span></h2>
+                    <p>From sensors to insights — the complete pipeline behind smart mushroom farming.</p>
+                </div>
+
+                <!-- Flow Diagram: a real pipeline, so the sequence numbering earns its place -->
+                <div class="architecture-flow reveal">
+                    <div class="arch-step">
+                        <div class="step-icon">01</div>
+                        <span class="step-label">Sensors</span>
+                        <span class="step-desc">IoT data collection</span>
+                    </div>
+                    <div class="arch-step">
+                        <div class="step-icon">02</div>
+                        <span class="step-label">Edge</span>
+                        <span class="step-desc">LoRaWAN / Gateway</span>
+                    </div>
+                    <div class="arch-step">
+                        <div class="step-icon">03</div>
+                        <span class="step-label">Cloud</span>
+                        <span class="step-desc">Storage &amp; AI</span>
+                    </div>
+                    <div class="arch-step">
+                        <div class="step-icon">04</div>
+                        <span class="step-label">GenAI</span>
+                        <span class="step-desc">Predict &amp; Detect</span>
+                    </div>
+                    <div class="arch-step">
+                        <div class="step-icon">05</div>
+                        <span class="step-label">Dashboard</span>
+                        <span class="step-desc">Farmer Alerts</span>
+                    </div>
+                </div>
+
+                <!-- Components -->
+                <div class="components-grid">
+                    <div class="component-card reveal">
+                        <div class="comp-icon">AI</div>
+                        <h4>GenAI Predictive Analytics</h4>
+                        <p>Advanced AI models analyze sensor data to predict optimal growing conditions, detect anomalies early, and recommend adjustments before problems occur.</p>
+                    </div>
+                    <div class="component-card reveal">
+                        <div class="comp-icon">IoT</div>
+                        <h4>IoT Sensor Network</h4>
+                        <p>Real-time monitoring of temperature, humidity, CO₂, light and substrate moisture using low-power, long-range LoRaWAN sensors for continuous data collection.</p>
+                    </div>
+                    <div class="component-card reveal">
+                        <div class="comp-icon">DS</div>
+                        <h4>Digital Shadows</h4>
+                        <p>Virtual models of grow rooms that simulate "what-if" scenarios, forecast yields, and provide training simulations for farmers and agritech advisors.</p>
+                    </div>
+                    <div class="component-card reveal">
+                        <div class="comp-icon">DB</div>
+                        <h4>Low-Bandwidth Dashboards</h4>
+                        <p>Farmer-friendly dashboards that work on basic smartphones with low internet connectivity, showing simple alerts and actionable insights.</p>
+                    </div>
+                    <div class="component-card reveal">
+                        <div class="comp-icon">VA</div>
+                        <h4>Virtual Assistants</h4>
+                        <p>Multilingual AI-powered assistants provide farmers with instant advisory support, answering questions about mushroom farming in local languages.</p>
+                    </div>
+                    <div class="component-card reveal">
+                        <div class="comp-icon">FM</div>
+                        <h4>Farmer Advisory Tools</h4>
+                        <p>Practical tools for farmers including SMS alerts, WhatsApp notifications, and simple visual guides to help them act on the data.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- SENSORS & MEASUREMENTS                                        -->
+        <!-- ============================================================ -->
+        <section class="section" id="sensors">
+            <div class="container">
+                <div class="section-header centered reveal">
+                    <span class="eyebrow centered">Technology</span>
+                    <h2>Sensors &amp; <span class="highlight clay">Measurements</span></h2>
+                    <p>What we monitor to keep mushrooms growing optimally.</p>
+                </div>
+                <div class="sensors-grid">
+                    <div class="sensor-card reveal">
+                        <div class="sensor-icon">T°</div>
+                        <h4>Temperature</h4>
+                        <span class="sensor-range">Air: 20–30°C | Substrate: 22–28°C</span>
+                        <p>Critical for mycelial growth and fruiting. Temperature drift can reduce yields or stop growth entirely.</p>
+                    </div>
+                    <div class="sensor-card reveal">
+                        <div class="sensor-icon">H₂O</div>
+                        <h4>Relative Humidity</h4>
+                        <span class="sensor-range">85–95%</span>
+                        <p>Mushrooms require very high humidity. If it drops too low, fruiting bodies dry out and abort.</p>
+                    </div>
+                    <div class="sensor-card reveal">
+                        <div class="sensor-icon">CO₂</div>
+                        <h4>Carbon Dioxide</h4>
+                        <span class="sensor-range">&lt; 1000 ppm</span>
+                        <p>High CO₂ levels inhibit fruiting and cause deformities. Fresh air exchange is essential during fruiting.</p>
+                    </div>
+                    <div class="sensor-card reveal">
+                        <div class="sensor-icon">LX</div>
+                        <h4>Light Intensity</h4>
+                        <span class="sensor-range">500–1000 lx</span>
+                        <p>Light signals mushrooms to initiate fruiting. LED lights (6500K) are used to avoid adding heat.</p>
+                    </div>
+                    <div class="sensor-card reveal">
+                        <div class="sensor-icon">%M</div>
+                        <h4>Substrate Moisture</h4>
+                        <span class="sensor-range">60–70%</span>
+                        <p>Maintains proper hydration for mycelium growth and prevents contamination.</p>
+                    </div>
+                    <div class="sensor-card reveal">
+                        <div class="sensor-icon">WX</div>
+                        <h4>Outdoor Microclimate</h4>
+                        <span class="sensor-range">Weather Data</span>
+                        <p>Optional monitoring of external conditions helps farmers plan and understand environmental impacts.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- DIGITAL SHADOWS                                               -->
+        <!-- ============================================================ -->
+        <section class="section section-alt" id="digital-shadows">
+            <div class="container">
+                <div class="section-header centered reveal">
+                    <span class="eyebrow centered">Digital Twins</span>
+                    <h2>Digital <span class="highlight purple">Shadows</span></h2>
+                    <p>Virtual models that help farmers predict, train and optimize.</p>
+                </div>
+                <div class="shadow-grid">
+                    <div class="shadow-card reveal">
+                        <span class="shadow-badge">Model 01</span>
+                        <h4>Small Peri-Urban Unit</h4>
+                        <p>
+                            A digital shadow designed for small-scale farmers in peri-urban areas. This model simulates growing conditions for limited-space operations.
+                        </p>
+                        <ul class="shadow-features">
+                            <li>What-if scenario testing</li>
+                            <li>Yield forecasting</li>
+                            <li>Training simulations</li>
+                            <li>Resource optimization</li>
+                        </ul>
+                    </div>
+                    <div class="shadow-card reveal">
+                        <span class="shadow-badge">Model 02</span>
+                        <h4>Semi-Commercial Farm</h4>
+                        <p>
+                            A larger digital shadow model for semi-commercial mushroom farms with multiple grow rooms and higher production capacity.
+                        </p>
+                        <ul class="shadow-features">
+                            <li>Multi-room monitoring</li>
+                            <li>Scalable predictions</li>
+                            <li>Business planning tools</li>
+                            <li>Replication playbooks</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- PILOT SITE                                                    -->
+        <!-- ============================================================ -->
+        <section class="section" id="pilot-site">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="eyebrow">Location</span>
+                    <h2>Pilot <span class="highlight">Site</span></h2>
+                    <p>Where the Smart Mushroom innovation is happening.</p>
+                </div>
+                <div class="pilot-grid">
+                    <div class="pilot-image reveal">
+                        {% set pilot_image = namespace(found=false) %}
+                        {% for activity in activities[:10] if not pilot_image.found and activity.featured_image %}
+                            {% if 'smart' in activity.title.lower() or 'mushroom' in activity.title.lower() or 'pilot' in activity.title.lower() %}
+                                <img src="{{ url_for('static', filename='uploads/smartmushrooms/DSC_2830-2.jpg') }}" 
+         alt="JKUAT Smart Farm Zone" 
+         loading="lazy">
+                                {% set pilot_image.found = true %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if not pilot_image.found %}
+                            <div class="image-placeholder">JKUAT Smart Farm Zone</div>
+                        {% endif %}
+                    </div>
+                    <div class="pilot-info reveal">
+                        <span class="eyebrow">Demonstration Farm</span>
+                        <h3>Mushroom Demonstration Farm</h3>
+                        <p class="pilot-address">JKUAT Smart Farm Zone, Juja, Kenya</p>
+                        <p>
+                            The pilot is hosted at JKUAT's Smart Farm Zone, a dedicated research and demonstration facility. Here, we deploy sensors, test digital shadow models, and train farmers in real-world conditions.
+                        </p>
+                        <p>
+                            The site serves as a <strong>Kenya Living Lab</strong> where farmers, researchers, youth, women, advisors and SMEs co-design and test solutions together.
+                        </p>
+                        <div class="pilot-status">
+                            <span class="status-dot"></span>
+                            Active Pilot Site
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- TRAINING TARGETS                                              -->
+        <!-- ============================================================ -->
+        <section class="section section-alt" id="training">
+            <div class="container">
+                <div class="section-header centered reveal">
+                    <span class="eyebrow centered">Capacity Building</span>
+                    <h2>Training <span class="highlight purple">Targets</span></h2>
+                    <p>Building digital skills across Kenya's agricultural ecosystem.</p>
+                </div>
+                <div class="training-grid">
+                    <div class="training-card reveal">
+                        <div class="training-icon">
+                            <svg viewBox="0 0 24 24"><path d="M4 21c0-4 3-6 8-6s8 2 8 6"/><circle cx="12" cy="8" r="4"/></svg>
+                        </div>
+                        <h4>Smallholder Farmers</h4>
+                        <p>Hands-on training in using sensor data and AI tools to improve mushroom yields and reduce losses.</p>
+                    </div>
+                    <div class="training-card reveal">
+                        <div class="training-icon">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                        </div>
+                        <h4>Youth Agripreneurs</h4>
+                        <p>Digital skills training in AI, IoT and data analytics to create new agritech business opportunities.</p>
+                    </div>
+                    <div class="training-card reveal">
+                        <div class="training-icon">
+                            <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.5 2.5-5.5 6-5.5s6 2 6 5.5"/><path d="M15.5 14.6c2.3.3 3.8 1.8 3.8 4.4"/></svg>
+                        </div>
+                        <h4>Women-Led Farms</h4>
+                        <p>Targeted training and mentoring to empower women in mushroom farming and agritech adoption.</p>
+                    </div>
+                    <div class="training-card reveal">
+                        <div class="training-icon">
+                            <svg viewBox="0 0 24 24"><path d="M3 21V9l9-5 9 5v12"/><path d="M9 21v-6h6v6"/></svg>
+                        </div>
+                        <h4>SMEs &amp; Advisors</h4>
+                        <p>Technical assistance and mentoring for agricultural SMEs to adopt, adapt and scale smart farming solutions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- PROGRESS UPDATES                                              -->
+        <!-- ============================================================ -->
+        <section class="section" id="progress">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="eyebrow">Milestones</span>
+                    <h2>Progress <span class="highlight clay">Updates</span></h2>
+                    <p>Track the journey of the Smart Mushroom pilot from setup to scale.</p>
+                </div>
+                <div class="timeline reveal">
+                    <div class="timeline-item tl-completed">
+                        <span class="tl-period">M1–M3</span>
+                        <h4>Pilot Setup</h4>
+                        <p>Sensor installation, baseline data collection and system configuration at the JKUAT Smart Farm Zone.</p>
+                        <span class="tl-status completed">Completed</span>
+                    </div>
+                    <div class="timeline-item tl-active">
+                        <span class="tl-period">M7–M15</span>
+                        <h4>Living Lab &amp; Stakeholder Onboarding</h4>
+                        <p>Co-design activities with farmers, researchers, youth, women and SMEs to ensure solutions meet local needs.</p>
+                        <span class="tl-status active">Active</span>
+                    </div>
+                    <div class="timeline-item tl-active">
+                        <span class="tl-period">M14–M27</span>
+                        <h4>Pilot Implementation &amp; Training</h4>
+                        <p>Deployment of GenAI analytics, sensor data collection, digital shadow validation and farmer training workshops.</p>
+                        <span class="tl-status active">Active</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="tl-period">M18–M30</span>
+                        <h4>Feedback &amp; Refinement</h4>
+                        <p>Collecting farmer feedback, usability testing and iterative improvement of the system.</p>
+                        <span class="tl-status">Upcoming</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="tl-period">M24–M36</span>
+                        <h4>Bootcamps &amp; Replication</h4>
+                        <p>East Africa/Kenya bootcamp, SME mentoring, replication toolkit launch and community scaling.</p>
+                        <span class="tl-status">Upcoming</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- GALLERY SECTION                                               -->
+        <!-- ============================================================ -->
+        <section class="section section-alt" id="gallery">
+            <div class="container">
+                <div class="section-header centered reveal">
+                    <span class="eyebrow centered">Visual Evidence</span>
+                    <h2>Photo <span class="highlight purple">Gallery</span></h2>
+                    <p>Images from the Smart Mushroom pilot in action.</p>
+                </div>
+                <div class="gallery-grid">
+                    {% set gallery_images = [] %}
+                    {% for album in albums if album.tags and 'mushroom' in album.tags|join(' ')|lower %}
+                        {% for image in album.images[:4] if image.is_approved %}
+                            {% set _ = gallery_images.append(image) %}
+                        {% endfor %}
+                    {% endfor %}
+
+                    {% if gallery_images|length > 0 %}
+                        {% for image in gallery_images[:8] %}
+                            <div class="gallery-item reveal">
+                                <img src="{{ url_for('static', filename=image.image_path) }}" alt="{{ image.caption or 'Smart Mushroom Pilot' }}" loading="lazy">
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {% for i in range(8) %}
+                            <div class="gallery-item reveal">
+                                <div class="gallery-placeholder">Image {{ i + 1 }}</div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- FAQS                                                         -->
+        <!-- ============================================================ -->
+        <section class="section" id="faqs">
+            <div class="container">
+                <div class="section-header centered reveal">
+                    <span class="eyebrow centered">Questions?</span>
+                    <h2>Frequently Asked <span class="highlight">Questions</span></h2>
+                    <p>Common questions from farmers and technical audiences.</p>
+                </div>
+                <div class="faq-columns reveal">
+                    <!-- For Farmers -->
+                    <div class="faq-col">
+                        <span class="faq-group-label">For Farmers</span>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <button class="faq-question" aria-expanded="false">
+                                    What is a smart mushroom farm?
+                                    <span class="faq-toggle">⌵</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>A smart mushroom farm uses sensors, AI and digital tools to monitor and control growing conditions automatically. This helps farmers maintain optimal temperature, humidity and CO₂ levels, reducing the risk of crop failure and increasing yields.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-item">
+                                <button class="faq-question" aria-expanded="false">
+                                    How will this help me grow more mushrooms?
+                                    <span class="faq-toggle">⌵</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>By providing real-time data and AI-powered alerts, the system helps you detect problems early — before they affect your mushrooms. You'll get simple, clear advice on when to adjust conditions, reducing waste and improving harvest quality and quantity.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-item">
+                                <button class="faq-question" aria-expanded="false">
+                                    Do I need internet access?
+                                    <span class="faq-toggle">⌵</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>The system is designed for low-bandwidth environments. Alerts can be sent via SMS or WhatsApp, and dashboards work on basic smartphones. You don't need high-speed internet to benefit from the system.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- For Technical Audiences -->
+                    <div class="faq-col">
+                        <span class="faq-group-label">For Technical Teams</span>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <button class="faq-question" aria-expanded="false">
+                                    What sensors are used in the pilot?
+                                    <span class="faq-toggle">⌵</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>The system uses low-power IoT sensors including temperature, humidity, CO₂, light intensity and substrate moisture sensors. Data is transmitted via LoRaWAN to a central gateway, then processed in the cloud using GenAI analytics.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-item">
+                                <button class="faq-question" aria-expanded="false">
+                                    How does GenAI help in mushroom farming?
+                                    <span class="faq-toggle">⌵</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>GenAI models analyze historical and real-time sensor data to predict optimal growing conditions, detect anomalies before they become critical, and generate actionable recommendations for farmers. This reduces the need for manual monitoring and expert knowledge.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="faq-item">
+                                <button class="faq-question" aria-expanded="false">
+                                    What is a digital shadow?
+                                    <span class="faq-toggle">⌵</span>
+                                </button>
+                                <div class="faq-answer">
+                                    <div class="faq-answer-inner">
+                                        <p>A digital shadow is a virtual model of a physical grow room. It simulates how conditions change in response to different actions, allowing farmers to test "what-if" scenarios, forecast yields, and train without risking real crops.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- CTA SECTION                                                   -->
+        <!-- ============================================================ -->
+        <section class="cta-section section-dark" id="get-involved">
+            <div class="container">
+                <span class="eyebrow on-dark centered">Get Involved</span>
+                <h2 style="margin-top: 10px;">Grow with the pilot</h2>
+                <p>
+                    Whether you're a farmer, student, SME or researcher, there's a place for you in the Smart Mushroom pilot.
+                </p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('public.training_wp5') }}" class="btn-primary">
+                        <svg class="btn-icon" viewBox="0 0 24 24">
+                            <path d="M12 6v7m0 0l-2-2m2 2l2-2M4 4v16h16V4H4z"/>
+                            <path d="M8 12h8"/>
+                        </svg>
+                        Training Updates
+                    </a>
+                    <a href="{{ url_for('public.contact') }}" class="btn-outline-light">
+                        <svg class="btn-icon" viewBox="0 0 24 24">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                        Contact JHUB Team
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER                                                           -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- PAGE JAVASCRIPT                                                  -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // PAGE LOADER
+            // ================================================================
+            var loader = document.getElementById('page-loader');
+
+            function hideLoader() {
+                if (loader) {
+                    loader.classList.add('hidden');
+                    setTimeout(function() {
+                        if (loader && loader.parentNode) {
+                            loader.parentNode.removeChild(loader);
+                        }
+                    }, 700);
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', hideLoader);
+            } else {
+                hideLoader();
+            }
+            setTimeout(hideLoader, 3000);
+
+            // ================================================================
+            // FAQ ACCORDION
+            // ================================================================
+            var faqButtons = document.querySelectorAll('.faq-question');
+
+            faqButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var faqItem = this.closest('.faq-item');
+                    var isOpen = faqItem.classList.contains('open');
+
+                    // Close all other FAQs
+                    faqButtons.forEach(function(otherButton) {
+                        var otherItem = otherButton.closest('.faq-item');
+                        if (otherItem !== faqItem && otherItem.classList.contains('open')) {
+                            otherItem.classList.remove('open');
+                            otherButton.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+
+                    // Toggle this FAQ
+                    if (isOpen) {
+                        faqItem.classList.remove('open');
+                        this.setAttribute('aria-expanded', 'false');
+                    } else {
+                        faqItem.classList.add('open');
+                        this.setAttribute('aria-expanded', 'true');
+                    }
+                });
+            });
+
+            // ================================================================
+            // SMOOTH SCROLL
+            // ================================================================
+            document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    var targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    var targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        var header = document.querySelector('.site-header');
+                        var headerHeight = header ? header.offsetHeight : 72;
+                        var targetPosition = targetElement.getBoundingClientRect().top +
+                            window.pageYOffset - headerHeight - 20;
+
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // ================================================================
+            // SCROLL REVEAL — one deliberate motion idea, applied consistently
+            // ================================================================
+            var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var revealEls = document.querySelectorAll('.reveal');
+
+            if (reduceMotion || !('IntersectionObserver' in window)) {
+                revealEls.forEach(function(el) { el.classList.add('in-view'); });
+            } else {
+                var revealObserver = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('in-view');
+                            revealObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+                revealEls.forEach(function(el) { revealObserver.observe(el); });
+            }
+
+            console.log('Smart Mushrooms page initialized.');
+
+        })();
+    </script>
+
+</body>
+</html>

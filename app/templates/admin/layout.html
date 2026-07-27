@@ -1,0 +1,1127 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - ADMIN LAYOUT                                  -->
+<!-- ================================================================ -->
+<!-- Base template for all admin pages                               -->
+<!-- Features: Responsive sidebar · Top header · Flash messages      -->
+<!--           Mobile-friendly · Clean professional design           -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BRIDGE-AI Kenya Admin{% endblock %}</title>
+
+    <!-- ================================================================ -->
+    <!-- META TAGS                                                       -->
+    <!-- ================================================================ -->
+    <meta name="csrf-token" content="{{ csrf_token() if csrf_token else '' }}">
+
+    <!-- ================================================================ -->
+    <!-- FONTS                                                           -->
+    <!-- ================================================================ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+
+    <!-- ================================================================ -->
+    <!-- ADMIN LAYOUT STYLES                                             -->
+    <!-- ================================================================ -->
+    <style>
+        /* ================================================================ */
+        /* CSS VARIABLES                                                   */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #061420;
+            --primary: #0F2B3D;
+            --primary-light: #1A4A6B;
+            --primary-lighter: #2A6A8B;
+            --gold: #D4A843;
+            --gold-light: #F5D77E;
+            --gold-pale: #F5ECD7;
+            --text-dark: #081A28;
+            --text-body: #1A2A3A;
+            --text-muted: #5A6A7A;
+            --text-light: #8A9AAA;
+            --text-white: #FFFFFF;
+            --bg-white: #FFFFFF;
+            --bg-light: #F5F8FA;
+            --bg-lighter: #FAFCFE;
+            --border-light: #E4EAF0;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+            --shadow-xl: 0 16px 56px rgba(0,0,0,0.10);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+            --sidebar-width: 260px;
+            --sidebar-collapsed: 72px;
+            --header-height: 64px;
+        }
+
+        /* ================================================================ */
+        /* RESET & BASE                                                    */
+        /* ================================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-body);
+            background: var(--bg-light);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ================================================================ */
+        /* ADMIN CONTAINER                                                 */
+        /* ================================================================ */
+        .admin-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ================================================================ */
+        /* SIDEBAR                                                         */
+        /* ================================================================ */
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--primary-dark);
+            color: var(--text-white);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: transform var(--transition-slow), width var(--transition-slow);
+            overflow: hidden;
+            box-shadow: 2px 0 24px rgba(0,0,0,0.06);
+        }
+
+        .admin-sidebar.collapsed {
+            width: var(--sidebar-collapsed);
+        }
+
+        /* ─── Sidebar Brand ─── */
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            height: var(--header-height);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand .brand-icon {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            background: var(--gold);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.7rem;
+            color: var(--primary-dark);
+            letter-spacing: 0.04em;
+        }
+
+        .sidebar-brand .brand-text {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-white);
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+            opacity: 1;
+            transition: opacity var(--transition);
+        }
+
+        .sidebar-brand .brand-text .highlight {
+            color: var(--gold);
+        }
+
+        .admin-sidebar.collapsed .sidebar-brand .brand-text {
+            opacity: 0;
+            width: 0;
+        }
+
+        .admin-sidebar.collapsed .sidebar-brand {
+            padding: 16px 20px;
+        }
+
+        /* ─── Sidebar Navigation ─── */
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 12px 20px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.06) transparent;
+        }
+
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.06);
+            border-radius: 4px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+        .sidebar-nav .nav-section {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-nav .nav-section .section-label {
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(255,255,255,0.2);
+            padding: 8px 12px 4px;
+            display: block;
+            white-space: nowrap;
+            transition: opacity var(--transition);
+        }
+
+        .admin-sidebar.collapsed .sidebar-nav .section-label {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: all var(--transition);
+            cursor: pointer;
+            white-space: nowrap;
+            position: relative;
+            margin-bottom: 1px;
+        }
+
+        .sidebar-nav .nav-item:hover {
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.8);
+        }
+
+        .sidebar-nav .nav-item.active {
+            background: rgba(255,255,255,0.06);
+            color: var(--text-white);
+        }
+
+        .sidebar-nav .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: var(--gold);
+            border-radius: 0 3px 3px 0;
+        }
+
+        .sidebar-nav .nav-item .nav-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.35);
+            transition: color var(--transition);
+            font-style: normal;
+        }
+
+        .sidebar-nav .nav-item:hover .nav-icon,
+        .sidebar-nav .nav-item.active .nav-icon {
+            color: var(--gold);
+        }
+
+        .sidebar-nav .nav-item .nav-label {
+            flex: 1;
+            opacity: 1;
+            transition: opacity var(--transition);
+        }
+
+        .admin-sidebar.collapsed .sidebar-nav .nav-item .nav-label {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-nav .nav-item .nav-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            border-radius: 60px;
+            background: rgba(212, 168, 67, 0.15);
+            color: var(--gold);
+            font-size: 0.55rem;
+            font-weight: 700;
+        }
+
+        .admin-sidebar.collapsed .sidebar-nav .nav-item .nav-badge {
+            display: none;
+        }
+
+        /* ─── Sidebar Footer ─── */
+        .sidebar-footer {
+            padding: 12px 16px 16px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            color: rgba(255,255,255,0.35);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: all var(--transition);
+            background: none;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            font-family: var(--font-sans);
+        }
+
+        .sidebar-footer .logout-btn:hover {
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .sidebar-footer .logout-btn .logout-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.25);
+            font-style: normal;
+        }
+
+        .sidebar-footer .logout-btn:hover .logout-icon {
+            color: #E85A5A;
+        }
+
+        .sidebar-footer .logout-btn .logout-label {
+            flex: 1;
+            opacity: 1;
+            transition: opacity var(--transition);
+            text-align: left;
+        }
+
+        .admin-sidebar.collapsed .sidebar-footer .logout-btn .logout-label {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        /* ================================================================ */
+        /* MAIN CONTENT                                                   */
+        /* ================================================================ */
+        .admin-main {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left var(--transition-slow);
+        }
+
+        .admin-sidebar.collapsed ~ .admin-main {
+            margin-left: var(--sidebar-collapsed);
+        }
+
+        /* ─── Top Header ─── */
+        .admin-header {
+            height: var(--header-height);
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .admin-header .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-header .sidebar-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition);
+            font-size: 1.2rem;
+            font-weight: 300;
+            font-family: var(--font-sans);
+        }
+
+        .admin-header .sidebar-toggle:hover {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .admin-header .header-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .admin-header .header-title .gold {
+            color: var(--gold);
+        }
+
+        .admin-header .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-header .header-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-header .header-user .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gold-pale);
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .admin-header .header-user .user-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .admin-header .header-user .user-role {
+            font-size: 0.65rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        /* ─── Page Content ─── */
+        .admin-content {
+            flex: 1;
+            padding: 24px 28px 40px;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .admin-content .page-header {
+            margin-bottom: 28px;
+        }
+
+        .admin-content .page-header .page-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 2px;
+        }
+
+        .admin-content .page-header .page-title .highlight {
+            color: var(--gold);
+        }
+
+        .admin-content .page-header .page-subtitle {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* ================================================================ */
+        /* FLASH MESSAGES                                                  */
+        /* ================================================================ */
+        .flash-messages {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .flash-message {
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: var(--bg-white);
+            box-shadow: var(--shadow-sm);
+            animation: slideDown 0.3s ease;
+        }
+
+        .flash-message .flash-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+            font-weight: 300;
+        }
+
+        .flash-message .flash-content {
+            flex: 1;
+        }
+
+        .flash-message .flash-title {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+        }
+
+        .flash-message .flash-body {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .flash-message.flash-success {
+            border-left-color: #1A6A4A;
+        }
+
+        .flash-message.flash-success .flash-icon {
+            color: #1A6A4A;
+        }
+
+        .flash-message.flash-error {
+            border-left-color: #C0392B;
+        }
+
+        .flash-message.flash-error .flash-icon {
+            color: #C0392B;
+        }
+
+        .flash-message.flash-warning {
+            border-left-color: #D4A843;
+        }
+
+        .flash-message.flash-warning .flash-icon {
+            color: #D4A843;
+        }
+
+        .flash-message.flash-info {
+            border-left-color: #1A4A6B;
+        }
+
+        .flash-message.flash-info .flash-icon {
+            color: #1A4A6B;
+        }
+
+        .flash-message .flash-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0 4px;
+            transition: color var(--transition);
+            font-weight: 300;
+            font-family: var(--font-sans);
+            line-height: 1;
+        }
+
+        .flash-message .flash-close:hover {
+            color: var(--text-dark);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                      */
+        /* ================================================================ */
+
+        /* ─── Tablets ─── */
+        @media (max-width: 1024px) {
+            .admin-content {
+                padding: 20px 20px 32px;
+            }
+        }
+
+        /* ─── Mobile ─── */
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                width: var(--sidebar-width);
+                box-shadow: var(--shadow-xl);
+            }
+
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+
+            .admin-sidebar.collapsed {
+                width: var(--sidebar-width);
+                transform: translateX(-100%);
+            }
+
+            .admin-sidebar.collapsed.open {
+                transform: translateX(0);
+            }
+
+            .admin-main {
+                margin-left: 0 !important;
+            }
+
+            .admin-header {
+                padding: 0 16px;
+            }
+
+            .admin-header .header-title {
+                font-size: 0.75rem;
+            }
+
+            .admin-header .header-user .user-role {
+                display: none;
+            }
+
+            .admin-content {
+                padding: 16px 14px 24px;
+            }
+
+            .admin-content .page-header .page-title {
+                font-size: 1.3rem;
+            }
+
+            .admin-content .page-header .page-subtitle {
+                font-size: 0.82rem;
+            }
+
+            /* Mobile overlay */
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(6,20,32,0.5);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                z-index: 999;
+                display: none;
+                animation: fadeIn 0.3s ease;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+
+            .flash-message {
+                padding: 12px 16px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ─── Small Mobile ─── */
+        @media (max-width: 480px) {
+            .admin-header .header-user .user-name {
+                display: none;
+            }
+
+            .admin-header .sidebar-toggle {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+
+            .admin-content .page-header .page-title {
+                font-size: 1.1rem;
+            }
+
+            .admin-content {
+                padding: 12px 10px 20px;
+            }
+
+            .flash-message {
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* ================================================================ */
+        /* UTILITY                                                         */
+        /* ================================================================ */
+        .text-gold {
+            color: var(--gold);
+        }
+
+        .text-muted {
+            color: var(--text-muted);
+        }
+
+        .text-light {
+            color: var(--text-light);
+        }
+
+        .mt-1 { margin-top: 8px; }
+        .mt-2 { margin-top: 16px; }
+        .mt-3 { margin-top: 24px; }
+        .mb-1 { margin-bottom: 8px; }
+        .mb-2 { margin-bottom: 16px; }
+        .mb-3 { margin-bottom: 24px; }
+
+        .flex { display: flex; }
+        .flex-center { display: flex; align-items: center; justify-content: center; }
+        .flex-between { display: flex; align-items: center; justify-content: space-between; }
+        .gap-1 { gap: 8px; }
+        .gap-2 { gap: 16px; }
+        .gap-3 { gap: 24px; }
+
+        .w-full { width: 100%; }
+        .text-center { text-align: center; }
+    </style>
+
+    <!-- ================================================================ -->
+    <!-- BLOCK: EXTRA STYLES                                             -->
+    <!-- ================================================================ -->
+    {% block extra_styles %}{% endblock %}
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- SIDEBAR OVERLAY (Mobile)                                        -->
+    <!-- ================================================================ -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- ================================================================ -->
+    <!-- ADMIN WRAPPER                                                   -->
+    <!-- ================================================================ -->
+    <div class="admin-wrapper">
+
+        <!-- ================================================================ -->
+        <!-- SIDEBAR                                                         -->
+        <!-- ================================================================ -->
+        <aside class="admin-sidebar" id="adminSidebar">
+            <!-- Brand -->
+            <div class="sidebar-brand">
+                <span class="brand-icon">BA</span>
+                <span class="brand-text">BRIDGE<span class="highlight">-AI</span></span>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="sidebar-nav">
+
+                <!-- Section: Main -->
+                <div class="nav-section">
+                    <span class="section-label">Main</span>
+                    <a href="{{ url_for('admin.admin_dashboard') }}" class="nav-item {% if request.endpoint == 'admin.admin_dashboard' %}active{% endif %}">
+                        <span class="nav-icon">◇</span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+                </div>
+
+                <!-- Section: Content -->
+                <div class="nav-section">
+                    <span class="section-label">Content</span>
+                    <a href="{{ url_for('admin.admin_activities') }}" class="nav-item {% if request.endpoint == 'admin.admin_activities' %}active{% endif %}">
+                        <span class="nav-icon">◈</span>
+                        <span class="nav-label">Activities</span>
+                    </a>
+                    <a href="{{ url_for('admin.admin_events') }}" class="nav-item {% if request.endpoint == 'admin.admin_events' %}active{% endif %}">
+                        <span class="nav-icon">◉</span>
+                        <span class="nav-label">Events</span>
+                    </a>
+                    <a href="{{ url_for('admin.admin_resources') }}" class="nav-item {% if request.endpoint == 'admin.admin_resources' %}active{% endif %}">
+                        <span class="nav-icon">▣</span>
+                        <span class="nav-label">Resources</span>
+                    </a>
+                    <a href="{{ url_for('admin.admin_partners') }}" class="nav-item {% if request.endpoint == 'admin.admin_partners' %}active{% endif %}">
+                        <span class="nav-icon">◈</span>
+                        <span class="nav-label">Partners</span>
+                    </a>
+                    <a href="{{ url_for('admin.admin_team') }}" class="nav-item {% if request.endpoint == 'admin.admin_team' %}active{% endif %}">
+                        <span class="nav-icon">◌</span>
+                        <span class="nav-label">Team</span>
+                    </a>
+                    <a href="{{ url_for('admin.admin_gallery') }}" class="nav-item {% if request.endpoint == 'admin.admin_gallery' %}active{% endif %}">
+                        <span class="nav-icon">⊞</span>
+                        <span class="nav-label">Gallery</span>
+                    </a>
+                    <a href="{{ url_for('admin.admin_faqs') }}" class="nav-item {% if request.endpoint == 'admin.admin_faqs' %}active{% endif %}">
+                        <span class="nav-icon">?</span>
+                        <span class="nav-label">FAQs</span>
+                    </a>
+                </div>
+
+                <!-- Section: WP5 & Capacity -->
+                <div class="nav-section">
+                    <span class="section-label">WP5 &amp; Capacity</span>
+                    <a href="{{ url_for('admin.admin_training_materials') }}" class="nav-item {% if request.endpoint == 'admin.admin_training_materials' %}active{% endif %}">
+                        <span class="nav-icon">▸</span>
+                        <span class="nav-label">Training Materials</span>
+                    </a>
+                    <a href="{{ url_for('admin.admin_sme') }}" class="nav-item {% if request.endpoint == 'admin.admin_sme' %}active{% endif %}">
+                        <span class="nav-icon">◈</span>
+                        <span class="nav-label">SME</span>
+                    </a>
+                    <a href="{{ url_for('admin.admin_community') }}" class="nav-item {% if request.endpoint == 'admin.admin_community' %}active{% endif %}">
+                        <span class="nav-icon">◍</span>
+                        <span class="nav-label">Community</span>
+                    </a>
+                    <a href="{{ url_for('admin.admin_replication') }}" class="nav-item {% if request.endpoint == 'admin.admin_replication' %}active{% endif %}">
+                        <span class="nav-icon">⟳</span>
+                        <span class="nav-label">Replication</span>
+                    </a>
+                </div>
+
+                <!-- Section: Admin -->
+                <div class="nav-section">
+                    <span class="section-label">Admin</span>
+                    <a href="{{ url_for('admin.admin_submissions') }}" class="nav-item {% if request.endpoint == 'admin.admin_submissions' %}active{% endif %}">
+                        <span class="nav-icon">⊞</span>
+                        <span class="nav-label">Submissions</span>
+                        <span class="nav-badge" id="submissionBadge">0</span>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <form action="{{ url_for('admin.admin_logout') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() if csrf_token else '' }}">
+                    <button type="submit" class="logout-btn">
+                        <span class="logout-icon">↗</span>
+                        <span class="logout-label">Logout</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- ================================================================ -->
+        <!-- MAIN CONTENT                                                   -->
+        <!-- ================================================================ -->
+        <main class="admin-main" id="adminMain">
+
+            <!-- ============================================================ -->
+            <!-- HEADER                                                        -->
+            <!-- ============================================================ -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+                        ☰
+                    </button>
+                    <span class="header-title">{% block header_title %}Admin <span class="gold">Panel</span>{% endblock %}</span>
+                </div>
+                <div class="header-right">
+                    <div class="header-user">
+                        <span class="user-avatar">{{ current_user.username[:1] if current_user.is_authenticated else 'A' }}</span>
+                        <div>
+                            <div class="user-name">{{ current_user.username if current_user.is_authenticated else 'Admin' }}</div>
+                            <div class="user-role">Administrator</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ============================================================ -->
+            <!-- PAGE CONTENT                                                 -->
+            <!-- ============================================================ -->
+            <div class="admin-content">
+
+                <!-- Flash Messages -->
+                <div class="flash-messages" id="flashMessages">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="flash-message flash-{{ category }}" role="alert">
+                                    <span class="flash-icon">
+                                        {% if category == 'success' %}✓{% elif category == 'error' %}✗{% elif category == 'warning' %}⚠{% else %}ℹ{% endif %}
+                                    </span>
+                                    <div class="flash-content">
+                                        <div class="flash-title">
+                                            {% if category == 'success' %}Success
+                                            {% elif category == 'error' %}Error
+                                            {% elif category == 'warning' %}Warning
+                                            {% else %}Notice{% endif %}
+                                        </div>
+                                        <div class="flash-body">{{ message }}</div>
+                                    </div>
+                                    <button class="flash-close" onclick="dismissFlash(this.parentElement)" aria-label="Close">✕</button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+                    <p class="page-subtitle">{% block page_subtitle %}Overview of your BRIDGE-AI Kenya admin panel{% endblock %}</p>
+                </div>
+
+                <!-- Page Content Block -->
+                {% block content %}{% endblock %}
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT                                        -->
+    <!-- ================================================================ -->
+    {% block extra_scripts %}{% endblock %}
+
+    <!-- ================================================================ -->
+    <!-- ADMIN LAYOUT JAVASCRIPT                                         -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // SIDEBAR TOGGLE
+            // ================================================================
+
+            var sidebar = document.getElementById('adminSidebar');
+            var overlay = document.getElementById('sidebarOverlay');
+            var isMobile = window.innerWidth <= 768;
+
+            function updateSidebarState() {
+                isMobile = window.innerWidth <= 768;
+                if (!isMobile) {
+                    // Desktop: use localStorage for collapsed state
+                    var isCollapsed = localStorage.getItem('adminSidebarCollapsed') === 'true';
+                    if (isCollapsed) {
+                        sidebar.classList.add('collapsed');
+                    } else {
+                        sidebar.classList.remove('collapsed');
+                    }
+                    overlay.classList.remove('active');
+                } else {
+                    // Mobile: always closed by default, open via toggle
+                    sidebar.classList.remove('collapsed');
+                    sidebar.classList.remove('open');
+                }
+            }
+
+            window.toggleSidebar = function() {
+                if (isMobile) {
+                    sidebar.classList.toggle('open');
+                    overlay.classList.toggle('active');
+                    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    localStorage.setItem('adminSidebarCollapsed', sidebar.classList.contains('collapsed') ? 'true' : 'false');
+                }
+            };
+
+            // ================================================================
+            // SIDEBAR NAVIGATION - Active highlight
+            // ================================================================
+
+            var currentPath = window.location.pathname;
+            document.querySelectorAll('.sidebar-nav .nav-item').forEach(function(item) {
+                var href = item.getAttribute('href');
+                if (href && currentPath === href) {
+                    item.classList.add('active');
+                } else if (href && currentPath.startsWith(href) && href !== '/admin/') {
+                    item.classList.add('active');
+                }
+            });
+
+            // ================================================================
+            // CLOSE SIDEBAR ON OUTSIDE CLICK (Mobile)
+            // ================================================================
+
+            overlay.addEventListener('click', function() {
+                if (isMobile) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // ================================================================
+            // WINDOW RESIZE HANDLER
+            // ================================================================
+
+            window.addEventListener('resize', function() {
+                updateSidebarState();
+            });
+
+            // ================================================================
+            // FLASH MESSAGE DISMISS
+            // ================================================================
+
+            window.dismissFlash = function(el) {
+                if (!el) return;
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(-12px)';
+                el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                setTimeout(function() {
+                    if (el.parentElement) {
+                        el.remove();
+                    }
+                }, 300);
+            };
+
+            // Auto-dismiss flash messages after 5 seconds
+            document.querySelectorAll('.flash-message').forEach(function(msg) {
+                setTimeout(function() {
+                    dismissFlash(msg);
+                }, 5000);
+            });
+
+            // ================================================================
+            // SUBMISSION BADGE COUNT
+            // ================================================================
+
+            function updateSubmissionBadge() {
+                var badge = document.getElementById('submissionBadge');
+                if (!badge) return;
+
+                fetch('/api/submissions/', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) {
+                    if (!response.ok) throw new Error('Network error');
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (!data || !Array.isArray(data)) return;
+                    var unread = data.filter(function(item) {
+                        return !item.is_read;
+                    });
+                    var count = unread.length;
+                    if (count > 0) {
+                        badge.textContent = count > 99 ? '99+' : count;
+                        badge.style.display = 'inline-flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                })
+                .catch(function(error) {
+                    console.warn('Could not fetch submission count:', error);
+                    badge.style.display = 'none';
+                });
+            }
+
+            // ================================================================
+            // CSRF TOKEN HELPER (for child pages)
+            // ================================================================
+
+            window.getCsrfToken = function() {
+                var metaTag = document.querySelector('meta[name="csrf-token"]');
+                if (metaTag) {
+                    return metaTag.getAttribute('content');
+                }
+                var cookieValue = document.cookie.match(/csrf_token=([^;]+)/);
+                if (cookieValue) {
+                    return cookieValue[1];
+                }
+                return '';
+            };
+
+            // ================================================================
+            // INITIALIZE
+            // ================================================================
+
+            document.addEventListener('DOMContentLoaded', function() {
+                updateSidebarState();
+                updateSubmissionBadge();
+
+                console.log('BRIDGE-AI Kenya Admin initialized');
+            });
+
+        })();
+    </script>
+
+</body>
+</html>

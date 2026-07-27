@@ -1,0 +1,1633 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - GALLERY PAGE                                  -->
+<!-- ================================================================ -->
+<!-- Public Gallery: Displays published albums with filter tabs      -->
+<!-- Features: Dynamic filters from tags, true masonry layout,       -->
+<!--           hover overlay, lightbox, dynamic title                -->
+<!-- CSS: Fully self-contained in this file                         -->
+<!-- Rules: No emojis Â· No decorative symbols Â· No colons           -->
+<!--        No slashes Â· No hyphens Â· Clean typography              -->
+<!-- ================================================================ -->
+<!-- REDESIGN NOTES                                                   -->
+<!-- Same design system as the Activities page: deep forest / harvest -->
+<!-- gold / warm paper palette, Fraunces for display type, Inter for  -->
+<!-- UI, IBM Plex Mono for data (dates, counts, consent tags) â€” so    -->
+<!-- the two pages read as one site. Every id, class, onclick handler -->
+<!-- and the JS block are unchanged: styling only.                   -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - BRIDGE-AI Kenya</title>
+    <meta name="description" content="Visual evidence of field activities, training workshops, and community engagements across the BRIDGE-AI Kenya project sites.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- ================================================================ -->
+    <!-- PAGE-SPECIFIC STYLES                                           -->
+    <!-- ================================================================ -->
+    <style>
+        /* ================================================================ */
+        /* CSS VARIABLES â€” matches the Activities page design system      */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #0B1B14;
+            --primary: #163A26;
+            --primary-light: #2C6B45;
+            --primary-lighter: #4F8F63;
+
+            --gold: #C89B3C;
+            --gold-light: #E8CA82;
+            --gold-pale: #F3E8C9;
+
+            --moss: #6F8F5C;
+            --clay: #B5703F;
+
+            --text-dark: #12201A;
+            --text-body: #2A362F;
+            --text-muted: #5E6B5F;
+            --text-light: #8B9789;
+
+            --bg-white: #FFFFFF;
+            --bg-light: #F5F3EA;
+            --bg-lighter: #FBF9F3;
+            --border-light: #E4DFCC;
+
+            --shadow-sm: 0 2px 10px rgba(18, 32, 24, 0.05);
+            --shadow-md: 0 8px 26px rgba(18, 32, 24, 0.07);
+            --shadow-lg: 0 14px 46px rgba(18, 32, 24, 0.09);
+            --shadow-xl: 0 22px 68px rgba(18, 32, 24, 0.14);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 26px;
+
+            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+            --font-serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+            --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-body);
+            background: var(--bg-white);
+            line-height: 1.7;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+
+        /* ================================================================ */
+        /* LOADER OVERLAY                                                  */
+        /* ================================================================ */
+        #loaderOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(251, 249, 243, 0.96);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease;
+        }
+
+        #loaderOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-spinner {
+            width: 42px;
+            height: 42px;
+            border: 2.5px solid var(--border-light);
+            border-top-color: var(--primary-light);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        .loader-text {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-family: var(--font-mono);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ================================================================ */
+        /* HERO SECTION                                                    */
+        /* ================================================================ */
+        .gallery-hero {
+            background: var(--primary-dark);
+            padding: 64px 24px 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 18% 40%, rgba(44, 107, 69, 0.30) 0%, transparent 58%),
+                radial-gradient(ellipse at 82% 60%, rgba(200, 155, 60, 0.14) 0%, transparent 42%);
+            pointer-events: none;
+        }
+
+        .gallery-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 72%);
+            -webkit-mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 72%);
+            pointer-events: none;
+        }
+
+        .gallery-hero .hero-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .gallery-hero .hero-left {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .gallery-hero .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 6px 16px 6px 13px;
+            background: rgba(232, 202, 130, 0.06);
+            border: 1px solid rgba(232, 202, 130, 0.18);
+            border-radius: 60px;
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            margin-bottom: 18px;
+            backdrop-filter: blur(8px);
+            font-family: var(--font-mono);
+        }
+
+        .gallery-hero .hero-badge .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+            animation: pulseDot 2s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(232, 202, 130, 0.5);
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.7); }
+        }
+
+        .gallery-hero .hero-title {
+            font-family: var(--font-serif);
+            font-size: 3.2rem;
+            font-weight: 600;
+            font-style: italic;
+            line-height: 1.06;
+            letter-spacing: -0.01em;
+            color: #ffffff;
+            margin: 0 0 12px;
+            transition: opacity 0.25s ease;
+        }
+
+        .gallery-hero .hero-title .highlight {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 45%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gallery-hero .hero-subtitle {
+            font-size: 0.95rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.56);
+            max-width: 560px;
+            line-height: 1.8;
+            margin: 0 0 26px;
+            letter-spacing: 0.005em;
+            transition: opacity 0.25s ease;
+        }
+        
+        .gallery-hero .hero-stats {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .gallery-hero .hero-stats .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .gallery-hero .hero-stats .stat-item .stat-number {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+        }
+
+        .gallery-hero .hero-stats .stat-item .stat-label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.35);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* â”€â”€â”€ Hero Right - Dynamic Filters â”€â”€â”€ */
+        .gallery-hero .hero-right {
+            display: flex;
+            align-items: center;
+            align-self: flex-end;
+            flex-shrink: 0;
+            padding-bottom: 2px;
+            max-width: 100%;
+        }
+
+        .hero-filters {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 60px;
+            padding: 5px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .hero-filters .filter-btn {
+            padding: 7px 18px;
+            background: none;
+            border: none;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            border-radius: 60px;
+            white-space: nowrap;
+        }
+
+        .hero-filters .filter-btn:hover {
+            color: rgba(255,255,255,0.85);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .hero-filters .filter-btn.active {
+            color: var(--primary-dark);
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            font-weight: 700;
+            box-shadow: 0 4px 16px rgba(200, 155, 60, 0.28);
+        }
+
+        .hero-filters .filter-btn .filter-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 15px;
+            height: 15px;
+            padding: 0 5px;
+            border-radius: 60px;
+            font-family: var(--font-mono);
+            font-size: 0.5rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.4);
+            margin-left: 5px;
+        }
+
+        .hero-filters .filter-btn.active .filter-count {
+            background: rgba(11, 27, 20, 0.14);
+            color: var(--primary-dark);
+        }
+
+        /* ================================================================ */
+        /* ALBUM GRID - True Masonry Layout                              */
+        /* ================================================================ */
+        .gallery-grid-section {
+            padding: 36px 24px 64px;
+            background: var(--bg-lighter);
+        }
+
+        .gallery-grid-container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+            transition: opacity 0.3s ease;
+            align-items: start;
+        }
+
+        .gallery-grid.loading {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* â”€â”€â”€ Album Card - Variable Widths â”€â”€â”€ */
+        .album-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            break-inside: avoid;
+            page-break-inside: avoid;
+            position: relative;
+        }
+
+        .album-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-lg);
+            border: 1px solid transparent;
+            background: linear-gradient(135deg, rgba(232, 202, 130, 0.5), transparent 40%) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity var(--transition);
+            pointer-events: none;
+        }
+
+        .album-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-light);
+        }
+
+        .album-card:hover::after { opacity: 1; }
+
+        /* Width classes */
+        .album-card.col-1 { grid-column: span 1; }
+        .album-card.col-2 { grid-column: span 2; }
+        .album-card.col-3 { grid-column: span 3; }
+        .album-card.col-4 { grid-column: span 4; }
+
+        /* Album Image Container - Variable Height */
+        .album-card .album-image-container {
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-light);
+            flex-shrink: 0;
+            width: 100%;
+        }
+
+        .album-card .album-image-container .album-main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-slow);
+            display: block;
+            filter: saturate(1.04);
+        }
+
+        .album-card:hover .album-image-container .album-main-image {
+            transform: scale(1.045);
+        }
+
+        /* â”€â”€â”€ Hover Overlay - Slides from Bottom â”€â”€â”€ */
+        .album-card .album-image-container .album-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 22px 22px 18px;
+            background: linear-gradient(0deg, rgba(11,27,20,0.94) 0%, rgba(11,27,20,0.66) 60%, transparent 100%);
+            transform: translateY(100%);
+            transition: transform var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-height: 45%;
+        }
+
+        .album-card:hover .album-image-container .album-overlay {
+            transform: translateY(0);
+        }
+
+        .album-card .album-image-container .album-overlay .overlay-title {
+            font-family: var(--font-serif);
+            font-size: 1.08rem;
+            font-weight: 600;
+            font-style: italic;
+            color: #ffffff;
+            margin: 0 0 4px;
+            line-height: 1.28;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .album-card .album-image-container .album-overlay .overlay-meta {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: rgba(232, 202, 130, 0.7);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 6px;
+            letter-spacing: 0.01em;
+        }
+
+        .album-card .album-image-container .album-overlay .overlay-description {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.58);
+            line-height: 1.55;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .album-card .album-image-container .album-overlay .overlay-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .album-card .album-image-container .album-overlay .overlay-photos {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.38);
+            font-weight: 500;
+            letter-spacing: 0.04em;
+        }
+
+        .album-card .album-image-container .album-overlay .overlay-consent {
+            padding: 2px 13px;
+            border-radius: 60px;
+            font-family: var(--font-mono);
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: rgba(111, 143, 92, 0.5);
+            color: rgba(255,255,255,0.9);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* â”€â”€â”€ No Thumbnails, No Info Section â”€â”€â”€ */
+        /* All details shown on hover only */
+
+        /* ================================================================ */
+        /* EMPTY STATE                                                     */
+        /* ================================================================ */
+        .empty-state {
+            text-align: center;
+            padding: 90px 20px;
+            grid-column: 1 / -1;
+            background: var(--bg-light);
+            border-radius: var(--radius-lg);
+            border: 2px dashed var(--border-light);
+            position: relative;
+        }
+
+        .empty-state::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .empty-state .empty-icon {
+            font-size: 2.6rem;
+            display: block;
+            margin-bottom: 16px;
+            color: var(--primary-light);
+            font-weight: 100;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            max-width: 400px;
+            margin: 0 auto;
+            font-size: 0.92rem;
+        }
+
+        /* ================================================================ */
+        /* LIGHTBOX - Full Screen Slideshow                               */
+        /* ================================================================ */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(11, 27, 20, 0.94);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lightbox-overlay.active {
+            display: flex;
+        }
+
+        .lightbox-overlay .lightbox-close {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.55);
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-mono);
+            line-height: 1;
+            padding: 9px 16px;
+            border-radius: 60px;
+            z-index: 10;
+        }
+
+        .lightbox-overlay .lightbox-close:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.09);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .lightbox-overlay .lightbox-container {
+            max-width: 1100px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Lightbox Header */
+        .lightbox-overlay .lightbox-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 0 0 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .lightbox-overlay .lightbox-header .lb-title {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .lightbox-overlay .lightbox-header .lb-meta {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: rgba(232, 202, 130, 0.6);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            padding-top: 6px;
+        }
+
+        /* Lightbox Main Image */
+        .lightbox-overlay .lightbox-main {
+            position: relative;
+            flex: 1;
+            background: rgba(0,0,0,0.35);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .lightbox-overlay .lightbox-main .lb-image {
+            max-width: 100%;
+            max-height: 62vh;
+            object-fit: contain;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-overlay .lightbox-main .lb-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-family: var(--font-mono);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .lightbox-overlay .lightbox-main .lb-nav:hover {
+            background: var(--gold);
+            color: var(--primary-dark);
+            border-color: var(--gold);
+        }
+
+        .lightbox-overlay .lightbox-main .lb-nav.prev { left: 16px; }
+        .lightbox-overlay .lightbox-main .lb-nav.next { right: 16px; }
+
+        /* Lightbox Footer */
+        .lightbox-overlay .lightbox-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0 0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .lightbox-overlay .lightbox-footer .lb-caption {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.58);
+            flex: 1;
+        }
+
+        .lightbox-overlay .lightbox-footer .lb-counter {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.28);
+            font-weight: 500;
+        }
+
+        .lightbox-overlay .lightbox-footer .lb-consent {
+            padding: 3px 14px;
+            border-radius: 60px;
+            font-family: var(--font-mono);
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: rgba(111, 143, 92, 0.35);
+            color: rgba(255,255,255,0.72);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* Lightbox Thumbnails Strip */
+        .lightbox-overlay .lightbox-thumbs {
+            display: flex;
+            gap: 7px;
+            padding: 12px 0 0;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+        }
+
+        .lightbox-overlay .lightbox-thumbs::-webkit-scrollbar { height: 2px; }
+        .lightbox-overlay .lightbox-thumbs::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+        }
+        .lightbox-overlay .lightbox-thumbs::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.14);
+            border-radius: 4px;
+        }
+
+        .lightbox-overlay .lightbox-thumbs .lb-thumb {
+            width: 60px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition);
+            flex-shrink: 0;
+            opacity: 0.55;
+        }
+
+        .lightbox-overlay .lightbox-thumbs .lb-thumb:hover {
+            border-color: rgba(255,255,255,0.25);
+            opacity: 0.85;
+        }
+
+        .lightbox-overlay .lightbox-thumbs .lb-thumb.active {
+            border-color: var(--gold);
+            opacity: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                      */
+        /* ================================================================ */
+        @media (max-width: 1024px) {
+            .gallery-hero .hero-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .gallery-hero .hero-right {
+                align-self: flex-start;
+                width: 100%;
+            }
+
+            .hero-filters {
+                width: 100%;
+                justify-content: flex-start;
+                border-radius: var(--radius-md);
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 18px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 64px;
+            }
+
+            .gallery-hero {
+                padding: 40px 16px 30px;
+            }
+
+            .gallery-hero .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .gallery-hero .hero-subtitle {
+                font-size: 0.85rem;
+                max-width: 100%;
+            }
+
+            .gallery-hero .hero-stats .stat-item .stat-number {
+                font-size: 1.15rem;
+            }
+
+            .gallery-hero .hero-stats {
+                gap: 18px;
+            }
+
+            .hero-filters {
+                border-radius: var(--radius-sm);
+                padding: 4px;
+                flex-wrap: wrap;
+            }
+
+            .hero-filters .filter-btn {
+                padding: 5px 13px;
+                font-size: 0.65rem;
+            }
+
+            .gallery-grid-section {
+                padding: 24px 16px 44px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
+            }
+
+            .album-card .album-image-container .album-overlay .overlay-title {
+                font-size: 0.9rem;
+            }
+
+            .album-card .album-image-container .album-overlay .overlay-description {
+                font-size: 0.68rem;
+                -webkit-line-clamp: 1;
+            }
+
+            .album-card.col-2 { grid-column: span 2; }
+            .album-card.col-3 { grid-column: span 2; }
+            .album-card.col-4 { grid-column: span 2; }
+
+            .lightbox-overlay .lightbox-main .lb-nav {
+                width: 38px;
+                height: 38px;
+            }
+
+            .lightbox-overlay .lightbox-main .lb-nav.prev { left: 8px; }
+            .lightbox-overlay .lightbox-main .lb-nav.next { right: 8px; }
+
+            .lightbox-overlay .lightbox-header .lb-title {
+                font-size: 1rem;
+            }
+
+            .lightbox-overlay .lightbox-footer .lb-caption {
+                font-size: 0.75rem;
+            }
+
+            .lightbox-overlay .lightbox-thumbs .lb-thumb {
+                width: 48px;
+                height: 36px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-hero .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .album-card .album-image-container .album-overlay {
+                padding: 14px 16px 12px;
+                min-height: 35%;
+            }
+
+            .album-card .album-image-container .album-overlay .overlay-title {
+                font-size: 0.85rem;
+                -webkit-line-clamp: 1;
+            }
+
+            .album-card .album-image-container .album-overlay .overlay-meta {
+                font-size: 0.62rem;
+            }
+
+            .album-card .album-image-container .album-overlay .overlay-description {
+                font-size: 0.62rem;
+                -webkit-line-clamp: 1;
+            }
+
+            .album-card.col-2 { grid-column: span 1; }
+            .album-card.col-3 { grid-column: span 1; }
+            .album-card.col-4 { grid-column: span 1; }
+
+            .lightbox-overlay {
+                padding: 12px;
+            }
+
+            .lightbox-overlay .lightbox-main {
+                min-height: 180px;
+            }
+
+            .lightbox-overlay .lightbox-main .lb-image {
+                max-height: 50vh;
+            }
+
+            .lightbox-overlay .lightbox-close {
+                top: 12px;
+                right: 16px;
+                padding: 7px 12px;
+                font-size: 0.6rem;
+            }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-light); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADER OVERLAY                                                  -->
+    <!-- ================================================================ -->
+    <div id="loaderOverlay">
+        <div class="loader-spinner"></div>
+        <p class="loader-text">Loading gallery</p>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT                                                    -->
+    <!-- ================================================================ -->
+    <main>
+
+        <!-- ============================================================ -->
+        <!-- HERO SECTION                                                 -->
+        <!-- ============================================================ -->
+        <section class="gallery-hero">
+            <div class="hero-container">
+                <div class="hero-left">
+                    
+                    <h1 class="hero-title" id="heroTitle">
+                        Activity <span class="highlight">Gallery</span>
+                    </h1>
+                    <p class="hero-subtitle" id="heroSubtitle">
+                        Visual evidence of our field activities, training workshops,
+                        and community engagements across the BRIDGE-AI Kenya project sites.
+                    </p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="totalAlbums">0</span>
+                            <span class="stat-label">Albums</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="totalPhotos">0</span>
+                            <span class="stat-label">Photos</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="totalConsent">0</span>
+                            <span class="stat-label">Consent Confirmed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Right - Dynamic Filters -->
+                <div class="hero-right">
+                    <div class="hero-filters" id="heroFilters">
+                        <!-- Dynamically generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- GALLERY GRID                                                 -->
+        <!-- ============================================================ -->
+        <section class="gallery-grid-section">
+            <div class="gallery-grid-container">
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Dynamically generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- LIGHTBOX                                                        -->
+    <!-- ================================================================ -->
+    <div class="lightbox-overlay" id="lightboxOverlay">
+        <button class="lightbox-close" onclick="closeLightbox()">Close</button>
+        <div class="lightbox-container">
+            <div class="lightbox-header">
+                <span class="lb-title" id="lbTitle">Album Title</span>
+                <div class="lb-meta">
+                    <span id="lbDate">Date --</span>
+                    <span id="lbLocation">Location --</span>
+                </div>
+            </div>
+            <div class="lightbox-main" id="lightboxMain">
+                <button class="lb-nav prev" onclick="navigateLightbox(-1)">Previous</button>
+                <img class="lb-image" id="lbImage" src="" alt="">
+                <button class="lb-nav next" onclick="navigateLightbox(1)">Next</button>
+            </div>
+            <div class="lightbox-footer">
+                <span class="lb-caption" id="lbCaption"></span>
+                <span class="lb-counter" id="lbCounter">1 / 1</span>
+                <span class="lb-consent">Consent Confirmed</span>
+            </div>
+            <div class="lightbox-thumbs" id="lbThumbs"></div>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT (unchanged â€” logic preserved exactly)  -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // STATE
+            // ================================================================
+
+            var allAlbums = [];
+            var filteredAlbums = [];
+            var currentFilter = 'all';
+            var lightboxImages = [];
+            var lightboxIndex = 0;
+            var currentAlbumId = null;
+            var filterTags = [];
+
+            // Tag display names mapping
+            var tagDisplayNames = {
+                'workshop': 'Workshops',
+                'field_demo': 'Field Demos',
+                'field_site': 'Field Sites',
+                'training': 'Training',
+                'meeting': 'Meetings',
+                'media': 'Media',
+                'publication': 'Publications',
+                'resource': 'Resources',
+                'repository': 'Repositories',
+                'policy': 'Policy',
+                'stakeholder_engagement': 'Stakeholder Engagement',
+                'bootcamp': 'Bootcamps'
+            };
+
+            // Filter display names for dynamic titles
+            var filterTitles = {
+                'all': 'Activity Gallery'
+            };
+
+            // ================================================================
+            // DOM REFS
+            // ================================================================
+
+            var loaderOverlay = document.getElementById('loaderOverlay');
+            var galleryGrid = document.getElementById('galleryGrid');
+            var heroTitle = document.getElementById('heroTitle');
+            var heroSubtitle = document.getElementById('heroSubtitle');
+            var heroFilters = document.getElementById('heroFilters');
+
+            // Lightbox
+            var lightboxOverlay = document.getElementById('lightboxOverlay');
+            var lbTitle = document.getElementById('lbTitle');
+            var lbDate = document.getElementById('lbDate');
+            var lbLocation = document.getElementById('lbLocation');
+            var lbImage = document.getElementById('lbImage');
+            var lbCaption = document.getElementById('lbCaption');
+            var lbCounter = document.getElementById('lbCounter');
+            var lbThumbs = document.getElementById('lbThumbs');
+
+            // Stats
+            var totalAlbumsEl = document.getElementById('totalAlbums');
+            var totalPhotosEl = document.getElementById('totalPhotos');
+            var totalConsentEl = document.getElementById('totalConsent');
+
+            // ================================================================
+            // LOAD DATA
+            // ================================================================
+
+            function loadData() {
+                showLoader();
+
+                fetch('/gallery/data/', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Network error');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    allAlbums = data;
+                    processData();
+                    hideLoader();
+                })
+                .catch(function(error) {
+                    console.error('Error loading gallery:', error);
+                    allAlbums = [];
+                    processData();
+                    hideLoader();
+                });
+            }
+
+            // ================================================================
+            // PROCESS DATA
+            // ================================================================
+
+            function processData() {
+                // Update stats
+                var totalPhotos = 0;
+                var totalConsent = 0;
+                allAlbums.forEach(function(album) {
+                    var images = album.images || [];
+                    totalPhotos += images.length;
+                    if (album.consent_confirmed) {
+                        totalConsent++;
+                    }
+                });
+
+                totalAlbumsEl.textContent = allAlbums.length;
+                totalPhotosEl.textContent = totalPhotos;
+                totalConsentEl.textContent = totalConsent;
+
+                // Extract unique tags from all albums
+                extractUniqueTags();
+
+                // Build filter buttons
+                buildFilterButtons();
+
+                // Set initial title and subtitle
+                updateTitle('all');
+
+                // Render grid with all albums
+                filterAlbums('all', null);
+            }
+
+            // ================================================================
+            // EXTRACT UNIQUE TAGS
+            // ================================================================
+
+            function extractUniqueTags() {
+                var tagSet = new Set();
+
+                allAlbums.forEach(function(album) {
+                    var tags = album.tags || [];
+                    var activityType = album.activity_type || '';
+
+                    // Add tags from the tags array
+                    tags.forEach(function(tag) {
+                        if (tag && tag.trim()) {
+                            tagSet.add(tag.trim());
+                        }
+                    });
+
+                    // Also add activity_type if it's a valid tag
+                    if (activityType && activityType.trim()) {
+                        tagSet.add(activityType.trim());
+                    }
+                });
+
+                // Convert to array and sort
+                filterTags = Array.from(tagSet).sort();
+
+                // Build filter titles dynamically
+                filterTags.forEach(function(tag) {
+                    var displayName = tagDisplayNames[tag] || tag.replace(/_/g, ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+                    filterTitles[tag] = displayName + ' Gallery';
+                });
+            }
+
+            // ================================================================
+            // BUILD FILTER BUTTONS
+            // ================================================================
+
+            function buildFilterButtons() {
+                if (!heroFilters) return;
+
+                var html = '';
+
+                // Always include "All Photos" first
+                html += `
+                    <button class="filter-btn active" data-filter="all" onclick="filterAlbums('all', this)">
+                        All Photos
+                        <span class="filter-count" id="countAll">${allAlbums.length}</span>
+                    </button>
+                `;
+
+                // Add buttons for each unique tag
+                filterTags.forEach(function(tag) {
+                    var displayName = tagDisplayNames[tag] || tag.replace(/_/g, ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+                    var count = countAlbumsWithTag(tag);
+                    html += `
+                        <button class="filter-btn" data-filter="${tag}" onclick="filterAlbums('${tag}', this)">
+                            ${displayName}
+                            <span class="filter-count">${count}</span>
+                        </button>
+                    `;
+                });
+
+                heroFilters.innerHTML = html;
+            }
+
+            // ================================================================
+            // COUNT ALBUMS WITH TAG
+            // ================================================================
+
+            function countAlbumsWithTag(tag) {
+                var count = 0;
+                allAlbums.forEach(function(album) {
+                    var tags = album.tags || [];
+                    var activityType = album.activity_type || '';
+                    if (tags.indexOf(tag) !== -1 || activityType === tag) {
+                        count++;
+                    }
+                });
+                return count;
+            }
+
+            // ================================================================
+            // GET FILTERED ALBUMS
+            // ================================================================
+
+            function getFilteredAlbums(filter) {
+                if (filter === 'all') {
+                    return allAlbums;
+                }
+
+                return allAlbums.filter(function(album) {
+                    var tags = album.tags || [];
+                    var activityType = album.activity_type || '';
+                    return tags.indexOf(filter) !== -1 || activityType === filter;
+                });
+            }
+
+            // ================================================================
+            // UPDATE TITLE
+            // ================================================================
+
+            function updateTitle(filter) {
+                var title = filterTitles[filter] || 'Activity Gallery';
+
+                if (filter === 'all') {
+                    heroTitle.innerHTML = 'Activity <span class="highlight">Gallery</span>';
+                } else {
+                    var displayName = tagDisplayNames[filter] || filter.replace(/_/g, ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+                    heroTitle.innerHTML = displayName + ' <span class="highlight">Gallery</span>';
+                }
+
+                // Update subtitle based on filter
+                var subtitles = {
+                    'all': 'Visual evidence of our field activities, training workshops, and community engagements across the BRIDGE-AI Kenya project sites.',
+                    'workshop': 'Explore our workshop activities where stakeholders co-design and refine BRIDGE-AI solutions.',
+                    'field_site': 'Discover field demonstrations and on-farm deployments of Smart Mushroom technology.',
+                    'training': 'View training sessions, bootcamps, and capacity building programs from BRIDGE-AI Kenya.'
+                };
+                heroSubtitle.textContent = subtitles[filter] || 'Explore ' + (filterTitles[filter] || 'gallery') + ' from BRIDGE-AI Kenya.';
+            }
+
+            // ================================================================
+            // FILTER ALBUMS
+            // ================================================================
+
+            window.filterAlbums = function(filter, button) {
+                currentFilter = filter;
+
+                // Update active button
+                document.querySelectorAll('.filter-btn').forEach(function(btn) {
+                    btn.classList.remove('active');
+                });
+                if (button) {
+                    button.classList.add('active');
+                }
+
+                filteredAlbums = getFilteredAlbums(filter);
+                updateTitle(filter);
+                renderGrid(filteredAlbums);
+            };
+
+            // ================================================================
+            // RENDER GRID - TRUE MASONRY WITH VARIABLE WIDTHS
+            // ================================================================
+
+            function renderGrid(albums) {
+                if (!galleryGrid) return;
+
+                if (!albums || albums.length === 0) {
+                    galleryGrid.innerHTML = `
+                        <div class="empty-state">
+                            <span class="empty-icon">âˆ…</span>
+                            <h3>No albums found</h3>
+                            <p>There are no albums matching this filter. Try selecting a different category.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                var html = '';
+                var columnOptions = [1, 1, 2, 3];
+                var heightOptions = ['280px', '340px', '300px', '360px', '320px', '380px', '290px', '350px', '310px'];
+
+                // Track grid column usage to avoid overflow
+                var colTracker = 0;
+                var maxCols = 4;
+
+                albums.forEach(function(album) {
+                    var images = album.images || [];
+                    var photoCount = images.length;
+
+                    // Get cover image (featured or first)
+                    var coverImage = '';
+                    images.forEach(function(img) {
+                        if (img.is_featured) {
+                            coverImage = img.image_path;
+                        }
+                    });
+                    if (!coverImage && images.length > 0) {
+                        coverImage = images[0].image_path;
+                    }
+
+                    // Determine column span (1, 2, or 3)
+                    var colSpan = columnOptions[Math.floor(Math.random() * columnOptions.length)];
+
+                    // Ensure we don't exceed grid columns
+                    if (colTracker + colSpan > maxCols) {
+                        colSpan = maxCols - colTracker;
+                        if (colSpan < 1) colSpan = 1;
+                    }
+                    colTracker += colSpan;
+                    if (colTracker >= maxCols) {
+                        colTracker = 0;
+                    }
+
+                    // Random height
+                    var height = heightOptions[Math.floor(Math.random() * heightOptions.length)];
+
+                    // Format date
+                    var displayDate = album.date || 'Date TBD';
+                    if (displayDate !== 'Date TBD') {
+                        try {
+                            var d = new Date(displayDate);
+                            displayDate = d.toLocaleDateString('en-GB', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric'
+                            });
+                        } catch(e) {}
+                    }
+
+                    var consentHtml = album.consent_confirmed ?
+                        '<span class="overlay-consent">Consent Confirmed</span>' :
+                        '';
+
+                    var description = album.description || '';
+                    if (description.length > 160) {
+                        description = description.substring(0, 160) + '...';
+                    }
+
+                    html += `
+                        <div class="album-card col-${colSpan}" onclick="openLightboxById(${album.id})">
+                            <div class="album-image-container" style="height: ${height};">
+                                ${coverImage ? `<img src="/static/${coverImage}" alt="${album.title || ''}" class="album-main-image" loading="lazy">` : '<div style="background:var(--bg-light);height:100%;display:flex;align-items:center;justify-content:center;color:var(--text-light);font-size:0.9rem;">No cover image</div>'}
+                                <div class="album-overlay">
+                                    <h4 class="overlay-title">${album.title || 'Untitled'}</h4>
+                                    <div class="overlay-meta">
+                                        <span>${displayDate}</span>
+                                        <span>${album.location || 'Location TBD'}</span>
+                                    </div>
+                                    ${description ? `<p class="overlay-description">${escapeHtml(description)}</p>` : ''}
+                                    <div class="overlay-footer">
+                                        <span class="overlay-photos">${photoCount} photo${photoCount !== 1 ? 's' : ''}</span>
+                                        ${consentHtml}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- No thumbnails, no info section - all details on hover -->
+                        </div>
+                    `;
+                });
+
+                galleryGrid.innerHTML = html;
+            }
+
+            // ================================================================
+            // LIGHTBOX
+            // ================================================================
+
+            window.openLightboxById = function(albumId) {
+                var album = null;
+                for (var i = 0; i < allAlbums.length; i++) {
+                    if (allAlbums[i].id === albumId) {
+                        album = allAlbums[i];
+                        break;
+                    }
+                }
+                if (album) {
+                    openLightbox(album);
+                }
+            };
+
+            function openLightbox(album) {
+                if (!album) return;
+
+                currentAlbumId = album.id;
+                var images = album.images || [];
+
+                if (images.length === 0) {
+                    return;
+                }
+
+                lightboxImages = images;
+                lightboxIndex = 0;
+
+                // Find featured image index
+                images.forEach(function(img, idx) {
+                    if (img.is_featured) {
+                        lightboxIndex = idx;
+                    }
+                });
+
+                lbTitle.textContent = album.title || 'Untitled';
+
+                var displayDate = album.date || 'Date TBD';
+                if (displayDate !== 'Date TBD') {
+                    try {
+                        var d = new Date(displayDate);
+                        displayDate = d.toLocaleDateString('en-GB', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric'
+                        });
+                    } catch(e) {}
+                }
+                lbDate.textContent = 'Date ' + displayDate;
+                lbLocation.textContent = 'Location ' + (album.location || 'TBD');
+
+                showLightboxImage(lightboxIndex);
+                lightboxOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Keyboard navigation
+                document.addEventListener('keydown', lightboxKeyHandler);
+            }
+
+            function showLightboxImage(index) {
+                if (!lightboxImages || lightboxImages.length === 0) return;
+
+                var img = lightboxImages[index];
+                if (!img) return;
+
+                lbImage.src = '/static/' + img.image_path;
+                lbImage.alt = img.alt_text || img.caption || '';
+                lbCaption.textContent = img.caption || '';
+                lbCounter.textContent = (index + 1) + ' / ' + lightboxImages.length;
+
+                // Update thumbnails
+                var thumbHtml = '';
+                lightboxImages.forEach(function(thumb, idx) {
+                    var active = idx === index ? 'active' : '';
+                    thumbHtml += `
+                        <img src="/static/${thumb.image_path}" alt="" class="lb-thumb ${active}" onclick="navigateLightboxTo(${idx})">
+                    `;
+                });
+                lbThumbs.innerHTML = thumbHtml;
+
+                // Scroll thumb into view
+                var activeThumb = lbThumbs.querySelector('.lb-thumb.active');
+                if (activeThumb) {
+                    activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            }
+
+            window.navigateLightbox = function(direction) {
+                if (!lightboxImages || lightboxImages.length === 0) return;
+                var newIndex = lightboxIndex + direction;
+                if (newIndex < 0) newIndex = lightboxImages.length - 1;
+                if (newIndex >= lightboxImages.length) newIndex = 0;
+                lightboxIndex = newIndex;
+                showLightboxImage(lightboxIndex);
+            };
+
+            window.navigateLightboxTo = function(index) {
+                if (!lightboxImages || lightboxImages.length === 0) return;
+                if (index < 0 || index >= lightboxImages.length) return;
+                lightboxIndex = index;
+                showLightboxImage(lightboxIndex);
+            };
+
+            window.closeLightbox = function() {
+                lightboxOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                document.removeEventListener('keydown', lightboxKeyHandler);
+            };
+
+            function lightboxKeyHandler(e) {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowLeft') {
+                    navigateLightbox(-1);
+                } else if (e.key === 'ArrowRight') {
+                    navigateLightbox(1);
+                }
+            }
+
+            // ================================================================
+            // LOADER
+            // ================================================================
+
+            function showLoader() {
+                if (loaderOverlay) {
+                    loaderOverlay.classList.remove('hidden');
+                    loaderOverlay.style.display = 'flex';
+                }
+            }
+
+            function hideLoader() {
+                if (loaderOverlay) {
+                    loaderOverlay.classList.add('hidden');
+                    setTimeout(function() {
+                        loaderOverlay.style.display = 'none';
+                    }, 600);
+                }
+            }
+
+            // ================================================================
+            // HELPERS
+            // ================================================================
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                var div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // ================================================================
+            // INITIALIZE
+            // ================================================================
+
+            document.addEventListener('DOMContentLoaded', function() {
+                loadData();
+                console.log('BRIDGE-AI Kenya Gallery initialized with dynamic filters');
+            });
+
+        })();
+    </script>
+</body>
+</html>

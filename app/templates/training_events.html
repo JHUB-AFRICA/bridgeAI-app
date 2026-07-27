@@ -1,0 +1,1752 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - TRAINING EVENTS PAGE                         -->
+<!-- ================================================================ -->
+<!-- Glassmorphism + Image Hero Style                                 -->
+<!-- Premium · Modern · Unique                                       -->
+<!-- Features: Gradient hero · Edge-to-edge image · Glass cards    -->
+<!-- Clean typography · No emojis · No decorative symbols         -->
+<!-- Fully responsive · Modern design                             -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Events - BRIDGE-AI Kenya</title>
+    <meta name="description" content="Upcoming bootcamps, workshops, and training events hosted by JKUAT's Smart Farm Zone under BRIDGE-AI Kenya.">
+    <meta name="robots" content="index, follow">
+
+    <style>
+        /* ================================================================ */
+        /* CSS VARIABLES                                                   */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #061420;
+            --primary: #0F2B3D;
+            --primary-light: #1A4A6B;
+            --gold: #D4A843;
+            --gold-light: #F5D77E;
+            --gold-pale: #F5ECD7;
+            --text-dark: #0A1A2A;
+            --text-body: #1A2A3A;
+            --text-muted: #5A6A7A;
+            --text-light: #8A9AAA;
+            --bg-white: #FFFFFF;
+            --bg-light: #F6F8FA;
+            --bg-lighter: #FAFCFE;
+            --border-light: #E8ECF0;
+            --shadow-sm: 0 2px 12px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 40px rgba(0,0,0,0.06);
+            --shadow-lg: 0 16px 60px rgba(0,0,0,0.08);
+            --shadow-xl: 0 24px 80px rgba(0,0,0,0.12);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --transition: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+            --status-upcoming: #28a745;
+            --status-ongoing: #D4A843;
+            --status-completed: #6c757d;
+            --status-cancelled: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-body);
+            background: var(--bg-white);
+            line-height: 1.7;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ================================================================ */
+        /* ANIMATIONS                                                      */
+        /* ================================================================ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .animate-on-scroll.delay-1 { transition-delay: 0.05s; }
+        .animate-on-scroll.delay-2 { transition-delay: 0.10s; }
+        .animate-on-scroll.delay-3 { transition-delay: 0.15s; }
+        .animate-on-scroll.delay-4 { transition-delay: 0.20s; }
+
+        /* ================================================================ */
+        /* PAGE LOADER                                                     */
+        /* ================================================================ */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0a0e14;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        #page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.06);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: loaderSpin 0.8s linear infinite;
+        }
+        @keyframes loaderSpin { to { transform: rotate(360deg); } }
+        #page-loader p {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.25);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+        }
+
+        /* ================================================================ */
+        /* BREADCRUMB                                                      */
+        /* ================================================================ */
+        .breadcrumb-bar {
+            background: var(--bg-white);
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 72px;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255,255,255,0.92);
+        }
+        .breadcrumb-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+        .breadcrumb-container a {
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: color var(--transition);
+            font-weight: 500;
+        }
+        .breadcrumb-container a:hover { color: var(--gold); }
+        .breadcrumb-container .sep {
+            color: var(--text-light);
+            opacity: 0.3;
+            font-weight: 300;
+        }
+        .breadcrumb-container .current {
+            color: var(--text-body);
+            font-weight: 600;
+        }
+
+        /* ================================================================ */
+        /* HERO - Gradient with Edge-to-Edge Image                        */
+        /* ================================================================ */
+        .hero-section {
+            position: relative;
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: #061420;
+            padding: 24px 0 16px;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(212, 168, 67, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(26, 74, 107, 0.06) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 80%, rgba(212, 168, 67, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-accent-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            z-index: 2;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            opacity: 0.6;
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 24px;
+            margin: 0 auto;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+            min-height: 40vh;
+        }
+
+        .hero-left {
+            max-width: 100%;
+            padding-top: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 4px 18px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 12px;
+            
+        }
+
+        .hero-title {
+            font-size: 3.8rem;
+            font-weight: 800;
+            line-height: 1.04;
+            letter-spacing: -0.03em;
+            margin: 0 0 6px;
+            color: #ffffff;
+        }
+
+        .hero-title .gold {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 0.95rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 480px;
+            line-height: 1.7;
+            margin: 0 0 16px;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 32px;
+            background: var(--gold);
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all var(--transition);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            font-family: var(--font-sans);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(212, 168, 67, 0.25);
+        }
+
+        .btn-arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+        .btn-primary:hover .btn-arrow { transform: translateX(6px); }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 30px;
+            color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* ─── Hero Image - Edge to Edge ─── */
+        .hero-right {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 0;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            background: var(--primary-dark);
+            margin: 0;
+        }
+
+        .hero-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 8s ease;
+            display: block;
+        }
+
+        .hero-image-wrapper:hover img {
+            transform: scale(1.04);
+        }
+
+        .hero-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, 
+                rgba(6, 20, 32, 0.10) 0%,
+                rgba(15, 43, 61, 0.30) 50%,
+                rgba(26, 74, 107, 0.15) 100%
+            );
+            pointer-events: none;
+        }
+
+        /* ================================================================ */
+        /* STATS STRIP - Minimal Bar                                      */
+        /* ================================================================ */
+        .stats-strip {
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-light);
+            padding: 16px 24px;
+        }
+
+        .stats-strip .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .stats-strip .stat-item {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .stats-strip .stat-item .stat-number {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+
+        .stats-strip .stat-item .stat-number.gold {
+            color: var(--gold);
+        }
+
+        .stats-strip .stat-item .stat-label {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .stats-strip .stat-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--border-light);
+        }
+
+        /* ================================================================ */
+        /* FILTER SECTION - Minimal                                        */
+        /* ================================================================ */
+        .filter-section {
+            background: var(--bg-white);
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 72px;
+            z-index: 40;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.92);
+        }
+
+        .filter-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-group .filter-label {
+            font-size: 0.5rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            flex-shrink: 0;
+            padding: 4px 6px 4px 0;
+        }
+
+        .filter-group select {
+            padding: 6px 28px 6px 12px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-body);
+            background: var(--bg-white);
+            cursor: pointer;
+            transition: all var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231A4A6B' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            min-width: 90px;
+            max-width: 150px;
+            width: auto;
+            font-family: var(--font-sans);
+        }
+
+        .filter-group select:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(26, 74, 107, 0.04);
+        }
+
+        .filter-group select.has-value {
+            border-color: var(--primary-light);
+            background-color: #F5F9FC;
+        }
+
+        .filter-group .filter-clear {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 14px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-light);
+            border: 1.5px solid var(--border-light);
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            cursor: pointer;
+        }
+
+        .filter-group .filter-clear:hover {
+            background: var(--primary-light);
+            color: #ffffff;
+            border-color: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(26, 74, 107, 0.12);
+        }
+
+        .filter-results {
+            font-size: 0.72rem;
+            font-weight: 450;
+            color: var(--text-muted);
+            padding: 4px 0;
+        }
+
+        .filter-results strong {
+            color: var(--text-body);
+            font-weight: 600;
+        }
+
+        /* ================================================================ */
+        /* TIMELINE SECTION                                                */
+        /* ================================================================ */
+        .section-timeline {
+            padding: 0px 24px 60px;
+            background: var(--bg-lighter);
+        }
+
+        .timeline-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline-year {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.03);
+            letter-spacing: -0.04em;
+            padding: 28px 0 10px;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 20px;
+            position: relative;
+            user-select: none;
+        }
+
+        .timeline-year .year-text {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+            opacity: 0.5;
+        }
+
+        .timeline-month {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 0 14px;
+            position: relative;
+        }
+
+        .timeline-month .month-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold);
+            flex-shrink: 0;
+            opacity: 0.3;
+        }
+
+        .timeline-month .month-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border-light);
+            opacity: 0.5;
+        }
+
+        .timeline-month .month-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: 0.02em;
+            flex-shrink: 0;
+        }
+
+        .timeline-month .month-count {
+            font-size: 0.65rem;
+            color: var(--text-light);
+            font-weight: 500;
+            flex-shrink: 0;
+            background: var(--bg-white);
+            padding: 0 10px;
+            border-radius: 40px;
+        }
+
+        /* ================================================================ */
+        /* EVENT CARD - Glassmorphism Style                               */
+        /* ================================================================ */
+        .event-card {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 0;
+            margin-bottom: 20px;
+            background: var(--bg-white);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 2;
+        }
+
+        .event-card:hover::before {
+            opacity: 1;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: rgba(212, 168, 67, 0.08);
+        }
+
+        /* ─── Card Image ─── */
+        .event-card .card-image {
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-light);
+            min-height: 160px;
+        }
+
+        .event-card .card-image img {
+            width: 100%;
+            height: 100%;
+            min-height: 160px;
+            object-fit: cover;
+            transition: transform var(--transition-slow);
+            display: block;
+        }
+
+        .event-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .event-card .card-image .image-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, var(--bg-light), #E8EDF2);
+            color: var(--text-light);
+            font-size: 0.6rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* ─── Status Overlay ─── */
+        .event-card .card-image .status-overlay {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 3px 14px;
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .event-card .card-image .status-overlay.upcoming { background: rgba(40, 167, 69, 0.85); }
+        .event-card .card-image .status-overlay.ongoing { background: rgba(212, 168, 67, 0.85); }
+        .event-card .card-image .status-overlay.completed { background: rgba(108, 117, 125, 0.85); }
+        .event-card .card-image .status-overlay.cancelled { background: rgba(220, 53, 69, 0.85); }
+
+        /* ─── Date Badge ─── */
+        .event-card .card-image .date-badge {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 4px;
+            padding: 4px 12px;
+            min-width: 44px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .event-card .card-image .date-badge .day {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.1;
+        }
+
+        .event-card .card-image .date-badge .month {
+            font-size: 0.5rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* ─── Card Body ─── */
+        .event-card .card-body {
+            padding: 18px 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .event-card .card-body .event-top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+
+        .event-card .card-body .status-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .event-card .card-body .status-dot.upcoming { background: var(--status-upcoming); }
+        .event-card .card-body .status-dot.ongoing { background: var(--status-ongoing); }
+        .event-card .card-body .status-dot.completed { background: var(--status-completed); }
+        .event-card .card-body .status-dot.cancelled { background: var(--status-cancelled); }
+
+        .event-card .card-body .status-text {
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+
+        .event-card .card-body .event-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: color var(--transition);
+            line-height: 1.3;
+            margin-bottom: 4px;
+        }
+
+        .event-card .card-body .event-title:hover {
+            color: var(--primary-light);
+        }
+
+        /* ─── Event Meta with Labels ─── */
+        .event-card .card-body .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 18px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+
+        .event-card .card-body .event-meta .meta-item {
+            display: flex;
+            align-items: baseline;
+            gap: 3px;
+        }
+
+        .event-card .card-body .event-meta .meta-item .meta-label {
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-light);
+            opacity: 0.5;
+            flex-shrink: 0;
+        }
+
+        .event-card .card-body .event-meta .meta-item .meta-label::after {
+            content: ':';
+            margin-right: 2px;
+        }
+
+        .event-card .card-body .event-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .event-card .card-body .event-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .event-card .card-body .event-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .event-card .card-body .event-actions .btn-detail {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+        }
+
+        .event-card .card-body .event-actions .btn-detail:hover {
+            color: var(--gold);
+            gap: 10px;
+        }
+
+        .event-card .card-body .event-actions .btn-detail .arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+        .event-card .card-body .event-actions .btn-detail:hover .arrow { transform: translateX(4px); }
+
+        .event-card .card-body .event-actions .btn-register {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: var(--primary-light);
+            padding: 4px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            border: none;
+            cursor: pointer;
+        }
+
+        .event-card .card-body .event-actions .btn-register:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(26, 74, 107, 0.15);
+        }
+
+        .event-card .card-body .event-actions .btn-register .reg-arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+        .event-card .card-body .event-actions .btn-register:hover .reg-arrow { transform: translateX(4px); }
+
+        .event-card .card-body .event-capacity {
+            font-size: 0.65rem;
+            color: var(--text-light);
+        }
+
+        /* ================================================================ */
+        /* EMPTY STATE                                                     */
+        /* ================================================================ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--bg-white);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .empty-state .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: var(--primary-light);
+            text-decoration: none;
+            transition: all var(--transition);
+        }
+
+        .empty-state .btn-back:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            gap: 12px;
+            box-shadow: 0 8px 32px rgba(26, 74, 107, 0.15);
+        }
+
+        /* ================================================================ */
+        /* BACK SECTION                                                    */
+        /* ================================================================ */
+        .back-section {
+            padding: 20px 24px 50px;
+            text-align: center;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .back-section .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all var(--transition);
+            padding: 10px 24px;
+            border-radius: 4px;
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+        }
+
+        .back-section .back-link:hover {
+            gap: 16px;
+            color: var(--primary-light);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                      */
+        /* ================================================================ */
+
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr 280px;
+                gap: 32px;
+            }
+            .hero-title { font-size: 3.2rem; }
+            .event-card { grid-template-columns: 160px 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 64px; }
+            .breadcrumb-bar { top: 64px; padding: 10px 16px; }
+
+            .hero-section { min-height: auto; }
+            .hero-container { padding: 30px 20px; }
+            .hero-grid { grid-template-columns: 1fr; gap: 24px; min-height: auto; }
+            .hero-left { padding-top: 0; }
+            .hero-title { font-size: 2.4rem; }
+            .hero-subtitle { font-size: 0.92rem; max-width: 100%; }
+
+            .hero-image-wrapper {
+                aspect-ratio: 16/10;
+                max-height: 240px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            .btn-primary, .btn-outline {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 20px;
+            }
+
+            .stats-strip { padding: 12px 16px; }
+            .stats-strip .stats-container { gap: 20px; }
+            .stats-strip .stat-item .stat-number { font-size: 1.2rem; }
+            .stats-strip .stat-item .stat-label { font-size: 0.5rem; }
+
+            .filter-section { top: 64px; padding: 10px 0; }
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+                padding: 0 16px;
+            }
+            .filter-group { flex-wrap: wrap; }
+            .filter-group select {
+                min-width: 80px;
+                flex: 1;
+                max-width: 100%;
+                font-size: 0.65rem;
+                padding: 5px 24px 5px 10px;
+            }
+            .filter-group .filter-label { width: 100%; padding: 0 0 2px 0; }
+            .filter-group .filter-clear { width: 100%; justify-content: center; }
+            .filter-results { text-align: center; width: 100%; }
+
+            .section-timeline { padding: 20px 16px 40px; }
+            .timeline-year { font-size: 1.6rem; padding: 20px 0 8px; margin-bottom: 14px; }
+            .timeline-year .year-text { font-size: 0.85rem; }
+            .timeline-month { padding: 12px 0 10px; }
+            .timeline-month .month-name { font-size: 0.9rem; }
+
+            .event-card {
+                grid-template-columns: 1fr;
+                margin-bottom: 14px;
+                border-radius: var(--radius-sm);
+            }
+            .event-card .card-image {
+                min-height: 160px;
+                max-height: 200px;
+            }
+            .event-card .card-image img {
+                min-height: 160px;
+                max-height: 200px;
+            }
+            .event-card .card-body { padding: 14px 16px; }
+            .event-card .card-body .event-title { font-size: 0.95rem; }
+            .event-card .card-body .event-meta { font-size: 0.7rem; gap: 4px 12px; }
+            .event-card .card-body .event-desc { font-size: 0.75rem; }
+            .event-card:hover { transform: translateY(-2px); }
+
+            .back-section { padding: 16px 16px 36px; }
+            .back-section .back-link { width: 100%; justify-content: center; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 1.8rem; }
+            .hero-badge { font-size: 0.55rem; padding: 3px 14px; }
+
+            .hero-image-wrapper {
+                max-height: 180px;
+            }
+
+            .stats-strip .stats-container { gap: 14px; }
+            .stats-strip .stat-item .stat-number { font-size: 1rem; }
+            .stats-strip .stat-divider { display: none; }
+
+            .filter-group select { font-size: 0.6rem; padding: 4px 20px 4px 8px; min-width: 60px; }
+            .filter-group .filter-label { font-size: 0.5rem; }
+
+            .event-card .card-body .event-title { font-size: 0.88rem; }
+            .event-card .card-body .event-meta { font-size: 0.65rem; }
+            .event-card .card-body .event-desc { font-size: 0.7rem; }
+            .event-card .card-body .event-actions .btn-detail { font-size: 0.7rem; }
+            .event-card .card-body .event-actions .btn-register { font-size: 0.6rem; padding: 3px 12px; }
+            .event-card .card-image { min-height: 130px; max-height: 160px; }
+            .event-card .card-image img { min-height: 130px; max-height: 160px; }
+
+            .empty-state { padding: 40px 16px; }
+            .empty-state h3 { font-size: 1.1rem; }
+            .timeline-month .month-count { font-size: 0.5rem; padding: 0 6px; }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-light); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+        ::selection { background: var(--gold-pale); color: var(--text-dark); }
+
+        /* ================================================================ */
+        /* REDUCED MOTION                                                  */
+        /* ================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADER                                                          -->
+    <!-- ================================================================ -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+        <p>Loading events...</p>
+    </div>
+
+    <script>
+        (function() {
+            function hideLoader() {
+                var loader = document.getElementById('page-loader');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    setTimeout(function() {
+                        if (loader.parentNode) loader.parentNode.removeChild(loader);
+                    }, 700);
+                }
+            }
+            if (document.readyState === 'complete') {
+                hideLoader();
+            } else {
+                window.addEventListener('load', hideLoader);
+                setTimeout(hideLoader, 3000);
+            }
+        })();
+    </script>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- BREADCRUMB                                                      -->
+    <!-- ================================================================ -->
+    <div class="breadcrumb-bar">
+        <div class="breadcrumb-container">
+            <a href="{{ url_for('public.index') }}">Home</a>
+            <span class="sep">·</span>
+            <a href="{{ url_for('public.training_wp5') }}">Training and WP5</a>
+            <span class="sep">·</span>
+            <span class="current">Training Events</span>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- HERO SECTION - With Edge-to-Edge Feature Image                 -->
+    <!-- ================================================================ -->
+    <section class="hero-section">
+        <div class="hero-accent-line"></div>
+
+        <div class="hero-container">
+            <div class="hero-grid">
+                <!-- Left Column -->
+                <div class="hero-left">
+                    <span class="hero-badge">T5.2 Local Training Bootcamps</span>
+                    <h1 class="hero-title">
+                        Training <span class="gold">Events</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Upcoming bootcamps, workshops, and training sessions hosted by JKUAT's Smart Farm Zone.
+                        Discover opportunities to build your skills in AI, IoT, and smart agriculture.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#events" class="btn-primary">
+                            Explore Events
+                            <span class="btn-arrow">→</span>
+                        </a>
+                        <a href="#filters" class="btn-outline">
+                            Filter Events
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column - Image Only -->
+                <div class="hero-right">
+                    <div class="hero-image-wrapper">
+                        {% if hero_image %}
+                            <img src="{{ url_for('static', filename='uploads/events/' + hero_image) }}" 
+                                 alt="Training event at JKUAT Smart Farm Zone" 
+                                 loading="eager">
+                        {% else %}
+                            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&h=600&fit=crop&crop=center&auto=format&q=80" 
+                                 alt="Training event at JKUAT Smart Farm Zone" 
+                                 loading="eager">
+                        {% endif %}
+                        <div class="hero-image-overlay"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- STATS STRIP                                                     -->
+    <!-- ================================================================ -->
+    <div class="stats-strip" id="statsStrip">
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-number gold" id="statUpcoming">0</span>
+                <span class="stat-label">Upcoming</span>
+            </div>
+            <span class="stat-divider"></span>
+            <div class="stat-item">
+                <span class="stat-number" id="statOngoing">0</span>
+                <span class="stat-label">Ongoing</span>
+            </div>
+            <span class="stat-divider"></span>
+            <div class="stat-item">
+                <span class="stat-number" id="statCompleted">0</span>
+                <span class="stat-label">Completed</span>
+            </div>
+            <span class="stat-divider"></span>
+            <div class="stat-item">
+                <span class="stat-number" id="statTotal">0</span>
+                <span class="stat-label">Total Events</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- FILTER SECTION                                                  -->
+    <!-- ================================================================ -->
+    <div class="filter-section" id="filters">
+        <div class="filter-container">
+            <div class="filter-group">
+                <span class="filter-label">Filter</span>
+                <select id="filterStatus" onchange="applyFilters()">
+                    <option value="">All Status</option>
+                    <option value="upcoming">Upcoming</option>
+                    <option value="ongoing">Ongoing</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+                <select id="filterAudience" onchange="applyFilters()">
+                    <option value="">All Audiences</option>
+                    <option value="farmers">Farmers</option>
+                    <option value="youth">Youth</option>
+                    <option value="women">Women</option>
+                    <option value="students">Students</option>
+                    <option value="developers">Developers</option>
+                    <option value="smes">SMEs</option>
+                    <option value="researchers">Researchers</option>
+                    <option value="policymakers">Policymakers</option>
+                    <option value="media">Media</option>
+                    <option value="public">Public</option>
+                </select>
+                <select id="filterYear" onchange="applyFilters()">
+                    <option value="">All Years</option>
+                </select>
+                <select id="filterMonth" onchange="applyFilters()">
+                    <option value="">All Months</option>
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <span class="filter-results" id="filterResults"><strong>0</strong> events found</span>
+                <button class="filter-clear" onclick="clearFilters()">Clear Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- TIMELINE SECTION                                                -->
+    <!-- ================================================================ -->
+    <section class="section-timeline" id="events">
+        <div class="timeline-container" id="timelineContainer">
+            <!-- Rendered by JavaScript -->
+        </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- BACK TO TRAINING                                                -->
+    <!-- ================================================================ -->
+    <section class="back-section">
+        <a href="{{ url_for('public.training_wp5') }}" class="back-link">
+            ← Back to Training and WP5
+        </a>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- JAVASCRIPT                                                      -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // STATE
+            // ================================================================
+
+            var allEvents = [];
+            var filteredEvents = [];
+
+            // DOM refs
+            var timelineContainer = document.getElementById('timelineContainer');
+            var filterStatus = document.getElementById('filterStatus');
+            var filterAudience = document.getElementById('filterAudience');
+            var filterYear = document.getElementById('filterYear');
+            var filterMonth = document.getElementById('filterMonth');
+            var filterResults = document.getElementById('filterResults');
+
+            // Stats refs
+            var statUpcoming = document.getElementById('statUpcoming');
+            var statOngoing = document.getElementById('statOngoing');
+            var statCompleted = document.getElementById('statCompleted');
+            var statTotal = document.getElementById('statTotal');
+
+            // Months array
+            var months = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+
+            // ================================================================
+            // LOAD EVENTS
+            // ================================================================
+
+            function loadEvents() {
+                fetch('/api/events/', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP error ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    allEvents = data || [];
+                    populateYearFilter(allEvents);
+                    updateStats(allEvents);
+                    filteredEvents = [...allEvents];
+                    renderTimeline(filteredEvents);
+                    hidePageLoader();
+                })
+                .catch(function(error) {
+                    console.error('Error loading events:', error);
+                    allEvents = [];
+                    filteredEvents = [];
+                    renderTimeline([]);
+                    hidePageLoader();
+                });
+            }
+
+            // ================================================================
+            // PAGE LOADER
+            // ================================================================
+
+            function hidePageLoader() {
+                var loader = document.getElementById('page-loader');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    setTimeout(function() {
+                        if (loader.parentNode) loader.parentNode.removeChild(loader);
+                    }, 700);
+                }
+            }
+
+            // ================================================================
+            // POPULATE YEAR FILTER
+            // ================================================================
+
+            function populateYearFilter(events) {
+                var yearSet = new Set();
+                events.forEach(function(event) {
+                    if (event.date) {
+                        var date = new Date(event.date);
+                        if (!isNaN(date.getTime())) {
+                            yearSet.add(date.getFullYear());
+                        }
+                    }
+                });
+
+                var years = Array.from(yearSet).sort(function(a, b) { return b - a; });
+
+                filterYear.innerHTML = '<option value="">All Years</option>';
+                years.forEach(function(year) {
+                    var opt = document.createElement('option');
+                    opt.value = year;
+                    opt.textContent = year;
+                    filterYear.appendChild(opt);
+                });
+            }
+
+            // ================================================================
+            // UPDATE STATS
+            // ================================================================
+
+            function updateStats(events) {
+                var upcoming = events.filter(function(e) { return e.status === 'upcoming'; });
+                var ongoing = events.filter(function(e) { return e.status === 'ongoing'; });
+                var completed = events.filter(function(e) { return e.status === 'completed'; });
+
+                animateNumber(statUpcoming, upcoming.length);
+                animateNumber(statOngoing, ongoing.length);
+                animateNumber(statCompleted, completed.length);
+                animateNumber(statTotal, events.length);
+            }
+
+            function animateNumber(el, target) {
+                if (!el) return;
+                var current = parseInt(el.textContent) || 0;
+                if (current === target) return;
+
+                var duration = 600;
+                var startTime = null;
+
+                function step(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    var progress = Math.min((timestamp - startTime) / duration, 1);
+                    var eased = 1 - Math.pow(1 - progress, 3);
+                    var value = Math.round(eased * target);
+                    el.textContent = value;
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        el.textContent = target;
+                    }
+                }
+                requestAnimationFrame(step);
+            }
+
+            // ================================================================
+            // RENDER TIMELINE
+            // ================================================================
+
+            function renderTimeline(events) {
+                if (!events || events.length === 0) {
+                    timelineContainer.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No Events Found</h3>
+                            <p>There are no events matching your filters. Try clearing the filters or check back later.</p>
+                            <a href="{{ url_for('public.training_wp5') }}" class="btn-back">
+                                Back to Training →
+                            </a>
+                        </div>
+                    `;
+                    filterResults.innerHTML = '<strong>0</strong> events found';
+                    return;
+                }
+
+                var grouped = groupEventsByYearMonth(events);
+
+                var html = '';
+                var yearKeys = Object.keys(grouped).sort(function(a, b) { return parseInt(b) - parseInt(a); });
+
+                yearKeys.forEach(function(year) {
+                    var monthsData = grouped[year];
+                    var monthKeys = Object.keys(monthsData).sort(function(a, b) {
+                        return months.indexOf(a) - months.indexOf(b);
+                    });
+
+                    html += '<div class="timeline-year">';
+                    html += '<span class="year-text">' + year + '</span>';
+                    html += '</div>';
+
+                    monthKeys.forEach(function(month) {
+                        var monthEvents = monthsData[month];
+                        html += '<div class="timeline-month">';
+                        html += '<span class="month-dot"></span>';
+                        html += '<span class="month-name">' + month + '</span>';
+                        html += '<span class="month-line"></span>';
+                        html += '<span class="month-count">' + monthEvents.length + '</span>';
+                        html += '</div>';
+
+                        monthEvents.forEach(function(event) {
+                            html += renderEventCard(event);
+                        });
+                    });
+                });
+
+                timelineContainer.innerHTML = html;
+                filterResults.innerHTML = '<strong>' + events.length + '</strong> events found';
+
+                setTimeout(observeElements, 100);
+            }
+
+            // ================================================================
+            // GROUP EVENTS
+            // ================================================================
+
+            function groupEventsByYearMonth(events) {
+                var grouped = {};
+
+                events.forEach(function(event) {
+                    if (!event.date) return;
+                    var date = new Date(event.date);
+                    if (isNaN(date.getTime())) return;
+                    var year = date.getFullYear();
+                    var month = months[date.getMonth()];
+
+                    if (!grouped[year]) grouped[year] = {};
+                    if (!grouped[year][month]) grouped[year][month] = [];
+                    grouped[year][month].push(event);
+                });
+
+                return grouped;
+            }
+
+            // ================================================================
+            // RENDER EVENT CARD - With Labels
+            // ================================================================
+
+            function renderEventCard(event) {
+                var statusDot = event.status || 'upcoming';
+                var statusLabel = statusDot.charAt(0).toUpperCase() + statusDot.slice(1);
+                var dateObj = event.date ? new Date(event.date) : null;
+                var dateDisplay = dateObj ? formatDate(dateObj) : 'Date TBD';
+                var day = dateObj ? String(dateObj.getDate()).padStart(2, '0') : '--';
+                var month = dateObj ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][dateObj.getMonth()] : '---';
+
+                // Featured image
+                var imageHtml = '';
+                if (event.featured_image) {
+                    var imageUrl = '/static/' + event.featured_image;
+                    imageHtml = '<img src="' + imageUrl + '" alt="' + escapeHtml(event.title || 'Event') + '" loading="lazy">';
+                } else {
+                    imageHtml = '<div class="image-placeholder">No Image</div>';
+                }
+
+                // ─── Meta Items with Labels ───
+                var locationHtml = event.location ? 
+                    '<span class="meta-item"><span class="meta-label">Location</span> ' + escapeHtml(event.location) + '</span>' : '';
+                var audienceHtml = event.audience ? 
+                    '<span class="meta-item"><span class="meta-label">Audience</span> ' + escapeHtml(event.audience).charAt(0).toUpperCase() + escapeHtml(event.audience).slice(1) + '</span>' : '';
+                var speakersHtml = event.speakers ? 
+                    '<span class="meta-item"><span class="meta-label">Speakers</span> ' + escapeHtml(event.speakers) + '</span>' : '';
+
+                var showRegister = (event.status === 'upcoming' || event.status === 'ongoing');
+
+                // Build register URL with event details
+                var registerUrl = "{{ url_for('public.contact') }}?type=training&event=" + encodeURIComponent(event.title || '');
+                if (event.date) {
+                    registerUrl += "&date=" + encodeURIComponent(event.date.substring(0, 10));
+                }
+                if (event.location) {
+                    registerUrl += "&location=" + encodeURIComponent(event.location);
+                }
+
+                return `
+                    <div class="event-card animate-on-scroll">
+                        <div class="card-image">
+                            ${imageHtml}
+                            <span class="status-overlay ${statusDot}">${statusLabel}</span>
+                            <div class="date-badge">
+                                <span class="day">${day}</span>
+                                <span class="month">${month}</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="event-top">
+                                <span class="status-dot ${statusDot}"></span>
+                                <span class="status-text">${statusLabel}</span>
+                            </div>
+                            <a href="/training-and-wp5/events/${event.slug || '#'}" class="event-title">
+                                ${escapeHtml(event.title || 'Untitled Event')}
+                            </a>
+                            <div class="event-meta">
+                                ${locationHtml}
+                                ${audienceHtml}
+                                ${speakersHtml}
+                            </div>
+                            ${event.agenda ? `
+                                <div class="event-desc">${escapeHtml(event.agenda)}</div>
+                            ` : ''}
+                            <div class="event-footer">
+                                <div class="event-actions">
+                                    <a href="/training-and-wp5/events/${event.slug || '#'}" class="btn-detail">
+                                        View Details
+                                        <span class="arrow">→</span>
+                                    </a>
+                                    ${showRegister ? `
+                                        <a href="${registerUrl}" class="btn-register">
+                                            Register
+                                            <span class="reg-arrow">→</span>
+                                        </a>
+                                    ` : ''}
+                                </div>
+                                ${event.capacity ? `
+                                    <span class="event-capacity">Capacity ${escapeHtml(String(event.capacity))}</span>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // ================================================================
+            // FILTER FUNCTIONS
+            // ================================================================
+
+            window.applyFilters = function() {
+                var status = filterStatus.value;
+                var audience = filterAudience.value;
+                var year = filterYear.value;
+                var month = filterMonth.value;
+
+                filteredEvents = allEvents.filter(function(event) {
+                    var match = true;
+                    if (status && event.status !== status) match = false;
+                    if (audience && event.audience !== audience) match = false;
+                    if (year && event.date) {
+                        var date = new Date(event.date);
+                        if (!isNaN(date.getTime())) {
+                            if (date.getFullYear() !== parseInt(year)) match = false;
+                        }
+                    }
+                    if (month && event.date) {
+                        var date = new Date(event.date);
+                        if (!isNaN(date.getTime())) {
+                            if ((date.getMonth() + 1) !== parseInt(month)) match = false;
+                        }
+                    }
+                    return match;
+                });
+
+                renderTimeline(filteredEvents);
+                updateActiveFilters();
+            };
+
+            window.clearFilters = function() {
+                filterStatus.value = '';
+                filterAudience.value = '';
+                filterYear.value = '';
+                filterMonth.value = '';
+                filteredEvents = [...allEvents];
+                renderTimeline(filteredEvents);
+                updateActiveFilters();
+            };
+
+            function updateActiveFilters() {
+                document.querySelectorAll('.filter-group select').forEach(function(select) {
+                    if (select.value) select.classList.add('has-value');
+                    else select.classList.remove('has-value');
+                });
+            }
+
+            // ================================================================
+            // SCROLL ANIMATIONS
+            // ================================================================
+
+            function observeElements() {
+                var elements = document.querySelectorAll('.animate-on-scroll:not(.visible)');
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.05,
+                    rootMargin: '0px 0px -30px 0px'
+                });
+                elements.forEach(function(el) { observer.observe(el); });
+            }
+
+            // ================================================================
+            // UTILITY FUNCTIONS
+            // ================================================================
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                var div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function formatDate(date) {
+                if (!date || isNaN(date.getTime())) return 'Date TBD';
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            }
+
+            // ================================================================
+            // INIT
+            // ================================================================
+
+            document.addEventListener('DOMContentLoaded', function() {
+                loadEvents();
+                observeElements();
+                console.log('BRIDGE-AI Kenya Training Events page initialized');
+            });
+
+            setTimeout(hidePageLoader, 5000);
+
+        })();
+    </script>
+
+</body>
+</html>

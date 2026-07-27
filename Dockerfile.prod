@@ -1,0 +1,104 @@
+# ================================================================
+# BRIDGE-AI KENYA - Production Dockerfile (JSON Version)
+# ================================================================
+# This Dockerfile builds a production-ready container with
+# minimal dependencies and optimized configuration.
+# No database required - uses JSON file storage.
+# ================================================================
+
+# Use Python 3.11 slim image
+FROM python:3.11-slim
+
+# ================================================================
+# Metadata
+# ================================================================
+
+LABEL maintainer="BRIDGE-AI Kenya <bridge-ai@jkuat.ac.ke>"
+LABEL description="BRIDGE-AI Kenya Web Application - Production"
+LABEL version="1.0.0"
+
+# ================================================================
+# Environment Variables
+# ================================================================
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    FLASK_APP=wsgi.py \
+    FLASK_ENV=production \
+    PYTHONPATH=/app \
+    PIP_NO_CACHE_DIR=1
+
+# ================================================================
+# Install System Dependencies
+# ================================================================
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# ================================================================
+# Set Working Directory
+# ================================================================
+
+WORKDIR /app
+
+# ================================================================
+# Install Python Dependencies
+# ================================================================
+
+# Copy requirements first for better caching
+COPY requirements.txt ./
+
+# Install production dependencies only
+RUN pip install --no-cache-dir -r requirements.txt
+
+# ================================================================
+# Copy Application Code
+# ================================================================
+
+COPY . .
+
+# ================================================================
+# Create Data Directory for JSON Files
+# ================================================================
+
+RUN mkdir -p /app/app/data && \
+    chown -R appuser:appuser /app
+
+# ================================================================
+# Create Non-Root User
+# ================================================================
+
+RUN adduser --disabled-password --gecos '' appuser && \
+    chown -R appuser:appuser /app
+
+# ================================================================
+# Switch to Non-Root User
+# ================================================================
+
+USER appuser
+
+# ================================================================
+# Expose Port
+# ================================================================
+
+EXPOSE 5000
+
+# ================================================================
+# Health Check
+# ================================================================
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:5000/ || exit 1
+
+# ================================================================
+# Entrypoint
+# ================================================================
+
+ENTRYPOINT ["./entrypoint.sh"]
+
+# ================================================================
+# Default Command (Production with Gunicorn)
+# ================================================================
+
+CMD ["gunicorn", "--config", "gunicorn.conf.py", "wsgi:app"]

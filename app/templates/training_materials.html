@@ -1,0 +1,1481 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - TRAINING MATERIALS PAGE                      -->
+<!-- ================================================================ -->
+<!-- Dark Editorial Style                                            -->
+<!-- Premium · Sophisticated · Unique                                -->
+<!-- Features: Full-width hero image · Dark theme · Premium cards   -->
+<!-- Clean typography · No emojis · No decorative symbols           -->
+<!-- Fully responsive · Modern design                               -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Materials - BRIDGE-AI Kenya</title>
+    <meta name="description" content="Training guides, slide decks, videos, and resources for capacity building under BRIDGE-AI Kenya.">
+    <meta name="robots" content="index, follow">
+
+    <style>
+        /* ================================================================ */
+        /* CSS VARIABLES                                                   */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #061420;
+            --primary: #0F2B3D;
+            --primary-light: #1A4A6B;
+            --gold: #D4A843;
+            --gold-light: #F5D77E;
+            --gold-pale: #F5ECD7;
+            --text-dark: #0A1A2A;
+            --text-body: #1A2A3A;
+            --text-muted: #5A6A7A;
+            --text-light: #8A9AAA;
+            --bg-white: #FFFFFF;
+            --bg-light: #F6F8FA;
+            --bg-lighter: #FAFCFE;
+            --border-light: #E8ECF0;
+            --shadow-sm: 0 2px 12px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 40px rgba(0,0,0,0.06);
+            --shadow-lg: 0 16px 60px rgba(0,0,0,0.08);
+            --shadow-xl: 0 24px 80px rgba(0,0,0,0.12);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --transition: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --font-serif: 'Georgia', 'Times New Roman', serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-body);
+            background: var(--bg-white);
+            line-height: 1.7;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ================================================================ */
+        /* PAGE LOADER                                                     */
+        /* ================================================================ */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0a0e14;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        #page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.06);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: loaderSpin 0.8s linear infinite;
+        }
+        @keyframes loaderSpin { to { transform: rotate(360deg); } }
+        #page-loader p {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.3);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+        }
+
+        /* ================================================================ */
+        /* CONTAINER                                                       */
+        /* ================================================================ */
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ================================================================ */
+        /* BREADCRUMB                                                      */
+        /* ================================================================ */
+        .breadcrumb-bar {
+            background: var(--bg-white);
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 72px;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255,255,255,0.92);
+        }
+        .breadcrumb-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+        .breadcrumb-container a {
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: color var(--transition);
+            font-weight: 500;
+        }
+        .breadcrumb-container a:hover { color: var(--gold); }
+        .breadcrumb-container .sep {
+            color: var(--text-light);
+            opacity: 0.3;
+            font-weight: 300;
+        }
+        .breadcrumb-container .current {
+            color: var(--text-body);
+            font-weight: 600;
+        }
+
+        /* ================================================================ */
+        /* HERO - Full Width Image with Dark Overlay                     */
+        /* ================================================================ */
+        .hero-section {
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: var(--primary-dark);
+        }
+
+        .hero-image-wrap {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 5;
+            transform: scale(1.02);
+            transition: transform 20s ease;
+        }
+
+        .hero-section:hover .hero-image-wrap img {
+            transform: scale(1);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(160deg,
+                rgba(6, 20, 32, 0.70) 0%,   /* ← 0.92 → 0.70 */
+                rgba(15, 43, 61, 0.55) 50%,  /* ← 0.80 → 0.55 */
+                rgba(26, 74, 107, 0.35) 100% /* ← 0.60 → 0.35 */
+            );
+        }
+
+        .hero-accent-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            z-index: 2;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            opacity: 0.5;
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            width: 100%;
+            padding: 40px 24px;
+            margin: 0 auto;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 48px;
+            align-items: center;
+            min-height: 50vh;
+        }
+
+        .hero-content {
+            max-width: 100%;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 4px 18px;
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 16px;
+            background: rgba(212, 168, 67, 0.04);
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: 4.2rem;
+            font-weight: 700;
+            line-height: 1.04;
+            letter-spacing: -0.03em;
+            margin: 0 0 8px;
+            color: #ffffff;
+        }
+
+        .hero-title .gold {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .hero-subtitle {
+            font-size: 1.05rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.893);
+            max-width: 520px;
+            line-height: 1.8;
+            margin: 0 0 24px;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 32px;
+            background: var(--gold);
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all var(--transition);
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            font-family: var(--font-sans);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(212, 168, 67, 0.25);
+        }
+
+        .btn-arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+        .btn-primary:hover .btn-arrow { transform: translateX(6px); }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 30px;
+            color: rgba(255, 255, 255, 0.6);
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* ─── Hero Stats ─── */
+        .hero-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-sm);
+            padding: 20px 24px;
+            transition: all var(--transition);
+        }
+
+        .hero-stats:hover {
+            border-color: rgba(212, 168, 67, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-stats .stat-item {
+            text-align: center;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .hero-stats .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .hero-stats .stat-item .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+            display: block;
+            line-height: 1.1;
+            font-family: var(--font-serif);
+        }
+
+        .hero-stats .stat-item .stat-label {
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.35);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* ================================================================ */
+        /* FILTER SECTION - Dark Bar                                      */
+        /* ================================================================ */
+        .filter-section {
+            background: #0F1A2A;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            position: sticky;
+            top: 72px;
+            z-index: 40;
+        }
+
+        .filter-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-group .filter-label {
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            flex-shrink: 0;
+            padding: 4px 8px 4px 0;
+        }
+
+        .filter-group .search-input {
+            padding: 6px 14px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.04);
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            min-width: 160px;
+            outline: none;
+        }
+
+        .filter-group .search-input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.06);
+            background: rgba(255,255,255,0.06);
+        }
+
+        .filter-group .search-input::placeholder {
+            color: rgba(255,255,255,0.2);
+        }
+
+        .filter-group select {
+            padding: 6px 28px 6px 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.04);
+            cursor: pointer;
+            transition: all var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23D4A843' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            min-width: 100px;
+            max-width: 150px;
+            width: auto;
+            font-family: var(--font-sans);
+        }
+
+        .filter-group select:hover {
+            border-color: rgba(212, 168, 67, 0.2);
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.06);
+        }
+
+        .filter-group select option {
+            background: #0F1A2A;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .filter-group select.has-value {
+            border-color: var(--gold);
+        }
+
+        .filter-group .filter-clear {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 14px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            cursor: pointer;
+        }
+
+        .filter-group .filter-clear:hover {
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.7);
+            border-color: rgba(255,255,255,0.12);
+        }
+
+        .filter-results {
+            font-size: 0.72rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.3);
+            padding: 4px 0;
+        }
+
+        .filter-results strong {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* ================================================================ */
+        /* MATERIALS GRID - Dark Cards                                    */
+        /* ================================================================ */
+        .materials-section {
+            padding: 32px 24px 60px;
+            background: #0a0e14;
+        }
+
+        .materials-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            transition: opacity 0.3s ease;
+        }
+
+        .materials-grid.loading {
+            opacity: 0.3;
+        }
+
+        /* ─── Material Card ─── */
+        .material-card {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            transition: all var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .material-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .material-card:hover::before {
+            opacity: 1;
+        }
+
+        .material-card:hover {
+            transform: translateY(-6px);
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(212, 168, 67, 0.08);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .material-card .card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px 20px 14px;
+        }
+
+        /* ─── File Icon ─── */
+        .material-card .file-icon {
+            flex-shrink: 0;
+            width: 52px;
+            height: 52px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .material-card .file-icon .file-extension {
+            font-size: 0.45rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .material-card .file-icon.pdf .file-extension { color: #E8A0A0; }
+        .material-card .file-icon.docx .file-extension { color: #80B0D0; }
+        .material-card .file-icon.pptx .file-extension { color: #E8B880; }
+        .material-card .file-icon.mp4 .file-extension { color: #B890D0; }
+        .material-card .file-icon.zip .file-extension { color: #A0A0A0; }
+        .material-card .file-icon.image .file-extension { color: #80C0A0; }
+        .material-card .file-icon.other .file-extension { color: #909090; }
+
+        .material-card .file-icon.pdf { background: rgba(158,42,42,0.08); border-color: rgba(158,42,42,0.1); }
+        .material-card .file-icon.docx { background: rgba(26,74,107,0.08); border-color: rgba(26,74,107,0.1); }
+        .material-card .file-icon.pptx { background: rgba(158,106,42,0.08); border-color: rgba(158,106,42,0.1); }
+        .material-card .file-icon.mp4 { background: rgba(90,58,122,0.08); border-color: rgba(90,58,122,0.1); }
+        .material-card .file-icon.zip { background: rgba(90,90,106,0.08); border-color: rgba(90,90,106,0.1); }
+        .material-card .file-icon.image { background: rgba(26,106,74,0.08); border-color: rgba(26,106,74,0.1); }
+        .material-card .file-icon.other { background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.04); }
+
+        /* ─── Card Header ─── */
+        .material-card .card-header {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .material-card .card-header .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            transition: color var(--transition);
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .material-card .card-header .card-title:hover {
+            color: var(--gold);
+        }
+
+        .material-card .card-header .card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .material-card .card-header .level-badge {
+            display: inline-block;
+            padding: 1px 12px;
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .level-badge.beginner {
+            background: rgba(40,167,69,0.12);
+            color: #4ADE80;
+        }
+
+        .level-badge.intermediate {
+            background: rgba(212,168,67,0.12);
+            color: #F5D77E;
+        }
+
+        .level-badge.advanced {
+            background: rgba(220,53,69,0.12);
+            color: #F87171;
+        }
+
+        .material-card .card-header .type-label {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.3);
+            font-weight: 400;
+        }
+
+        .material-card .card-header .type-label::before {
+            content: '·';
+            margin-right: 6px;
+            color: rgba(255,255,255,0.06);
+        }
+
+        /* ─── Card Body ─── */
+        .material-card .card-body {
+            padding: 0 20px 12px;
+            flex: 1;
+        }
+
+        .material-card .card-body .card-description {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* ─── Card Tags ─── */
+        .material-card .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            padding: 0 20px 14px;
+        }
+
+        .material-card .card-tags .tag {
+            display: inline-block;
+            padding: 1px 10px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 4px;
+            font-size: 0.55rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.04);
+            transition: all var(--transition);
+        }
+
+        .material-card .card-tags .tag:hover {
+            background: rgba(212,168,67,0.08);
+            color: var(--gold-light);
+            border-color: rgba(212,168,67,0.12);
+        }
+
+        /* ─── Card Footer ─── */
+        .material-card .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px 18px;
+            border-top: 1px solid rgba(255,255,255,0.03);
+            margin-top: auto;
+        }
+
+        .material-card .card-footer .card-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .material-card .card-footer .btn-view {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+        }
+
+        .material-card .card-footer .btn-view:hover {
+            color: var(--gold);
+            gap: 10px;
+        }
+
+        .material-card .card-footer .btn-view .arrow {
+            transition: transform var(--transition);
+            display: inline-block;
+        }
+
+        .material-card .card-footer .btn-view:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        .material-card .card-footer .file-size {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.15);
+        }
+
+        /* ================================================================ */
+        /* EMPTY STATE                                                     */
+        /* ================================================================ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: var(--radius-sm);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 4px;
+            font-family: var(--font-serif);
+        }
+
+        .empty-state p {
+            color: rgba(255,255,255,0.2);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* ================================================================ */
+        /* LOADING INDICATOR                                               */
+        /* ================================================================ */
+        #loadingIndicator {
+            text-align: center;
+            padding: 60px 20px;
+            display: none;
+        }
+
+        #loadingIndicator .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(255,255,255,0.06);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #loadingIndicator p {
+            color: rgba(255,255,255,0.2);
+            margin-top: 12px;
+            font-size: 0.85rem;
+        }
+
+        /* ================================================================ */
+        /* BACK SECTION                                                    */
+        /* ================================================================ */
+        .back-section {
+            padding: 20px 24px 50px;
+            text-align: center;
+            background: #0a0e14;
+            border-top: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .back-section .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255,255,255,0.2);
+            font-weight: 400;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all var(--transition);
+            padding: 10px 24px;
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 4px;
+        }
+
+        .back-section .back-link:hover {
+            gap: 16px;
+            color: rgba(255,255,255,0.6);
+            border-color: rgba(255,255,255,0.08);
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                      */
+        /* ================================================================ */
+
+        @media (max-width: 1024px) {
+            .hero-title { font-size: 3.2rem; }
+            .hero-grid { grid-template-columns: 1fr 280px; gap: 32px; }
+            .materials-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 64px; }
+            .breadcrumb-bar { top: 64px; padding: 10px 16px; }
+
+            .hero-section { min-height: auto; }
+            .hero-container { padding: 30px 20px; }
+            .hero-grid { grid-template-columns: 1fr; gap: 24px; min-height: auto; }
+            .hero-title { font-size: 2.4rem; }
+            .hero-subtitle { font-size: 0.92rem; max-width: 100%; }
+
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
+                padding: 16px 18px;
+            }
+            .hero-stats .stat-item .stat-number { font-size: 1.6rem; }
+
+            .hero-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            .btn-primary, .btn-outline {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 20px;
+            }
+
+            .filter-section { top: 64px; padding: 12px 0; }
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+                padding: 0 16px;
+            }
+            .filter-group { flex-wrap: wrap; }
+            .filter-group .search-input { min-width: 100%; width: 100%; font-size: 0.68rem; padding: 6px 12px; }
+            .filter-group select {
+                min-width: 80px;
+                flex: 1;
+                max-width: 100%;
+                font-size: 0.68rem;
+                padding: 5px 24px 5px 10px;
+            }
+            .filter-group .filter-label { width: 100%; padding: 0 0 2px 0; }
+            .filter-group .filter-clear { width: 100%; justify-content: center; }
+            .filter-results { text-align: center; width: 100%; }
+
+            .materials-section { padding: 24px 16px 40px; }
+            .materials-grid { grid-template-columns: 1fr; gap: 14px; }
+
+            .material-card .card-top { padding: 16px 16px 10px; gap: 12px; }
+            .material-card .file-icon { width: 40px; height: 40px; }
+            .material-card .card-header .card-title { font-size: 0.9rem; }
+            .material-card .card-body { padding: 0 16px 10px; }
+            .material-card .card-tags { padding: 0 16px 10px; }
+            .material-card .card-footer {
+                padding: 10px 16px 14px;
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+
+            .back-section { padding: 16px 16px 36px; }
+            .back-section .back-link { width: 100%; justify-content: center; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 1.8rem; }
+            .hero-badge { font-size: 0.45rem; padding: 3px 14px; }
+
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px;
+                padding: 12px 14px;
+            }
+            .hero-stats .stat-item .stat-number { font-size: 1.3rem; }
+            .hero-stats .stat-item .stat-label { font-size: 0.5rem; }
+
+            .filter-group select { font-size: 0.6rem; padding: 4px 20px 4px 8px; min-width: 60px; }
+            .filter-group .filter-label { font-size: 0.5rem; }
+
+            .material-card .card-header .card-title { font-size: 0.82rem; }
+            .material-card .card-body .card-description { font-size: 0.72rem; }
+            .material-card .card-footer .btn-view { font-size: 0.7rem; }
+            .empty-state { padding: 40px 16px; }
+            .empty-state h3 { font-size: 1.1rem; }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0e14; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+        ::selection { background: var(--gold-pale); color: var(--text-dark); }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADER                                                          -->
+    <!-- ================================================================ -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+        <p>Loading materials...</p>
+    </div>
+
+    <script>
+        (function() {
+            function hideLoader() {
+                var loader = document.getElementById('page-loader');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    setTimeout(function() {
+                        if (loader.parentNode) loader.parentNode.removeChild(loader);
+                    }, 700);
+                }
+            }
+            if (document.readyState === 'complete') {
+                hideLoader();
+            } else {
+                window.addEventListener('load', hideLoader);
+                setTimeout(hideLoader, 3000);
+            }
+        })();
+    </script>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- BREADCRUMB                                                      -->
+    <!-- ================================================================ -->
+    <div class="breadcrumb-bar">
+        <div class="breadcrumb-container">
+            <a href="{{ url_for('public.index') }}">Home</a>
+            <span class="sep">·</span>
+            <a href="{{ url_for('public.training_wp5') }}">Training and WP5</a>
+            <span class="sep">·</span>
+            <span class="current">Training Materials</span>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- HERO - Full Width Image                                         -->
+    <!-- ================================================================ -->
+    <section class="hero-section">
+        <div class="hero-image-wrap">
+            <img src="{{ url_for('static', filename='uploads/events/DSC_7091.jpg') }}" alt="Training Materials" loading="eager">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-accent-line"></div>
+
+        <div class="hero-container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <span class="hero-badge">T5.1 Training Content</span>
+                    <h1 class="hero-title">
+                        Training <span class="gold">Materials</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Browse training guides, slide decks, videos, and resources for capacity building
+                        under BRIDGE-AI Kenya. All materials are designed to support WP5 activities.
+                    </p>
+                    
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="heroStatTotal">0</span>
+                        <span class="stat-label">Total</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="heroStatBeginner">0</span>
+                        <span class="stat-label">Beginner</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="heroStatIntermediate">0</span>
+                        <span class="stat-label">Intermediate</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="heroStatAdvanced">0</span>
+                        <span class="stat-label">Advanced</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- FILTER SECTION - Dark Bar                                       -->
+    <!-- ================================================================ -->
+    <div class="filter-section" id="filters">
+        <div class="filter-container">
+            <div class="filter-group">
+                <span class="filter-label">Search</span>
+                <input type="text" class="search-input" id="materialSearch" placeholder="Search materials..." onkeyup="applyFilters()">
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Filter</span>
+                <select id="filterLevel" onchange="applyFilters()">
+                    <option value="">All Levels</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                </select>
+                <select id="filterType" onchange="applyFilters()">
+                    <option value="">All Types</option>
+                    <option value="training_guide">Training Guide</option>
+                    <option value="slide_deck">Slide Deck</option>
+                    <option value="video">Video</option>
+                    <option value="code_repository">Code Repository</option>
+                    <option value="publication">Publication</option>
+                    <option value="policy_brief">Policy Brief</option>
+                    <option value="other">Other</option>
+                </select>
+                <select id="filterLanguage" onchange="applyFilters()">
+                    <option value="">All Languages</option>
+                    <option value="English">English</option>
+                    <option value="French">French</option>
+                    <option value="Arabic">Arabic</option>
+                    <option value="Swahili">Swahili</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <span class="filter-results" id="filterResults"><strong>0</strong> materials found</span>
+                <button class="filter-clear" onclick="clearFilters()">Clear Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- MATERIALS GRID                                                  -->
+    <!-- ================================================================ -->
+    <section class="materials-section" id="materials">
+        <div class="materials-container">
+            <div id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Loading materials...</p>
+            </div>
+            <div class="materials-grid" id="materialsGrid">
+                <!-- Rendered by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- BACK SECTION                                                    -->
+    <!-- ================================================================ -->
+    <section class="back-section">
+        <a href="{{ url_for('public.training_wp5') }}" class="back-link">
+            ← Back to Training and WP5
+        </a>
+    </section>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- JAVASCRIPT                                                      -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // STATE
+            // ================================================================
+
+            var allMaterials = [];
+            var filteredMaterials = [];
+
+            // DOM refs
+            var materialsGrid = document.getElementById('materialsGrid');
+            var loadingIndicator = document.getElementById('loadingIndicator');
+            var filterLevel = document.getElementById('filterLevel');
+            var filterType = document.getElementById('filterType');
+            var filterLanguage = document.getElementById('filterLanguage');
+            var filterSearch = document.getElementById('materialSearch');
+            var filterResults = document.getElementById('filterResults');
+
+            // Stats refs
+            var statTotal = document.getElementById('statTotal');
+            var statBeginner = document.getElementById('statBeginner');
+            var statIntermediate = document.getElementById('statIntermediate');
+            var statAdvanced = document.getElementById('statAdvanced');
+            var heroStatTotal = document.getElementById('heroStatTotal');
+            var heroStatBeginner = document.getElementById('heroStatBeginner');
+            var heroStatIntermediate = document.getElementById('heroStatIntermediate');
+            var heroStatAdvanced = document.getElementById('heroStatAdvanced');
+
+            // ================================================================
+            // FILE ICON HELPER
+            // ================================================================
+
+            function getFileIcon(filePath) {
+                if (!filePath) return { label: 'FILE', iconClass: 'other' };
+
+                var ext = filePath.split('.').pop().toLowerCase();
+                var iconMap = {
+                    'pdf': { label: 'PDF', iconClass: 'pdf' },
+                    'docx': { label: 'DOCX', iconClass: 'docx' },
+                    'doc': { label: 'DOC', iconClass: 'docx' },
+                    'ppt': { label: 'PPT', iconClass: 'pptx' },
+                    'pptx': { label: 'PPTX', iconClass: 'pptx' },
+                    'mp4': { label: 'MP4', iconClass: 'mp4' },
+                    'mov': { label: 'MOV', iconClass: 'mp4' },
+                    'avi': { label: 'AVI', iconClass: 'mp4' },
+                    'zip': { label: 'ZIP', iconClass: 'zip' },
+                    'rar': { label: 'RAR', iconClass: 'zip' },
+                    'png': { label: 'PNG', iconClass: 'image' },
+                    'jpg': { label: 'JPG', iconClass: 'image' },
+                    'jpeg': { label: 'JPEG', iconClass: 'image' },
+                    'gif': { label: 'GIF', iconClass: 'image' },
+                    'webp': { label: 'WEBP', iconClass: 'image' },
+                    'svg': { label: 'SVG', iconClass: 'image' }
+                };
+
+                return iconMap[ext] || { label: ext.toUpperCase(), iconClass: 'other' };
+            }
+
+            // ================================================================
+            // LOAD MATERIALS
+            // ================================================================
+
+            function loadMaterials() {
+                showLoading();
+
+                fetch('/api/training-materials/', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP error ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    allMaterials = data || [];
+                    updateStats(allMaterials);
+                    filteredMaterials = [...allMaterials];
+                    renderMaterials(filteredMaterials);
+                    hideLoading();
+                    hidePageLoader();
+                })
+                .catch(function(error) {
+                    console.error('Error loading materials:', error);
+                    allMaterials = [];
+                    filteredMaterials = [];
+                    renderMaterials([]);
+                    hideLoading();
+                    hidePageLoader();
+                });
+            }
+
+            // ================================================================
+            // PAGE LOADER
+            // ================================================================
+
+            function hidePageLoader() {
+                var loader = document.getElementById('page-loader');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    setTimeout(function() {
+                        if (loader.parentNode) loader.parentNode.removeChild(loader);
+                    }, 700);
+                }
+            }
+
+            // ================================================================
+            // UPDATE STATS
+            // ================================================================
+
+            function updateStats(materials) {
+                var total = materials.length;
+                var beginner = materials.filter(function(m) { return m.level === 'beginner'; }).length;
+                var intermediate = materials.filter(function(m) { return m.level === 'intermediate'; }).length;
+                var advanced = materials.filter(function(m) { return m.level === 'advanced'; }).length;
+
+                // Bottom stats
+                animateNumber(statTotal, total);
+                animateNumber(statBeginner, beginner);
+                animateNumber(statIntermediate, intermediate);
+                animateNumber(statAdvanced, advanced);
+
+                // Hero stats
+                animateNumber(heroStatTotal, total);
+                animateNumber(heroStatBeginner, beginner);
+                animateNumber(heroStatIntermediate, intermediate);
+                animateNumber(heroStatAdvanced, advanced);
+            }
+
+            function animateNumber(el, target) {
+                if (!el) return;
+                var current = parseInt(el.textContent) || 0;
+                if (current === target) return;
+
+                var duration = 600;
+                var startTime = null;
+
+                function step(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    var progress = Math.min((timestamp - startTime) / duration, 1);
+                    var eased = 1 - Math.pow(1 - progress, 3);
+                    var value = Math.round(eased * target);
+                    el.textContent = value;
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        el.textContent = target;
+                    }
+                }
+                requestAnimationFrame(step);
+            }
+
+            // ================================================================
+            // SHOW / HIDE LOADING
+            // ================================================================
+
+            function showLoading() {
+                if (loadingIndicator) loadingIndicator.style.display = 'block';
+                if (materialsGrid) materialsGrid.classList.add('loading');
+            }
+
+            function hideLoading() {
+                if (loadingIndicator) loadingIndicator.style.display = 'none';
+                if (materialsGrid) materialsGrid.classList.remove('loading');
+            }
+
+            // ================================================================
+            // RENDER MATERIALS
+            // ================================================================
+
+            function renderMaterials(materials) {
+                if (!materials || materials.length === 0) {
+                    materialsGrid.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No Materials Found</h3>
+                            <p>There are no training materials matching your filters.</p>
+                        </div>
+                    `;
+                    filterResults.innerHTML = '<strong>0</strong> materials found';
+                    return;
+                }
+
+                var html = '';
+                materials.forEach(function(material) {
+                    var icon = getFileIcon(material.file_path);
+
+                    var levelClass = material.level || 'beginner';
+                    var levelLabel = levelClass.charAt(0).toUpperCase() + levelClass.slice(1);
+                    var typeLabel = material.resource_type ? material.resource_type.replace(/_/g, ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); }) : 'N/A';
+                    var description = material.description || '';
+                    var tags = material.tags || [];
+
+                    var tagsHtml = '';
+                    if (tags.length > 0) {
+                        tagsHtml = tags.slice(0, 3).map(function(tag) {
+                            return '<span class="tag">' + escapeHtml(tag) + '</span>';
+                        }).join('');
+                        if (tags.length > 3) {
+                            tagsHtml += '<span class="tag" style="background:transparent;border:none;color:rgba(255,255,255,0.15);font-size:0.5rem;">+' + (tags.length - 3) + '</span>';
+                        }
+                    }
+
+                    html += `
+                        <div class="material-card animate-on-scroll">
+                            <div class="card-top">
+                                <div class="file-icon ${icon.iconClass}">
+                                    <span class="file-extension">${escapeHtml(icon.label)}</span>
+                                </div>
+                                <div class="card-header">
+                                    <a href="/training-and-wp5/training-materials/${escapeHtml(material.slug || '#')}" class="card-title">
+                                        ${escapeHtml(material.title || 'Untitled')}
+                                    </a>
+                                    <div class="card-meta">
+                                        <span class="level-badge ${levelClass}">${escapeHtml(levelLabel)}</span>
+                                        <span class="type-label">${escapeHtml(typeLabel)}</span>
+                                        ${material.language ? `<span class="type-label">${escapeHtml(material.language)}</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            ${description ? `
+                                <div class="card-body">
+                                    <p class="card-description">${escapeHtml(description)}</p>
+                                </div>
+                            ` : ''}
+                            ${tagsHtml ? `
+                                <div class="card-tags">${tagsHtml}</div>
+                            ` : ''}
+                            <div class="card-footer">
+                                <div class="card-actions">
+                                    <a href="/training-and-wp5/training-materials/${escapeHtml(material.slug || '#')}" class="btn-view">
+                                        View Details
+                                        <span class="arrow">→</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                materialsGrid.innerHTML = html;
+                filterResults.innerHTML = '<strong>' + materials.length + '</strong> materials found';
+
+                setTimeout(observeElements, 100);
+            }
+
+            // ================================================================
+            // FILTERS
+            // ================================================================
+
+            window.applyFilters = function() {
+                var level = filterLevel.value;
+                var type = filterType.value;
+                var language = filterLanguage.value;
+                var search = filterSearch.value.toLowerCase().trim();
+
+                filteredMaterials = allMaterials.filter(function(material) {
+                    var match = true;
+                    if (level && material.level !== level) match = false;
+                    if (type && material.resource_type !== type) match = false;
+                    if (language && material.language !== language) match = false;
+                    if (search) {
+                        var title = (material.title || '').toLowerCase();
+                        var desc = (material.description || '').toLowerCase();
+                        var tags = (material.tags || []).join(' ').toLowerCase();
+                        if (title.indexOf(search) === -1 && desc.indexOf(search) === -1 && tags.indexOf(search) === -1) {
+                            match = false;
+                        }
+                    }
+                    return match;
+                });
+
+                renderMaterials(filteredMaterials);
+                updateActiveFilters();
+            };
+
+            window.clearFilters = function() {
+                filterLevel.value = '';
+                filterType.value = '';
+                filterLanguage.value = '';
+                filterSearch.value = '';
+                filteredMaterials = [...allMaterials];
+                renderMaterials(filteredMaterials);
+                updateActiveFilters();
+            };
+
+            function updateActiveFilters() {
+                document.querySelectorAll('.filter-group select').forEach(function(select) {
+                    if (select.value) select.classList.add('has-value');
+                    else select.classList.remove('has-value');
+                });
+            }
+
+            // ================================================================
+            // SCROLL ANIMATIONS
+            // ================================================================
+
+            function observeElements() {
+                var elements = document.querySelectorAll('.animate-on-scroll:not(.visible)');
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.05,
+                    rootMargin: '0px 0px -30px 0px'
+                });
+                elements.forEach(function(el) { observer.observe(el); });
+            }
+
+            // ================================================================
+            // UTILITIES
+            // ================================================================
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                var div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // ================================================================
+            // KEYBOARD SUPPORT
+            // ================================================================
+
+            document.querySelectorAll('.filter-group select, .filter-group input').forEach(function(el) {
+                el.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') applyFilters();
+                });
+            });
+
+            // ================================================================
+            // INIT
+            // ================================================================
+
+            document.addEventListener('DOMContentLoaded', function() {
+                loadMaterials();
+                observeElements();
+                console.log('BRIDGE-AI Kenya Training Materials page initialized (Dark Editorial Style)');
+            });
+
+            setTimeout(hidePageLoader, 5000);
+
+        })();
+    </script>
+
+</body>
+</html>

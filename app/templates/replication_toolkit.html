@@ -1,0 +1,2105 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - REPLICATION TOOLKIT                           -->
+<!-- ================================================================ -->
+<!-- Design: Premium Agri-Tech · Grow Room Image Hero               -->
+<!-- Layout: Two-column with sidebar filters + content grid         -->
+<!-- Visual: Warm earthy tones · Real imagery · Soft lighting       -->
+<!-- Content: Resources · Templates · Lessons Learned               -->
+<!-- Data: Fetched from /api/replication-* endpoints                -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Replication Toolkit - BRIDGE-AI Kenya</title>
+    <meta name="description" content="Resources, templates and lessons for scaling agritech solutions across African agricultural contexts.">
+
+    <style>
+        /* ================================================================ */
+        /* CSS VARIABLES                                                   */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #0A0E0A;
+            --primary: #1A2A1A;
+            --primary-light: #2A4A2A;
+            --gold: #C9913A;
+            --gold-light: #E8C87A;
+            --gold-pale: #F5ECD7;
+            --teal: #2A6B6B;
+            --text-dark: #081A08;
+            --text-body: #1A2A1A;
+            --text-muted: #5A6A5A;
+            --text-light: #8A9A8A;
+            --bg-white: #FDFAF5;
+            --bg-light: #F5F0E8;
+            --bg-lighter: #FAF8F2;
+            --border-light: #E4DCD0;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 32px rgba(0,0,0,0.06);
+            --shadow-lg: 0 16px 56px rgba(0,0,0,0.08);
+            --shadow-xl: 0 24px 80px rgba(0,0,0,0.12);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --transition: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-body);
+            background: var(--bg-white);
+            line-height: 1.7;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ================================================================ */
+        /* CONTAINER                                                       */
+        /* ================================================================ */
+        .page-container {
+            max-width: 1340px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ================================================================ */
+        /* HERO SECTION - Image + Content                                 */
+        /* ================================================================ */
+        .hero-section {
+            position: relative;
+            padding: 60px 0 48px;
+            min-height: 420px;
+            overflow: hidden;
+            isolation: isolate;
+            background: var(--primary-dark);
+        }
+
+        /* ─── Background Layers ─── */
+        .hero-bg-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 40% at 50% 0%, rgba(212, 168, 67, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 100% 100% at 50% 100%, #1A0E0A 0%, #0A0604 100%);
+        }
+
+        /* ─── Rack Pattern Overlay ─── */
+        .rack-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+            background:
+                repeating-linear-gradient(
+                    90deg,
+                    transparent 0px,
+                    transparent 120px,
+                    rgba(60, 40, 30, 0.1) 120px,
+                    rgba(60, 40, 30, 0.1) 122px,
+                    transparent 122px,
+                    transparent 240px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent 0px,
+                    transparent 80px,
+                    rgba(40, 30, 20, 0.05) 80px,
+                    rgba(40, 30, 20, 0.05) 82px,
+                    transparent 82px,
+                    transparent 160px
+                );
+        }
+
+        /* ─── Grow Light Glow ─── */
+        .light-glow {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 60%;
+            z-index: 0;
+            background: radial-gradient(ellipse at center, rgba(212, 168, 67, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            animation: glowPulse 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes glowPulse {
+            0% { opacity: 0.4; transform: translateX(-50%) scale(1); }
+            100% { opacity: 0.8; transform: translateX(-50%) scale(1.04); }
+        }
+
+        /* ─── Accent Line ─── */
+        .hero-accent {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            z-index: 2;
+            background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+            opacity: 0.25;
+        }
+
+        /* ─── Hero Content ─── */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        /* ─── Left Column ─── */
+        .hero-left {
+            min-width: 0;
+        }
+
+        /* ─── Badge ─── */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 20px 5px 16px;
+            border: 1px solid rgba(212, 168, 67, 0.15);
+            border-radius: 60px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 18px;
+            background: rgba(6, 20, 8, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all var(--transition);
+        }
+
+        .hero-badge:hover {
+            border-color: rgba(212, 168, 67, 0.3);
+            background: rgba(6, 20, 8, 0.7);
+            transform: translateY(-1px);
+        }
+
+        .hero-badge .badge-line {
+            display: inline-block;
+            width: 16px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0.3;
+        }
+
+        /* ─── Title ─── */
+        .hero-title {
+            font-size: 3.8rem;
+            font-weight: 800;
+            line-height: 1.0;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+            margin: 0 0 6px;
+            text-shadow: 0 4px 40px rgba(0,0,0,0.2);
+        }
+
+        .hero-title .gold {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ─── Subtitle ─── */
+        .hero-subtitle {
+            font-size: 1.15rem;
+            font-weight: 300;
+            color: rgba(255, 237, 237, 0.872);
+            line-height: 1.7;
+            margin: 0 0 2px;
+            max-width: 520px;
+            letter-spacing: 0.01em;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+
+        /* ─── Description ─── */
+        .hero-desc {
+            font-size: 0.95rem;
+            font-weight: 300;
+            color: rgba(197, 189, 189, 0.957);
+            line-height: 1.8;
+            margin: 0 0 24px;
+            max-width: 480px;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+        }
+
+        /* ─── CTA ─── */
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            text-decoration: none;
+            box-shadow: 0 4px 24px rgba(212, 168, 67, 0.12);
+            letter-spacing: 0.02em;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 48px rgba(212, 168, 67, 0.25);
+        }
+
+        .hero-cta .cta-arrow {
+            display: inline-block;
+            transition: transform var(--transition);
+            font-weight: 300;
+        }
+
+        .hero-cta:hover .cta-arrow {
+            transform: translateX(6px);
+        }
+
+        .hero-cta-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 16px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.04);
+            color: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            text-decoration: none;
+        }
+
+        .hero-cta-secondary:hover {
+            background: rgba(255,255,255,0.08);
+            color: rgba(255, 255, 255, 0.6);
+            border-color: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+        }
+
+        .hero-cta-secondary .arrow {
+            display: inline-block;
+            transition: transform var(--transition);
+        }
+
+        .hero-cta-secondary:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        /* ─── Right Column - Image ─── */
+        .hero-right {
+            position: relative;
+            min-height: 280px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            min-height: 280px;
+            object-fit: cover;
+            display: block;
+            border-radius: var(--radius-md);
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .hero-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* ─── Image Overlay ─── */
+        .hero-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(6, 20, 8, 0.1) 0%, rgba(6, 20, 8, 0.3) 100%);
+            border-radius: var(--radius-md);
+            pointer-events: none;
+        }
+
+        /* ─── Image Badge ─── */
+        .hero-image-badge {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            padding: 4px 14px;
+            background: rgba(6, 20, 8, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 60px;
+            font-size: 0.5rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+
+        /* ================================================================ */
+        /* MAIN LIBRARY LAYOUT                                             */
+        /* ================================================================ */
+        .library-section {
+            padding: 36px 0 56px;
+            background: var(--bg-lighter);
+        }
+
+        .library-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 36px;
+            align-items: start;
+        }
+
+        /* ================================================================ */
+        /* SIDEBAR                                                         */
+        /* ================================================================ */
+        .sidebar {
+            position: sticky;
+            top: 92px;
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 24px 20px 28px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sidebar-header {
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .sidebar-header h4 {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: 0.04em;
+            margin: 0 0 2px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.68rem;
+            color: var(--text-light);
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .filter-group {
+            margin-bottom: 16px;
+        }
+
+        .filter-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-group .filter-label {
+            display: block;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
+        }
+
+        .filter-group .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .filter-group .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-body);
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: var(--font-sans);
+        }
+
+        .filter-group .filter-option:hover {
+            background: var(--bg-light);
+            color: var(--primary-light);
+        }
+
+        .filter-group .filter-option.active {
+            background: var(--gold-pale);
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .filter-group .filter-option .option-indicator {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border-light);
+            flex-shrink: 0;
+            transition: all var(--transition);
+        }
+
+        .filter-group .filter-option.active .option-indicator {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .filter-group .filter-option .option-count {
+            margin-left: auto;
+            font-size: 0.6rem;
+            color: var(--text-light);
+            background: var(--bg-light);
+            padding: 0px 10px;
+            border-radius: 60px;
+        }
+
+        .filter-group .filter-option.active .option-count {
+            background: var(--gold-pale);
+            color: var(--gold);
+        }
+
+        .filter-divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 10px 0 14px;
+        }
+
+        .filter-clear {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.68rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 4px 0;
+            transition: all var(--transition);
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: var(--font-sans);
+        }
+
+        .filter-clear:hover {
+            color: var(--primary-light);
+        }
+
+        .filter-clear .clear-icon {
+            display: inline-block;
+            transition: transform var(--transition);
+        }
+
+        .filter-clear:hover .clear-icon {
+            transform: rotate(90deg);
+        }
+
+        /* ================================================================ */
+        /* CONTENT AREA                                                    */
+        /* ================================================================ */
+        .content-area {
+            min-height: 400px;
+        }
+
+        .content-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .content-header .content-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .content-header .content-title-group h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+
+        .content-header .content-title-group .result-count {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .content-header .content-title-group .result-count .count-number {
+            color: var(--text-body);
+            font-weight: 600;
+        }
+
+        .content-sort select {
+            padding: 5px 30px 5px 14px;
+            border: 1px solid var(--border-light);
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--text-body);
+            background: var(--bg-white);
+            cursor: pointer;
+            transition: all var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235A6A7A' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            font-family: var(--font-sans);
+        }
+
+        .content-sort select:hover {
+            border-color: var(--primary-light);
+        }
+
+        .content-sort select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(26, 74, 107, 0.06);
+        }
+
+        /* ================================================================ */
+        /* ITEM CARDS                                                      */
+        /* ================================================================ */
+        .items-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item-card {
+            background: var(--bg-white);
+            border: 1px solid rgb(43, 71, 0);
+            border-radius: var(--radius-sm);
+            padding: 16px 22px 16px 20px;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .item-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 3px;
+            background: transparent;
+            border-radius: 0 3px 3px 0;
+            transition: background var(--transition);
+        }
+
+        .item-card:hover {
+            border-color: rgba(212, 168, 67, 0.12);
+        }
+
+        .item-card:hover::before {
+            background: var(--gold);
+        }
+
+        .item-card .card-indicator {
+            flex-shrink: 0;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .item-card .card-indicator.resource { background: var(--primary-light); }
+        .item-card .card-indicator.template { background: var(--gold); color: var(--primary-dark); }
+        .item-card .card-indicator.lesson { background: #1A6A4A; }
+
+        .item-card .card-body { flex: 1; min-width: 0; }
+
+        .item-card .card-body .card-title {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0 0 1px;
+            line-height: 1.3;
+        }
+
+        .item-card .card-body .card-title a {
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: color var(--transition);
+        }
+
+        .item-card .card-body .card-title a:hover { color: var(--primary-light); }
+
+        .item-card .card-body .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 1px;
+        }
+
+        .item-card .card-body .card-meta .meta-tag {
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 1px 12px;
+            border-radius: 60px;
+        }
+
+        .item-card .card-body .card-meta .meta-tag.resource {
+            background: #D4E8F5;
+            color: var(--primary-light);
+        }
+
+        .item-card .card-body .card-meta .meta-tag.template {
+            background: var(--gold-pale);
+            color: var(--gold);
+        }
+
+        .item-card .card-body .card-meta .meta-tag.lesson {
+            background: #E6F0E6;
+            color: #1A6A4A;
+        }
+
+        .item-card .card-body .card-meta .meta-date {
+            font-size: 0.68rem;
+            color: var(--text-light);
+        }
+
+        .item-card .card-body .card-meta .meta-size {
+            font-size: 0.6rem;
+            color: var(--text-light);
+            background: var(--bg-light);
+            padding: 0px 10px;
+            border-radius: 60px;
+        }
+
+        .item-card .card-body .card-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .item-card .card-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 16px;
+            background: var(--primary-light);
+            color: #ffffff;
+            border: none;
+            border-radius: 60px;
+            font-size: 0.68rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            text-decoration: none;
+        }
+
+        .btn-download:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(26, 74, 107, 0.15);
+        }
+
+        .btn-download .download-icon {
+            display: inline-block;
+            font-size: 0.7rem;
+            line-height: 1;
+            font-weight: 300;
+        }
+
+        .btn-details {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 12px;
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--border-light);
+            border-radius: 60px;
+            font-size: 0.62rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            text-decoration: none;
+        }
+
+        .btn-details:hover {
+            background: var(--bg-light);
+            color: var(--text-body);
+            border-color: var(--primary-light);
+        }
+
+        /* ================================================================ */
+        /* SKELETON LOADER                                                 */
+        /* ================================================================ */
+        .skeleton-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .skeleton-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 16px 22px 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shadow-sm);
+            animation: skeletonPulse 1.2s ease-in-out infinite;
+        }
+
+        .skeleton-card .skeleton-indicator {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--border-light);
+            flex-shrink: 0;
+        }
+
+        .skeleton-card .skeleton-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .skeleton-card .skeleton-body .skeleton-title {
+            height: 18px;
+            width: 60%;
+            background: var(--border-light);
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        .skeleton-card .skeleton-body .skeleton-meta {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .skeleton-card .skeleton-body .skeleton-meta span {
+            height: 14px;
+            width: 60px;
+            background: var(--border-light);
+            border-radius: 4px;
+        }
+
+        .skeleton-card .skeleton-body .skeleton-meta span:last-child {
+            width: 80px;
+        }
+
+        .skeleton-card .skeleton-body .skeleton-desc {
+            height: 12px;
+            width: 85%;
+            background: var(--border-light);
+            border-radius: 4px;
+        }
+
+        .skeleton-card .skeleton-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .skeleton-card .skeleton-actions span {
+            height: 28px;
+            width: 80px;
+            background: var(--border-light);
+            border-radius: 60px;
+        }
+
+        .skeleton-card .skeleton-actions span:last-child {
+            width: 60px;
+        }
+
+        .skeleton-card:nth-child(2) .skeleton-body .skeleton-title { width: 45%; }
+        .skeleton-card:nth-child(3) .skeleton-body .skeleton-title { width: 70%; }
+        .skeleton-card:nth-child(4) .skeleton-body .skeleton-title { width: 50%; }
+        .skeleton-card:nth-child(5) .skeleton-body .skeleton-title { width: 65%; }
+
+        @keyframes skeletonPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ================================================================ */
+        /* EMPTY STATE                                                     */
+        /* ================================================================ */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background: var(--bg-white);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 1.4rem;
+            display: block;
+            margin-bottom: 10px;
+            opacity: 0.2;
+            font-weight: 100;
+            color: var(--text-body);
+        }
+
+        .empty-state h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        /* ================================================================ */
+        /* BACK SECTION                                                    */
+        /* ================================================================ */
+        .back-section {
+            padding: 22px 24px 44px;
+            text-align: center;
+            background: var(--bg-lighter);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .back-section .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.82rem;
+            transition: all var(--transition);
+            padding: 8px 22px;
+            border-radius: 60px;
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .back-section .back-link:hover {
+            gap: 16px;
+            color: var(--primary-light);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        /* ================================================================ */
+        /* TOAST CONTAINER                                                 */
+        /* ================================================================ */
+        #toastContainer {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 360px;
+            pointer-events: none;
+        }
+
+        @keyframes slideInToast {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideUpModal {
+            from { opacity: 0; transform: translateY(20px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                      */
+        /* ================================================================ */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .hero-title {
+                font-size: 2.8rem;
+            }
+
+            .hero-right {
+                min-height: 200px;
+                max-height: 260px;
+            }
+
+            .hero-image {
+                min-height: 200px;
+                max-height: 260px;
+            }
+
+            .library-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .sidebar {
+                position: static;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 16px;
+                padding: 18px 20px;
+            }
+
+            .sidebar-header {
+                grid-column: 1 / -1;
+                margin-bottom: 2px;
+            }
+
+            .filter-group { margin-bottom: 0; }
+            .filter-group .filter-options { flex-direction: row; flex-wrap: wrap; }
+            .filter-group .filter-option { padding: 4px 12px; width: auto; font-size: 0.72rem; }
+            .filter-divider { display: none; }
+            .item-card { flex-wrap: wrap; padding: 14px 16px; }
+            .item-card .card-actions {
+                width: 100%;
+                justify-content: flex-end;
+                padding-top: 6px;
+                border-top: 1px solid var(--border-light);
+            }
+            .skeleton-card { flex-wrap: wrap; padding: 14px 16px; }
+            .skeleton-card .skeleton-actions {
+                width: 100%;
+                justify-content: flex-end;
+                padding-top: 6px;
+                border-top: 1px solid var(--border-light);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 64px; }
+
+            .hero-section {
+                padding: 32px 0 28px;
+                min-height: auto;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .hero-desc {
+                font-size: 0.85rem;
+                margin-bottom: 18px;
+            }
+
+            .hero-cta {
+                padding: 10px 20px;
+                font-size: 0.78rem;
+            }
+
+            .hero-cta-secondary {
+                margin-left: 8px;
+                padding: 8px 16px;
+                font-size: 0.65rem;
+            }
+
+            .hero-right {
+                min-height: 160px;
+                max-height: 200px;
+            }
+
+            .hero-image {
+                min-height: 160px;
+                max-height: 200px;
+            }
+
+            .hero-image-badge {
+                bottom: 10px;
+                left: 10px;
+                font-size: 0.4rem;
+                padding: 2px 10px;
+            }
+
+            .sidebar {
+                grid-template-columns: 1fr 1fr;
+                padding: 14px 16px;
+            }
+
+            .content-header { flex-direction: column; align-items: flex-start; }
+            .content-sort { width: 100%; }
+            .content-sort select { width: 100%; }
+
+            .item-card { padding: 12px 14px; gap: 10px; }
+            .item-card .card-indicator { width: 28px; height: 28px; font-size: 0.5rem; }
+            .item-card .card-body .card-title { font-size: 0.82rem; }
+            .item-card .card-body .card-desc { font-size: 0.72rem; -webkit-line-clamp: 1; }
+            .item-card .card-body .card-meta .meta-tag { font-size: 0.48rem; padding: 0px 8px; }
+            .item-card .card-body .card-meta .meta-date { font-size: 0.58rem; }
+            .btn-download { padding: 4px 12px; font-size: 0.58rem; }
+            .btn-details { padding: 4px 10px; font-size: 0.55rem; }
+
+            .back-section { padding: 18px 16px 32px; }
+            .back-section .back-link { width: 100%; justify-content: center; font-size: 0.78rem; }
+
+            .skeleton-card { padding: 12px 14px; gap: 10px; }
+            .skeleton-card .skeleton-indicator { width: 28px; height: 28px; }
+            .skeleton-card .skeleton-body .skeleton-title { height: 16px; width: 70%; }
+            .skeleton-card .skeleton-body .skeleton-meta span { height: 12px; width: 50px; }
+            .skeleton-card .skeleton-body .skeleton-meta span:last-child { width: 60px; }
+            .skeleton-card .skeleton-body .skeleton-desc { height: 10px; width: 90%; }
+            .skeleton-card .skeleton-actions span { height: 24px; width: 60px; }
+            .skeleton-card .skeleton-actions span:last-child { width: 50px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.7rem;
+            }
+
+            .hero-badge {
+                font-size: 0.48rem;
+                padding: 3px 12px;
+                gap: 6px;
+            }
+
+            .hero-badge .badge-line {
+                width: 10px;
+            }
+
+            .hero-cta {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hero-cta-secondary {
+                width: 100%;
+                justify-content: center;
+                margin-left: 0;
+                margin-top: 8px;
+            }
+
+            .hero-right {
+                min-height: 120px;
+                max-height: 160px;
+            }
+
+            .hero-image {
+                min-height: 120px;
+                max-height: 160px;
+            }
+
+            .sidebar {
+                grid-template-columns: 1fr;
+                padding: 12px 14px;
+            }
+
+            .item-card .card-actions {
+                justify-content: flex-start;
+            }
+
+            .item-card .card-body .card-meta {
+                gap: 4px;
+            }
+
+            .skeleton-card .skeleton-actions {
+                justify-content: flex-start;
+            }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        ::selection {
+            background: var(--gold-pale);
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT                                                    -->
+    <!-- ================================================================ -->
+    <main>
+
+        <!-- ============================================================ -->
+        <!-- HERO WITH IMAGE                                              -->
+        <!-- ============================================================ -->
+        <section class="hero-section">
+            <!-- Background Layers -->
+            <div class="hero-bg-layer"></div>
+            <div class="rack-overlay"></div>
+            <div class="light-glow"></div>
+
+            <!-- Accent Line -->
+            <div class="hero-accent"></div>
+
+            <div class="page-container">
+                <div class="hero-content">
+
+                    <!-- Left Column - Content -->
+                    <div class="hero-left">
+                        <span class="hero-badge">
+                            <span class="badge-line"></span>
+                            WP5 · Replication Toolkit
+                        </span>
+
+                        <h1 class="hero-title">
+                            Replication <span class="gold">Toolkit</span>
+                        </h1>
+
+                        <p class="hero-subtitle">
+                            Scaling agritech solutions across African agricultural contexts
+                        </p>
+
+                        <p class="hero-desc">
+                            A curated collection of resources, templates and lessons learned
+                            for replicating Smart Mushroom and other agritech solutions
+                            across Kenya, East Africa and beyond.
+                        </p>
+
+                        <div>
+                            <a href="#library" class="hero-cta">
+                                Explore Library
+                                <span class="cta-arrow">→</span>
+                            </a>
+                            <a href="{{ url_for('public.training_wp5') }}" class="hero-cta-secondary">
+                                Back to Training
+                                <span class="arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Real Image -->
+                    <div class="hero-right">
+                        <img
+                            src="{{ url_for('static', filename='uploads/events/DSC_7239.jpg') }}"
+                            alt="Mushroom grow room with substrate blocks and racks"
+                            class="hero-image"
+                            loading="lazy"
+                        >
+                        <div class="hero-image-overlay"></div>
+                        <span class="hero-image-badge">Smart Mushroom Grow Room</span>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- LIBRARY SECTION                                              -->
+        <!-- ============================================================ -->
+        <section class="library-section" id="library">
+            <div class="page-container">
+                <div class="library-grid">
+
+                    <!-- ==================================================== -->
+                    <!-- SIDEBAR                                             -->
+                    <!-- ==================================================== -->
+                    <aside class="sidebar" id="sidebar">
+                        <div class="sidebar-header">
+                            <h4>Filter Library</h4>
+                            <p>Refine by category and type</p>
+                        </div>
+
+                        <div class="filter-group">
+                            <span class="filter-label">Category</span>
+                            <div class="filter-options">
+                                <button class="filter-option active" data-filter="all" onclick="filterItems('all')">
+                                    <span class="option-indicator"></span>
+                                    All Items
+                                    <span class="option-count" id="countAll">0</span>
+                                </button>
+                                <button class="filter-option" data-filter="resource" onclick="filterItems('resource')">
+                                    <span class="option-indicator"></span>
+                                    Resources
+                                    <span class="option-count" id="countResource">0</span>
+                                </button>
+                                <button class="filter-option" data-filter="template" onclick="filterItems('template')">
+                                    <span class="option-indicator"></span>
+                                    Templates
+                                    <span class="option-count" id="countTemplate">0</span>
+                                </button>
+                                <button class="filter-option" data-filter="lesson" onclick="filterItems('lesson')">
+                                    <span class="option-indicator"></span>
+                                    Lessons Learned
+                                    <span class="option-count" id="countLesson">0</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="filter-divider"></div>
+
+                        <div class="filter-group">
+                            <span class="filter-label">Sort By</span>
+                            <div class="filter-options">
+                                <button class="filter-option active" data-sort="newest" onclick="sortItems('newest')">
+                                    <span class="option-indicator"></span>
+                                    Newest First
+                                </button>
+                                <button class="filter-option" data-sort="oldest" onclick="sortItems('oldest')">
+                                    <span class="option-indicator"></span>
+                                    Oldest First
+                                </button>
+                                <button class="filter-option" data-sort="alpha" onclick="sortItems('alpha')">
+                                    <span class="option-indicator"></span>
+                                    A to Z
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="filter-divider"></div>
+
+                        <button class="filter-clear" onclick="clearFilters()">
+                            <span class="clear-icon">↺</span>
+                            Reset Filters
+                        </button>
+                    </aside>
+
+                    <!-- ==================================================== -->
+                    <!-- MAIN CONTENT                                         -->
+                    <!-- ==================================================== -->
+                    <div class="content-area" id="contentArea">
+
+                        <div class="content-header">
+                            <div class="content-title-group">
+                                <h2 id="contentTitle">All Resources</h2>
+                                <span class="result-count">
+                                    <span class="count-number" id="resultCount">0</span> items available
+                                </span>
+                            </div>
+                            <div class="content-sort">
+                                <select id="sortSelect" onchange="sortItems(this.value)">
+                                    <option value="newest">Newest First</option>
+                                    <option value="oldest">Oldest First</option>
+                                    <option value="alpha">A to Z</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Items Grid -->
+                        <div class="items-grid" id="itemsGrid">
+                            <!-- Skeleton Loader -->
+                            <div id="skeletonLoader">
+                                <div class="skeleton-card">
+                                    <div class="skeleton-indicator"></div>
+                                    <div class="skeleton-body">
+                                        <div class="skeleton-title"></div>
+                                        <div class="skeleton-meta">
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                        <div class="skeleton-desc"></div>
+                                    </div>
+                                    <div class="skeleton-actions">
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <div class="skeleton-card">
+                                    <div class="skeleton-indicator"></div>
+                                    <div class="skeleton-body">
+                                        <div class="skeleton-title"></div>
+                                        <div class="skeleton-meta">
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                        <div class="skeleton-desc"></div>
+                                    </div>
+                                    <div class="skeleton-actions">
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <div class="skeleton-card">
+                                    <div class="skeleton-indicator"></div>
+                                    <div class="skeleton-body">
+                                        <div class="skeleton-title"></div>
+                                        <div class="skeleton-meta">
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                        <div class="skeleton-desc"></div>
+                                    </div>
+                                    <div class="skeleton-actions">
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <div class="skeleton-card">
+                                    <div class="skeleton-indicator"></div>
+                                    <div class="skeleton-body">
+                                        <div class="skeleton-title"></div>
+                                        <div class="skeleton-meta">
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                        <div class="skeleton-desc"></div>
+                                    </div>
+                                    <div class="skeleton-actions">
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <div class="skeleton-card">
+                                    <div class="skeleton-indicator"></div>
+                                    <div class="skeleton-body">
+                                        <div class="skeleton-title"></div>
+                                        <div class="skeleton-meta">
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                        <div class="skeleton-desc"></div>
+                                    </div>
+                                    <div class="skeleton-actions">
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Loading Indicator -->
+                        <div id="loadingIndicator" style="display: none; text-align: center; padding: 40px 0;">
+                            <div class="spinner" style="display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border-light); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                            <p class="loading-text" style="color: var(--text-light); margin-top: 8px; font-size: 0.82rem;">Loading items...</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- BACK TO TRAINING                                              -->
+        <!-- ============================================================ -->
+        <section class="back-section">
+            <a href="{{ url_for('public.training_wp5') }}" class="back-link">
+                ← Back to Training and WP5
+            </a>
+        </section>
+
+    </main>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT                                        -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // STATE
+            // ================================================================
+
+            var allItems = [];
+            var currentFilter = 'all';
+            var currentSort = 'newest';
+            var filteredItems = [];
+            var dataLoaded = false;
+
+            // ================================================================
+            // DOM REFS
+            // ================================================================
+
+            var grid = document.getElementById('itemsGrid');
+            var skeletonLoader = document.getElementById('skeletonLoader');
+            var resultCount = document.getElementById('resultCount');
+            var contentTitle = document.getElementById('contentTitle');
+            var loadingIndicator = document.getElementById('loadingIndicator');
+            var sortSelect = document.getElementById('sortSelect');
+
+            var countAll = document.getElementById('countAll');
+            var countResource = document.getElementById('countResource');
+            var countTemplate = document.getElementById('countTemplate');
+            var countLesson = document.getElementById('countLesson');
+
+            // ================================================================
+            // LOAD DATA FROM API
+            // ================================================================
+
+            function loadData() {
+                showSkeleton();
+
+                var promises = [
+                    fetch('/api/replication-resources/', { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).then(function(r) {
+                        if (!r.ok) throw new Error('Failed to load resources');
+                        return r.json();
+                    }).catch(function() { return []; }),
+                    fetch('/api/replication-templates/', { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).then(function(r) {
+                        if (!r.ok) throw new Error('Failed to load templates');
+                        return r.json();
+                    }).catch(function() { return []; }),
+                    fetch('/api/replication-lessons/', { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).then(function(r) {
+                        if (!r.ok) throw new Error('Failed to load lessons');
+                        return r.json();
+                    }).catch(function() { return []; })
+                ];
+
+                Promise.all(promises)
+                    .then(function(results) {
+                        var resources = results[0] || [];
+                        var templates = results[1] || [];
+                        var lessons = results[2] || [];
+
+                        var mappedResources = resources.map(function(item) {
+                            item.type = 'resource';
+                            item.badge = 'Resource';
+                            return item;
+                        });
+
+                        var mappedTemplates = templates.map(function(item) {
+                            item.type = 'template';
+                            item.badge = 'Template';
+                            return item;
+                        });
+
+                        var mappedLessons = lessons.map(function(item) {
+                            item.type = 'lesson';
+                            item.badge = 'Lesson';
+                            return item;
+                        });
+
+                        allItems = mappedResources.concat(mappedTemplates).concat(mappedLessons);
+
+                        allItems.sort(function(a, b) {
+                            return new Date(b.created_at || b.date) - new Date(a.created_at || a.date);
+                        });
+
+                        dataLoaded = true;
+                        hideSkeleton();
+                        applyFiltersAndSort();
+                    })
+                    .catch(function(error) {
+                        console.error('Error loading data:', error);
+                        allItems = [];
+                        dataLoaded = true;
+                        hideSkeleton();
+                        applyFiltersAndSort();
+                        showToast('Error', 'Failed to load replication data. Please refresh the page.', 'error');
+                    });
+            }
+
+            // ================================================================
+            // SKELETON LOADER CONTROL
+            // ================================================================
+
+            function showSkeleton() {
+                if (skeletonLoader) {
+                    skeletonLoader.style.display = 'block';
+                }
+            }
+
+            function hideSkeleton() {
+                if (skeletonLoader) {
+                    skeletonLoader.style.display = 'none';
+                }
+            }
+
+            // ================================================================
+            // FILTER FUNCTIONS
+            // ================================================================
+
+            window.filterItems = function(type) {
+                if (!dataLoaded) return;
+                currentFilter = type;
+                updateFilterUI(type);
+                applyFiltersAndSort();
+            };
+
+            window.sortItems = function(sort) {
+                if (!dataLoaded) return;
+                currentSort = sort;
+                if (sortSelect && typeof sort === 'string') {
+                    sortSelect.value = sort;
+                }
+                updateSortUI(sort);
+                applyFiltersAndSort();
+            };
+
+            window.clearFilters = function() {
+                if (!dataLoaded) return;
+                currentFilter = 'all';
+                currentSort = 'newest';
+                if (sortSelect) sortSelect.value = 'newest';
+                updateFilterUI('all');
+                updateSortUI('newest');
+                applyFiltersAndSort();
+            };
+
+            // ================================================================
+            // UI UPDATES
+            // ================================================================
+
+            function updateFilterUI(type) {
+                document.querySelectorAll('.filter-option[data-filter]').forEach(function(el) {
+                    el.classList.toggle('active', el.dataset.filter === type);
+                });
+
+                var titles = {
+                    'all': 'All Resources',
+                    'resource': 'Resources',
+                    'template': 'Templates',
+                    'lesson': 'Lessons Learned'
+                };
+                if (contentTitle) {
+                    contentTitle.textContent = titles[type] || 'All Resources';
+                }
+            }
+
+            function updateSortUI(sort) {
+                document.querySelectorAll('.filter-option[data-sort]').forEach(function(el) {
+                    el.classList.toggle('active', el.dataset.sort === sort);
+                });
+            }
+
+            // ================================================================
+            // FILTER AND SORT LOGIC
+            // ================================================================
+
+            function applyFiltersAndSort() {
+                if (!dataLoaded) return;
+
+                filteredItems = allItems.filter(function(item) {
+                    if (currentFilter === 'all') return true;
+                    return item.type === currentFilter;
+                });
+
+                filteredItems.sort(function(a, b) {
+                    var dateA = a.created_at || a.date || '';
+                    var dateB = b.created_at || b.date || '';
+                    var titleA = (a.title || '').toLowerCase();
+                    var titleB = (b.title || '').toLowerCase();
+
+                    if (currentSort === 'newest') {
+                        return new Date(dateB) - new Date(dateA);
+                    } else if (currentSort === 'oldest') {
+                        return new Date(dateA) - new Date(dateB);
+                    } else if (currentSort === 'alpha') {
+                        return titleA.localeCompare(titleB);
+                    }
+                    return 0;
+                });
+
+                renderItems(filteredItems);
+                updateCounts();
+            }
+
+            // ================================================================
+            // RENDER ITEMS
+            // ================================================================
+
+            function renderItems(items) {
+                if (!grid) return;
+
+                if (items.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <span class="empty-icon">—</span>
+                            <h3>No items found</h3>
+                            <p>Try adjusting your filters to find what you are looking for.</p>
+                        </div>
+                    `;
+                    if (resultCount) resultCount.textContent = '0';
+                    return;
+                }
+
+                var html = '';
+                items.forEach(function(item) {
+                    var typeClass = item.type;
+                    var indicatorLabel = item.type.charAt(0).toUpperCase();
+                    var itemDate = item.created_at || item.date || '';
+                    var itemTitle = item.title || 'Untitled';
+                    var itemDesc = item.description || 'No description available';
+                    var filePath = item.file_path || '';
+                    var fileSize = item.file_size || '';
+
+                    var fileExt = '';
+                    if (filePath) {
+                        var parts = filePath.split('.');
+                        fileExt = parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
+                    }
+
+                    html += `
+                        <div class="item-card" data-type="${item.type}" data-id="${item.id}">
+                            <div class="card-indicator ${typeClass}">${indicatorLabel}</div>
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <a href="#" onclick="event.preventDefault(); viewItem(${item.id}, '${item.type}')">${escapeHtml(itemTitle)}</a>
+                                </div>
+                                <div class="card-meta">
+                                    <span class="meta-tag ${typeClass}">${escapeHtml(item.badge || item.type)}</span>
+                                    <span class="meta-date">${formatDate(itemDate)}</span>
+                                    ${fileSize ? `<span class="meta-size">${escapeHtml(fileSize)}</span>` : ''}
+                                    ${fileExt ? `<span class="meta-size">${escapeHtml(fileExt.toUpperCase())}</span>` : ''}
+                                </div>
+                                <p class="card-desc">${escapeHtml(itemDesc)}</p>
+                            </div>
+                            <div class="card-actions">
+                                ${filePath ? `
+                                    <button class="btn-download" onclick="downloadFile('${escapeHtml(filePath)}', event)">
+                                        <span class="download-icon">↓</span> Download
+                                    </button>
+                                ` : ''}
+                                <button class="btn-details" onclick="viewItem(${item.id}, '${item.type}')">
+                                    View Details →
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                grid.innerHTML = html;
+                if (resultCount) resultCount.textContent = items.length;
+            }
+
+            // ================================================================
+            // VIEW ITEM
+            // ================================================================
+
+            window.viewItem = function(id, type) {
+                var endpointMap = {
+                    'resource': '/api/replication-resources/' + id,
+                    'template': '/api/replication-templates/' + id,
+                    'lesson': '/api/replication-lessons/' + id
+                };
+
+                var endpoint = endpointMap[type];
+                if (!endpoint) {
+                    showToast('Error', 'Invalid item type.', 'error');
+                    return;
+                }
+
+                showModal('Loading...', '<p style="text-align:center;padding:20px;color:var(--text-muted);">Loading details...</p>');
+
+                fetch(endpoint, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) {
+                    if (!response.ok) throw new Error('Item not found');
+                    return response.json();
+                })
+                .then(function(item) {
+                    var detailContent = buildDetailView(item, type);
+                    var modalTitle = document.getElementById('modalTitle');
+                    if (modalTitle) {
+                        modalTitle.textContent = (item.badge || type.charAt(0).toUpperCase() + type.slice(1)) + ' Details';
+                    }
+                    var modalBody = document.getElementById('modalBody');
+                    if (modalBody) {
+                        modalBody.innerHTML = detailContent;
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error loading item:', error);
+                    var modalBody = document.getElementById('modalBody');
+                    if (modalBody) {
+                        modalBody.innerHTML = `
+                            <div style="text-align:center;padding:30px;color:#9E2A2A;">
+                                <p>Error loading item details. Please try again.</p>
+                                <button class="btn-details" style="padding:8px 24px;background:var(--bg-white);border-color:var(--border-light);" onclick="closeModal()">
+                                    Close
+                                </button>
+                            </div>
+                        `;
+                    }
+                    showToast('Error', 'Could not load item details.', 'error');
+                });
+            };
+
+            // ================================================================
+            // BUILD DETAIL VIEW
+            // ================================================================
+
+            function buildDetailView(item, type) {
+                var filePath = item.file_path || '';
+                var fileName = filePath ? filePath.split('/').pop() : '';
+                var fileExt = '';
+                if (filePath) {
+                    var parts = filePath.split('.');
+                    fileExt = parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
+                }
+
+                var html = `
+                    <div style="background:var(--bg-light);border-radius:var(--radius-sm);padding:18px 22px;margin-bottom:16px;border-left:3px solid var(--gold);">
+                        <h4 style="font-size:1.1rem;font-weight:600;color:var(--text-dark);margin:0 0 4px;">${escapeHtml(item.title || 'Untitled')}</h4>
+                        <span style="font-size:0.75rem;color:var(--text-muted);">${escapeHtml(item.badge || type)} · ${formatDate(item.created_at || item.date)}</span>
+                    </div>
+                `;
+
+                html += `
+                    <div class="detail-row" style="display:flex;padding:6px 0;border-bottom:1px solid var(--border-light);">
+                        <span style="font-weight:600;color:var(--text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em;width:120px;flex-shrink:0;padding-top:2px;">Description</span>
+                        <span style="color:var(--text-body);font-size:0.9rem;flex:1;">${escapeHtml(item.description || 'No description available')}</span>
+                    </div>
+                `;
+
+                if (type === 'lesson' && item.content) {
+                    html += `
+                        <div class="detail-row" style="display:flex;padding:6px 0;border-bottom:1px solid var(--border-light);">
+                            <span style="font-weight:600;color:var(--text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em;width:120px;flex-shrink:0;padding-top:2px;">Content</span>
+                            <span style="color:var(--text-body);font-size:0.9rem;flex:1;white-space:pre-wrap;">${escapeHtml(item.content)}</span>
+                        </div>
+                    `;
+                }
+
+                if (type === 'lesson' && item.subtext) {
+                    html += `
+                        <div class="detail-row" style="display:flex;padding:6px 0;border-bottom:1px solid var(--border-light);">
+                            <span style="font-weight:600;color:var(--text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em;width:120px;flex-shrink:0;padding-top:2px;">Subtext</span>
+                            <span style="color:var(--text-body);font-size:0.9rem;flex:1;">${escapeHtml(item.subtext)}</span>
+                        </div>
+                    `;
+                }
+
+                if (filePath) {
+                    html += `
+                        <div class="detail-row" style="display:flex;padding:6px 0;border-bottom:1px solid var(--border-light);">
+                            <span style="font-weight:600;color:var(--text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em;width:120px;flex-shrink:0;padding-top:2px;">File</span>
+                            <span style="color:var(--text-body);font-size:0.9rem;flex:1;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                                <span style="font-family:monospace;font-size:0.8rem;color:var(--text-muted);">${escapeHtml(fileName)}</span>
+                                <span style="font-size:0.6rem;padding:1px 10px;background:var(--bg-light);border-radius:60px;color:var(--text-light);text-transform:uppercase;">${escapeHtml(fileExt)}</span>
+                                <button class="btn-download" onclick="downloadFile('${escapeHtml(filePath)}', event);">
+                                    <span class="download-icon">↓</span> Download
+                                </button>
+                            </span>
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div class="detail-row" style="display:flex;padding:6px 0;border-bottom:1px solid var(--border-light);">
+                        <span style="font-weight:600;color:var(--text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em;width:120px;flex-shrink:0;padding-top:2px;">Created</span>
+                        <span style="color:var(--text-body);font-size:0.9rem;flex:1;">${formatDate(item.created_at || item.date)}</span>
+                    </div>
+                    <div class="detail-row" style="display:flex;padding:6px 0;">
+                        <span style="font-weight:600;color:var(--text-muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em;width:120px;flex-shrink:0;padding-top:2px;">Updated</span>
+                        <span style="color:var(--text-body);font-size:0.9rem;flex:1;">${formatDate(item.updated_at || item.date)}</span>
+                    </div>
+                `;
+
+                html += `
+                    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light);display:flex;gap:12px;justify-content:flex-end;">
+                        <button class="btn-details" style="padding:8px 24px;background:var(--bg-white);border-color:var(--border-light);" onclick="closeModal()">
+                            Close
+                        </button>
+                    </div>
+                `;
+
+                return html;
+            }
+
+            // ================================================================
+            // MODAL
+            // ================================================================
+
+            var modalOverlay = null;
+
+            function createModal() {
+                if (document.getElementById('modalOverlay')) return;
+
+                var overlay = document.createElement('div');
+                overlay.id = 'modalOverlay';
+                overlay.style.cssText = `
+                    position:fixed;top:0;left:0;right:0;bottom:0;
+                    background:rgba(6,20,32,0.70);backdrop-filter:blur(8px);
+                    -webkit-backdrop-filter:blur(8px);
+                    z-index:9999;display:none;
+                    align-items:center;justify-content:center;
+                    padding:20px;
+                `;
+
+                var modal = document.createElement('div');
+                modal.style.cssText = `
+                    background:#FFFFFF;border-radius:16px;
+                    max-width:640px;width:100%;max-height:90vh;
+                    overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,0.12);
+                    animation:slideUpModal 0.3s ease;
+                `;
+
+                modal.innerHTML = `
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:20px 24px 12px;border-bottom:1px solid #E4EAF0;position:sticky;top:0;background:#FFFFFF;z-index:10;border-radius:16px 16px 0 0;">
+                        <h3 id="modalTitle" style="font-size:1.1rem;font-weight:700;color:#081A28;margin:0;">Details</h3>
+                        <button id="modalClose" style="background:none;border:none;font-size:1.4rem;font-weight:300;color:#8A9AAA;cursor:pointer;padding:0 4px;transition:all 0.3s ease;">×</button>
+                    </div>
+                    <div id="modalBody" style="padding:20px 24px 24px;"></div>
+                `;
+
+                overlay.appendChild(modal);
+                document.body.appendChild(overlay);
+
+                modalOverlay = overlay;
+
+                document.getElementById('modalClose').addEventListener('click', closeModal);
+                overlay.addEventListener('click', function(e) {
+                    if (e.target === this) closeModal();
+                });
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') closeModal();
+                });
+            }
+
+            window.showModal = function(title, content) {
+                createModal();
+                var titleEl = document.getElementById('modalTitle');
+                var bodyEl = document.getElementById('modalBody');
+                if (titleEl) titleEl.textContent = title;
+                if (bodyEl) bodyEl.innerHTML = content;
+                if (modalOverlay) {
+                    modalOverlay.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+            };
+
+            window.closeModal = function() {
+                if (modalOverlay) {
+                    modalOverlay.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+            };
+
+            // ================================================================
+            // DOWNLOAD FUNCTION
+            // ================================================================
+
+            window.downloadFile = function(filePath, event) {
+                if (event) event.stopPropagation();
+
+                if (!filePath) {
+                    showToast('No file available', 'This item has no file to download.', 'error');
+                    return;
+                }
+
+                var url = '/static/' + filePath;
+                var filename = filePath.split('/').pop();
+
+                var link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                showToast('Download started', 'Your file is being downloaded.', 'success');
+            };
+
+            // ================================================================
+            // TOAST NOTIFICATION
+            // ================================================================
+
+            function showToast(title, message, type) {
+                type = type || 'success';
+
+                var container = document.getElementById('toastContainer');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'toastContainer';
+                    document.body.appendChild(container);
+                }
+
+                var toast = document.createElement('div');
+                var colors = {
+                    'success': '#1A6A4A',
+                    'error': '#9E2A2A',
+                    'warning': '#C9913A'
+                };
+                var icons = {
+                    'success': '✓',
+                    'error': '✗',
+                    'warning': '⚠'
+                };
+
+                toast.style.cssText = `
+                    pointer-events:auto;background:#1A2A3A;color:#FFFFFF;
+                    border-radius:12px;padding:12px 18px;
+                    box-shadow:0 12px 48px rgba(0,0,0,0.15);
+                    border-left:4px solid ${colors[type] || '#1A4A6B'};
+                    animation:slideInToast 0.4s cubic-bezier(0.4,0,0.2,1);
+                    display:flex;align-items:flex-start;gap:12px;
+                    font-family:'Inter',-apple-system,system-ui,sans-serif;
+                `;
+
+                toast.innerHTML = `
+                    <span style="font-size:1.1rem;flex-shrink:0;margin-top:1px;color:${type === 'success' ? '#E8C87A' : '#F5A0A0'};">${icons[type] || 'ℹ'}</span>
+                    <div style="flex:1;">
+                        <div style="font-weight:600;font-size:0.85rem;">${escapeHtml(title)}</div>
+                        <div style="font-size:0.75rem;opacity:0.7;margin-top:2px;">${escapeHtml(message)}</div>
+                    </div>
+                    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.1rem;cursor:pointer;padding:0 4px;line-height:1;">✕</button>
+                `;
+
+                container.appendChild(toast);
+
+                setTimeout(function() {
+                    if (toast.parentElement) {
+                        toast.style.opacity = '0';
+                        toast.style.transform = 'translateX(20px)';
+                        toast.style.transition = 'all 0.3s ease';
+                        setTimeout(function() {
+                            if (toast.parentElement) toast.remove();
+                        }, 300);
+                    }
+                }, 4000);
+            }
+
+            // ================================================================
+            // UPDATE COUNTS
+            // ================================================================
+
+            function updateCounts() {
+                var total = allItems.length;
+                var resources = allItems.filter(function(i) { return i.type === 'resource'; }).length;
+                var templates = allItems.filter(function(i) { return i.type === 'template'; }).length;
+                var lessons = allItems.filter(function(i) { return i.type === 'lesson'; }).length;
+
+                if (countAll) countAll.textContent = total;
+                if (countResource) countResource.textContent = resources;
+                if (countTemplate) countTemplate.textContent = templates;
+                if (countLesson) countLesson.textContent = lessons;
+            }
+
+            // ================================================================
+            // HELPER FUNCTIONS
+            // ================================================================
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                var div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function formatDate(dateStr) {
+                if (!dateStr) return '';
+                try {
+                    var d = new Date(dateStr);
+                    return d.toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                } catch (e) {
+                    return dateStr;
+                }
+            }
+
+            // ================================================================
+            // SORT SELECT EVENT
+            // ================================================================
+
+            if (sortSelect) {
+                sortSelect.addEventListener('change', function() {
+                    sortItems(this.value);
+                });
+            }
+
+            // ================================================================
+            // SPINNER KEYFRAMES
+            // ================================================================
+
+            var spinnerStyle = document.createElement('style');
+            spinnerStyle.textContent = `
+                @keyframes spin {
+                    to { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(spinnerStyle);
+
+            // ================================================================
+            // INITIALIZE
+            // ================================================================
+
+            loadData();
+            console.log('BRIDGE-AI Kenya Replication Toolkit initialized (Image Hero)');
+
+        })();
+    </script>
+
+</body>
+</html>

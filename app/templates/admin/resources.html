@@ -1,0 +1,2223 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - ADMIN RESOURCES MANAGEMENT                    -->
+<!-- ================================================================ -->
+<!-- Extends: admin/layout.html                                     -->
+<!-- Content: List · Add · Edit · Delete · View Resources           -->
+<!-- Features: Tabs with Counters · File Upload · Drag & Drop       -->
+<!-- CSS: Fully self-contained in this file                         -->
+<!-- Rules: No emojis · No decorative symbols · No colons           -->
+<!--        No slashes · No hyphens · Clean typography              -->
+<!-- ================================================================ -->
+
+{% extends "admin/layout.html" %}
+
+{% block title %}Resources - BRIDGE-AI Kenya Admin{% endblock %}
+
+{% block page_title %}Resource <span class="highlight">Management</span>{% endblock %}
+
+{% block page_subtitle %}Manage deliverables, policy briefs, videos, presentations, training kits, publications, and open-source links{% endblock %}
+
+{% block content %}
+
+<!-- ================================================================ -->
+<!-- TOAST NOTIFICATIONS CONTAINER                                   -->
+<!-- ================================================================ -->
+<div id="toastContainer"></div>
+
+<!-- ================================================================ -->
+<!-- CSS - Self-contained for this page                              -->
+<!-- ================================================================ -->
+<style>
+    /* ================================================================ */
+    /* TABS                                                           */
+    /* ================================================================ */
+    .resource-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 24px;
+        padding: 4px 0;
+        border-bottom: 2px solid #E4EAF0;
+        background: #FFFFFF;
+    }
+
+    .resource-tabs .tab-btn {
+        padding: 8px 18px;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #5A6A7A;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 0;
+        margin-bottom: -2px;
+    }
+
+    .resource-tabs .tab-btn:hover {
+        color: #1A2A3A;
+        background: #F5F8FA;
+    }
+
+    .resource-tabs .tab-btn.active {
+        color: #1A4A6B;
+        border-bottom-color: #D4A843;
+    }
+
+    .resource-tabs .tab-btn .tab-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 7px;
+        border-radius: 60px;
+        font-size: 0.55rem;
+        font-weight: 700;
+        background: #F5F8FA;
+        color: #5A6A7A;
+    }
+
+    .resource-tabs .tab-btn.active .tab-count {
+        background: #F5ECD7;
+        color: #D4A843;
+    }
+
+    /* ================================================================ */
+    /* TOOLBAR                                                         */
+    /* ================================================================ */
+    .resource-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .resource-toolbar .toolbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .resource-toolbar .toolbar-left .search-input {
+        padding: 8px 14px;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        color: #1A2A3A;
+        background: #FFFFFF;
+        outline: none;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        min-width: 200px;
+    }
+
+    .resource-toolbar .toolbar-left .search-input:focus {
+        border-color: #1A4A6B;
+        box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+    }
+
+    .btn-add {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        background: #D4A843;
+        color: #061420;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        box-shadow: 0 4px 16px rgba(212, 168, 67, 0.12);
+    }
+
+    .btn-add:hover {
+        background: #F5D77E;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.2);
+    }
+
+    /* ================================================================ */
+    /* TABLE                                                           */
+    /* ================================================================ */
+    .table-container {
+        background: #FFFFFF;
+        border: 1px solid #E4EAF0;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .table-container table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .table-container table thead {
+        background: #F5F8FA;
+        border-bottom: 1px solid #E4EAF0;
+    }
+
+    .table-container table thead th {
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 600;
+        color: #5A6A7A;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .table-container table tbody tr {
+        border-bottom: 1px solid #E4EAF0;
+        transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .table-container table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table-container table tbody tr:hover {
+        background: #FAFCFE;
+    }
+
+    .table-container table tbody td {
+        padding: 12px 16px;
+        color: #1A2A3A;
+        vertical-align: middle;
+    }
+
+    /* ─── Type Badges ─── */
+    .table-container table tbody td .type-badge {
+        display: inline-block;
+        padding: 2px 12px;
+        border-radius: 60px;
+        font-size: 0.6rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .type-badge.deliverable { background: #D4E8F5; color: #1A4A6B; }
+    .type-badge.policy_brief { background: #F5ECD7; color: #9E7A2A; }
+    .type-badge.video { background: #F5D6D6; color: #9E2A2A; }
+    .type-badge.presentation { background: #E8D6F5; color: #6A3A8A; }
+    .type-badge.training_kit { background: #D6F0E0; color: #1A6A4A; }
+    .type-badge.publication { background: #D6DCE8; color: #2A4A6A; }
+    .type-badge.open_source { background: #F5E8D6; color: #9E6A2A; }
+
+    /* ─── Status Badges ─── */
+    .table-container table tbody td .status-badge {
+        display: inline-block;
+        padding: 2px 12px;
+        border-radius: 60px;
+        font-size: 0.6rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .status-badge.published {
+        background: #D6F0E0;
+        color: #1A6A4A;
+    }
+
+    .status-badge.draft {
+        background: #F5E8D6;
+        color: #9E6A2A;
+    }
+
+    /* ─── Action Buttons ─── */
+    .table-container table tbody td .actions {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+
+    .table-container table tbody td .actions button,
+    .table-container table tbody td .actions a {
+        padding: 4px 10px;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .btn-download-sm {
+        background: #E6F0E6;
+        color: #1A6A4A;
+    }
+
+    .btn-download-sm:hover {
+        background: #1A6A4A;
+        color: #FFFFFF;
+        transform: translateY(-1px);
+    }
+
+    .btn-view {
+        background: #E8F0F8;
+        color: #1A4A6B;
+    }
+
+    .btn-view:hover {
+        background: #1A4A6B;
+        color: #FFFFFF;
+        transform: translateY(-1px);
+    }
+
+    .btn-edit {
+        background: #F5ECD7;
+        color: #D4A843;
+    }
+
+    .btn-edit:hover {
+        background: #D4A843;
+        color: #061420;
+        transform: translateY(-1px);
+    }
+
+    .btn-delete {
+        background: #F5E6E6;
+        color: #9E2A2A;
+    }
+
+    .btn-delete:hover {
+        background: #9E2A2A;
+        color: #FFFFFF;
+        transform: translateY(-1px);
+    }
+
+    /* ─── Empty State ─── */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #5A6A7A;
+    }
+
+    .empty-state h4 {
+        font-size: 1.1rem;
+        color: #081A28;
+        margin-bottom: 4px;
+    }
+
+    .empty-state p {
+        font-size: 0.9rem;
+    }
+
+    /* ================================================================ */
+    /* MODAL                                                           */
+    /* ================================================================ */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(6, 20, 32, 0.6);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal {
+        background: #FFFFFF;
+        border-radius: 20px;
+        max-width: 720px;
+        width: 100%;
+        max-height: 92vh;
+        overflow-y: auto;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.12);
+        animation: slideUp 0.3s ease;
+    }
+
+    .modal::-webkit-scrollbar {
+        width: 4px;
+    }
+    .modal::-webkit-scrollbar-track {
+        background: #F5F8FA;
+        border-radius: 4px;
+    }
+    .modal::-webkit-scrollbar-thumb {
+        background: #1A4A6B;
+        border-radius: 4px;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px) scale(0.96); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 24px 28px 16px;
+        border-bottom: 1px solid #E4EAF0;
+        position: sticky;
+        top: 0;
+        background: #FFFFFF;
+        z-index: 10;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .modal-header h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #081A28;
+    }
+
+    .modal-header h3 .gold {
+        color: #D4A843;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        font-weight: 300;
+        color: #8A9AAA;
+        cursor: pointer;
+        padding: 4px 8px;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        line-height: 1;
+    }
+
+    .modal-close:hover {
+        color: #081A28;
+        transform: rotate(90deg);
+    }
+
+    .modal-body {
+        padding: 24px 28px 28px;
+    }
+
+    /* ─── Form ─── */
+    .modal-body .form-group {
+        margin-bottom: 16px;
+    }
+
+    .modal-body .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #1A2A3A;
+        margin-bottom: 4px;
+    }
+
+    .modal-body .form-group label .required {
+        color: #9E2A2A;
+    }
+
+    .modal-body .form-group input,
+    .modal-body .form-group select,
+    .modal-body .form-group textarea {
+        width: 100%;
+        padding: 9px 14px;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #1A2A3A;
+        background: #FAFCFE;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        outline: none;
+    }
+
+    .modal-body .form-group input:focus,
+    .modal-body .form-group select:focus,
+    .modal-body .form-group textarea:focus {
+        border-color: #1A4A6B;
+        box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+        background: #FFFFFF;
+    }
+
+    .modal-body .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .modal-body .form-group .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    /* ─── File Upload ─── */
+    .file-upload-area {
+        border: 2px dashed #E4EAF0;
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        position: relative;
+        background: #FAFCFE;
+    }
+
+    .file-upload-area:hover {
+        border-color: #1A4A6B;
+        background: #F5F8FA;
+    }
+
+    .file-upload-area.dragover {
+        border-color: #D4A843;
+        background: #F5ECD7;
+    }
+
+    .file-upload-area .upload-icon {
+        font-size: 2.4rem;
+        color: #8A9AAA;
+        display: block;
+        margin-bottom: 4px;
+        font-weight: 200;
+    }
+
+    .file-upload-area .upload-text {
+        font-size: 0.9rem;
+        color: #5A6A7A;
+    }
+
+    .file-upload-area .upload-text strong {
+        color: #1A4A6B;
+    }
+
+    .file-upload-area .upload-hint {
+        font-size: 0.7rem;
+        color: #8A9AAA;
+        margin-top: 4px;
+    }
+
+    .file-upload-area input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* ─── File Preview ─── */
+    .file-preview {
+        display: none;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: #F5F8FA;
+        border-radius: 8px;
+        border: 1px solid #E4EAF0;
+        margin-top: 8px;
+    }
+
+    .file-preview.visible {
+        display: flex;
+    }
+
+    .file-preview .file-info {
+        flex: 1;
+        font-size: 0.82rem;
+        color: #1A2A3A;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .file-preview .file-info .file-size {
+        font-size: 0.7rem;
+        color: #8A9AAA;
+        margin-left: 8px;
+    }
+
+    .file-preview .file-remove {
+        background: none;
+        border: none;
+        color: #9E2A2A;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0 4px;
+        line-height: 1;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        transition: color 0.3s ease;
+    }
+
+    .file-preview .file-remove:hover {
+        color: #6A1A1A;
+    }
+
+    .file-preview .file-icon-text {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #1A4A6B;
+        background: #D4E8F5;
+        padding: 2px 10px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* ─── Existing File in Edit ─── */
+    .existing-file {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        background: #F5F8FA;
+        border-radius: 8px;
+        border: 1px solid #E4EAF0;
+        margin-top: 8px;
+    }
+
+    .existing-file .file-info {
+        flex: 1;
+        font-size: 0.82rem;
+        color: #1A2A3A;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .existing-file .file-remove {
+        background: none;
+        border: none;
+        color: #9E2A2A;
+        font-size: 1rem;
+        cursor: pointer;
+        padding: 0 4px;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        transition: color 0.3s ease;
+    }
+
+    .existing-file .file-remove:hover {
+        color: #6A1A1A;
+    }
+
+    .existing-file .file-icon-text {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #1A4A6B;
+        background: #D4E8F5;
+        padding: 2px 10px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* ─── Form Actions ─── */
+    .modal-body .form-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 8px;
+        padding-top: 16px;
+        border-top: 1px solid #E4EAF0;
+    }
+
+    .btn-modal-save {
+        padding: 10px 28px;
+        background: #D4A843;
+        color: #061420;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        box-shadow: 0 4px 16px rgba(212, 168, 67, 0.12);
+    }
+
+    .btn-modal-save:hover {
+        background: #F5D77E;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.2);
+    }
+
+    .btn-modal-cancel {
+        padding: 10px 24px;
+        background: #F5F8FA;
+        color: #5A6A7A;
+        border: 1px solid #E4EAF0;
+        border-radius: 60px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    .btn-modal-cancel:hover {
+        background: #E4EAF0;
+        color: #1A2A3A;
+    }
+
+    /* ================================================================ */
+    /* VIEW MODAL                                                      */
+    /* ================================================================ */
+    .detail-view .detail-row {
+        display: flex;
+        padding: 8px 0;
+        border-bottom: 1px solid #F5F8FA;
+    }
+
+    .detail-view .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-view .detail-label {
+        font-weight: 600;
+        color: #5A6A7A;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        width: 120px;
+        flex-shrink: 0;
+        padding-top: 2px;
+    }
+
+    .detail-view .detail-value {
+        color: #1A2A3A;
+        font-size: 0.9rem;
+        word-break: break-word;
+        flex: 1;
+    }
+
+    .detail-view .detail-value a {
+        color: #1A4A6B;
+        text-decoration: none;
+        word-break: break-all;
+    }
+
+    .detail-view .detail-value a:hover {
+        text-decoration: underline;
+    }
+
+    .detail-view .detail-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #E4EAF0;
+    }
+
+    .detail-view .btn-modal-close {
+        padding: 8px 24px;
+        background: #F5F8FA;
+        color: #5A6A7A;
+        border: 1px solid #E4EAF0;
+        border-radius: 60px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    .detail-view .btn-modal-close:hover {
+        background: #E4EAF0;
+        color: #1A2A3A;
+    }
+
+    .detail-view .btn-download-detail {
+        padding: 8px 24px;
+        background: #D4A843;
+        color: #061420;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        box-shadow: 0 4px 16px rgba(212, 168, 67, 0.12);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .detail-view .btn-download-detail:hover {
+        background: #F5D77E;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.2);
+    }
+
+    .detail-view .btn-external-detail {
+        padding: 8px 24px;
+        background: #1A4A6B;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        box-shadow: 0 4px 16px rgba(26, 74, 107, 0.12);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .detail-view .btn-external-detail:hover {
+        background: #2A6A8B;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(26, 74, 107, 0.2);
+    }
+
+    /* ================================================================ */
+    /* TOAST NOTIFICATIONS                                             */
+    /* ================================================================ */
+    #toastContainer {
+        position: fixed;
+        top: 90px;
+        right: 20px;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 380px;
+        width: 100%;
+        pointer-events: none;
+    }
+
+    .toast {
+        pointer-events: auto;
+        background: #FFFFFF;
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+        border-left: 4px solid;
+        animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .toast.hiding {
+        animation: slideOutRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    .toast-success { border-left-color: #1A6A4A; }
+    .toast-error { border-left-color: #9E2A2A; }
+    .toast-warning { border-left-color: #D4A843; }
+    .toast-info { border-left-color: #1A4A6B; }
+
+    .toast-icon {
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-weight: 700;
+    }
+
+    .toast-success .toast-icon { color: #1A6A4A; }
+    .toast-error .toast-icon { color: #9E2A2A; }
+    .toast-warning .toast-icon { color: #D4A843; }
+    .toast-info .toast-icon { color: #1A4A6B; }
+
+    .toast-content { flex: 1; }
+    .toast-title { font-weight: 600; font-size: 0.9rem; color: #081A28; }
+    .toast-message { font-size: 0.8rem; color: #5A6A7A; margin-top: 2px; }
+
+    .toast-close {
+        background: none;
+        border: none;
+        color: #8A9AAA;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0 4px;
+        line-height: 1;
+        font-weight: 300;
+        transition: color 0.3s ease;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    .toast-close:hover { color: #081A28; }
+
+    .toast-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        background: #E4EAF0;
+        overflow: hidden;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .toast-progress-bar {
+        height: 100%;
+        background: #D4A843;
+        border-radius: 0 0 12px 12px;
+        animation: progressBar 4s linear forwards;
+        width: 100%;
+    }
+
+    .toast-error .toast-progress-bar { background: #9E2A2A; }
+    .toast-success .toast-progress-bar { background: #1A6A4A; }
+    .toast-warning .toast-progress-bar { background: #D4A843; }
+    .toast-info .toast-progress-bar { background: #1A4A6B; }
+
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(40px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideOutRight {
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(40px); }
+    }
+
+    @keyframes progressBar {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
+
+    /* ================================================================ */
+    /* RESPONSIVE                                                      */
+    /* ================================================================ */
+    @media (max-width: 768px) {
+        .resource-tabs {
+            gap: 2px;
+        }
+
+        .resource-tabs .tab-btn {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+
+        .resource-tabs .tab-btn .tab-count {
+            min-width: 16px;
+            height: 16px;
+            font-size: 0.5rem;
+            padding: 0 5px;
+        }
+
+        .resource-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .resource-toolbar .toolbar-left .search-input {
+            min-width: 100%;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table-container table {
+            font-size: 0.75rem;
+            min-width: 700px;
+        }
+
+        .table-container table thead th,
+        .table-container table tbody td {
+            padding: 8px 10px;
+        }
+
+        .modal {
+            max-width: 100%;
+            margin: 10px;
+            max-height: 95vh;
+        }
+
+        .modal-header {
+            padding: 18px 20px 12px;
+        }
+
+        .modal-body {
+            padding: 16px 20px 20px;
+        }
+
+        .modal-body .form-group .form-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .detail-view .detail-row {
+            flex-direction: column;
+            padding: 6px 0;
+        }
+
+        .detail-view .detail-label {
+            width: 100%;
+            font-size: 0.7rem;
+            padding-bottom: 2px;
+        }
+
+        .detail-view .detail-value {
+            font-size: 0.85rem;
+        }
+
+        .detail-view .detail-actions {
+            flex-wrap: wrap;
+        }
+
+        #toastContainer {
+            top: 80px;
+            right: 10px;
+            left: 10px;
+            max-width: none;
+        }
+        .toast { padding: 14px 16px; }
+    }
+
+    @media (max-width: 480px) {
+        .resource-tabs .tab-btn {
+            padding: 4px 10px;
+            font-size: 0.6rem;
+        }
+
+        .resource-tabs .tab-btn .tab-count {
+            min-width: 14px;
+            height: 14px;
+            font-size: 0.45rem;
+            padding: 0 4px;
+        }
+
+        .btn-add {
+            font-size: 0.75rem;
+            padding: 6px 16px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .table-container table tbody td .actions button,
+        .table-container table tbody td .actions a {
+            font-size: 0.55rem;
+            padding: 3px 6px;
+        }
+
+        .modal-body .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-modal-save,
+        .btn-modal-cancel {
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .file-upload-area {
+            padding: 16px;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 1.8rem;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 0.8rem;
+        }
+    }
+
+    /* ================================================================ */
+    /* SCROLLBAR                                                       */
+    /* ================================================================ */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #F5F8FA;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #1A4A6B;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #0F2B3D;
+    }
+</style>
+
+<!-- ================================================================ -->
+<!-- CONTENT                                                         -->
+<!-- ================================================================ -->
+
+<!-- Tabs -->
+<div class="resource-tabs" id="resourceTabs">
+    <!-- Dynamically generated by JavaScript -->
+</div>
+
+<!-- Toolbar -->
+<div class="resource-toolbar">
+    <div class="toolbar-left">
+        <input type="text" class="search-input" id="resourceSearch" placeholder="Search resources..." onkeyup="filterTable()">
+    </div>
+    <button class="btn-add" onclick="openModal(null)">Add Resource</button>
+</div>
+
+<!-- Table -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>WP</th>
+                <th>Status</th>
+                <th>Downloads</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="resourcesTableBody"></tbody>
+    </table>
+</div>
+
+<!-- ================================================================ -->
+<!-- MODAL - Add/Edit Form                                           -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modalTitle">Add <span class="gold">Resource</span></h3>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <!-- Dynamic form content -->
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- VIEW MODAL - Detail View                                        -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="viewModalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="viewModalTitle">View <span class="gold">Resource</span></h3>
+            <button class="modal-close" onclick="closeViewModal()">×</button>
+        </div>
+        <div class="modal-body" id="viewModalBody">
+            <div class="detail-view" id="viewModalContent">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- JAVASCRIPT                                                      -->
+<!-- ================================================================ -->
+<script>
+    (function() {
+        'use strict';
+
+        // ================================================================
+        // STATE
+        // ================================================================
+
+        var editingItem = null;
+        var currentFilterType = 'all';
+        var allResources = [];
+
+        // ================================================================
+        // RESOURCE TYPE DEFINITIONS
+        // ================================================================
+
+        var RESOURCE_TYPES = [
+            { value: 'deliverable', label: 'Deliverable' },
+            { value: 'policy_brief', label: 'Policy Brief' },
+            { value: 'video', label: 'Video' },
+            { value: 'presentation', label: 'Presentation' },
+            { value: 'training_kit', label: 'Training Kit' },
+            { value: 'publication', label: 'Publication' },
+            { value: 'open_source', label: 'Open Source' }
+        ];
+
+        var WP_OPTIONS = ['WP1', 'WP2', 'WP3', 'WP4', 'WP5', 'WP6'];
+        var AUDIENCE_OPTIONS = ['farmers', 'youth', 'women', 'students', 'developers', 'SMEs', 'researchers', 'policymakers', 'media', 'public'];
+        var LANGUAGE_OPTIONS = ['English', 'French', 'Arabic'];
+
+        // ================================================================
+        // FILE TYPE MAPPING (for validation and accept attribute)
+        // ================================================================
+
+        var FILE_TYPE_MAP = {
+            'deliverable': ['.pdf', '.docx'],
+            'policy_brief': ['.pdf', '.docx'],
+            'video': ['.mp4', '.mov', '.avi', '.webm', '.mkv'],
+            'presentation': ['.ppt', '.pptx', '.pdf'],
+            'training_kit': ['.pdf', '.docx', '.zip'],
+            'publication': ['.pdf'],
+            'open_source': []  // No file upload allowed for open source
+        };
+
+        var FILE_TYPE_HINTS = {
+            'deliverable': 'PDF, DOCX',
+            'policy_brief': 'PDF, DOCX',
+            'video': 'MP4, MOV, AVI, WEBM, MKV',
+            'presentation': 'PPT, PPTX, PDF',
+            'training_kit': 'PDF, DOCX, ZIP',
+            'publication': 'PDF',
+            'open_source': 'No file upload required (use External URL)'
+        };
+
+        // ================================================================
+        // GET TYPE LABEL
+        // ================================================================
+
+        function getTypeLabel(type) {
+            var found = RESOURCE_TYPES.find(function(t) { return t.value === type; });
+            return found ? found.label : type;
+        }
+
+        // ================================================================
+        // CSRF TOKEN HELPER
+        // ================================================================
+
+        function getCsrfToken() {
+            if (window.getCsrfToken && typeof window.getCsrfToken === 'function') {
+                return window.getCsrfToken();
+            }
+            var metaTag = document.querySelector('meta[name="csrf-token"]');
+            if (metaTag) {
+                return metaTag.getAttribute('content');
+            }
+            var cookieValue = document.cookie.match(/csrf_token=([^;]+)/);
+            if (cookieValue) {
+                return cookieValue[1];
+            }
+            return '';
+        }
+
+        // ================================================================
+        // DOM REFS
+        // ================================================================
+
+        var tabsContainer = document.getElementById('resourceTabs');
+        var tableBody = document.getElementById('resourcesTableBody');
+        var modalOverlay = document.getElementById('modalOverlay');
+        var modalTitle = document.getElementById('modalTitle');
+        var modalBody = document.getElementById('modalBody');
+        var viewModalOverlay = document.getElementById('viewModalOverlay');
+        var viewModalTitle = document.getElementById('viewModalTitle');
+        var viewModalContent = document.getElementById('viewModalContent');
+
+        // ================================================================
+        // LOAD DATA
+        // ================================================================
+
+        function loadData() {
+            fetch('/api/resources/', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                allResources = data;
+                renderTabs(data);
+                renderTable(data);
+            })
+            .catch(function(error) {
+                console.error('Error loading resources:', error);
+                allResources = [];
+                renderTabs([]);
+                renderTable([]);
+            });
+        }
+
+        // ================================================================
+        // RENDER TABS WITH COUNTERS
+        // ================================================================
+
+        function renderTabs(data) {
+            if (!tabsContainer) return;
+
+            var counts = {};
+            var total = data.length;
+
+            // Count by type
+            data.forEach(function(item) {
+                var type = item.resource_type || 'other';
+                counts[type] = (counts[type] || 0) + 1;
+            });
+
+            var html = '';
+
+            // All tab
+            var allActive = currentFilterType === 'all' ? 'active' : '';
+            html += `
+                <button class="tab-btn ${allActive}" onclick="filterByType('all')">
+                    All
+                    <span class="tab-count">${total}</span>
+                </button>
+            `;
+
+            // Type tabs
+            RESOURCE_TYPES.forEach(function(type) {
+                var count = counts[type.value] || 0;
+                var active = currentFilterType === type.value ? 'active' : '';
+                html += `
+                    <button class="tab-btn ${active}" onclick="filterByType('${type.value}')">
+                        ${type.label}
+                        <span class="tab-count">${count}</span>
+                    </button>
+                `;
+            });
+
+            tabsContainer.innerHTML = html;
+        }
+
+        // ================================================================
+        // FILTER BY TYPE
+        // ================================================================
+
+        window.filterByType = function(type) {
+            currentFilterType = type;
+            var filtered = [];
+
+            if (type === 'all') {
+                filtered = allResources;
+            } else {
+                filtered = allResources.filter(function(item) {
+                    return (item.resource_type || 'other') === type;
+                });
+            }
+
+            renderTabs(allResources);
+            renderTable(filtered);
+        };
+
+        // ================================================================
+        // RENDER TABLE
+        // ================================================================
+
+        function renderTable(data) {
+            if (!tableBody) return;
+
+            if (!data || data.length === 0) {
+                var emptyMessage = currentFilterType === 'all' ?
+                    'No resources found. Click "Add Resource" to create your first resource.' :
+                    'No resources found for this type.';
+
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <h4>No resources found</h4>
+                                <p>${emptyMessage}</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            var html = '';
+            data.forEach(function(item) {
+                var typeLabel = getTypeLabel(item.resource_type);
+                var typeClass = item.resource_type || 'deliverable';
+                var statusClass = item.is_public ? 'published' : 'draft';
+                var statusLabel = item.is_public ? 'Published' : 'Draft';
+                var hasFile = item.file_path ? true : false;
+                var hasUrl = item.external_url ? true : false;
+
+                // Download button (only if file exists)
+                var downloadBtn = '';
+                if (hasFile) {
+                    var fileUrl = '/static/' + item.file_path;
+                    downloadBtn = `<a href="${fileUrl}" class="btn-download-sm" target="_blank" onclick="event.stopPropagation();">↓ Download</a>`;
+                }
+
+                html += `
+                    <tr>
+                        <td><strong>${escapeHtml(item.title)}</strong></td>
+                        <td><span class="type-badge ${typeClass}">${escapeHtml(typeLabel)}</span></td>
+                        <td>${escapeHtml(item.wp_tag || '-')}</td>
+                        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                        <td>${escapeHtml(item.download_count || 0)}</td>
+                        <td>
+                            <div class="actions">
+                                ${downloadBtn}
+                                <button class="btn-view" onclick="viewItem(${item.id})">View</button>
+                                <button class="btn-edit" onclick="editItem(${item.id})">Edit</button>
+                                <button class="btn-delete" onclick="deleteItem(${item.id})">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            tableBody.innerHTML = html;
+        }
+
+        // ================================================================
+        // FILTER TABLE (Search)
+        // ================================================================
+
+        window.filterTable = function() {
+            var searchInput = document.getElementById('resourceSearch');
+            var searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            var rows = tableBody ? tableBody.querySelectorAll('tr') : [];
+
+            rows.forEach(function(row) {
+                var text = row.textContent.toLowerCase();
+                row.style.display = text.indexOf(searchTerm) > -1 ? '' : 'none';
+            });
+        };
+
+        // ================================================================
+        // OPEN MODAL - Add
+        // ================================================================
+
+        var fileUploadSetupDone = false;  // Add this at the top of the script, after 'use strict'
+
+window.openModal = function(id) {
+    editingItem = id;
+
+    if (id) {
+        modalTitle.innerHTML = 'Edit <span class="gold">Resource</span>';
+        fetch('/api/resources/' + id, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            modalBody.innerHTML = buildForm(data);
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // ✅ Only setup once
+            if (!fileUploadSetupDone) {
+                setupFileUpload();
+                fileUploadSetupDone = true;
+            }
+            setTimeout(function() {
+                if (window.updateFileAccept) {
+                    window.updateFileAccept();
+                }
+            }, 100);
+        })
+        .catch(function() {
+            modalBody.innerHTML = buildForm(null);
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            if (!fileUploadSetupDone) {
+                setupFileUpload();
+                fileUploadSetupDone = true;
+            }
+            setTimeout(function() {
+                if (window.updateFileAccept) {
+                    window.updateFileAccept();
+                }
+            }, 100);
+        });
+    } else {
+        modalTitle.innerHTML = 'Add <span class="gold">Resource</span>';
+        modalBody.innerHTML = buildForm(null);
+        modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        if (!fileUploadSetupDone) {
+            setupFileUpload();
+            fileUploadSetupDone = true;
+        }
+        setTimeout(function() {
+            if (window.updateFileAccept) {
+                window.updateFileAccept();
+            }
+        }, 100);
+    }
+};
+        // ================================================================
+        // EDIT ITEM
+        // ================================================================
+
+        window.editItem = function(id) {
+            openModal(id);
+        };
+
+        // ================================================================
+        // BUILD FORM
+        // ================================================================
+
+        function buildForm(data) {
+            var isEdit = !!data;
+            var title = data ? data.title : '';
+            var slug = data ? data.slug : '';
+            var description = data ? data.description : '';
+            var resourceType = data ? data.resource_type : '';
+            var wpTag = data ? data.wp_tag : '';
+            var audience = data ? data.audience : '';
+            var language = data ? data.language : 'English';
+            var license = data ? data.license : '';
+            var isPublic = data ? data.is_public : true;
+            var externalUrl = data ? data.external_url : '';
+            var filePath = data ? data.file_path : '';
+            var hasFile = !!filePath;
+
+            var typeOptions = RESOURCE_TYPES.map(function(t) {
+                return `<option value="${t.value}" ${t.value === resourceType ? 'selected' : ''}>${t.label}</option>`;
+            }).join('');
+
+            var wpOptions = WP_OPTIONS.map(function(wp) {
+                return `<option value="${wp}" ${wp === wpTag ? 'selected' : ''}>${wp}</option>`;
+            }).join('');
+
+            var audienceOptions = AUDIENCE_OPTIONS.map(function(a) {
+                return `<option value="${a}" ${a === audience ? 'selected' : ''}>${a.charAt(0).toUpperCase() + a.slice(1)}</option>`;
+            }).join('');
+
+            var languageOptions = LANGUAGE_OPTIONS.map(function(l) {
+                return `<option value="${l}" ${l === language ? 'selected' : ''}>${l}</option>`;
+            }).join('');
+
+            var existingFileHtml = '';
+            if (hasFile) {
+                var fileName = filePath.split('/').pop();
+                var fileExt = fileName.split('.').pop().toUpperCase();
+                existingFileHtml = `
+                    <div class="existing-file" id="existingFileContainer">
+                        <span class="file-icon-text">${escapeHtml(fileExt)}</span>
+                        <span class="file-info">${escapeHtml(fileName)}</span>
+                        <button class="file-remove" onclick="removeExistingFile()">✕</button>
+                    </div>
+                    <input type="hidden" id="removeFile" value="false">
+                `;
+            }
+
+            return `
+                <form id="resourceForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label>Title <span class="required">*</span></label>
+                                <input type="text" id="formTitle" value="${escapeHtml(title)}" placeholder="Resource title" required>
+                            </div>
+                            <div>
+                                <label>Slug</label>
+                                <input type="text" id="formSlug" value="${escapeHtml(slug)}" placeholder="URL-friendly version">
+                                <small style="color:var(--text-light);font-size:0.7rem;">Leave blank to auto-generate from title</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description <span class="required">*</span></label>
+                        <textarea id="formDescription" placeholder="Resource description" required>${escapeHtml(description)}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label>Resource Type <span class="required">*</span></label>
+                                <select id="formType" required onchange="updateFileAccept()">
+                                    <option value="">Select type</option>
+                                    ${typeOptions}
+                                </select>
+                            </div>
+                            <div>
+                                <label>Work Package <span class="required">*</span></label>
+                                <select id="formWp" required>
+                                    <option value="">Select WP</option>
+                                    ${wpOptions}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label>Audience <span class="required">*</span></label>
+                                <select id="formAudience" required>
+                                    <option value="">Select audience</option>
+                                    ${audienceOptions}
+                                </select>
+                            </div>
+                            <div>
+                                <label>Language <span class="required">*</span></label>
+                                <select id="formLanguage" required>
+                                    ${languageOptions}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>License</label>
+                        <input type="text" id="formLicense" value="${escapeHtml(license)}" placeholder="e.g. CC BY 4.0, MIT, Apache 2.0">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label>External URL</label>
+                                <input type="url" id="formExternalUrl" value="${escapeHtml(externalUrl)}" placeholder="https://...">
+                                <small style="color:var(--text-light);font-size:0.7rem;">Provide a URL for open-source links or online resources</small>
+                            </div>
+                            <div style="display:flex;align-items:center;padding-top:20px;">
+                                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.9rem;">
+                                    <input type="checkbox" id="formIsPublic" ${isPublic ? 'checked' : ''}>
+                                    Published
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>File Upload</label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <span class="upload-icon">↑</span>
+                            <div class="upload-text">
+                                <strong>Click to upload</strong> or drag and drop
+                            </div>
+                            <div class="upload-hint" id="uploadHint">Select a resource type first to see allowed file formats (Max 50MB)</div>
+                            <input type="file" id="formFile" accept="">
+                        </div>
+                        <div class="file-preview" id="filePreview">
+                            <span class="file-icon-text" id="filePreviewExt">FILE</span>
+                            <span class="file-info" id="filePreviewName">No file selected</span>
+                            <button class="file-remove" onclick="removeFile()">✕</button>
+                        </div>
+                        ${existingFileHtml}
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+                        <button type="button" class="btn-modal-save" onclick="saveItem()">Save Resource</button>
+                    </div>
+                </form>
+            `;
+        }
+
+        // ================================================================
+        // UPDATE FILE ACCEPT ATTRIBUTE BASED ON RESOURCE TYPE
+        // ================================================================
+
+        window.updateFileAccept = function() {
+            var typeSelect = document.getElementById('formType');
+            var selectedType = typeSelect ? typeSelect.value : '';
+            var fileInput = document.getElementById('formFile');
+            var uploadArea = document.getElementById('fileUploadArea');
+            var uploadHint = document.getElementById('uploadHint');
+
+            if (!fileInput || !uploadArea) return;
+
+            // Get allowed extensions for this type
+            var allowedExtensions = FILE_TYPE_MAP[selectedType] || [];
+
+            if (selectedType === 'open_source') {
+                // Hide file upload for open source
+                uploadArea.style.display = 'none';
+                if (uploadHint) {
+                    uploadHint.textContent = 'No file upload required for open source resources';
+                }
+                // Clear any selected file
+                fileInput.value = '';
+                document.getElementById('filePreview').classList.remove('visible');
+            } else if (allowedExtensions.length > 0) {
+                // Show file upload and set accept attribute
+                uploadArea.style.display = 'block';
+                fileInput.accept = allowedExtensions.join(',');
+                if (uploadHint) {
+                    var hintText = FILE_TYPE_HINTS[selectedType] || allowedExtensions.join(', ').toUpperCase();
+                    uploadHint.textContent = 'Allowed: ' + hintText + ' (Max 50MB)';
+                }
+                // Clear previously selected file (since type changed)
+                fileInput.value = '';
+                document.getElementById('filePreview').classList.remove('visible');
+            } else {
+                // Fallback: show file upload with default accept
+                uploadArea.style.display = 'block';
+                fileInput.accept = '.pdf,.docx,.ppt,.pptx,.mp4,.zip,.png,.jpg,.jpeg,.gif,.webp,.svg';
+                if (uploadHint) {
+                    uploadHint.textContent = 'PDF, DOCX, PPT, MP4, ZIP, PNG, JPG, GIF, WEBP, SVG (Max 50MB)';
+                }
+            }
+        };
+
+        // ================================================================
+        // SETUP FILE UPLOAD - FIXED: Prevents page refresh on file selection
+        // ================================================================
+
+       function setupFileUpload() {
+    var fileInput = document.getElementById('formFile');
+    var uploadArea = document.getElementById('fileUploadArea');
+    var filePreview = document.getElementById('filePreview');
+    var filePreviewName = document.getElementById('filePreviewName');
+    var filePreviewExt = document.getElementById('filePreviewExt');
+    var isDialogOpen = false;
+
+    if (!fileInput || !uploadArea) return;
+
+    // ──────────────────────────────────────────────────────────────
+    // CLICK TO UPLOAD - Prevents double popup
+    // ──────────────────────────────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────
+// CLICK TO UPLOAD - Prevents double popup with proper targeting
+// ──────────────────────────────────────────────────────────────
+uploadArea.addEventListener('click', function(e) {
+    // ✅ CRITICAL: Only trigger if the click is on the upload area itself,
+    //    not on the file input or children (prevents double firing)
+    if (e.target.tagName === 'INPUT' && e.target.type === 'file') {
+        return;
+    }
+    
+    // If dialog is already open, ignore the click
+    if (isDialogOpen) {
+        return;
+    }
+    
+    // Set flag to prevent multiple clicks
+    isDialogOpen = true;
+    // Clear previous selection so the change event fires properly
+    fileInput.value = '';
+    
+    // Open the file dialog
+    fileInput.click();
+    
+    // Reset flag after a short delay (even if no file is selected)
+    setTimeout(function() {
+        isDialogOpen = false;
+    }, 500);
+});
+
+    // ──────────────────────────────────────────────────────────────
+    // FILE SELECTION - Prevents page refresh
+    // ──────────────────────────────────────────────────────────────
+    fileInput.addEventListener('change', function(e) {
+        isDialogOpen = false;
+        // Prevent any default behavior
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Process the selected file
+        if (this.files && this.files.length > 0) {
+            var file = this.files[0];
+
+            // Validate file type
+            var typeSelect = document.getElementById('formType');
+            var selectedType = typeSelect ? typeSelect.value : '';
+            var allowedExtensions = FILE_TYPE_MAP[selectedType] || [];
+
+            if (allowedExtensions.length > 0) {
+                var fileExt = '.' + file.name.split('.').pop().toLowerCase();
+                if (!allowedExtensions.includes(fileExt)) {
+                    var typeLabel = getTypeLabel(selectedType) || selectedType;
+                    showToast(
+                        'Invalid File Type',
+                        'Please select a valid file for ' + typeLabel + '. Allowed: ' + (FILE_TYPE_HINTS[selectedType] || allowedExtensions.join(', ')),
+                        'error'
+                    );
+                    this.value = '';
+                    filePreview.classList.remove('visible');
+                    return;
+                }
+            }
+
+            // Show preview
+            var ext = file.name.split('.').pop().toUpperCase();
+            filePreviewExt.textContent = ext;
+            filePreviewName.textContent = file.name + ' (' + formatFileSize(file.size) + ')';
+            filePreview.classList.add('visible');
+        }
+    });
+
+    // ──────────────────────────────────────────────────────────────
+    // DRAG & DROP (with validation)
+    // ──────────────────────────────────────────────────────────────
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('dragover');
+
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            var file = e.dataTransfer.files[0];
+
+            // Validate file type
+            var typeSelect = document.getElementById('formType');
+            var selectedType = typeSelect ? typeSelect.value : '';
+            var allowedExtensions = FILE_TYPE_MAP[selectedType] || [];
+
+            if (allowedExtensions.length > 0) {
+                var fileExt = '.' + file.name.split('.').pop().toLowerCase();
+                if (!allowedExtensions.includes(fileExt)) {
+                    var typeLabel = getTypeLabel(selectedType) || selectedType;
+                    showToast(
+                        'Invalid File Type',
+                        'Please drop a valid file for ' + typeLabel + '. Allowed: ' + (FILE_TYPE_HINTS[selectedType] || allowedExtensions.join(', ')),
+                        'error'
+                    );
+                    return;
+                }
+            }
+
+            // Update file input and show preview
+            fileInput.files = e.dataTransfer.files;
+            var ext = file.name.split('.').pop().toUpperCase();
+            filePreviewExt.textContent = ext;
+            filePreviewName.textContent = file.name + ' (' + formatFileSize(file.size) + ')';
+            filePreview.classList.add('visible');
+        }
+    });
+}
+        // ================================================================
+        // REMOVE FILE
+        // ================================================================
+
+        window.removeFile = function() {
+            var fileInput = document.getElementById('formFile');
+            var filePreview = document.getElementById('filePreview');
+            fileInput.value = '';
+            filePreview.classList.remove('visible');
+        };
+
+        window.removeExistingFile = function() {
+            var container = document.getElementById('existingFileContainer');
+            var removeField = document.getElementById('removeFile');
+            if (container) {
+                container.style.display = 'none';
+            }
+            if (removeField) {
+                removeField.value = 'true';
+            }
+        };
+
+        // ================================================================
+        // SAVE ITEM
+        // ================================================================
+
+        window.saveItem = function() {
+            var form = document.getElementById('resourceForm');
+            var formData = new FormData(form);
+
+            var title = document.getElementById('formTitle').value.trim();
+            var slug = document.getElementById('formSlug').value.trim();
+            var description = document.getElementById('formDescription').value.trim();
+            var type = document.getElementById('formType').value;
+            var wp = document.getElementById('formWp').value;
+            var audience = document.getElementById('formAudience').value;
+            var language = document.getElementById('formLanguage').value;
+            var license = document.getElementById('formLicense').value.trim();
+            var externalUrl = document.getElementById('formExternalUrl').value.trim();
+            var isPublic = document.getElementById('formIsPublic').checked;
+            var fileInput = document.getElementById('formFile');
+
+            if (!title) {
+                showToast('Validation Error', 'Title is required.', 'error');
+                return;
+            }
+            if (!description) {
+                showToast('Validation Error', 'Description is required.', 'error');
+                return;
+            }
+            if (!type) {
+                showToast('Validation Error', 'Resource type is required.', 'error');
+                return;
+            }
+            if (!wp) {
+                showToast('Validation Error', 'Work Package is required.', 'error');
+                return;
+            }
+
+            // ============================================================
+            // VALIDATE FILE TYPE BEFORE SAVING (extra safety)
+            // ============================================================
+            if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                var file = fileInput.files[0];
+                var selectedType = document.getElementById('formType').value;
+                var allowedExtensions = FILE_TYPE_MAP[selectedType] || [];
+
+                if (selectedType !== 'open_source' && allowedExtensions.length > 0) {
+                    var fileExt = '.' + file.name.split('.').pop().toLowerCase();
+                    if (!allowedExtensions.includes(fileExt)) {
+                        var typeLabel = getTypeLabel(selectedType) || selectedType;
+                        showToast(
+                            'Invalid File Type',
+                            'Please select a valid file for ' + typeLabel + '. Allowed: ' + (FILE_TYPE_HINTS[selectedType] || allowedExtensions.join(', ')),
+                            'error'
+                        );
+                        return;
+                    }
+                }
+            }
+
+            // ============================================================
+            // BUILD FORM DATA
+            // ============================================================
+            var formDataToSend = new FormData();
+            formDataToSend.append('title', title);
+            formDataToSend.append('description', description);
+            formDataToSend.append('resource_type', type);
+            formDataToSend.append('wp_tag', wp);
+            formDataToSend.append('audience', audience);
+            formDataToSend.append('language', language);
+            formDataToSend.append('is_public', isPublic ? 'true' : 'false');
+
+            if (slug) {
+                formDataToSend.append('slug', slug);
+            }
+            if (license) {
+                formDataToSend.append('license', license);
+            }
+            if (externalUrl) {
+                formDataToSend.append('external_url', externalUrl);
+            }
+
+            if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                formDataToSend.append('file', fileInput.files[0]);
+            }
+
+            var removeFileField = document.getElementById('removeFile');
+            if (removeFileField && removeFileField.value === 'true') {
+                formDataToSend.append('remove_file', 'true');
+            }
+
+            var endpoint = '/api/resources/';
+            var method = 'POST';
+
+            if (editingItem) {
+                endpoint = '/api/resources/' + editingItem;
+                method = 'PUT';
+            }
+
+            var csrfToken = getCsrfToken();
+
+            fetch(endpoint, {
+                method: method,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                },
+                body: formDataToSend
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    closeModal();
+                    loadData();
+                    var action = editingItem ? 'updated' : 'created';
+                    showToast('Resource ' + action, result.message || 'Resource ' + action + ' successfully', 'success');
+                } else {
+                    showToast('Error', result.message || result.error || 'Error saving resource. Please try again.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error saving:', error);
+                showToast('Error', 'An error occurred. Please try again.', 'error');
+            });
+        };
+
+        // ================================================================
+        // VIEW ITEM
+        // ================================================================
+
+        window.viewItem = function(id) {
+            fetch('/api/resources/' + id, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                var html = buildDetailView(data);
+                viewModalContent.innerHTML = html;
+                viewModalTitle.innerHTML = 'View <span class="gold">Resource</span>';
+                viewModalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            })
+            .catch(function(error) {
+                console.error('Error loading resource:', error);
+                showToast('Error', 'Could not load resource details.', 'error');
+            });
+        };
+
+        // ================================================================
+        // BUILD DETAIL VIEW
+        // ================================================================
+
+        function buildDetailView(data) {
+            var typeLabel = getTypeLabel(data.resource_type);
+            var typeClass = data.resource_type || 'deliverable';
+            var statusClass = data.is_public ? 'published' : 'draft';
+            var statusLabel = data.is_public ? 'Published' : 'Draft';
+            var hasFile = data.file_path ? true : false;
+            var hasUrl = data.external_url ? true : false;
+
+            var html = '<div class="detail-view">';
+
+            html += `
+                <div class="detail-row">
+                    <span class="detail-label">Title</span>
+                    <span class="detail-value"><strong>${escapeHtml(data.title)}</strong></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Slug</span>
+                    <span class="detail-value">${escapeHtml(data.slug || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Description</span>
+                    <span class="detail-value">${escapeHtml(data.description || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Type</span>
+                    <span class="detail-value"><span class="type-badge ${typeClass}">${escapeHtml(typeLabel)}</span></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Work Package</span>
+                    <span class="detail-value">${escapeHtml(data.wp_tag || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Audience</span>
+                    <span class="detail-value">${escapeHtml(data.audience || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Language</span>
+                    <span class="detail-value">${escapeHtml(data.language || 'English')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">License</span>
+                    <span class="detail-value">${escapeHtml(data.license || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value"><span class="status-badge ${statusClass}">${statusLabel}</span></span>
+                </div>
+                ${hasFile ? `
+                    <div class="detail-row">
+                        <span class="detail-label">File</span>
+                        <span class="detail-value">${escapeHtml(data.file_path.split('/').pop())}</span>
+                    </div>
+                ` : ''}
+                ${hasUrl ? `
+                    <div class="detail-row">
+                        <span class="detail-label">External URL</span>
+                        <span class="detail-value"><a href="${escapeHtml(data.external_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(data.external_url)}</a></span>
+                    </div>
+                ` : ''}
+                <div class="detail-row">
+                    <span class="detail-label">Downloads</span>
+                    <span class="detail-value">${escapeHtml(data.download_count || 0)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Created</span>
+                    <span class="detail-value">${formatDate(data.created_at)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Updated</span>
+                    <span class="detail-value">${formatDate(data.updated_at)}</span>
+                </div>
+                <div class="detail-actions">
+                    <button class="btn-modal-close" onclick="closeViewModal()">Close</button>
+                    ${hasFile ? `<a href="/static/${escapeHtml(data.file_path)}" class="btn-download-detail" target="_blank">Download</a>` : ''}
+                    ${hasUrl ? `<a href="${escapeHtml(data.external_url)}" target="_blank" rel="noopener noreferrer" class="btn-external-detail">Visit Link →</a>` : ''}
+                </div>
+            `;
+
+            html += '</div>';
+            return html;
+        }
+
+        // ================================================================
+        // DELETE ITEM
+        // ================================================================
+
+        window.deleteItem = function(id) {
+            if (!confirm('Are you sure you want to delete this resource?')) return;
+
+            var csrfToken = getCsrfToken();
+
+            fetch('/api/resources/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    loadData();
+                    showToast('Resource deleted', result.message || 'Resource deleted successfully', 'success');
+                } else {
+                    showToast('Error', result.message || result.error || 'Error deleting resource.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error deleting:', error);
+                showToast('Error', 'An error occurred. Please try again.', 'error');
+            });
+        };
+
+        // ================================================================
+        // CLOSE MODAL
+        // ================================================================
+
+        window.closeModal = function() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            editingItem = null;
+        };
+
+        window.closeViewModal = function() {
+            viewModalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        viewModalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeViewModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeViewModal();
+            }
+        });
+
+        // ================================================================
+        // TOAST NOTIFICATION SYSTEM
+        // ================================================================
+
+        function showToast(title, message, type, duration) {
+            type = type || 'success';
+            duration = duration || 4000;
+
+            var container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            var icons = {
+                'success': '✓',
+                'error': '✗',
+                'warning': '⚠',
+                'info': 'ℹ'
+            };
+
+            var toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || 'ℹ'}</span>
+                <div class="toast-content">
+                    <div class="toast-title">${escapeHtml(title)}</div>
+                    <div class="toast-message">${escapeHtml(message)}</div>
+                </div>
+                <button class="toast-close" onclick="dismissToast(this.parentElement)">✕</button>
+                <div class="toast-progress"><div class="toast-progress-bar" style="animation-duration:${duration}ms;"></div></div>
+            `;
+
+            container.appendChild(toast);
+
+            var timeout = setTimeout(function() {
+                dismissToast(toast);
+            }, duration);
+
+            toast.addEventListener('mouseenter', function() {
+                clearTimeout(timeout);
+                var progressBar = toast.querySelector('.toast-progress-bar');
+                if (progressBar) {
+                    progressBar.style.animationPlayState = 'paused';
+                }
+            });
+
+            toast.addEventListener('mouseleave', function() {
+                var progressBar = toast.querySelector('.toast-progress-bar');
+                if (progressBar) {
+                    progressBar.style.animationPlayState = 'running';
+                }
+                timeout = setTimeout(function() {
+                    dismissToast(toast);
+                }, duration);
+            });
+        }
+
+        window.dismissToast = function(toast) {
+            if (!toast || toast.classList.contains('hiding')) return;
+            toast.classList.add('hiding');
+            setTimeout(function() {
+                if (toast.parentElement) {
+                    toast.parentElement.removeChild(toast);
+                }
+            }, 400);
+        };
+
+        // ================================================================
+        // HELPER FUNCTIONS
+        // ================================================================
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            try {
+                var d = new Date(dateStr);
+                return d.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        // ================================================================
+        // INITIALIZE
+        // ================================================================
+
+        loadData();
+        console.log('BRIDGE-AI Kenya Resources Admin initialized');
+
+    })();
+</script>
+
+{% endblock %}

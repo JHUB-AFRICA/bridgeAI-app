@@ -1,0 +1,1090 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - PUBLIC RESOURCE DETAIL                        -->
+<!-- ================================================================ -->
+<!-- Displays full details of a single resource                      -->
+<!-- Rules: No emojis · No decorative symbols · No colons            -->
+<!--        No slashes · No hyphens · Clean typography              -->
+<!-- ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Resource Detail - BRIDGE-AI Kenya</title>
+    <meta name="description" id="pageDescription" content="View full details of BRIDGE-AI Kenya resources including deliverables, training materials, and publications.">
+
+    <style>
+        /* ================================================================ */
+        /* CSS VARIABLES                                                   */
+        /* ================================================================ */
+        :root {
+            --primary-dark: #061420;
+            --primary: #0F2B3D;
+            --primary-light: #1A4A6B;
+            --primary-lighter: #2A6A8B;
+            --gold: #D4A843;
+            --gold-light: #F5D77E;
+            --text-dark: #081A28;
+            --text-body: #1A2A3A;
+            --text-muted: #5A6A7A;
+            --text-light: #8A9AAA;
+            --bg-white: #FFFFFF;
+            --bg-light: #F5F8FA;
+            --bg-lighter: #FAFCFE;
+            --border-light: #E4EAF0;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-body);
+            background: var(--bg-white);
+            line-height: 1.7;
+            padding-top: 72px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ================================================================ */
+        /* LOADER - Full Page Overlay                                     */
+        /* ================================================================ */
+        #loaderOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        #loaderOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border-light);
+            border-top-color: var(--primary-light);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        .loader-text {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ================================================================ */
+        /* RESOURCE DETAIL HERO                                            */
+        /* ================================================================ */
+        .detail-hero {
+            background: var(--primary-dark);
+            padding: 40px 24px 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detail-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(160deg, rgba(6,20,32,0.92) 0%, rgba(15,43,61,0.8) 50%, rgba(26,74,107,0.5) 100%),
+                radial-gradient(ellipse at 60% 30%, rgba(255,255,255,0.03) 0%, transparent 60%);
+            z-index: 0;
+        }
+
+        .detail-hero .hero-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* ─── Breadcrumb ─── */
+        .detail-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .detail-breadcrumb a {
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            transition: color var(--transition);
+        }
+
+        .detail-breadcrumb a:hover {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .detail-breadcrumb .separator {
+            color: rgba(255,255,255,0.15);
+        }
+
+        .detail-breadcrumb .current {
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ─── Type Badge ─── */
+        .detail-type-badge {
+            display: inline-block;
+            padding: 3px 16px;
+            border-radius: 60px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 10px;
+        }
+
+        .detail-type-badge.deliverable { background: #D4E8F5; color: #1A4A6B; }
+        .detail-type-badge.policy_brief { background: #F5ECD7; color: #9E7A2A; }
+        .detail-type-badge.video { background: #F5D6D6; color: #9E2A2A; }
+        .detail-type-badge.presentation { background: #E8D6F5; color: #6A3A8A; }
+        .detail-type-badge.training_kit { background: #D6F0E0; color: #1A6A4A; }
+        .detail-type-badge.publication { background: #D6DCE8; color: #2A4A6A; }
+        .detail-type-badge.open_source { background: #F5E8D6; color: #9E6A2A; }
+
+        .detail-hero h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: -0.03em;
+            line-height: 1.12;
+            margin-bottom: 8px;
+        }
+
+        .detail-hero .hero-sub {
+            font-size: 1.05rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.5);
+            max-width: 680px;
+            line-height: 1.8;
+        }
+
+        /* ================================================================ */
+        /* DETAIL CONTENT                                                 */
+        /* ================================================================ */
+        .detail-section {
+            padding: 40px 24px 60px;
+        }
+
+        .detail-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* ─── Not Found ─── */
+        .not-found {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .not-found h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .not-found p {
+            color: var(--text-muted);
+        }
+
+        .not-found .btn-back {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 10px 28px;
+            background: var(--primary-light);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all var(--transition);
+        }
+
+        .not-found .btn-back:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(26,74,107,0.15);
+        }
+
+        /* ─── Detail Card ─── */
+        .detail-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 32px 36px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .detail-card .detail-description {
+            font-size: 1.05rem;
+            color: var(--text-body);
+            line-height: 1.8;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        /* ─── Meta Grid ─── */
+        .detail-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px 24px;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .detail-meta-grid .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .detail-meta-grid .meta-item .meta-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-light);
+        }
+
+        .detail-meta-grid .meta-item .meta-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .detail-meta-grid .meta-item .meta-value .badge {
+            display: inline-block;
+            padding: 1px 12px;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .badge.published { background: #D6F0E0; color: #1A6A4A; }
+        .badge.draft { background: #F5E8D6; color: #9E6A2A; }
+
+        .detail-meta-grid .meta-item .meta-value a {
+            color: var(--primary-light);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .detail-meta-grid .meta-item .meta-value a:hover {
+            text-decoration: underline;
+        }
+
+        /* ─── Actions ─── */
+        .detail-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .detail-actions .btn-download {
+            padding: 10px 28px;
+            background: var(--primary-light);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-actions .btn-download:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(26,74,107,0.2);
+        }
+
+        .detail-actions .btn-external {
+            padding: 10px 28px;
+            background: var(--bg-light);
+            color: var(--text-body);
+            border: 1px solid var(--border-light);
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-actions .btn-external:hover {
+            background: var(--primary-light);
+            color: #FFFFFF;
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .detail-actions .btn-back-list {
+            padding: 10px 28px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-light);
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all var(--transition);
+            font-family: var(--font-sans);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .detail-actions .btn-back-list:hover {
+            background: var(--bg-light);
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        /* ─── Downloads Count ─── */
+        .detail-downloads {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            padding-top: 16px;
+            border-top: 1px solid var(--bg-light);
+        }
+
+        /* ================================================================ */
+        /* RELATED RESOURCES                                              */
+        /* ================================================================ */
+        .related-section {
+            margin-top: 40px;
+        }
+
+        .related-section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-light);
+            position: relative;
+        }
+
+        .related-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .related-item {
+            padding: 16px 20px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition);
+            background: var(--bg-white);
+            text-decoration: none;
+            display: block;
+        }
+
+        .related-item:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+
+        .related-item .related-title {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: block;
+        }
+
+        .related-item .related-type {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-light);
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                      */
+        /* ================================================================ */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 64px;
+            }
+
+            .detail-hero {
+                padding: 28px 16px 24px;
+            }
+
+            .detail-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .detail-hero .hero-sub {
+                font-size: 0.92rem;
+            }
+
+            .detail-breadcrumb {
+                font-size: 0.7rem;
+            }
+
+            .detail-section {
+                padding: 24px 16px 40px;
+            }
+
+            .detail-card {
+                padding: 20px 18px;
+            }
+
+            .detail-card .detail-description {
+                font-size: 0.95rem;
+            }
+
+            .detail-meta-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px 16px;
+            }
+
+            .detail-meta-grid .meta-item .meta-value {
+                font-size: 0.88rem;
+            }
+
+            .detail-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .detail-actions .btn-download,
+            .detail-actions .btn-external,
+            .detail-actions .btn-back-list {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .detail-hero h1 {
+                font-size: 1.4rem;
+            }
+
+            .detail-hero .hero-sub {
+                font-size: 0.82rem;
+            }
+
+            .detail-meta-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .detail-card {
+                padding: 16px 14px;
+            }
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                       */
+        /* ================================================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADER OVERLAY (full page)                                      -->
+    <!-- ================================================================ -->
+    <div id="loaderOverlay">
+        <div class="loader-spinner"></div>
+        <p class="loader-text">Loading resource details...</p>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'header.html' %}
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT                                                    -->
+    <!-- ================================================================ -->
+    <main>
+
+        <!-- ============================================================ -->
+        <!-- RESOURCE DETAIL HERO                                         -->
+        <!-- ============================================================ -->
+        <section class="detail-hero">
+            <div class="hero-container">
+                <!-- Breadcrumb -->
+                <nav class="detail-breadcrumb">
+                    <a href="{{ url_for('public.index') }}">Home</a>
+                    <span class="separator">/</span>
+                    <a href="{{ url_for('public.resources') }}">Resources</a>
+                    <span class="separator">/</span>
+                    <span class="current" id="breadcrumbCurrent">Loading...</span>
+                </nav>
+
+                <!-- Type Badge -->
+                <span class="detail-type-badge" id="detailTypeBadge">Loading...</span>
+
+                <!-- Title -->
+                <h1 id="detailTitle">Loading resource...</h1>
+
+                <!-- Subtitle -->
+                <p class="hero-sub" id="detailSub">Please wait while we load the resource details.</p>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- RESOURCE DETAIL CONTENT                                      -->
+        <!-- ============================================================ -->
+        <section class="detail-section" id="detailSection">
+            <div class="detail-container">
+
+                <!-- Not Found -->
+                <div id="notFound" style="display:none;">
+                    <div class="not-found">
+                        <h2>Resource Not Found</h2>
+                        <p>The resource you are looking for does not exist or is not publicly available.</p>
+                        <a href="{{ url_for('public.resources') }}" class="btn-back">Back to Resources</a>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div id="detailContent" style="display:none;">
+                    <div class="detail-card" id="detailCard">
+                        <!-- Full Description -->
+                        <div class="detail-description" id="detailDescription"></div>
+
+                        <!-- Meta Grid -->
+                        <div class="detail-meta-grid" id="detailMetaGrid">
+                            <!-- Dynamically populated -->
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="detail-actions" id="detailActions">
+                            <!-- Dynamically populated -->
+                        </div>
+
+                        <!-- Downloads Count -->
+                        <div class="detail-downloads" id="detailDownloads"></div>
+                    </div>
+
+                    <!-- Related Resources -->
+                    <div class="related-section" id="relatedSection" style="display:none;">
+                        <h3>Related Resources</h3>
+                        <div class="related-grid" id="relatedGrid"></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================================================================ -->
+    <!-- FOOTER                                                          -->
+    <!-- ================================================================ -->
+    {% include 'footer.html' %}
+
+    <!-- ================================================================ -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT                                        -->
+    <!-- ================================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ================================================================
+            // RESOURCE TYPE CONFIG
+            // ================================================================
+
+            var RESOURCE_TYPE_LABELS = {
+                'deliverable': 'Deliverable',
+                'policy_brief': 'Policy Brief',
+                'video': 'Video',
+                'presentation': 'Presentation',
+                'training_kit': 'Training Kit',
+                'publication': 'Publication',
+                'open_source': 'Open Source'
+            };
+
+            var RESOURCE_TYPE_COLORS = {
+                'deliverable': '#1A4A6B',
+                'policy_brief': '#9E7A2A',
+                'video': '#9E2A2A',
+                'presentation': '#6A3A8A',
+                'training_kit': '#1A6A4A',
+                'publication': '#2A4A6A',
+                'open_source': '#9E6A2A'
+            };
+
+            // ================================================================
+            // DOM REFS
+            // ================================================================
+
+            var loaderOverlay = document.getElementById('loaderOverlay');
+            var detailContent = document.getElementById('detailContent');
+            var notFound = document.getElementById('notFound');
+
+            var breadcrumbCurrent = document.getElementById('breadcrumbCurrent');
+            var detailTypeBadge = document.getElementById('detailTypeBadge');
+            var detailTitle = document.getElementById('detailTitle');
+            var detailSub = document.getElementById('detailSub');
+            var detailDescription = document.getElementById('detailDescription');
+            var detailMetaGrid = document.getElementById('detailMetaGrid');
+            var detailActions = document.getElementById('detailActions');
+            var detailDownloads = document.getElementById('detailDownloads');
+            var relatedSection = document.getElementById('relatedSection');
+            var relatedGrid = document.getElementById('relatedGrid');
+
+            // ================================================================
+            // GET RESOURCE SLUG FROM URL
+            // ================================================================
+
+            function getResourceSlug() {
+                var path = window.location.pathname;
+                var parts = path.split('/').filter(function(p) { return p; });
+                if (parts.length >= 2 && parts[0] === 'resources') {
+                    return parts[1];
+                }
+                return null;
+            }
+
+            // ================================================================
+            // HIDE LOADER
+            // ================================================================
+
+            function hideLoader() {
+                loaderOverlay.classList.add('hidden');
+                setTimeout(function() {
+                    loaderOverlay.style.display = 'none';
+                }, 500);
+            }
+
+            // ================================================================
+            // LOAD RESOURCE DETAIL
+            // ================================================================
+
+            function loadResourceDetail() {
+                var slug = getResourceSlug();
+
+                if (!slug) {
+                    showNotFound();
+                    hideLoader();
+                    return;
+                }
+
+                fetch('/api/resources/', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Network error');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    var resource = null;
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].slug === slug && data[i].is_public === true) {
+                            resource = data[i];
+                            break;
+                        }
+                    }
+
+                    if (!resource) {
+                        showNotFound();
+                        hideLoader();
+                        return;
+                    }
+
+                    renderResourceDetail(resource);
+                    hideLoader();
+                })
+                .catch(function(error) {
+                    console.error('Error loading resource:', error);
+                    showNotFound();
+                    hideLoader();
+                });
+            }
+
+            // ================================================================
+            // RENDER RESOURCE DETAIL
+            // ================================================================
+
+            function renderResourceDetail(resource) {
+                // Update page title
+                document.title = resource.title + ' - BRIDGE-AI Kenya';
+
+                // Breadcrumb
+                breadcrumbCurrent.textContent = resource.title;
+
+                // Type Badge
+                var typeClass = resource.resource_type || 'deliverable';
+                var typeLabel = RESOURCE_TYPE_LABELS[typeClass] || typeClass;
+                detailTypeBadge.textContent = typeLabel;
+                detailTypeBadge.className = 'detail-type-badge ' + typeClass;
+
+                // Title
+                detailTitle.textContent = resource.title;
+
+                // Subtitle
+                if (resource.summary) {
+                    detailSub.textContent = resource.summary;
+                } else if (resource.description) {
+                    var desc = resource.description;
+                    if (desc.length > 200) {
+                        desc = desc.substring(0, 200) + '...';
+                    }
+                    detailSub.textContent = desc;
+                } else {
+                    detailSub.textContent = 'View full details of this resource.';
+                }
+
+                // Full Description
+                if (resource.description) {
+                    detailDescription.innerHTML = escapeHtml(resource.description);
+                } else {
+                    detailDescription.textContent = 'No description available.';
+                }
+
+                // Meta Grid
+                renderMetaGrid(resource);
+
+                // Actions
+                renderActions(resource);
+
+                // Downloads Count
+                var downloadCount = resource.download_count || 0;
+                detailDownloads.innerHTML = '<strong>' + downloadCount + '</strong> download' + (downloadCount !== 1 ? 's' : '');
+
+                // Related Resources
+                loadRelatedResources(resource);
+
+                // Show content
+                detailContent.style.display = 'block';
+            }
+
+            // ================================================================
+            // RENDER META GRID
+            // ================================================================
+
+            function renderMetaGrid(resource) {
+                var html = '';
+
+                // Work Package
+                if (resource.wp_tag) {
+                    html += `
+                        <div class="meta-item">
+                            <span class="meta-label">Work Package</span>
+                            <span class="meta-value">${escapeHtml(resource.wp_tag)}</span>
+                        </div>
+                    `;
+                }
+
+                // Audience
+                if (resource.audience) {
+                    var audienceDisplay = resource.audience.split(',').map(function(a) {
+                        return a.trim().charAt(0).toUpperCase() + a.trim().slice(1);
+                    }).join(', ');
+                    html += `
+                        <div class="meta-item">
+                            <span class="meta-label">Audience</span>
+                            <span class="meta-value">${escapeHtml(audienceDisplay)}</span>
+                        </div>
+                    `;
+                }
+
+                // Language
+                if (resource.language) {
+                    html += `
+                        <div class="meta-item">
+                            <span class="meta-label">Language</span>
+                            <span class="meta-value">${escapeHtml(resource.language)}</span>
+                        </div>
+                    `;
+                }
+
+                // License
+                if (resource.license) {
+                    html += `
+                        <div class="meta-item">
+                            <span class="meta-label">License</span>
+                            <span class="meta-value">${escapeHtml(resource.license)}</span>
+                        </div>
+                    `;
+                }
+
+                // Version
+                if (resource.version) {
+                    html += `
+                        <div class="meta-item">
+                            <span class="meta-label">Version</span>
+                            <span class="meta-value">${escapeHtml(resource.version)}</span>
+                        </div>
+                    `;
+                }
+
+                // Created Date
+                if (resource.created_at) {
+                    html += `
+                        <div class="meta-item">
+                            <span class="meta-label">Created</span>
+                            <span class="meta-value">${formatDate(resource.created_at)}</span>
+                        </div>
+                    `;
+                }
+
+                // Updated Date
+                if (resource.updated_at) {
+                    html += `
+                        <div class="meta-item">
+                            <span class="meta-label">Updated</span>
+                            <span class="meta-value">${formatDate(resource.updated_at)}</span>
+                        </div>
+                    `;
+                }
+
+                // Status
+                var statusClass = resource.is_public ? 'published' : 'draft';
+                var statusLabel = resource.is_public ? 'Published' : 'Draft';
+                html += `
+                    <div class="meta-item">
+                        <span class="meta-label">Status</span>
+                        <span class="meta-value"><span class="badge ${statusClass}">${statusLabel}</span></span>
+                    </div>
+                `;
+
+                // File size (if available)
+                if (resource.file_size) {
+                    html += `
+                        <div class="meta-item">
+                            <span class="meta-label">File Size</span>
+                            <span class="meta-value">${escapeHtml(resource.file_size)}</span>
+                        </div>
+                    `;
+                }
+
+                detailMetaGrid.innerHTML = html;
+            }
+
+            // ================================================================
+            // RENDER ACTIONS
+            // ================================================================
+
+            function renderActions(resource) {
+                var html = '';
+
+                // Back to Resources button
+                html += `
+                    <a href="/resources/" class="btn-back-list">Back to Resources</a>
+                `;
+
+                // Download button (if file exists)
+                if (resource.file_path) {
+                    var fileUrl = '/static/' + resource.file_path;
+                    html += `
+                        <a href="${fileUrl}" class="btn-download" target="_blank" onclick="event.stopPropagation();">
+                            Download Asset
+                        </a>
+                    `;
+                }
+
+                // External link (if URL exists and no file)
+                if (resource.external_url && !resource.file_path) {
+                    html += `
+                        <a href="${escapeHtml(resource.external_url)}" class="btn-external" target="_blank" rel="noopener noreferrer">
+                            Visit Resource
+                        </a>
+                    `;
+                }
+
+                detailActions.innerHTML = html;
+            }
+
+            // ================================================================
+            // LOAD RELATED RESOURCES
+            // ================================================================
+
+            function loadRelatedResources(resource) {
+                var type = resource.resource_type || '';
+
+                fetch('/api/resources/', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Network error');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    var related = [];
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        if (item.id !== resource.id &&
+                            item.resource_type === type &&
+                            item.is_public === true) {
+                            related.push(item);
+                        }
+                    }
+
+                    related = related.slice(0, 3);
+
+                    if (related.length === 0) {
+                        relatedSection.style.display = 'none';
+                        return;
+                    }
+
+                    renderRelated(related);
+                    relatedSection.style.display = 'block';
+                })
+                .catch(function(error) {
+                    console.error('Error loading related resources:', error);
+                    relatedSection.style.display = 'none';
+                });
+            }
+
+            // ================================================================
+            // RENDER RELATED
+            // ================================================================
+
+            function renderRelated(related) {
+                var html = '';
+                for (var i = 0; i < related.length; i++) {
+                    var item = related[i];
+                    var typeLabel = RESOURCE_TYPE_LABELS[item.resource_type] || item.resource_type;
+                    html += `
+                        <a href="/resources/${escapeHtml(item.slug)}/" class="related-item">
+                            <span class="related-title">${escapeHtml(item.title)}</span>
+                            <span class="related-type">${escapeHtml(typeLabel)}</span>
+                        </a>
+                    `;
+                }
+                relatedGrid.innerHTML = html;
+            }
+
+            // ================================================================
+            // HELPERS
+            // ================================================================
+
+            function formatDate(dateStr) {
+                if (!dateStr) return '';
+                try {
+                    var d = new Date(dateStr);
+                    return d.toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                } catch (e) {
+                    return dateStr;
+                }
+            }
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                var div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function showNotFound() {
+                detailContent.style.display = 'none';
+                notFound.style.display = 'block';
+                document.title = 'Resource Not Found - BRIDGE-AI Kenya';
+            }
+
+            // ================================================================
+            // INITIALIZE
+            // ================================================================
+
+            document.addEventListener('DOMContentLoaded', function() {
+                loadResourceDetail();
+                console.log('BRIDGE-AI Kenya Resource Detail initialized');
+            });
+
+        })();
+    </script>
+</body>
+</html>

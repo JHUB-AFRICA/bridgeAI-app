@@ -1,0 +1,2888 @@
+<!-- ================================================================ -->
+<!-- BRIDGE-AI KENYA - ADMIN GALLERY MANAGEMENT                      -->
+<!-- ================================================================ -->
+<!-- Extends: admin/layout.html                                     -->
+<!-- Content: List · Add · Edit · Delete · View Albums             -->
+<!-- Features: Image Upload · Multiple Images · Set Featured        -->
+<!--           Consent Management · Drag & Drop · Search           -->
+<!-- CSS: Fully self-contained in this file                         -->
+<!-- Rules: No emojis · No decorative symbols · No colons           -->
+<!--        No slashes · No hyphens · Clean typography              -->
+<!-- ================================================================ -->
+
+{% extends "admin/layout.html" %}
+
+{% block title %}Gallery - BRIDGE-AI Kenya Admin{% endblock %}
+
+{% block page_title %}Gallery <span class="highlight">Management</span>{% endblock %}
+
+{% block page_subtitle %}Manage photo albums and gallery images{% endblock %}
+
+{% block content %}
+
+<!-- ================================================================ -->
+<!-- TOAST NOTIFICATIONS CONTAINER                                   -->
+<!-- ================================================================ -->
+<div id="toastContainer"></div>
+
+<!-- ================================================================ -->
+<!-- LOADER OVERLAY                                                  -->
+<!-- ================================================================ -->
+<div id="loaderOverlay">
+    <div class="loader-spinner"></div>
+    <p class="loader-text">Loading albums...</p>
+</div>
+
+<!-- ================================================================ -->
+<!-- CSS - Self-contained for this page                              -->
+<!-- ================================================================ -->
+<style>
+    /* ================================================================ */
+    /* CSS VARIABLES                                                   */
+    /* ================================================================ */
+    :root {
+        --primary-dark: #061420;
+        --primary: #0F2B3D;
+        --primary-light: #1A4A6B;
+        --gold: #D4A843;
+        --gold-light: #F5D77E;
+        --text-dark: #081A28;
+        --text-body: #1A2A3A;
+        --text-muted: #5A6A7A;
+        --text-light: #8A9AAA;
+        --bg-white: #FFFFFF;
+        --bg-light: #F5F8FA;
+        --bg-lighter: #FAFCFE;
+        --border-light: #E4EAF0;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+        --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+        --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    /* ================================================================ */
+    /* LOADER OVERLAY                                                  */
+    /* ================================================================ */
+    #loaderOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.92);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.5s ease;
+    }
+
+    #loaderOverlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .loader-spinner {
+        width: 48px;
+        height: 48px;
+        border: 3px solid var(--border-light);
+        border-top-color: var(--primary-light);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-bottom: 16px;
+    }
+
+    .loader-text {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        font-weight: 400;
+        letter-spacing: 0.02em;
+        font-family: var(--font-sans);
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* ================================================================ */
+    /* TABS                                                           */
+    /* ================================================================ */
+    .gallery-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 24px;
+        padding: 4px 0;
+        border-bottom: 2px solid #E4EAF0;
+        background: #FFFFFF;
+    }
+
+    .gallery-tabs .tab-btn {
+        padding: 8px 18px;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #5A6A7A;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 0;
+        margin-bottom: -2px;
+    }
+
+    .gallery-tabs .tab-btn:hover {
+        color: #1A2A3A;
+        background: #F5F8FA;
+    }
+
+    .gallery-tabs .tab-btn.active {
+        color: #1A4A6B;
+        border-bottom-color: #D4A843;
+    }
+
+    .gallery-tabs .tab-btn .tab-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 7px;
+        border-radius: 60px;
+        font-size: 0.55rem;
+        font-weight: 700;
+        background: #F5F8FA;
+        color: #5A6A7A;
+    }
+
+    .gallery-tabs .tab-btn.active .tab-count {
+        background: #F5ECD7;
+        color: #D4A843;
+    }
+
+    /* ================================================================ */
+    /* TOOLBAR                                                         */
+    /* ================================================================ */
+    .gallery-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .gallery-toolbar .toolbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .gallery-toolbar .toolbar-left .search-input {
+        padding: 8px 14px;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        color: #1A2A3A;
+        background: #FFFFFF;
+        outline: none;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        min-width: 200px;
+    }
+
+    .gallery-toolbar .toolbar-left .search-input:focus {
+        border-color: #1A4A6B;
+        box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+    }
+
+    .btn-add {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        background: #D4A843;
+        color: #061420;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        box-shadow: 0 4px 16px rgba(212, 168, 67, 0.12);
+    }
+
+    .btn-add:hover {
+        background: #F5D77E;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.2);
+    }
+
+    /* ================================================================ */
+    /* TABLE                                                           */
+    /* ================================================================ */
+    .table-container {
+        background: #FFFFFF;
+        border: 1px solid #E4EAF0;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .table-container table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .table-container table thead {
+        background: #F5F8FA;
+        border-bottom: 1px solid #E4EAF0;
+    }
+
+    .table-container table thead th {
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 600;
+        color: #5A6A7A;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .table-container table tbody tr {
+        border-bottom: 1px solid #E4EAF0;
+        transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .table-container table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table-container table tbody tr:hover {
+        background: #FAFCFE;
+    }
+
+    .table-container table tbody td {
+        padding: 12px 16px;
+        color: #1A2A3A;
+        vertical-align: middle;
+    }
+
+    /* ─── Cover Preview ─── */
+    .table-container table tbody td .cover-preview {
+        width: 60px;
+        height: 45px;
+        object-fit: cover;
+        border-radius: 6px;
+        background: var(--bg-light);
+        border: 1px solid var(--border-light);
+        display: block;
+    }
+
+    .table-container table tbody td .no-cover {
+        width: 60px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-light);
+        border: 1px dashed var(--border-light);
+        border-radius: 6px;
+        font-size: 0.5rem;
+        color: var(--text-light);
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        text-align: center;
+    }
+
+    /* ─── Status Badges ─── */
+    .status-badge {
+        display: inline-block;
+        padding: 2px 12px;
+        border-radius: 60px;
+        font-size: 0.6rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .status-badge.published {
+        background: #D6F0E0;
+        color: #1A6A4A;
+    }
+
+    .status-badge.draft {
+        background: #F5E8D6;
+        color: #9E6A2A;
+    }
+
+    /* ─── Consent Badge ─── */
+    .consent-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 60px;
+        font-size: 0.55rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .consent-badge.confirmed {
+        background: #D6F0E0;
+        color: #1A6A4A;
+    }
+
+    .consent-badge.pending {
+        background: #F5E8D6;
+        color: #9E6A2A;
+    }
+
+    .consent-badge.missing {
+        background: #F5E6E6;
+        color: #9E2A2A;
+    }
+
+    /* ─── Photo Count ─── */
+    .photo-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 600;
+        color: var(--primary-light);
+    }
+
+    /* ─── Action Buttons ─── */
+    .table-container table tbody td .actions {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+
+    .table-container table tbody td .actions button,
+    .table-container table tbody td .actions a {
+        padding: 4px 10px;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .btn-view-sm {
+        background: #E8F0F8;
+        color: #1A4A6B;
+    }
+
+    .btn-view-sm:hover {
+        background: #1A4A6B;
+        color: #FFFFFF;
+        transform: translateY(-1px);
+    }
+
+    .btn-edit-sm {
+        background: #F5ECD7;
+        color: #D4A843;
+    }
+
+    .btn-edit-sm:hover {
+        background: #D4A843;
+        color: #061420;
+        transform: translateY(-1px);
+    }
+
+    .btn-delete-sm {
+        background: #F5E6E6;
+        color: #9E2A2A;
+    }
+
+    .btn-delete-sm:hover {
+        background: #9E2A2A;
+        color: #FFFFFF;
+        transform: translateY(-1px);
+    }
+
+    .btn-images-sm {
+        background: #E8F0F8;
+        color: #1A4A6B;
+    }
+
+    .btn-images-sm:hover {
+        background: #1A4A6B;
+        color: #FFFFFF;
+        transform: translateY(-1px);
+    }
+
+    /* ─── Empty State ─── */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #5A6A7A;
+    }
+
+    .empty-state h4 {
+        font-size: 1.1rem;
+        color: #081A28;
+        margin-bottom: 4px;
+    }
+
+    .empty-state p {
+        font-size: 0.9rem;
+    }
+
+    /* ================================================================ */
+    /* MODAL                                                           */
+    /* ================================================================ */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(6, 20, 32, 0.6);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal {
+        background: #FFFFFF;
+        border-radius: 20px;
+        max-width: 820px;
+        width: 100%;
+        max-height: 92vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-lg);
+        animation: slideUp 0.3s ease;
+    }
+
+    .modal::-webkit-scrollbar {
+        width: 4px;
+    }
+    .modal::-webkit-scrollbar-track {
+        background: #F5F8FA;
+        border-radius: 4px;
+    }
+    .modal::-webkit-scrollbar-thumb {
+        background: #1A4A6B;
+        border-radius: 4px;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px) scale(0.96); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 24px 28px 16px;
+        border-bottom: 1px solid #E4EAF0;
+        position: sticky;
+        top: 0;
+        background: #FFFFFF;
+        z-index: 10;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .modal-header h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #081A28;
+    }
+
+    .modal-header h3 .gold {
+        color: #D4A843;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        font-weight: 300;
+        color: #8A9AAA;
+        cursor: pointer;
+        padding: 4px 8px;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        line-height: 1;
+    }
+
+    .modal-close:hover {
+        color: #081A28;
+        transform: rotate(90deg);
+    }
+
+    .modal-body {
+        padding: 24px 28px 28px;
+    }
+
+    /* ─── View Modal ─── */
+    .detail-view .detail-row {
+        display: flex;
+        padding: 8px 0;
+        border-bottom: 1px solid #F5F8FA;
+    }
+
+    .detail-view .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-view .detail-label {
+        font-weight: 600;
+        color: #5A6A7A;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        width: 120px;
+        flex-shrink: 0;
+        padding-top: 2px;
+    }
+
+    .detail-view .detail-value {
+        color: #1A2A3A;
+        font-size: 0.9rem;
+        word-break: break-word;
+        flex: 1;
+    }
+
+    .detail-view .detail-value .cover-preview-lg {
+        max-width: 200px;
+        max-height: 150px;
+        object-fit: cover;
+        border: 1px solid var(--border-light);
+        border-radius: 6px;
+        background: var(--bg-light);
+    }
+
+    .detail-view .detail-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #E4EAF0;
+    }
+
+    .detail-view .btn-modal-close {
+        padding: 8px 24px;
+        background: #F5F8FA;
+        color: #5A6A7A;
+        border: 1px solid #E4EAF0;
+        border-radius: 60px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+    }
+
+    .detail-view .btn-modal-close:hover {
+        background: #E4EAF0;
+        color: #1A2A3A;
+    }
+
+    /* ─── Image Grid in View Modal ─── */
+    .image-grid-view {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .image-grid-view .image-thumb {
+        position: relative;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid var(--border-light);
+        aspect-ratio: 4/3;
+        background: var(--bg-light);
+    }
+
+    .image-grid-view .image-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .image-grid-view .image-thumb .thumb-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 4px 6px;
+        background: rgba(0,0,0,0.6);
+        color: #FFFFFF;
+        font-size: 0.55rem;
+        font-weight: 500;
+        text-align: center;
+        letter-spacing: 0.03em;
+    }
+
+    .image-grid-view .image-thumb .thumb-overlay.featured {
+        background: rgba(212, 168, 67, 0.85);
+    }
+
+    /* ─── Form ─── */
+    .modal-body .form-group {
+        margin-bottom: 16px;
+    }
+
+    .modal-body .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #1A2A3A;
+        margin-bottom: 4px;
+    }
+
+    .modal-body .form-group label .required {
+        color: #9E2A2A;
+    }
+
+    .modal-body .form-group input,
+    .modal-body .form-group select,
+    .modal-body .form-group textarea {
+        width: 100%;
+        padding: 9px 14px;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #1A2A3A;
+        background: #FAFCFE;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: var(--font-sans);
+        outline: none;
+    }
+
+    .modal-body .form-group input:focus,
+    .modal-body .form-group select:focus,
+    .modal-body .form-group textarea:focus {
+        border-color: #1A4A6B;
+        box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+        background: #FFFFFF;
+    }
+
+    .modal-body .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .modal-body .form-group .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .modal-body .form-group .form-row-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 14px;
+    }
+
+    .modal-body .form-group .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 4px 0;
+    }
+
+    .modal-body .form-group .checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--primary-light);
+        flex-shrink: 0;
+    }
+
+    .modal-body .form-group .checkbox-group label {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-body);
+        cursor: pointer;
+        margin-bottom: 0;
+    }
+
+    /* ─── File Upload ─── */
+    .file-upload-area {
+        border: 2px dashed #E4EAF0;
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        transition: all var(--transition);
+        cursor: pointer;
+        position: relative;
+        background: #FAFCFE;
+    }
+
+    .file-upload-area:hover {
+        border-color: #1A4A6B;
+        background: #F5F8FA;
+    }
+
+    .file-upload-area.dragover {
+        border-color: #D4A843;
+        background: #F5ECD7;
+    }
+
+    .file-upload-area .upload-icon {
+        font-size: 2rem;
+        color: #8A9AAA;
+        display: block;
+        margin-bottom: 4px;
+        font-weight: 200;
+    }
+
+    .file-upload-area .upload-text {
+        font-size: 0.9rem;
+        color: #5A6A7A;
+    }
+
+    .file-upload-area .upload-text strong {
+        color: #1A4A6B;
+    }
+
+    .file-upload-area .upload-hint {
+        font-size: 0.7rem;
+        color: #8A9AAA;
+        margin-top: 4px;
+    }
+
+    .file-upload-area input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* ─── Image Preview Container ─── */
+    .image-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+    }
+
+    .image-preview-grid .preview-item {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border-light);
+        aspect-ratio: 4/3;
+        background: var(--bg-light);
+    }
+
+    .image-preview-grid .preview-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .image-preview-grid .preview-item .remove-image {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(0,0,0,0.7);
+        color: #FFFFFF;
+        border: none;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        font-size: 0.6rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+        z-index: 2;
+    }
+
+    .image-preview-grid .preview-item .remove-image:hover {
+        background: #9E2A2A;
+        transform: scale(1.1);
+    }
+
+    .image-preview-grid .preview-item .preview-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 4px 6px;
+        background: rgba(0,0,0,0.6);
+        color: #FFFFFF;
+        font-size: 0.6rem;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* ─── Image Management in Edit Modal ─── */
+    .image-manage-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+        margin: 12px 0;
+    }
+
+    .image-manage-grid .manage-item {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid var(--border-light);
+        aspect-ratio: 4/3;
+        background: var(--bg-light);
+        transition: all var(--transition);
+    }
+
+    .image-manage-grid .manage-item:hover {
+        border-color: var(--primary-light);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .image-manage-grid .manage-item.featured {
+        border-color: #D4A843;
+        box-shadow: 0 0 0 2px #D4A843;
+    }
+
+    .image-manage-grid .manage-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .image-manage-grid .manage-item .item-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 4px 6px;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4px;
+    }
+
+    .image-manage-grid .manage-item .item-overlay .item-actions {
+        display: flex;
+        gap: 2px;
+    }
+
+    .image-manage-grid .manage-item .item-overlay button {
+        background: none;
+        border: none;
+        color: rgba(255,255,255,0.7);
+        font-size: 0.6rem;
+        cursor: pointer;
+        padding: 2px 4px;
+        border-radius: 4px;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+    }
+
+    .image-manage-grid .manage-item .item-overlay button:hover {
+        background: rgba(255,255,255,0.15);
+        color: #FFFFFF;
+    }
+
+    .image-manage-grid .manage-item .item-overlay .featured-star {
+        color: #D4A843;
+        font-weight: 700;
+        font-size: 0.7rem;
+    }
+
+    .image-manage-grid .manage-item .item-overlay .featured-star.inactive {
+        color: rgba(255,255,255,0.3);
+    }
+
+    /* ─── Form Actions ─── */
+    .modal-body .form-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 8px;
+        padding-top: 16px;
+        border-top: 1px solid #E4EAF0;
+    }
+
+    .btn-modal-save {
+        padding: 10px 28px;
+        background: #D4A843;
+        color: #061420;
+        border: none;
+        border-radius: 60px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+        box-shadow: 0 4px 16px rgba(212, 168, 67, 0.12);
+    }
+
+    .btn-modal-save:hover {
+        background: #F5D77E;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 168, 67, 0.2);
+    }
+
+    .btn-modal-cancel {
+        padding: 10px 24px;
+        background: #F5F8FA;
+        color: #5A6A7A;
+        border: 1px solid #E4EAF0;
+        border-radius: 60px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+    }
+
+    .btn-modal-cancel:hover {
+        background: #E4EAF0;
+        color: #1A2A3A;
+    }
+
+    .btn-modal-danger {
+        padding: 10px 24px;
+        background: #F5E6E6;
+        color: #9E2A2A;
+        border: 1px solid #F5E6E6;
+        border-radius: 60px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+    }
+
+    .btn-modal-danger:hover {
+        background: #9E2A2A;
+        color: #FFFFFF;
+    }
+
+    /* ================================================================ */
+    /* TOAST NOTIFICATIONS                                             */
+    /* ================================================================ */
+    #toastContainer {
+        position: fixed;
+        top: 90px;
+        right: 20px;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 380px;
+        width: 100%;
+        pointer-events: none;
+    }
+
+    .toast {
+        pointer-events: auto;
+        background: #FFFFFF;
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+        border-left: 4px solid;
+        animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .toast.hiding {
+        animation: slideOutRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    .toast-success { border-left-color: #1A6A4A; }
+    .toast-error { border-left-color: #9E2A2A; }
+    .toast-warning { border-left-color: #D4A843; }
+    .toast-info { border-left-color: #1A4A6B; }
+
+    .toast-icon {
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+        font-weight: 700;
+    }
+
+    .toast-success .toast-icon { color: #1A6A4A; }
+    .toast-error .toast-icon { color: #9E2A2A; }
+    .toast-warning .toast-icon { color: #D4A843; }
+    .toast-info .toast-icon { color: #1A4A6B; }
+
+    .toast-content { flex: 1; }
+    .toast-title { font-weight: 600; font-size: 0.9rem; color: #081A28; }
+    .toast-message { font-size: 0.8rem; color: #5A6A7A; margin-top: 2px; }
+
+    .toast-close {
+        background: none;
+        border: none;
+        color: #8A9AAA;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0 4px;
+        line-height: 1;
+        font-weight: 300;
+        transition: color 0.3s ease;
+        font-family: var(--font-sans);
+    }
+
+    .toast-close:hover { color: #081A28; }
+
+    .toast-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        background: #E4EAF0;
+        overflow: hidden;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .toast-progress-bar {
+        height: 100%;
+        background: #D4A843;
+        border-radius: 0 0 12px 12px;
+        animation: progressBar 4s linear forwards;
+        width: 100%;
+    }
+
+    .toast-error .toast-progress-bar { background: #9E2A2A; }
+    .toast-success .toast-progress-bar { background: #1A6A4A; }
+    .toast-warning .toast-progress-bar { background: #D4A843; }
+    .toast-info .toast-progress-bar { background: #1A4A6B; }
+
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(40px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideOutRight {
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(40px); }
+    }
+
+    @keyframes progressBar {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
+
+    /* ================================================================ */
+    /* RESPONSIVE                                                      */
+    /* ================================================================ */
+    @media (max-width: 768px) {
+        .gallery-tabs {
+            gap: 2px;
+        }
+
+        .gallery-tabs .tab-btn {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+
+        .gallery-tabs .tab-btn .tab-count {
+            min-width: 16px;
+            height: 16px;
+            font-size: 0.5rem;
+            padding: 0 5px;
+        }
+
+        .gallery-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .gallery-toolbar .toolbar-left .search-input {
+            min-width: 100%;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table-container table {
+            font-size: 0.75rem;
+            min-width: 700px;
+        }
+
+        .table-container table thead th,
+        .table-container table tbody td {
+            padding: 8px 10px;
+        }
+
+        .modal {
+            max-width: 100%;
+            margin: 10px;
+            max-height: 95vh;
+        }
+
+        .modal-header {
+            padding: 18px 20px 12px;
+        }
+
+        .modal-body {
+            padding: 16px 20px 20px;
+        }
+
+        .modal-body .form-group .form-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .modal-body .form-group .form-row-3 {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .detail-view .detail-row {
+            flex-direction: column;
+            padding: 6px 0;
+        }
+
+        .detail-view .detail-label {
+            width: 100%;
+            font-size: 0.7rem;
+            padding-bottom: 2px;
+        }
+
+        .detail-view .detail-value {
+            font-size: 0.85rem;
+        }
+
+        .detail-view .detail-actions {
+            flex-wrap: wrap;
+        }
+
+        .image-grid-view {
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        }
+
+        .image-manage-grid {
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        }
+
+        .image-preview-grid {
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        }
+
+        #toastContainer {
+            top: 80px;
+            right: 10px;
+            left: 10px;
+            max-width: none;
+        }
+        .toast { padding: 14px 16px; }
+    }
+
+    @media (max-width: 480px) {
+        .gallery-tabs .tab-btn {
+            padding: 4px 10px;
+            font-size: 0.6rem;
+        }
+
+        .gallery-tabs .tab-btn .tab-count {
+            min-width: 14px;
+            height: 14px;
+            font-size: 0.45rem;
+            padding: 0 4px;
+        }
+
+        .btn-add {
+            font-size: 0.75rem;
+            padding: 6px 16px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .modal-body .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-modal-save,
+        .btn-modal-cancel,
+        .btn-modal-danger {
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .file-upload-area {
+            padding: 16px;
+        }
+
+        .file-upload-area .upload-icon {
+            font-size: 1.8rem;
+        }
+
+        .file-upload-area .upload-text {
+            font-size: 0.8rem;
+        }
+
+        .image-grid-view {
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        }
+
+        .image-manage-grid {
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        }
+
+        .image-preview-grid {
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        }
+    }
+
+    /* ================================================================ */
+    /* SCROLLBAR                                                       */
+    /* ================================================================ */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #F5F8FA;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #1A4A6B;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #0F2B3D;
+    }
+
+
+
+        /* ================================================================ */
+    /* TAGS DROPDOWN                                                   */
+    /* ================================================================ */
+    .tags-dropdown-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    .tags-dropdown-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        background: #FAFCFE;
+        cursor: pointer;
+        transition: all var(--transition);
+        font-family: var(--font-sans);
+        min-height: 44px;
+        user-select: none;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .tags-dropdown-header:hover {
+        border-color: #1A4A6B;
+        background: #F5F8FA;
+    }
+
+    .tags-dropdown-header.active {
+        border-color: #1A4A6B;
+        box-shadow: 0 0 0 4px rgba(26, 74, 107, 0.04);
+    }
+
+    .tags-dropdown-placeholder {
+        color: #5A6A7A;
+        font-size: 0.9rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        flex: 1;
+    }
+
+    .tags-dropdown-placeholder .tags-selected-tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 10px;
+        background: #1A4A6B;
+        color: #FFFFFF;
+        border-radius: 60px;
+        font-size: 0.7rem;
+        font-weight: 500;
+    }
+
+    .tags-dropdown-arrow {
+        color: #8A9AAA;
+        font-size: 0.6rem;
+        transition: transform var(--transition);
+        flex-shrink: 0;
+    }
+
+    .tags-dropdown-arrow.open {
+        transform: rotate(180deg);
+    }
+
+    .tags-dropdown-list {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background: #FFFFFF;
+        border: 1.5px solid #E4EAF0;
+        border-radius: 8px;
+        box-shadow: var(--shadow-lg);
+        max-height: 200px;
+        overflow-y: auto;
+        display: none;
+        z-index: 100;
+        padding: 4px 0;
+    }
+
+    .tags-dropdown-list.open {
+        display: block;
+    }
+
+    .tags-dropdown-list::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .tags-dropdown-list::-webkit-scrollbar-track {
+        background: #F5F8FA;
+        border-radius: 4px;
+    }
+
+    .tags-dropdown-list::-webkit-scrollbar-thumb {
+        background: #1A4A6B;
+        border-radius: 4px;
+    }
+
+    .tags-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        cursor: pointer;
+        transition: background var(--transition);
+        font-size: 0.85rem;
+        color: #1A2A3A;
+        font-family: var(--font-sans);
+        margin: 0;
+    }
+
+    .tags-option:hover {
+        background: #F5F8FA;
+    }
+
+    .tags-option input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        accent-color: #1A4A6B;
+        flex-shrink: 0;
+        margin: 0;
+    }
+
+    .tags-option input[type="checkbox"]:checked + span {
+        font-weight: 600;
+        color: #1A4A6B;
+    }
+</style>
+
+<!-- ================================================================ -->
+<!-- CONTENT                                                         -->
+<!-- ================================================================ -->
+
+<!-- Tabs -->
+<div class="gallery-tabs" id="galleryTabs">
+    <!-- Dynamically generated by JavaScript -->
+</div>
+
+<!-- Toolbar -->
+<div class="gallery-toolbar">
+    <div class="toolbar-left">
+        <input type="text" class="search-input" id="gallerySearch" placeholder="Search albums..." onkeyup="filterTable()">
+    </div>
+    <button class="btn-add" onclick="openModal(null)">Add Album</button>
+</div>
+
+<!-- Table -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th style="width:40px;">#</th>
+                <th style="width:70px;">Cover</th>
+                <th>Album Title</th>
+                <th style="width:70px;">Photos</th>
+                <th style="width:110px;">Date</th>
+                <th style="width:100px;">Status</th>
+                <th style="width:200px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="galleryTableBody"></tbody>
+    </table>
+</div>
+
+<!-- ================================================================ -->
+<!-- MODAL - Add/Edit Album Form                                     -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modalTitle">Add <span class="gold">Album</span></h3>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <!-- Dynamic form content -->
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- VIEW MODAL - Detail View                                        -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="viewModalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="viewModalTitle">View <span class="gold">Album</span></h3>
+            <button class="modal-close" onclick="closeViewModal()">×</button>
+        </div>
+        <div class="modal-body" id="viewModalBody">
+            <div class="detail-view" id="viewModalContent">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- IMAGE UPLOAD MODAL                                              -->
+<!-- ================================================================ -->
+<div class="modal-overlay" id="imageModalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="imageModalTitle">Manage <span class="gold">Images</span></h3>
+            <button class="modal-close" onclick="closeImageModal()">×</button>
+        </div>
+        <div class="modal-body" id="imageModalBody">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- JAVASCRIPT                                                      -->
+<!-- ================================================================ -->
+<script>
+    (function() {
+        'use strict';
+
+        // ================================================================
+        // STATE
+        // ================================================================
+
+        var allAlbums = [];
+        var editingItem = null;
+        var currentFilterType = 'all';
+        var currentAlbumId = null;
+        var tempImageFiles = [];
+        var tempImagePreviews = [];
+
+        // ================================================================
+        // DOM REFS
+        // ================================================================
+
+        var tabsContainer = document.getElementById('galleryTabs');
+        var tableBody = document.getElementById('galleryTableBody');
+        var modalOverlay = document.getElementById('modalOverlay');
+        var modalTitle = document.getElementById('modalTitle');
+        var modalBody = document.getElementById('modalBody');
+        var viewModalOverlay = document.getElementById('viewModalOverlay');
+        var viewModalTitle = document.getElementById('viewModalTitle');
+        var viewModalContent = document.getElementById('viewModalContent');
+        var imageModalOverlay = document.getElementById('imageModalOverlay');
+        var imageModalTitle = document.getElementById('imageModalTitle');
+        var imageModalBody = document.getElementById('imageModalBody');
+        var loaderOverlay = document.getElementById('loaderOverlay');
+
+        // ================================================================
+        // LOAD DATA
+        // ================================================================
+
+        function loadData() {
+            showLoader();
+
+            fetch('/api/gallery/', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Network error');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                allAlbums = data;
+                renderTabs(data);
+                renderTable(data);
+                hideLoader();
+            })
+            .catch(function(error) {
+                console.error('Error loading albums:', error);
+                allAlbums = [];
+                renderTabs([]);
+                renderTable([]);
+                hideLoader();
+                showToast('Error', 'Failed to load albums. Please refresh the page.', 'error');
+            });
+        }
+
+        // ================================================================
+        // RENDER TABS
+        // ================================================================
+
+        function renderTabs(data) {
+            if (!tabsContainer) return;
+
+            var counts = {
+                all: data.length,
+                workshops: 0,
+                field_sites: 0,
+                training: 0
+            };
+
+            data.forEach(function(item) {
+                var tags = item.tags || [];
+                if (tags.includes('workshop')) {
+                    counts.workshops++;
+                }
+                if (tags.includes('field_site')) {
+                    counts.field_sites++;
+                }
+                if (tags.includes('training')) {
+                    counts.training++;
+                }
+            });
+
+            // Also count by activity_type if available
+            data.forEach(function(item) {
+                var activityType = item.activity_type || '';
+                if (activityType === 'workshop' && !item.tags.includes('workshop')) {
+                    counts.workshops++;
+                }
+                if (activityType === 'field_demo' && !item.tags.includes('field_site')) {
+                    counts.field_sites++;
+                }
+                if (activityType === 'training' && !item.tags.includes('training')) {
+                    counts.training++;
+                }
+            });
+
+            var html = '';
+            var tabs = [
+                { type: 'all', label: 'All Albums', count: counts.all },
+                { type: 'workshop', label: 'Workshops', count: counts.workshops },
+                { type: 'field_site', label: 'Field Sites', count: counts.field_sites },
+                { type: 'training', label: 'Training', count: counts.training }
+            ];
+
+            tabs.forEach(function(tab) {
+                var active = currentFilterType === tab.type ? 'active' : '';
+                html += `
+                    <button class="tab-btn ${active}" onclick="filterByType('${tab.type}', this)">
+                        ${tab.label}
+                        <span class="tab-count">${tab.count}</span>
+                    </button>
+                `;
+            });
+
+            tabsContainer.innerHTML = html;
+        }
+
+        // ================================================================
+        // FILTER BY TYPE
+        // ================================================================
+
+        window.filterByType = function(type, button) {
+            currentFilterType = type;
+
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            if (button) {
+                button.classList.add('active');
+            }
+
+            var filtered = getFilteredData();
+            renderTable(filtered);
+        };
+
+        // ================================================================
+        // GET FILTERED DATA
+        // ================================================================
+
+        function getFilteredData() {
+            var filtered = allAlbums;
+
+            if (currentFilterType !== 'all') {
+                filtered = filtered.filter(function(item) {
+                    var tags = item.tags || [];
+                    var activityType = item.activity_type || '';
+                    if (currentFilterType === 'workshop') {
+                        return tags.includes('workshop') || activityType === 'workshop';
+                    } else if (currentFilterType === 'field_site') {
+                        return tags.includes('field_site') || activityType === 'field_demo';
+                    } else if (currentFilterType === 'training') {
+                        return tags.includes('training') || activityType === 'training';
+                    }
+                    return true;
+                });
+            }
+
+            return filtered;
+        }
+
+        // ================================================================
+        // RENDER TABLE
+        // ================================================================
+
+        function renderTable(data) {
+            if (!tableBody) return;
+
+            var filtered = data || getFilteredData();
+
+            if (!filtered || filtered.length === 0) {
+                var emptyMessage = currentFilterType === 'all' ?
+                    'No albums found. Click "Add Album" to create your first album.' :
+                    'No albums found for this type.';
+
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <h4>No albums found</h4>
+                                <p>${emptyMessage}</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            var html = '';
+            var counter = 1;
+            filtered.forEach(function(item) {
+                var images = item.images || [];
+                var photoCount = images.length;
+                var coverImage = '';
+                var isFeatured = false;
+
+                // Find featured image
+                images.forEach(function(img) {
+                    if (img.is_featured) {
+                        coverImage = img.image_path;
+                        isFeatured = true;
+                    }
+                });
+
+                // If no featured image, use the first image
+                if (!coverImage && images.length > 0) {
+                    coverImage = images[0].image_path;
+                }
+
+                var coverHtml = '';
+                if (coverImage) {
+                    coverHtml = `<img src="/static/${escapeHtml(coverImage)}" alt="${escapeHtml(item.title)}" class="cover-preview">`;
+                } else {
+                    coverHtml = `<div class="no-cover">No<br>cover</div>`;
+                }
+
+                var statusClass = item.is_published !== false ? 'published' : 'draft';
+                var statusLabel = item.is_published !== false ? 'Published' : 'Draft';
+
+                html += `
+                    <tr>
+                        <td>${counter}</td>
+                        <td>${coverHtml}</td>
+                        <td><strong>${escapeHtml(item.title)}</strong></td>
+                        <td><span class="photo-count">${photoCount}</span></td>
+                        <td>${escapeHtml(item.date || '')}</td>
+                        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn-view-sm" onclick="viewItem(${item.id})">View</button>
+                                <button class="btn-images-sm" onclick="openImageModal(${item.id})">Images</button>
+                                <button class="btn-edit-sm" onclick="editItem(${item.id})">Edit</button>
+                                <button class="btn-delete-sm" onclick="deleteItem(${item.id})">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                counter++;
+            });
+
+            tableBody.innerHTML = html;
+        }
+
+        // ================================================================
+        // FILTER TABLE (Search)
+        // ================================================================
+
+        window.filterTable = function() {
+            var searchInput = document.getElementById('gallerySearch');
+            var searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            var rows = tableBody ? tableBody.querySelectorAll('tr') : [];
+
+            rows.forEach(function(row) {
+                var text = row.textContent.toLowerCase();
+                row.style.display = text.indexOf(searchTerm) > -1 ? '' : 'none';
+            });
+        };
+
+        // ================================================================
+        // OPEN MODAL
+        // ================================================================
+
+        window.openModal = function(id) {
+            editingItem = id;
+            tempImageFiles = [];
+            tempImagePreviews = [];
+
+            if (id) {
+                modalTitle.innerHTML = 'Edit <span class="gold">Album</span>';
+                fetch('/api/gallery/' + id, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    modalBody.innerHTML = buildForm(data);
+                    modalOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    setupFileUpload();
+                    setupImageManagement(data);
+                })
+                .catch(function() {
+                    modalBody.innerHTML = buildForm(null);
+                    modalOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    setupFileUpload();
+                });
+            } else {
+                modalTitle.innerHTML = 'Add <span class="gold">Album</span>';
+                modalBody.innerHTML = buildForm(null);
+                modalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                setupFileUpload();
+            }
+        };
+
+        // ================================================================
+        // EDIT ITEM
+        // ================================================================
+
+        window.editItem = function(id) {
+            openModal(id);
+        };
+
+        // ================================================================
+        // BUILD FORM
+        // ================================================================
+
+       function buildForm(data) {
+    var isEdit = !!data;
+    var title = data ? data.title : '';
+    var date = data ? data.date : '';
+    var location = data ? data.location : '';
+    var description = data ? data.description : '';
+    var isPublished = data ? (data.is_published !== false) : true;
+    var consentConfirmed = data ? (data.consent_confirmed !== false) : false;
+    var tags = data ? (data.tags || []) : [];
+    var albumId = data ? data.id : null;
+
+    var publishedChecked = isPublished ? 'checked' : '';
+    var consentChecked = consentConfirmed ? 'checked' : '';
+
+    // Tag options
+    var tagOptions = [
+        { value: 'workshop', label: 'Workshop' },
+        { value: 'field_demo', label: 'Field Demo' },
+        { value: 'training', label: 'Training' },
+        { value: 'meeting', label: 'Meeting' },
+        { value: 'media', label: 'Media' },
+        { value: 'publication', label: 'Publication' },
+        { value: 'resource', label: 'Resource' },
+        { value: 'repository', label: 'Repository' },
+        { value: 'policy', label: 'Policy' },
+        { value: 'stakeholder_engagement', label: 'Stakeholder Engagement' },
+        { value: 'bootcamp', label: 'Bootcamp' }
+    ];
+
+    // Build checkbox options with pre-selected state
+    var tagCheckboxesHtml = tagOptions.map(function(opt) {
+        var checked = (tags.indexOf(opt.value) !== -1) ? 'checked' : '';
+        return `
+            <label class="tags-option" data-value="${opt.value}">
+                <input type="checkbox" value="${opt.value}" ${checked}>
+                <span>${opt.label}</span>
+            </label>
+        `;
+    }).join('');
+
+    // Build selected tags display
+    var selectedTagsHtml = '';
+    if (tags.length > 0) {
+        selectedTagsHtml = tags.map(function(tag) {
+            var label = tagOptions.find(function(t) { return t.value === tag; });
+            var displayLabel = label ? label.label : tag;
+            return `<span class="tags-selected-tag">${displayLabel}</span>`;
+        }).join('');
+    }
+
+    return `
+        <form id="albumForm" enctype="multipart/form-data">
+            <input type="hidden" id="formAlbumId" value="${albumId || ''}">
+
+            <div class="form-group">
+                <label>Album Title <span class="required">*</span></label>
+                <input type="text" id="formTitle" value="${escapeHtml(title)}" placeholder="e.g. WP5 Technical Workshop" required>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <div>
+                        <label>Date</label>
+                        <input type="date" id="formDate" value="${escapeHtml(date)}">
+                    </div>
+                    <div>
+                        <label>Location</label>
+                        <input type="text" id="formLocation" value="${escapeHtml(location)}" placeholder="e.g. Kiambu County">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="formDescription" placeholder="Album description">${escapeHtml(description)}</textarea>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- CUSTOM TAGS DROPDOWN                                        -->
+            <!-- ============================================================ -->
+            <div class="form-group">
+                <label>Tags</label>
+                <div class="tags-dropdown-wrapper">
+                    <div class="tags-dropdown-header" id="tagsDropdownHeader">
+                        <span class="tags-dropdown-placeholder" id="tagsPlaceholder">
+                            ${tags.length > 0 ? selectedTagsHtml : 'Select tags...'}
+                        </span>
+                        <span class="tags-dropdown-arrow" id="tagsDropdownArrow">▼</span>
+                    </div>
+                    <div class="tags-dropdown-list" id="tagsDropdownList">
+                        ${tagCheckboxesHtml}
+                    </div>
+                </div>
+                <div style="font-size:0.7rem;color:var(--text-light);margin-top:4px;">
+                    Select one or more tags
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="formIsPublished" ${publishedChecked}>
+                        <label for="formIsPublished">Published</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="formConsent" ${consentChecked}>
+                        <label for="formConsent">Consent Confirmed</label>
+                    </div>
+                </div>
+            </div>
+
+            ${isEdit ? `
+                <div class="form-group">
+                    <hr style="border:none;border-top:1px solid var(--border-light);margin:16px 0;">
+                    <label style="font-weight:700;font-size:0.9rem;">Image Management</label>
+                    <div id="imageManageContainer">
+                        <!-- Managed by JavaScript -->
+                    </div>
+                </div>
+            ` : ''}
+
+            <div class="form-group" id="uploadSection">
+                <label>${isEdit ? 'Add More Images' : 'Upload Images'}</label>
+                <div class="file-upload-area" id="imageUploadArea">
+                    <span class="upload-icon">↑</span>
+                    <div class="upload-text">
+                        <strong>Click to upload</strong> or drag and drop
+                    </div>
+                    <div class="upload-hint">JPG, PNG, WEBP, GIF (Max 10MB each)</div>
+                    <input type="file" id="imageFiles" accept=".jpg,.jpeg,.png,.webp,.gif" multiple>
+                </div>
+                <div id="imagePreviewGrid" class="image-preview-grid" style="display:none;"></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+                ${isEdit ? `<button type="button" class="btn-modal-danger" onclick="deleteItem(${albumId})">Delete Album</button>` : ''}
+                <button type="button" class="btn-modal-save" onclick="saveItem()">${isEdit ? 'Update Album' : 'Create Album'}</button>
+            </div>
+        </form>
+    `;
+}
+        
+    
+                // ================================================================
+                // TAGS DROPDOWN
+                // ================================================================
+
+                function toggleTagsDropdown() {
+                    var list = document.getElementById('tagsDropdownList');
+                    var header = document.getElementById('tagsDropdownHeader');
+                    var arrow = document.getElementById('tagsDropdownArrow');
+                    
+                    if (!list || !header || !arrow) return;
+                    
+                    list.classList.toggle('open');
+                    header.classList.toggle('active');
+                    arrow.classList.toggle('open');
+                }
+
+                function updateTagsDisplay() {
+                    var checkboxes = document.querySelectorAll('#tagsDropdownList .tags-option input[type="checkbox"]');
+                    var selectedTags = [];
+                    checkboxes.forEach(function(cb) {
+                        if (cb.checked) {
+                            selectedTags.push(cb.value);
+                        }
+                    });
+                    
+                    var placeholder = document.getElementById('tagsPlaceholder');
+                    if (!placeholder) return;
+                    
+                    if (selectedTags.length === 0) {
+                        placeholder.textContent = 'Select tags...';
+                        return;
+                    }
+                    
+                    var tagOptions = [
+                        { value: 'workshop', label: 'Workshop' },
+                        { value: 'field_demo', label: 'Field Demo' },
+                        { value: 'training', label: 'Training' },
+                        { value: 'meeting', label: 'Meeting' },
+                        { value: 'media', label: 'Media' },
+                        { value: 'publication', label: 'Publication' },
+                        { value: 'resource', label: 'Resource' },
+                        { value: 'repository', label: 'Repository' },
+                        { value: 'policy', label: 'Policy' },
+                        { value: 'stakeholder_engagement', label: 'Stakeholder Engagement' },
+                        { value: 'bootcamp', label: 'Bootcamp' }
+                    ];
+                    
+                    var selectedLabels = selectedTags.map(function(tag) {
+                        var found = tagOptions.find(function(t) { return t.value === tag; });
+                        return found ? found.label : tag;
+                    });
+                    
+                    var html = selectedLabels.map(function(label) {
+                        return `<span class="tags-selected-tag">${escapeHtml(label)}</span>`;
+                    }).join('');
+                    
+                    placeholder.innerHTML = html;
+                }
+
+                function getTagsFromUI() {
+                    var checkboxes = document.querySelectorAll('#tagsDropdownList .tags-option input[type="checkbox"]');
+                    var tags = [];
+                    checkboxes.forEach(function(cb) {
+                        if (cb.checked) {
+                            tags.push(cb.value);
+                        }
+                    });
+                    return tags;
+                }
+
+                // ================================================================
+                // ✅ SETUP EVENT LISTENERS
+                // ================================================================
+
+                // Toggle dropdown when clicking on header (delegated event)
+                document.addEventListener('click', function(e) {
+                    var header = e.target.closest('#tagsDropdownHeader');
+                    if (header) {
+                        var list = document.getElementById('tagsDropdownList');
+                        var headerEl = document.getElementById('tagsDropdownHeader');
+                        var arrow = document.getElementById('tagsDropdownArrow');
+                        
+                        if (list && headerEl && arrow) {
+                            list.classList.toggle('open');
+                            headerEl.classList.toggle('active');
+                            arrow.classList.toggle('open');
+                        }
+                        return;
+                    }
+                });
+
+                // Handle checkbox changes
+                document.addEventListener('change', function(e) {
+                    if (e.target.closest('#tagsDropdownList') && e.target.type === 'checkbox') {
+                        updateTagsDisplay();
+                    }
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    var wrapper = document.querySelector('.tags-dropdown-wrapper');
+                    if (wrapper && !wrapper.contains(e.target)) {
+                        var list = document.getElementById('tagsDropdownList');
+                        var header = document.getElementById('tagsDropdownHeader');
+                        var arrow = document.getElementById('tagsDropdownArrow');
+                        if (list) list.classList.remove('open');
+                        if (header) header.classList.remove('active');
+                        if (arrow) arrow.classList.remove('open');
+                    }
+                });
+        // ================================================================
+        // SETUP FILE UPLOAD
+        // ================================================================
+
+        function setupFileUpload() {
+            var fileInput = document.getElementById('imageFiles');
+            var uploadArea = document.getElementById('imageUploadArea');
+
+            if (!fileInput || !uploadArea) return;
+
+            // Remove existing listeners by cloning
+            var newFileInput = fileInput.cloneNode(true);
+            fileInput.parentNode.replaceChild(newFileInput, fileInput);
+            fileInput = newFileInput;
+
+            var newUploadArea = uploadArea.cloneNode(true);
+            uploadArea.parentNode.replaceChild(newUploadArea, uploadArea);
+            uploadArea = newUploadArea;
+
+            // Store reference
+            window._fileInput = fileInput;
+            window._uploadArea = uploadArea;
+
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    handleFiles(this.files);
+                }
+            });
+
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+        }
+
+        // ================================================================
+        // HANDLE FILES
+        // ================================================================
+
+        function handleFiles(files) {
+            var previewGrid = document.getElementById('imagePreviewGrid');
+            if (!previewGrid) return;
+
+            previewGrid.style.display = 'grid';
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var reader = new FileReader();
+
+                reader.onload = (function(f) {
+                    return function(e) {
+                        var previewItem = document.createElement('div');
+                        previewItem.className = 'preview-item';
+                        previewItem.innerHTML = `
+                            <img src="${e.target.result}" alt="Image preview">
+                            <button type="button" class="remove-image" onclick="removePreviewImage(this)">×</button>
+                            <div class="preview-caption">${escapeHtml(f.name)}</div>
+                        `;
+                        previewGrid.appendChild(previewItem);
+
+                        // Store file for upload
+                        tempImageFiles.push(f);
+                        tempImagePreviews.push(e.target.result);
+                    };
+                })(file);
+
+                reader.readAsDataURL(file);
+            }
+
+            // Reset file input
+            var fileInput = document.getElementById('imageFiles');
+            if (fileInput) {
+                fileInput.value = '';
+            }
+        }
+
+        window.removePreviewImage = function(button) {
+            var item = button.parentElement;
+            var index = Array.from(item.parentElement.children).indexOf(item);
+            if (index > -1) {
+                tempImageFiles.splice(index, 1);
+                tempImagePreviews.splice(index, 1);
+            }
+            item.remove();
+
+            var previewGrid = document.getElementById('imagePreviewGrid');
+            if (previewGrid && previewGrid.children.length === 0) {
+                previewGrid.style.display = 'none';
+            }
+        };
+
+        // ================================================================
+        // SETUP IMAGE MANAGEMENT (Edit mode)
+        // ================================================================
+
+        function setupImageManagement(data) {
+            var container = document.getElementById('imageManageContainer');
+            if (!container) return;
+
+            var images = data.images || [];
+
+            if (images.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-light);font-size:0.85rem;padding:10px 0;">No images uploaded yet.</div>';
+                return;
+            }
+
+            var html = '<div class="image-manage-grid">';
+            images.forEach(function(img, index) {
+                var isFeatured = img.is_featured || false;
+                var featuredClass = isFeatured ? 'featured' : '';
+                var starIcon = isFeatured ? '★' : '☆';
+                var starClass = isFeatured ? 'featured-star' : 'featured-star inactive';
+
+                html += `
+                    <div class="manage-item ${featuredClass}" data-image-id="${img.id}">
+                        <img src="/static/${escapeHtml(img.image_path)}" alt="${escapeHtml(img.caption || '')}">
+                        <div class="item-overlay">
+                            <span class="${starClass}" onclick="setFeaturedImage(${data.id}, ${img.id})">${starIcon}</span>
+                            <div class="item-actions">
+                                <button onclick="editImageCaption(${data.id}, ${img.id})" title="Edit caption">✎</button>
+                                <button onclick="deleteImage(${data.id}, ${img.id})" title="Delete image" style="color:#9E2A2A;">×</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            container.innerHTML = html;
+        }
+
+        // ================================================================
+        // SET FEATURED IMAGE
+        // ================================================================
+
+        window.setFeaturedImage = function(albumId, imageId) {
+            // First, get the album to find the image
+            fetch('/api/gallery/' + albumId, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var images = data.images || [];
+                var updatedImages = images.map(function(img) {
+                    img.is_featured = (img.id === imageId);
+                    return img;
+                });
+
+                // Update the album
+                return fetch('/api/gallery/' + albumId, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    body: JSON.stringify({ images: updatedImages })
+                });
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    showToast('Featured Image', 'Featured image updated successfully.', 'success');
+                    // Refresh the view
+                    editItem(albumId);
+                } else {
+                    showToast('Error', 'Failed to update featured image.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error setting featured image:', error);
+                showToast('Error', 'An error occurred.', 'error');
+            });
+        };
+
+        // ================================================================
+        // EDIT IMAGE CAPTION
+        // ================================================================
+
+        window.editImageCaption = function(albumId, imageId) {
+            // Get the album
+            fetch('/api/gallery/' + albumId, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var image = data.images.find(function(img) { return img.id === imageId; });
+                if (!image) {
+                    showToast('Error', 'Image not found.', 'error');
+                    return;
+                }
+
+                var newCaption = prompt('Edit caption:', image.caption || '');
+                if (newCaption === null) return; // Cancelled
+
+                // Update the image
+                image.caption = newCaption.trim();
+
+                // Update the album
+                return fetch('/api/gallery/' + albumId, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    body: JSON.stringify({ images: data.images })
+                });
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    showToast('Caption Updated', 'Image caption updated successfully.', 'success');
+                    editItem(albumId);
+                } else {
+                    showToast('Error', 'Failed to update caption.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error updating caption:', error);
+                showToast('Error', 'An error occurred.', 'error');
+            });
+        };
+
+        // ================================================================
+        // DELETE IMAGE
+        // ================================================================
+
+        window.deleteImage = function(albumId, imageId) {
+            if (!confirm('Are you sure you want to delete this image? This action cannot be undone.')) return;
+
+            // Get album data
+            fetch('/api/gallery/' + albumId, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var filteredImages = data.images.filter(function(img) { return img.id !== imageId; });
+                data.images = filteredImages;
+
+                return fetch('/api/gallery/' + albumId, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    body: JSON.stringify({ images: filteredImages })
+                });
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    showToast('Image Deleted', 'Image deleted successfully.', 'success');
+                    editItem(albumId);
+                } else {
+                    showToast('Error', 'Failed to delete image.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error deleting image:', error);
+                showToast('Error', 'An error occurred.', 'error');
+            });
+        };
+
+        // ================================================================
+        // SAVE ITEM
+        // ================================================================
+
+        window.saveItem = function() {
+            var title = document.getElementById('formTitle').value.trim();
+            var date = document.getElementById('formDate').value;
+            var location = document.getElementById('formLocation').value.trim();
+            var description = document.getElementById('formDescription').value.trim();
+            var isPublished = document.getElementById('formIsPublished').checked;
+            var consentConfirmed = document.getElementById('formConsent').checked;
+            var tags = getTagsFromUI();
+
+            if (!title) {
+                showToast('Validation Error', 'Album title is required.', 'error');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('title', title);
+            formData.append('date', date);
+            formData.append('location', location);
+            formData.append('description', description);
+            formData.append('is_published', isPublished ? 'true' : 'false');
+            formData.append('consent_confirmed', consentConfirmed ? 'true' : 'false');
+
+            if (tags.length > 0) {
+                formData.append('tags', tags.join(','));
+            }
+
+            // Add images
+            tempImageFiles.forEach(function(file) {
+                formData.append('images', file);
+            });
+
+            var endpoint = '/api/gallery/';
+            var method = 'POST';
+
+            if (editingItem) {
+                endpoint = '/api/gallery/' + editingItem;
+                method = 'PUT';
+            }
+
+            var csrfToken = getCsrfToken();
+
+            showLoader();
+
+            fetch(endpoint, {
+                method: method,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                },
+                body: formData
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(data) {
+                        throw new Error(data.error || 'Server error');
+                    });
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                if (result.success) {
+                    closeModal();
+                    loadData();
+                    var action = editingItem ? 'updated' : 'created';
+                    showToast('Album ' + action, result.message || 'Album ' + action + ' successfully', 'success');
+                } else {
+                    showToast('Error', result.message || result.error || 'Error saving album.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error saving:', error);
+                showToast('Error', error.message || 'An error occurred. Please try again.', 'error');
+            })
+            .finally(function() {
+                hideLoader();
+            });
+        };
+
+        // ================================================================
+        // OPEN IMAGE MODAL (Manage Images)
+        // ================================================================
+
+        window.openImageModal = function(albumId) {
+            currentAlbumId = albumId;
+
+            fetch('/api/gallery/' + albumId, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                imageModalTitle.innerHTML = 'Manage <span class="gold">Images</span> - ' + escapeHtml(data.title);
+                imageModalBody.innerHTML = buildImageManagement(data);
+                imageModalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            })
+            .catch(function(error) {
+                console.error('Error loading images:', error);
+                showToast('Error', 'Failed to load images.', 'error');
+            });
+        };
+
+        function buildImageManagement(data) {
+            var images = data.images || [];
+            var albumId = data.id;
+
+            if (images.length === 0) {
+                return `
+                    <div style="text-align:center;padding:30px 0;color:var(--text-light);">
+                        <div style="font-size:2.5rem;margin-bottom:10px;">📷</div>
+                        <p>No images in this album yet.</p>
+                        <p style="font-size:0.85rem;">Click "Add Images" below to upload photos.</p>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-modal-cancel" onclick="closeImageModal()">Close</button>
+                        <button class="btn-modal-save" onclick="addImagesToAlbum(${albumId})">Add Images</button>
+                    </div>
+                `;
+            }
+
+            var html = `
+                <div style="margin-bottom:16px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                        <span style="font-size:0.85rem;color:var(--text-muted);">${images.length} images in this album</span>
+                        <span style="font-size:0.85rem;color:var(--text-muted);">
+                            <span class="consent-badge confirmed">✓ Consent Confirmed</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="image-manage-grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr));">
+            `;
+
+            images.forEach(function(img) {
+                var isFeatured = img.is_featured || false;
+                var featuredClass = isFeatured ? 'featured' : '';
+                var starIcon = isFeatured ? '★' : '☆';
+                var starClass = isFeatured ? 'featured-star' : 'featured-star inactive';
+
+                html += `
+                    <div class="manage-item ${featuredClass}" data-image-id="${img.id}">
+                        <img src="/static/${escapeHtml(img.image_path)}" alt="${escapeHtml(img.caption || '')}" style="width:100%;height:100%;object-fit:cover;">
+                        <div class="item-overlay">
+                            <span class="${starClass}" onclick="setFeaturedImage(${albumId}, ${img.id})" title="Set as featured">${starIcon}</span>
+                            <div class="item-actions">
+                                <button onclick="editImageCaption(${albumId}, ${img.id})" title="Edit caption">✎</button>
+                                <button onclick="deleteImage(${albumId}, ${img.id})" title="Delete image" style="color:#9E2A2A;">×</button>
+                            </div>
+                        </div>
+                        ${img.caption ? `<div style="font-size:0.6rem;padding:2px 4px;background:rgba(0,0,0,0.5);color:#fff;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;position:absolute;bottom:0;left:0;right:0;">${escapeHtml(img.caption)}</div>` : ''}
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+                <div class="form-actions" style="margin-top:16px;">
+                    <button class="btn-modal-cancel" onclick="closeImageModal()">Close</button>
+                    <button class="btn-modal-save" onclick="addImagesToAlbum(${albumId})">Add More Images</button>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // ================================================================
+        // ADD IMAGES TO ALBUM (via modal)
+        // ================================================================
+
+        window.addImagesToAlbum = function(albumId) {
+            closeImageModal();
+            openModal(albumId);
+            // Scroll to upload section
+            setTimeout(function() {
+                var uploadSection = document.getElementById('uploadSection');
+                if (uploadSection) {
+                    uploadSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 300);
+        };
+
+        // ================================================================
+        // VIEW ITEM
+        // ================================================================
+
+        window.viewItem = function(id) {
+            fetch('/api/gallery/' + id, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                var html = buildDetailView(data);
+                viewModalContent.innerHTML = html;
+                viewModalTitle.innerHTML = 'View <span class="gold">Album</span>';
+                viewModalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            })
+            .catch(function(error) {
+                console.error('Error loading album:', error);
+                showToast('Error', 'Could not load album details.', 'error');
+            });
+        };
+
+        // ================================================================
+        // BUILD DETAIL VIEW
+        // ================================================================
+
+        function buildDetailView(data) {
+            var images = data.images || [];
+            var statusClass = data.is_published !== false ? 'published' : 'draft';
+            var statusLabel = data.is_published !== false ? 'Published' : 'Draft';
+            var consentClass = data.consent_confirmed ? 'confirmed' : 'pending';
+            var consentLabel = data.consent_confirmed ? 'Confirmed' : 'Pending';
+
+            var coverImage = '';
+            images.forEach(function(img) {
+                if (img.is_featured) {
+                    coverImage = img.image_path;
+                }
+            });
+            if (!coverImage && images.length > 0) {
+                coverImage = images[0].image_path;
+            }
+
+            var coverHtml = coverImage ?
+                `<img src="/static/${escapeHtml(coverImage)}" alt="Cover" class="cover-preview-lg">` :
+                '<span style="color:var(--text-light);font-size:0.85rem;">No cover image</span>';
+
+            var tags = data.tags || [];
+            var tagsHtml = tags.map(function(tag) {
+                return `<span style="display:inline-block;padding:2px 10px;margin:2px 4px 2px 0;background:#1A4A6B;color:#FFFFFF;border-radius:60px;font-size:0.7rem;font-weight:500;">${escapeHtml(tag)}</span>`;
+            }).join('');
+
+            var imagesHtml = '';
+            if (images.length > 0) {
+                imagesHtml = '<div class="image-grid-view">';
+                images.forEach(function(img) {
+                    var isFeatured = img.is_featured ? ' featured' : '';
+                    imagesHtml += `
+                        <div class="image-thumb">
+                            <img src="/static/${escapeHtml(img.image_path)}" alt="${escapeHtml(img.caption || '')}">
+                            <div class="thumb-overlay${isFeatured}">${img.is_featured ? '★ Featured' : (img.caption ? escapeHtml(img.caption) : '')}</div>
+                        </div>
+                    `;
+                });
+                imagesHtml += '</div>';
+            } else {
+                imagesHtml = '<span style="color:var(--text-light);font-size:0.85rem;">No images in this album.</span>';
+            }
+
+            return `
+                <div class="detail-row">
+                    <span class="detail-label">Cover Image</span>
+                    <span class="detail-value">${coverHtml}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Album Title</span>
+                    <span class="detail-value"><strong>${escapeHtml(data.title)}</strong></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date</span>
+                    <span class="detail-value">${escapeHtml(data.date || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Location</span>
+                    <span class="detail-value">${escapeHtml(data.location || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Description</span>
+                    <span class="detail-value">${escapeHtml(data.description || '-')}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Tags</span>
+                    <span class="detail-value">${tagsHtml || '<span style="color:var(--text-light);font-size:0.85rem;">No tags</span>'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value"><span class="status-badge ${statusClass}">${statusLabel}</span></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Consent</span>
+                    <span class="detail-value"><span class="consent-badge ${consentClass}">${consentLabel}</span></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Photo Count</span>
+                    <span class="detail-value"><strong>${images.length}</strong> image${images.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div class="detail-row" style="flex-direction:column;align-items:stretch;padding:12px 0;">
+                    <span class="detail-label" style="width:100%;padding-bottom:8px;">All Images</span>
+                    <span class="detail-value" style="width:100%;">${imagesHtml}</span>
+                </div>
+                <div class="detail-actions">
+                    <button class="btn-modal-close" onclick="closeViewModal()">Close</button>
+                    <button class="btn-modal-save" onclick="closeViewModal();openImageModal(${data.id});">Manage Images</button>
+                    <button class="btn-modal-save" onclick="closeViewModal();editItem(${data.id});">Edit Album</button>
+                </div>
+            `;
+        }
+
+        // ================================================================
+        // DELETE ITEM
+        // ================================================================
+
+        window.deleteItem = function(id) {
+            if (!confirm('Are you sure you want to delete this album? All associated images will also be deleted. This action cannot be undone.')) return;
+
+            var csrfToken = getCsrfToken();
+
+            showLoader();
+
+            fetch('/api/gallery/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    closeModal();
+                    loadData();
+                    showToast('Album Deleted', result.message || 'Album deleted successfully', 'success');
+                } else {
+                    showToast('Error', result.message || result.error || 'Error deleting album.', 'error');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error deleting:', error);
+                showToast('Error', 'An error occurred. Please try again.', 'error');
+            })
+            .finally(function() {
+                hideLoader();
+            });
+        };
+
+        // ================================================================
+        // CLOSE MODALS
+        // ================================================================
+
+        window.closeModal = function() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            editingItem = null;
+            tempImageFiles = [];
+            tempImagePreviews = [];
+        };
+
+        window.closeViewModal = function() {
+            viewModalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        window.closeImageModal = function() {
+            imageModalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        // Click outside to close
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        viewModalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeViewModal();
+        });
+
+        imageModalOverlay.addEventListener('click', function(e) {
+            if (e.target === this) closeImageModal();
+        });
+
+        // Escape key to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeViewModal();
+                closeImageModal();
+            }
+        });
+
+        // ================================================================
+        // CSRF TOKEN
+        // ================================================================
+
+        function getCsrfToken() {
+            if (window.getCsrfToken && typeof window.getCsrfToken === 'function') {
+                return window.getCsrfToken();
+            }
+            var metaTag = document.querySelector('meta[name="csrf-token"]');
+            if (metaTag) {
+                return metaTag.getAttribute('content');
+            }
+            var cookieValue = document.cookie.match(/csrf_token=([^;]+)/);
+            if (cookieValue) {
+                return cookieValue[1];
+            }
+            return '';
+        }
+
+        // ================================================================
+        // LOADER
+        // ================================================================
+
+        function showLoader() {
+            if (loaderOverlay) {
+                loaderOverlay.classList.remove('hidden');
+                loaderOverlay.style.display = 'flex';
+            }
+        }
+
+        function hideLoader() {
+            if (loaderOverlay) {
+                loaderOverlay.classList.add('hidden');
+                setTimeout(function() {
+                    loaderOverlay.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        // ================================================================
+        // TOAST NOTIFICATIONS
+        // ================================================================
+
+        function showToast(title, message, type, duration) {
+            type = type || 'success';
+            duration = duration || 4000;
+
+            var container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            var icons = {
+                'success': '✓',
+                'error': '✗',
+                'warning': '⚠',
+                'info': 'ℹ'
+            };
+
+            var toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || 'ℹ'}</span>
+                <div class="toast-content">
+                    <div class="toast-title">${escapeHtml(title)}</div>
+                    <div class="toast-message">${escapeHtml(message)}</div>
+                </div>
+                <button class="toast-close" onclick="dismissToast(this.parentElement)">✕</button>
+                <div class="toast-progress"><div class="toast-progress-bar" style="animation-duration:${duration}ms;"></div></div>
+            `;
+
+            container.appendChild(toast);
+
+            var timeout = setTimeout(function() {
+                dismissToast(toast);
+            }, duration);
+
+            toast.addEventListener('mouseenter', function() {
+                clearTimeout(timeout);
+                var progressBar = toast.querySelector('.toast-progress-bar');
+                if (progressBar) {
+                    progressBar.style.animationPlayState = 'paused';
+                }
+            });
+
+            toast.addEventListener('mouseleave', function() {
+                var progressBar = toast.querySelector('.toast-progress-bar');
+                if (progressBar) {
+                    progressBar.style.animationPlayState = 'running';
+                }
+                timeout = setTimeout(function() {
+                    dismissToast(toast);
+                }, duration);
+            });
+        }
+
+        window.dismissToast = function(toast) {
+            if (!toast || toast.classList.contains('hiding')) return;
+            toast.classList.add('hiding');
+            setTimeout(function() {
+                if (toast.parentElement) {
+                    toast.parentElement.removeChild(toast);
+                }
+            }, 400);
+        };
+
+        // ================================================================
+        // HELPERS
+        // ================================================================
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            try {
+                var d = new Date(dateStr);
+                return d.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        // ================================================================
+        // INITIALIZE
+        // ================================================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            console.log('BRIDGE-AI Kenya Gallery Admin initialized');
+        });
+
+    })();
+</script>
+
+{% endblock %}

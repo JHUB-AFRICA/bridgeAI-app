@@ -20,7 +20,7 @@ pytest-xdist==3.5.0              # Parallel test execution
 
 Flask-DebugToolbar==0.13.1
 ipython==8.17.2                  # Interactive shell
-python-dotenv==1.0.0
+python-dotenv==1.2.2
 
 # ================================================================
 # Code Quality

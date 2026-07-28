@@ -1,13 +1,13 @@
 <!-- ================================================================ -->
 <!-- BRIDGE-AI KENYA — MODERN HOMEPAGE (FULL UPGRADE)               -->
 <!-- ================================================================ -->
-<!-- Design: Material Design + Neumorphism                           -->
+<!-- Design: Dark Background + Light Text (Minimalist)               -->
 <!-- Layout: Flexbox only, no grids                                 -->
-<!-- Hero: Image Right, Content Left (PC) / Background (Mobile)    -->
+<!-- Hero: Full Width Background with Parallax                      -->
 <!-- Font: Inter, sans-serif (uniform, no italics)                 -->
 <!-- Icons: Font Awesome 6 (Free)                                  -->
 <!-- Sections: No badge spans, all centered                        -->
-<!-- 6 Cards: 3 rows × 2 with correct redirects                   -->
+<!-- Pilot Regions: 4 cards with images (Flexbox)                  -->
 <!-- ================================================================ -->
 
 <!DOCTYPE html>
@@ -15,8 +15,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BRIDGE-AI Kenya &mdash; AI for African Agriculture</title>
-    <meta name="description" content="BRIDGE-AI Kenya at JHUB Africa: GenAI, IoT and digital skills for climate-smart mushroom farming and rural innovation in Kenya.">
+    <title>BRIDGE-AI — AI for African Agriculture</title>
+    <meta name="description" content="BRIDGE-AI: Building ResIlient Development with GEnerative AI in Education & Agriculture across Africa.">
 
     <!-- Font Awesome 6 (Free) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -33,7 +33,7 @@
         #page-loader {
             position: fixed;
             inset: 0;
-            background: #F7F2E6;
+            background: #16281A;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -51,8 +51,8 @@
         .loader-spinner {
             width: 38px;
             height: 38px;
-            border: 2.5px solid #E1D8C0;
-            border-top-color: #7C4FA3;
+            border: 2.5px solid rgba(255,255,255,0.1);
+            border-top-color: #C89BE8;
             border-radius: 50%;
             animation: loaderSpin 0.8s linear infinite;
         }
@@ -64,7 +64,7 @@
         #page-loader p {
             margin-top: 18px;
             font-size: 0.7rem;
-            color: #6E7767;
+            color: rgba(255,255,255,0.5);
             font-family: 'Inter', monospace;
             font-weight: 500;
             letter-spacing: 0.12em;
@@ -94,15 +94,13 @@
 
             --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-            --shadow-sm: 0 4px 20px rgba(23, 36, 27, 0.06);
-            --shadow-md: 0 12px 40px rgba(23, 36, 27, 0.08);
-            --shadow-lg: 0 24px 64px rgba(23, 36, 27, 0.12);
-            --shadow-neu: 8px 8px 24px rgba(23, 36, 27, 0.08), -8px -8px 24px rgba(255, 253, 247, 0.7);
+            --shadow-sm: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-md: 0 12px 40px rgba(0,0,0,0.08);
+            --shadow-lg: 0 24px 64px rgba(0,0,0,0.12);
 
             --radius-sm: 8px;
             --radius-md: 16px;
             --radius-lg: 24px;
-            --radius-xl: 32px;
 
             --transition: 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
@@ -154,13 +152,11 @@
             color: var(--ink);
             line-height: 1.08;
             letter-spacing: -0.02em;
-            font-style: normal;
         }
 
         .section-header h2 .highlight {
             color: var(--moss);
             font-weight: 800;
-            font-style: normal;
         }
 
         .section-header h2 .highlight.purple {
@@ -172,7 +168,6 @@
             color: var(--mist);
             margin-top: 14px;
             font-weight: 400;
-            font-style: normal;
         }
 
         .section-alt { background: var(--paper-alt); }
@@ -198,7 +193,6 @@
             border: none;
             cursor: pointer;
             font-family: var(--font-body);
-            font-style: normal;
         }
 
         .btn-primary:hover {
@@ -213,88 +207,44 @@
             gap: 10px;
             padding: 14px 32px;
             background: transparent;
-            color: var(--ink);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.88rem;
-            border-radius: 50px;
-            border: 1.5px solid var(--line);
-            transition: all 0.35s var(--transition);
-            cursor: pointer;
-            font-family: var(--font-body);
-            font-style: normal;
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--growlight);
-            color: var(--growlight-deep);
-            background: var(--growlight-tint);
-            transform: translateY(-3px);
-        }
-
-        .btn-light {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 32px;
-            background: rgba(255, 255, 255, 0.12);
             color: #fff;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.88rem;
             border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1.5px solid rgba(255,255,255,0.3);
             transition: all 0.35s var(--transition);
             cursor: pointer;
             font-family: var(--font-body);
-            font-style: normal;
-            backdrop-filter: blur(4px);
         }
 
-        .btn-light:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .btn-secondary:hover {
+            border-color: #fff;
+            color: #fff;
+            background: rgba(255,255,255,0.08);
             transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
         }
 
         .btn-icon { font-size: 1rem; }
 
         /* ================================================================ */
-        /* HERO — Image Right, Content Left (PC) / Background (Mobile)   */
+        /* HERO — Full Width Background + Dark Overlay                   */
         /* ================================================================ */
         .hero {
             position: relative;
-            min-height: 100vh;
-            display: flex;
-            align-items: stretch;
-            overflow: hidden;
-            background: var(--paper-card);
-        }
-
-        .hero-grid {
-            display: flex;
-            flex-wrap: wrap;
-            width: 100%;
-            min-height: 80vh;
-        }
-
-        .hero-content-wrapper {
-            flex: 1 1 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 60px 48px;
-            background: var(--paper-card);
-            order: 1;
+            overflow: hidden;
+            min-height: 100vh;
+            background: var(--moss-deep);
         }
 
         .hero-image-wrapper {
-            flex: 1 1 50%;
-            position: relative;
+            position: absolute;
+            inset: 0;
+            z-index: 0;
             overflow: hidden;
-            background: var(--moss-deep);
-            min-height: 400px;
-            order: 2;
         }
 
         .hero-image-wrapper .hero-slide-bg {
@@ -302,8 +252,8 @@
             inset: 0;
             background-size: cover;
             background-position: center;
+            will-change: transform;
             transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: opacity;
             opacity: 0;
         }
 
@@ -311,86 +261,155 @@
             opacity: 1;
         }
 
-        .hero-content {
-            max-width: 560px;
+        /* Dark Overlay - makes text readable */
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(22, 40, 26, 0.65);
+            z-index: 1;
+        }
+
+        .hero-content-wrapper {
+            position: relative;
+            z-index: 2;
             width: 100%;
+            max-width: 900px;
+            padding: 60px 40px;
+            text-align: center;
         }
 
         .hero-content h1 {
             font-size: 3.6rem;
             font-weight: 900;
-            color: var(--ink);
-            line-height: 1.04;
+            color: #fff;
+            line-height: 1.08;
             letter-spacing: -0.02em;
-            margin-bottom: 12px;
-            font-style: normal;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 30px rgba(0,0,0,0.4);
         }
 
         .hero-content h1 .highlight {
-            color: var(--moss);
+            color: #C89BE8;
             font-weight: 900;
-            font-style: normal;
         }
 
-        .hero-content .hero-subtitle {
-            font-size: 1.1rem;
-            color: var(--ink-soft);
-            line-height: 1.5;
+        .hero-content .hero-sub {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.85);
             font-weight: 500;
             margin-bottom: 6px;
-            font-style: normal;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.3);
+            letter-spacing: 0.02em;
         }
 
         .hero-content .hero-description {
-            font-size: 0.95rem;
-            color: var(--mist);
-            line-height: 1.7;
-            margin-bottom: 28px;
-            max-width: 480px;
-            font-style: normal;
+            font-size: 1.02rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.8;
+            margin: 16px auto 28px;
+            max-width: 680px;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.3);
         }
 
         .hero-buttons {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 14px;
             flex-wrap: wrap;
-            margin-bottom: 24px;
         }
 
         /* ================================================================ */
-        /* SECTION — Challenge (Centered, No Badge)                       */
+        /* PILOT REGIONS — 4 Cards (Flexbox, no grids)                   */
         /* ================================================================ */
-        .challenge-section {
-            position: relative;
+        .pilot-section {
             padding: 80px 0;
-            background: var(--paper-alt);
-            overflow: hidden;
+            background: var(--paper);
         }
 
-        .challenge-section::before {
-            content: '';
-            position: absolute;
-            right: -20%;
-            top: -20%;
-            width: 60%;
-            height: 80%;
-            background: radial-gradient(circle, rgba(124, 79, 163, 0.04) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .challenge-wrapper {
+        .pilot-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 48px;
-            align-items: center;
-            position: relative;
-            z-index: 1;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .pilot-card {
+            flex: 1 1 220px;
+            max-width: 280px;
+            min-width: 200px;
+            background: var(--paper-card);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--line);
+            transition: all 0.4s var(--transition);
+        }
+
+        .pilot-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--growlight);
+        }
+
+        .pilot-card .pilot-image {
+            height: 160px;
+            overflow: hidden;
+            background: var(--moss-deep);
+        }
+
+        .pilot-card .pilot-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s var(--transition);
+        }
+
+        .pilot-card:hover .pilot-image img {
+            transform: scale(1.05);
+        }
+
+        .pilot-card .pilot-body {
+            padding: 20px 22px 24px;
+        }
+
+        .pilot-card .pilot-body .pilot-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 2px;
+        }
+
+        .pilot-card .pilot-body .pilot-country {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--growlight-deep);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .pilot-card .pilot-body p {
+            font-size: 0.85rem;
+            color: var(--mist);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* ================================================================ */
+        /* SECTION — Challenge (Centered)                                 */
+        /* ================================================================ */
+        .challenge-section {
+            padding: 80px 0;
+            background: var(--paper-alt);
         }
 
         .challenge-text {
-            flex: 1 1 55%;
             text-align: center;
+            max-width: 760px;
+            margin: 0 auto;
         }
 
         .challenge-text h2 {
@@ -400,13 +419,11 @@
             line-height: 1.08;
             letter-spacing: -0.02em;
             margin-bottom: 16px;
-            font-style: normal;
         }
 
         .challenge-text h2 .highlight {
             color: var(--moss);
             font-weight: 800;
-            font-style: normal;
         }
 
         .challenge-text p {
@@ -414,10 +431,6 @@
             color: var(--ink-soft);
             line-height: 1.8;
             margin-bottom: 14px;
-            font-style: normal;
-            max-width: 760px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .challenge-stats {
@@ -425,7 +438,7 @@
             flex-wrap: wrap;
             gap: 40px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 24px;
         }
 
         .challenge-stat {
@@ -438,7 +451,6 @@
             color: var(--moss);
             display: block;
             line-height: 1.1;
-            font-family: var(--font-body);
         }
 
         .challenge-stat .stat-label {
@@ -448,127 +460,12 @@
             margin-top: 2px;
         }
 
-        .challenge-image {
-            flex: 1 1 35%;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            min-height: 280px;
-            background: var(--moss-deep);
-            position: relative;
-        }
-
-        .challenge-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            min-height: 280px;
-        }
-
-        /* ================================================================ */
-        /* SECTION — At a Glance (Image Left, Card Right)                 */
-        /* ================================================================ */
-        .glance-section {
-            position: relative;
-            padding: 80px 0;
-            background: var(--paper);
-            overflow: hidden;
-        }
-
-        .glance-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 48px;
-            align-items: center;
-        }
-
-        .glance-image {
-            flex: 1 1 45%;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            min-height: 300px;
-            background: var(--moss-deep);
-        }
-
-        .glance-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            min-height: 300px;
-        }
-
-        .glance-content {
-            flex: 1 1 45%;
-        }
-
-        .glance-content h2 {
-            font-size: 2.6rem;
-            font-weight: 800;
-            color: var(--ink);
-            line-height: 1.08;
-            letter-spacing: -0.02em;
-            margin-bottom: 12px;
-            font-style: normal;
-        }
-
-        .glance-content h2 .highlight {
-            color: var(--moss);
-            font-weight: 800;
-            font-style: normal;
-        }
-
-        .glance-content p {
-            font-size: 1.02rem;
-            color: var(--ink-soft);
-            line-height: 1.8;
-            margin-bottom: 16px;
-            font-style: normal;
-        }
-
-        .glance-features {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .glance-feature {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 18px;
-            background: var(--paper-card);
-            border-radius: var(--radius-sm);
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--line);
-            transition: all 0.3s var(--transition);
-        }
-
-        .glance-feature:hover {
-            transform: translateX(6px);
-            border-color: var(--growlight);
-        }
-
-        .glance-feature i {
-            font-size: 1.4rem;
-            color: var(--growlight-deep);
-            width: 30px;
-            text-align: center;
-        }
-
-        .glance-feature span {
-            font-size: 0.95rem;
-            color: var(--ink-soft);
-            font-weight: 500;
-            font-style: normal;
-        }
-
         /* ================================================================ */
         /* JKUAT ROLE — 6 Cards (3 rows × 2)                              */
         /* ================================================================ */
         .jkuat-section {
             padding: 80px 0;
-            background: var(--paper-alt);
+            background: var(--paper);
         }
 
         .jkuat-grid {
@@ -582,7 +479,7 @@
             min-width: 280px;
             border-radius: var(--radius-md);
             overflow: hidden;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-sm);
             transition: all 0.4s var(--transition);
             background: var(--paper-card);
             border: 1px solid var(--line);
@@ -626,7 +523,6 @@
             padding: 3px 14px;
             border-radius: 50px;
             margin-bottom: 10px;
-            font-family: var(--font-body);
         }
 
         .jkuat-card .card-body h3 {
@@ -634,7 +530,6 @@
             font-weight: 700;
             color: var(--ink);
             margin-bottom: 8px;
-            font-style: normal;
         }
 
         .jkuat-card .card-body p {
@@ -642,7 +537,6 @@
             color: var(--mist);
             line-height: 1.7;
             margin-bottom: 14px;
-            font-style: normal;
         }
 
         .jkuat-card .card-body .card-link {
@@ -653,7 +547,6 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s var(--transition);
-            font-style: normal;
         }
 
         .jkuat-card .card-body .card-link:hover {
@@ -675,8 +568,8 @@
             content: '';
             position: absolute;
             inset: 0;
-            background-image: linear-gradient(rgba(247, 242, 230, 0.04) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(247, 242, 230, 0.04) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(247,242,230,0.04) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(247,242,230,0.04) 1px, transparent 1px);
             background-size: 48px 48px;
             pointer-events: none;
         }
@@ -706,7 +599,6 @@
             color: var(--paper);
             display: block;
             line-height: 1.1;
-            font-family: var(--font-body);
             letter-spacing: -1px;
         }
 
@@ -722,7 +614,6 @@
             font-weight: 500;
             margin-top: 6px;
             display: block;
-            font-family: var(--font-body);
         }
 
         /* ================================================================ */
@@ -754,13 +645,11 @@
             font-weight: 700;
             color: var(--ink);
             margin-top: 4px;
-            font-style: normal;
         }
 
         .col-heading h2 .accent {
             color: var(--moss);
             font-weight: 700;
-            font-style: normal;
         }
 
         .col-heading h2 .accent.purple {
@@ -806,7 +695,6 @@
             letter-spacing: 0.04em;
             color: var(--paper);
             background: var(--moss);
-            font-family: var(--font-body);
         }
 
         .activity-item .activity-meta {
@@ -821,7 +709,6 @@
             font-size: 0.68rem;
             color: var(--mist);
             font-weight: 500;
-            font-family: var(--font-body);
         }
 
         .activity-item .activity-meta .tag {
@@ -834,7 +721,6 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.04em;
-            font-family: var(--font-body);
         }
 
         .activity-item h4 {
@@ -842,7 +728,6 @@
             font-weight: 700;
             color: var(--ink);
             margin-bottom: 3px;
-            font-style: normal;
         }
 
         .activity-item p {
@@ -850,7 +735,6 @@
             font-size: 0.85rem;
             line-height: 1.6;
             margin: 0;
-            font-style: normal;
         }
 
         .event-item {
@@ -880,7 +764,6 @@
             border-radius: var(--radius-sm);
             min-width: 50px;
             flex-shrink: 0;
-            font-family: var(--font-body);
         }
 
         .event-item .event-date .day {
@@ -888,7 +771,6 @@
             font-weight: 700;
             display: block;
             line-height: 1.1;
-            font-family: var(--font-body);
         }
 
         .event-item .event-date .month {
@@ -897,7 +779,6 @@
             text-transform: uppercase;
             letter-spacing: 0.06em;
             display: block;
-            font-family: var(--font-body);
         }
 
         .event-item .event-info { flex: 1; }
@@ -906,14 +787,12 @@
             font-weight: 700;
             color: var(--ink);
             margin: 0;
-            font-style: normal;
         }
 
         .event-item .event-info p {
             color: var(--mist);
             font-size: 0.78rem;
             margin: 0;
-            font-style: normal;
         }
 
         .event-item .event-status {
@@ -926,7 +805,6 @@
             background: var(--moss-mid);
             color: #fff;
             flex-shrink: 0;
-            font-family: var(--font-body);
         }
 
         .event-item .event-status.soon { background: var(--clay); }
@@ -941,8 +819,6 @@
             font-size: 0.9rem;
             text-decoration: none;
             transition: all 0.3s var(--transition);
-            font-family: var(--font-body);
-            font-style: normal;
         }
 
         .view-all:hover { gap: 12px; color: var(--growlight-deep); }
@@ -963,7 +839,7 @@
             position: absolute;
             inset: 0;
             background: url('https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1600&q=80') center/cover no-repeat;
-            opacity: 0.08;
+            opacity: 0.06;
             pointer-events: none;
         }
 
@@ -977,7 +853,6 @@
             font-weight: 800;
             color: var(--paper);
             margin-bottom: 12px;
-            font-style: normal;
         }
 
         .cta-section p {
@@ -985,7 +860,6 @@
             color: rgba(247, 242, 230, 0.7);
             max-width: 520px;
             margin: 0 auto 32px;
-            font-style: normal;
         }
 
         .cta-buttons {
@@ -1000,53 +874,24 @@
         /* RESPONSIVE                                                       */
         /* ================================================================ */
         @media (max-width: 1024px) {
-            .hero-content-wrapper { padding: 40px 32px; }
             .hero-content h1 { font-size: 2.8rem; }
             .section-header h2 { font-size: 2.2rem; }
             .challenge-text h2 { font-size: 2.2rem; }
-            .glance-content h2 { font-size: 2.2rem; }
             .challenge-stats { gap: 24px; }
             .challenge-stat .stat-number { font-size: 1.8rem; }
             .counter-item { flex: 1 1 calc(33.333% - 1px); }
             .cta-section h2 { font-size: 2.2rem; }
             .jkuat-card { flex: 1 1 calc(50% - 15px); }
+            .pilot-card { flex: 1 1 calc(50% - 15px); max-width: none; }
         }
 
         @media (max-width: 768px) {
             body { padding-top: 64px; }
 
-            .hero-content-wrapper {
-                flex: 1 1 100%;
-                padding: 40px 24px;
-                order: 1;
-                min-height: 60vh;
-                position: relative;
-                z-index: 2;
-                background: rgba(255, 253, 247, 0.85);
-                backdrop-filter: blur(8px);
-                -webkit-backdrop-filter: blur(8px);
-            }
-
-            .hero-image-wrapper {
-                flex: 1 1 100%;
-                position: absolute;
-                inset: 0;
-                min-height: 100%;
-                max-height: 100%;
-                order: 0;
-                z-index: 1;
-            }
-
-            .hero-image-wrapper .hero-slide-bg {
-                position: absolute;
-                inset: 0;
-                background-size: cover;
-                background-position: center;
-            }
-
+            .hero-content-wrapper { padding: 40px 24px; }
             .hero-content h1 { font-size: 2.2rem; }
-            .hero-content .hero-subtitle { font-size: 1rem; }
-            .hero-content .hero-description { font-size: 0.9rem; }
+            .hero-content .hero-sub { font-size: 1rem; }
+            .hero-content .hero-description { font-size: 0.92rem; }
             .hero-buttons { flex-direction: column; width: 100%; }
             .hero-buttons .btn-primary,
             .hero-buttons .btn-secondary { width: 100%; justify-content: center; }
@@ -1056,14 +901,9 @@
 
             .challenge-section { padding: 60px 0; }
             .challenge-text h2 { font-size: 1.8rem; }
-            .challenge-wrapper { flex-direction: column; }
-            .challenge-image { flex: 1 1 100%; min-height: 200px; }
 
-            .glance-section { padding: 60px 0; }
-            .glance-wrapper { flex-direction: column; }
-            .glance-image { flex: 1 1 100%; min-height: 200px; }
-            .glance-content { flex: 1 1 100%; }
-            .glance-content h2 { font-size: 1.8rem; }
+            .pilot-section { padding: 60px 0; }
+            .pilot-card { flex: 1 1 100%; max-width: 360px; }
 
             .jkuat-section { padding: 60px 0; }
             .jkuat-card { flex: 1 1 100%; }
@@ -1089,17 +929,17 @@
 
         @media (max-width: 480px) {
             .hero-content h1 { font-size: 1.8rem; }
-            .hero-content .hero-subtitle { font-size: 0.9rem; }
+            .hero-content .hero-sub { font-size: 0.9rem; }
             .hero-content .hero-description { font-size: 0.85rem; }
             .container { padding: 0 16px; }
             .section-header h2 { font-size: 1.5rem; }
             .challenge-text h2 { font-size: 1.5rem; }
-            .glance-content h2 { font-size: 1.5rem; }
             .cta-section h2 { font-size: 1.5rem; }
             .jkuat-card .card-body { padding: 20px; }
-            .glance-feature { padding: 10px 14px; }
-            .glance-feature i { font-size: 1.2rem; }
-            .glance-feature span { font-size: 0.85rem; }
+            .pilot-card .pilot-body { padding: 16px 18px 20px; }
+            .hero-content-wrapper { padding: 30px 20px; }
+            .hero-buttons .btn-primary,
+            .hero-buttons .btn-secondary { padding: 12px 16px; font-size: 0.85rem; }
         }
 
         /* ================================================================ */
@@ -1114,15 +954,10 @@
 
         .btn-primary:focus-visible,
         .btn-secondary:focus-visible,
-        .btn-light:focus-visible,
         .view-all:focus-visible,
         .card-link:focus-visible {
             outline: 2px solid var(--growlight);
             outline-offset: 2px;
-        }
-
-        @media (prefers-contrast: high) {
-            .feature-card, .doing-card, .event-item { border: 2px solid var(--line); }
         }
 
         /* ================================================================ */
@@ -1155,110 +990,138 @@
     <main>
 
         <!-- ============================================================ -->
-        <!-- HERO — Image Right, Content Left (PC) / Background (Mobile) -->
+        <!-- HERO — Full Width Background + Dark Overlay                 -->
         <!-- ============================================================ -->
         <section class="hero" id="heroSection">
-            <div class="hero-grid">
+            <div class="hero-image-wrapper" id="heroImageWrapper">
+                <div id="heroSlidesContainer">
+                    <!-- Single image populated by JavaScript -->
+                </div>
+            </div>
+            <div class="hero-content-wrapper">
+                <div class="hero-content">
+                    <h1>
+                        BRIDGE-AI
+                    </h1>
+                    <p style="color:rgba(255,255,255,0.7); font-size:1.1rem; font-weight:500; letter-spacing:0.04em; margin-bottom:4px;">
+                        Building ResIlient Development with<br>
+                        GEnerative AI in Education &amp; Agriculture
+                    </p>
+                    <h1 style="font-size:2.8rem; margin-top:4px;">
+                        <span class="highlight">Transforming</span> African Agriculture
+                    </h1>
 
-                <!-- Left: Content -->
-                <div class="hero-content-wrapper">
-                    <div class="hero-content">
-                        <h1>
-                            BRIDGE-AI<br>
-                            <span class="highlight">Kenya at JKUAT</span>
-                        </h1>
+                    <p class="hero-sub">
+                        GenAI, IoT and digital skills for climate-smart farming.
+                    </p>
 
-                        <p class="hero-subtitle">
-                            GenAI, IoT and digital skills for climate-smart farming.
-                        </p>
+                    <p class="hero-description">
+                        BRIDGE-AI is building a climate-resilient agricultural future across Africa.
+                        By combining generative AI, IoT sensing, and digital shadow technology,
+                        we're empowering farmers, youth, and SMEs with the tools and skills
+                        they need to thrive.
+                    </p>
 
-                        <p class="hero-description">
-                            Exploring how AI, sensor data, and inclusive training help farmers, youth, and SMEs adopt practical digital agriculture solutions.
-                        </p>
-
-                        <div class="hero-buttons">
-                            <a href="{{ url_for('public.smart_mushrooms') }}" class="btn-primary">
-                                <i class="fas fa-seedling btn-icon"></i>
-                                Smart-Mushrooms Pilot
-                            </a>
-                            <a href="{{ url_for('public.training_wp5') }}" class="btn-secondary">
-                                <i class="fas fa-graduation-cap btn-icon"></i>
-                                Training
-                            </a>
-                        </div>
+                    <div class="hero-buttons">
+                        <a href="{{ url_for('public.smart_mushrooms') }}" class="btn-primary">
+                            <i class="fas fa-seedling btn-icon"></i>
+                            Smart-Mushrooms Pilot
+                        </a>
+                        <a href="{{ url_for('public.training_wp5') }}" class="btn-secondary">
+                            <i class="fas fa-graduation-cap btn-icon"></i>
+                            Training
+                        </a>
                     </div>
                 </div>
-
-                <!-- Right: Image -->
-                <div class="hero-image-wrapper" id="heroImageWrapper">
-                    <div id="heroSlidesContainer">
-                        <!-- Single image populated by JavaScript -->
-                    </div>
-                </div>
-
             </div>
         </section>
 
         <!-- ============================================================ -->
-        <!-- THE CHALLENGE (Centered, No Badge)                          -->
+        <!-- PILOT REGIONS — 4 Cards (Flexbox, no grids)                 -->
+        <!-- ============================================================ -->
+        <section class="pilot-section" id="pilot-regions">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Pilot <span class="highlight">Regions</span></h2>
+                    <p>BRIDGE-AI validates its solutions in real agriculture systems across Africa</p>
+                </div>
+                <div class="pilot-grid">
+                    <!-- Maize | Nigeria -->
+                    <div class="pilot-card">
+                        <div class="pilot-image">
+                            <img src="https://images.unsplash.com/photo-1536315238512-4c8ceb9af5f0?w=600&q=80" alt="Maize farming in Nigeria" loading="lazy">
+                        </div>
+                        <div class="pilot-body">
+                            <span class="pilot-title">Maize</span>
+                            <span class="pilot-country"><i class="fas fa-map-pin" style="margin-right:4px;"></i> Nigeria</span>
+                            <p>Maize production, with tools for seasonal planning and climate adaptation.</p>
+                        </div>
+                    </div>
+
+                    <!-- Mushroom | Kenya -->
+                    <div class="pilot-card">
+                        <div class="pilot-image">
+                            <img src="https://images.unsplash.com/photo-1598023696416-0193a0bcd302?w=600&q=80" alt="Mushroom cultivation in Kenya" loading="lazy">
+                        </div>
+                        <div class="pilot-body">
+                            <span class="pilot-title">Mushroom</span>
+                            <span class="pilot-country"><i class="fas fa-map-pin" style="margin-right:4px;"></i> Kenya</span>
+                            <p>Mushroom cultivation in microclimates with environmental monitoring and yield prediction.</p>
+                        </div>
+                    </div>
+
+                    <!-- Pasture | Tunisia -->
+                    <div class="pilot-card">
+                        <div class="pilot-image">
+                            <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80" alt="Pasture in Tunisia" loading="lazy">
+                        </div>
+                        <div class="pilot-body">
+                            <span class="pilot-title">Pasture</span>
+                            <span class="pilot-country"><i class="fas fa-map-pin" style="margin-right:4px;"></i> Tunisia</span>
+                            <p>Environmental information and digital tools to help farmers better understand pasture growth.</p>
+                        </div>
+                    </div>
+
+                    <!-- Pomegranate | Tunisia -->
+                    <div class="pilot-card">
+                        <div class="pilot-image">
+                            <img src="https://images.unsplash.com/photo-1541344999736-2b9d6a8c5d3e?w=600&q=80" alt="Pomegranate in Tunisia" loading="lazy">
+                        </div>
+                        <div class="pilot-body">
+                            <span class="pilot-title">Pomegranate</span>
+                            <span class="pilot-country"><i class="fas fa-map-pin" style="margin-right:4px;"></i> Tunisia</span>
+                            <p>Data-driven recommendations on irrigation, biomass and crop care to increase pomegranate productivity.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- THE CHALLENGE (Centered)                                     -->
         <!-- ============================================================ -->
         <section class="challenge-section" id="challenge">
             <div class="container">
-                <div class="challenge-wrapper">
-                    <div class="challenge-text">
-                        <h2>The <span class="highlight">Challenge</span></h2>
-                        <p>
-                            Agriculture in Africa is highly dependent on rainfall, with more than 95% of cultivated land relying on it. This makes farmers particularly vulnerable to climate variability and extreme weather conditions.
-                        </p>
-                        <p>
-                            Limited access to irrigation systems, advisory services and digital tools further constrains productivity and innovation. While artificial intelligence offers strong potential, many solutions remain inaccessible or not adapted to local needs.
-                        </p>
-                        <div class="challenge-stats">
-                            <div class="challenge-stat">
-                                <span class="stat-number">95%</span>
-                                <span class="stat-label">Rain-fed Agriculture</span>
-                            </div>
-                            <div class="challenge-stat">
-                                <span class="stat-number">3</span>
-                                <span class="stat-label">Pilot Countries</span>
-                            </div>
-                            <div class="challenge-stat">
-                                <span class="stat-number">400K+</span>
-                                <span class="stat-label">Farmers Reached</span>
-                            </div>
+                <div class="challenge-text">
+                    <h2>The <span class="highlight">Challenge</span></h2>
+                    <p>
+                        Agriculture in Africa is highly dependent on rainfall, with more than 95% of cultivated land relying on it. This makes farmers particularly vulnerable to climate variability and extreme weather conditions.
+                    </p>
+                    <p>
+                        Limited access to irrigation systems, advisory services and digital tools further constrains productivity and innovation. While artificial intelligence offers strong potential, many solutions remain inaccessible or not adapted to local needs.
+                    </p>
+                    <div class="challenge-stats">
+                        <div class="challenge-stat">
+                            <span class="stat-number">95%</span>
+                            <span class="stat-label">Rain-fed Agriculture</span>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================================================ -->
-        <!-- BRIDGE-AI AT A GLANCE (Image Left, Card Right)              -->
-        <!-- ============================================================ -->
-        <section class="glance-section" id="glance">
-            <div class="container">
-                <div class="glance-wrapper">
-                    <div class="glance-image">
-                        <img src="https://images.unsplash.com/photo-1578574577315-3fbeb0cecd5c?w=800&q=80" alt="BRIDGE-AI Technology" loading="lazy">
-                    </div>
-                    <div class="glance-content">
-                        <h2>BRIDGE-AI <span class="highlight">in Action</span></h2>
-                        <p>
-                            Combining Generative AI, satellite data and field sensors to support farmers in their daily decisions.
-                        </p>
-                        <div class="glance-features">
-                            <div class="glance-feature">
-                                <i class="fas fa-microchip"></i>
-                                <span>Generative AI solutions for daily decisions</span>
-                            </div>
-                            <div class="glance-feature">
-                                <i class="fas fa-satellite"></i>
-                                <span>Satellite data and field sensors integration</span>
-                            </div>
-                            <div class="glance-feature">
-                                <i class="fas fa-globe-africa"></i>
-                                <span>Validation in Kenya, Tunisia and Nigeria</span>
-                            </div>
+                        <div class="challenge-stat">
+                            <span class="stat-number">3</span>
+                            <span class="stat-label">Pilot Countries</span>
+                        </div>
+                        <div class="challenge-stat">
+                            <span class="stat-number">400K+</span>
+                            <span class="stat-label">Farmers Reached</span>
                         </div>
                     </div>
                 </div>
@@ -1573,8 +1436,7 @@
             function loadLatestImage() {
                 if (!container) return;
 
-                // Show loading state with paper color
-                container.innerHTML = `<div class="hero-slide-bg" style="background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Crect width="100" height="100" fill="%23F7F2E6"/%3E%3C/svg%3E');"></div>`;
+                container.innerHTML = `<div class="hero-slide-bg" style="background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Crect width="100" height="100" fill="%2316281A"/%3E%3C/svg%3E');"></div>`;
 
                 fetch('/api/activities/images/', {
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -1607,23 +1469,37 @@
                         };
                         img.onerror = function() {
                             container.innerHTML = `
-                                <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=1200&h=1200&fit=crop&crop=center&auto=format');"></div>
+                                <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=1600&q=80');"></div>
                             `;
                         };
                         img.src = imageUrl;
 
                     } else {
                         container.innerHTML = `
-                            <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=1200&h=1200&fit=crop&crop=center&auto=format');"></div>
+                            <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=1600&q=80');"></div>
                         `;
                     }
                 })
                 .catch(function(error) {
                     console.warn('Failed to load image, using fallback:', error);
                     container.innerHTML = `
-                        <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=1200&h=1200&fit=crop&crop=center&auto=format');"></div>
+                        <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=1600&q=80');"></div>
                     `;
                 });
+            }
+
+            // ================================================================
+            // PARALLAX EFFECT
+            // ================================================================
+            function initParallax() {
+                const heroBg = document.querySelector('.hero-image-wrapper .hero-slide-bg.active');
+                if (!heroBg) return;
+
+                window.addEventListener('scroll', function() {
+                    const scrolled = window.pageYOffset;
+                    const rate = scrolled * 0.4;
+                    heroBg.style.transform = 'translateY(' + rate + 'px)';
+                }, { passive: true });
             }
 
             // ================================================================
@@ -1700,13 +1576,16 @@
 
             loadLatestImage();
 
+            // Wait for image to load then init parallax
+            setTimeout(initParallax, 1500);
+
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', animateCounters);
             } else {
                 animateCounters();
             }
 
-            console.log('BRIDGE-AI Kenya Homepage initialized (Full Upgrade)');
+            console.log('BRIDGE-AI Homepage initialized (Dark Background + Light Text)');
 
         })();
     </script>

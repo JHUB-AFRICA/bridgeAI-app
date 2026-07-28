@@ -1,9 +1,11 @@
 <!-- ================================================================ -->
-<!-- BRIDGE-AI KENYA - ABOUT PAGE                                    -->
+<!-- BRIDGE-AI — ABOUT PAGE (UPGRADED)                               -->
 <!-- ================================================================ -->
-<!-- Premium editorial design with full-width hero image            -->
-<!-- Font: Roboto Slab (display) + Work Sans (body)                 -->
-<!-- Visual: Full-bleed hero · Sticky section nav · Clear hierarchy -->
+<!-- Purpose: Official project overview explaining GenAI, IoT,       -->
+<!-- Digital Shadows, EO and FIWARE/NGSI-LD in accessible language   -->
+<!-- Components: Official summary, objectives, countries, use cases, -->
+<!-- technology explainer, project timeline                          -->
+<!-- Layout: Flexbox only, no grids, modern creative cards          -->
 <!-- ================================================================ -->
 
 <!DOCTYPE html>
@@ -11,12 +13,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About BRIDGE-AI - BRIDGE-AI Kenya</title>
-    <meta name="description" content="Learn about BRIDGE-AI - Building ResIlient Development with GEnerative AI in Education & Agriculture, a Horizon Europe project operating across Kenya, Tunisia and Nigeria.">
+    <title>About BRIDGE-AI — Building ResIlient Development with GEnerative AI</title>
+    <meta name="description" content="BRIDGE-AI: A Horizon Europe project using Generative AI, IoT, and Earth Observation to support farmers and sustainable agriculture across Africa.">
 
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
         /* ================================================================ */
@@ -25,7 +31,7 @@
         #page-loader {
             position: fixed;
             inset: 0;
-            background: #faf8f2;
+            background: #16281A;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -40,182 +46,278 @@
             pointer-events: none;
         }
 
-        .loader-mark {
-            position: relative;
-            width: 46px;
-            height: 46px;
+        .loader-spinner {
+            width: 38px;
+            height: 38px;
+            border: 2.5px solid rgba(255,255,255,0.1);
+            border-top-color: #C89BE8;
+            border-radius: 50%;
+            animation: loaderSpin 0.8s linear infinite;
         }
 
-        .loader-mark svg { width: 100%; height: 100%; }
-
-        .loader-mark circle {
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .loader-mark .track {
-            stroke: #ddd5bf;
-        }
-
-        .loader-mark .sweep {
-            stroke: #c8952f;
-            stroke-linecap: round;
-            stroke-dasharray: 130;
-            stroke-dashoffset: 130;
-            transform-origin: center;
-            transform: rotate(-90deg);
-            animation: loaderSweep 1.3s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-        }
-
-        @keyframes loaderSweep {
-            0%   { stroke-dashoffset: 130; }
-            50%  { stroke-dashoffset: 20; }
-            100% { stroke-dashoffset: -130; }
+        @keyframes loaderSpin {
+            to { transform: rotate(360deg); }
         }
 
         #page-loader p {
             margin-top: 18px;
-            font-size: 0.68rem;
-            color: #6b6252;
-            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.5);
+            font-family: 'Inter', monospace;
             font-weight: 500;
-            letter-spacing: 0.14em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
         }
 
         /* ================================================================ */
-        /* DESIGN TOKENS                                                   */
+        /* ROOT VARIABLES                                                  */
         /* ================================================================ */
         :root {
-            --ink: #241d15;
-            --loam: #1a140d;
-            --loam-2: #251c12;
-            --stone: #eae4d4;
-            --paper: #faf8f2;
-            --gold: #c8952f;
-            --gold-soft: #e7c778;
-            --moss: #43593f;
-            --teal: #1e5955;
-            --teal-soft: #2c7772;
-            --line: #ddd5bf;
-            --line-dark: rgba(255, 255, 255, 0.14);
+            --ink: #17241B;
+            --ink-soft: #2D3D35;
+            --paper: #F7F2E6;
+            --paper-alt: #EFE6CE;
+            --paper-card: #FFFDF7;
+            --moss: #26432B;
+            --moss-deep: #16281A;
+            --moss-mid: #3E6B45;
+            --growlight: #7C4FA3;
+            --growlight-deep: #5B3878;
+            --growlight-tint: rgba(124, 79, 163, 0.09);
+            --clay: #BE5A2B;
+            --clay-tint: rgba(190, 90, 43, 0.1);
+            --mist: #6E7767;
+            --line: #E1D8C0;
+            --gold: #C89B3C;
+            --gold-soft: #D4B06A;
 
-            --font-display: 'Roboto Slab', Georgia, serif;
-            --font-body: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
-            --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-            --header-h: 72px;
+            --shadow-sm: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-md: 0 12px 40px rgba(0,0,0,0.08);
+            --shadow-lg: 0 24px 64px rgba(0,0,0,0.12);
+            --shadow-neu: 8px 8px 24px rgba(23, 36, 27, 0.08), -8px -8px 24px rgba(255, 253, 247, 0.7);
+
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+
+            --transition: 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* ================================================================ */
+        /* RESET & BASE                                                    */
+        /* ================================================================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: var(--font-body);
-            color: var(--ink);
+            color: var(--ink-soft);
             background: var(--paper);
-            line-height: 1.6;
-            padding-top: var(--header-h);
+            line-height: 1.7;
+            padding-top: 80px;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        h1, h2, h3, h4 {
-            font-family: var(--font-display);
+        img { max-width: 100%; height: auto; display: block; }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 28px;
         }
 
-        a { color: inherit; }
-        img { max-width: 100%; display: block; }
-
-        @media (prefers-reduced-motion: reduce) {
-            * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
-            .reveal { opacity: 1 !important; transform: none !important; }
-        }
-
-        a:focus-visible,
-        button:focus-visible {
-            outline: 2px solid var(--gold);
-            outline-offset: 2px;
-        }
+        ::selection { background: var(--growlight); color: #fff; }
 
         /* ================================================================ */
-        /* SHARED ELEMENTS                                                 */
+        /* TYPOGRAPHY — No Italics                                         */
         /* ================================================================ */
-        .eyebrow {
+        h1, h2, h3, h4, h5, h6, p, span, a, li {
+            font-family: var(--font-body);
+            font-style: normal;
+        }
+
+        .section-header {
+            max-width: 720px;
+            margin: 0 auto 48px;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+        }
+
+        .section-header h2 .highlight {
+            color: var(--moss);
+            font-weight: 800;
+        }
+
+        .section-header h2 .highlight.purple {
+            color: var(--growlight-deep);
+        }
+
+        .section-header p {
+            font-size: 1.05rem;
+            color: var(--mist);
+            margin-top: 14px;
+            font-weight: 400;
+        }
+
+        .section-alt { background: var(--paper-alt); }
+        .section-dark { background: var(--moss-deep); color: var(--paper); }
+        .section-dark .section-header h2 { color: var(--paper); }
+        .section-dark .section-header p { color: rgba(247, 242, 230, 0.7); }
+
+        /* ================================================================ */
+        /* BUTTONS                                                         */
+        /* ================================================================ */
+        .btn-primary {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            font-family: var(--font-mono);
-            color: var(--gold);
-            font-size: 0.72rem;
+            gap: 10px;
+            padding: 14px 32px;
+            background: var(--moss);
+            color: var(--paper);
+            text-decoration: none;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.4px;
-            margin-bottom: 14px;
+            font-size: 0.88rem;
+            border-radius: 50px;
+            transition: all 0.35s var(--transition);
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-body);
         }
 
-        .eyebrow::before {
-            content: '';
-            width: 18px;
-            height: 2px;
-            background: var(--gold);
-            display: inline-block;
+        .btn-primary:hover {
+            background: var(--moss-deep);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(22, 40, 26, 0.3);
         }
 
-        .eyebrow.on-dark { color: var(--gold-soft); }
-        .eyebrow.on-dark::before { background: var(--gold-soft); }
-
-        .photo-frame {
-            position: relative;
-            border-radius: 4px;
-            overflow: hidden;
-            background: linear-gradient(135deg, var(--teal) 0%, var(--loam) 100%);
-        }
-
-        .photo-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .photo-frame::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 22px;
-            height: 22px;
-            border-top: 2px solid rgba(250, 248, 242, 0.75);
-            border-left: 2px solid rgba(250, 248, 242, 0.75);
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .photo-caption {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 14px 16px 12px;
-            background: linear-gradient(0deg, rgba(20, 15, 8, 0.82) 0%, rgba(20, 15, 8, 0) 100%);
-            color: #f3ecd8;
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            letter-spacing: 0.3px;
-        }
-
-        /* A single, honest numeral treatment used for both objectives and
-           timeline milestones — no fake gauges, just clear ordinal marks
-           where order is real (a 6-point list, a 5-phase schedule). */
-        .num-badge {
+        .btn-secondary {
             display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: transparent;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            border-radius: 50px;
+            border: 1.5px solid rgba(255,255,255,0.3);
+            transition: all 0.35s var(--transition);
+            cursor: pointer;
+            font-family: var(--font-body);
+        }
+
+        .btn-secondary:hover {
+            border-color: #fff;
+            color: #fff;
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-3px);
+        }
+
+        .btn-icon { font-size: 1rem; }
+
+        /* ================================================================ */
+        /* HERO — Full Width Background                                   */
+        /* ================================================================ */
+        .hero {
+            position: relative;
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-family: var(--font-mono);
-            font-weight: 600;
-            flex-shrink: 0;
+            overflow: hidden;
+            min-height: 85vh;
+            background: var(--moss-deep);
+        }
+
+        .hero-image-wrapper {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .hero-image-wrapper .hero-slide-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            will-change: transform;
+            transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+
+        .hero-image-wrapper .hero-slide-bg.active {
+            opacity: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(22, 40, 26, 0.6);
+            z-index: 1;
+        }
+
+        .hero-content-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 900px;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3.6rem;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+        }
+
+        .hero-content h1 .highlight {
+            color: #C89BE8;
+            font-weight: 900;
+        }
+
+        .hero-content .hero-sub {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.85);
+            font-weight: 500;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.3);
+            letter-spacing: 0.02em;
+        }
+
+        .hero-content .hero-description {
+            font-size: 1.02rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.8;
+            margin: 16px auto 28px;
+            max-width: 680px;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.3);
+        }
+
+        .hero-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
         }
 
         /* ================================================================ */
@@ -223,790 +325,642 @@
         /* ================================================================ */
         .section-nav {
             position: sticky;
-            top: var(--header-h);
+            top: 80px;
             z-index: 40;
-            background: rgba(250, 248, 242, 0.92);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 253, 247, 0.92);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--line);
         }
 
         .section-nav-inner {
-            max-width: 1240px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 0 28px;
             display: flex;
+            flex-wrap: wrap;
             gap: 4px;
-            overflow-x: auto;
-            scrollbar-width: none;
+            justify-content: center;
         }
-
-        .section-nav-inner::-webkit-scrollbar { display: none; }
 
         .section-nav a {
-            flex-shrink: 0;
             display: inline-flex;
             align-items: center;
-            padding: 15px 18px;
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
+            padding: 14px 20px;
+            font-size: 0.7rem;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: #6b6252;
+            color: var(--mist);
             text-decoration: none;
             border-bottom: 2px solid transparent;
-            transition: color 0.2s ease, border-color 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .section-nav a:hover { color: var(--ink); }
-
-        .section-nav a.active {
-            color: var(--teal);
-            border-bottom-color: var(--gold);
-        }
-
-        /* ================================================================ */
-        /* PREMIUM HERO — Full-Width Image with Overlay                   */
-        /* ================================================================ */
-        .page-hero {
-            position: relative;
-            min-height: 70vh;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-            background: var(--loam);
-        }
-
-        .page-hero .hero-bg {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            background-image: url('/static/uploads/DSC_4012-scaled.jpg');
-            background-size: cover;
-            background-position: center;
-            transform: scale(1.02);
-            transition: transform 20s ease;
-            filter: brightness(0.6) contrast(1.05);
-        }
-
-        .page-hero:hover .hero-bg {
-            transform: scale(1);
-        }
-
-        .page-hero .hero-overlay {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            background:
-                linear-gradient(160deg, rgba(26, 20, 13, 0.70) 0%, rgba(26, 20, 13, 0.45) 50%, rgba(30, 89, 85, 0.20) 100%);
-        }
-
-        .page-hero .hero-accent {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            z-index: 2;
-            background: linear-gradient(90deg, var(--gold) 0%, var(--gold-soft) 50%, var(--gold) 100%);
-            opacity: 0.5;
-        }
-
-        .page-hero-inner {
-            position: relative;
-            z-index: 2;
-            max-width: 820px;
-            margin: 0 auto;
-            padding: 60px 24px;
-            text-align: center;
-        }
-
-        .page-hero .breadcrumb {
-            color: #a89a7d;
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            margin-bottom: 22px;
-            letter-spacing: 0.3px;
-        }
-
-        .page-hero .breadcrumb a {
-            color: var(--gold-soft);
-            text-decoration: none;
-        }
-
-        .page-hero .breadcrumb a:hover {
-            color: #ffffff;
-            text-decoration: underline;
-        }
-
-        .page-hero h1 {
-            font-size: clamp(2.8rem, 5.5vw, 4.2rem);
-            font-weight: 800;
-            color: #f7f2e2;
-            letter-spacing: -0.5px;
-            line-height: 1.05;
-            margin-bottom: 16px;
-        }
-
-        .page-hero h1 .highlight {
-            color: var(--gold-soft);
-        }
-
-        .page-hero .hero-subtitle {
-            font-size: 1.2rem;
-            color: #c7bda2;
-            max-width: 620px;
-            margin: 0 auto 16px;
-            line-height: 1.6;
-        }
-
-        .page-hero .hero-desc {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.5);
-            max-width: 560px;
-            margin: 0 auto 32px;
-            line-height: 1.7;
-        }
-
-        /* ─── Hero Stats Row ─── */
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 48px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding-top: 24px;
-        }
-
-        .hero-stats .stat-item {
-            text-align: center;
-        }
-
-        .hero-stats .stat-number {
-            font-family: var(--font-mono);
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--gold-soft);
-            display: block;
-            line-height: 1.1;
-        }
-
-        .hero-stats .stat-label {
-            color: #a89a7d;
-            font-size: 0.72rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-
-        /* ─── Hero CTA ─── */
-        .hero-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 8px;
-            padding: 14px 36px;
-            background: var(--gold);
-            color: var(--loam);
-            font-weight: 600;
-            font-size: 0.95rem;
-            text-decoration: none;
-            border-radius: 60px;
-            transition: all 0.25s ease;
+            transition: all 0.25s var(--transition);
             font-family: var(--font-body);
         }
 
-        .hero-cta:hover {
-            background: var(--gold-soft);
-            transform: translateY(-3px);
-            box-shadow: 0 16px 48px rgba(200, 149, 47, 0.35);
-        }
-
-        .hero-cta .cta-arrow {
-            transition: transform 0.25s ease;
-            display: inline-block;
-        }
-
-        .hero-cta:hover .cta-arrow {
-            transform: translateX(6px);
+        .section-nav a:hover { color: var(--ink); }
+        .section-nav a.active {
+            color: var(--moss);
+            border-bottom-color: var(--gold);
         }
 
         /* ================================================================ */
         /* SECTION COMMON                                                 */
         /* ================================================================ */
         .section {
-            padding: 84px 24px;
-            scroll-margin-top: calc(var(--header-h) + 52px);
+            padding: 80px 0;
+            scroll-margin-top: 140px;
         }
-
-        .section-container {
-            max-width: 1240px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            margin-bottom: 48px;
-            max-width: 640px;
-        }
-
-        .section-header.centered {
-            text-align: center;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .section-header h2 {
-            font-size: clamp(1.7rem, 3vw, 2.3rem);
-            font-weight: 700;
-            color: var(--ink);
-            letter-spacing: -0.4px;
-        }
-
-        .section-header p {
-            color: #5e5544;
-            font-size: 1.03rem;
-            margin: 12px 0 0;
-        }
-
-        .section-alt {
-            background: var(--stone);
-        }
-
-        .section-dark {
-            background: var(--loam);
-        }
-
-        .section-dark .section-header h2 { color: #f7f2e2; }
-        .section-dark .section-header p { color: #b8ac8f; }
 
         /* ================================================================ */
-        /* REVEAL-ON-SCROLL — one deliberate motion idea, used consistently */
+        /* OVERVIEW — Modern Split Layout                                 */
+        /* ================================================================ */
+        .overview-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 56px;
+            align-items: flex-start;
+        }
+
+        .overview-text {
+            flex: 1 1 55%;
+        }
+
+        .overview-text h2 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .overview-text h2 .highlight {
+            color: var(--moss);
+        }
+
+        .overview-text p {
+            font-size: 1.02rem;
+            color: var(--ink-soft);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .overview-text .highlight-box {
+            background: var(--paper-card);
+            border-left: 3px solid var(--gold);
+            padding: 22px 26px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin: 22px 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .overview-text .highlight-box strong {
+            color: var(--ink);
+            display: block;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .overview-text .highlight-box p {
+            margin: 0;
+            font-size: 0.96rem;
+            color: var(--mist);
+        }
+
+        .overview-image {
+            flex: 1 1 35%;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            min-height: 320px;
+            background: var(--moss-deep);
+        }
+
+        .overview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-height: 320px;
+        }
+
+        /* ================================================================ */
+        /* BENEFITS CARDS — 6 Cards (2 per row)                          */
+        /* ================================================================ */
+        .benefits-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+
+        .benefit-card {
+            flex: 1 1 calc(50% - 12px);
+            min-width: 280px;
+            max-width: 580px;
+            background: var(--paper-card);
+            border-radius: var(--radius-md);
+            padding: 36px 30px;
+            box-shadow: var(--shadow-neu);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.4s var(--transition);
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--growlight-tint);
+        }
+
+        .benefit-card .benefit-icon {
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: var(--growlight-tint);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--growlight-deep);
+        }
+
+        .benefit-card .benefit-content h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .benefit-card .benefit-content p {
+            font-size: 0.9rem;
+            color: var(--mist);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* ================================================================ */
+        /* OBJECTIVES — 6 Cards (2 per row)                              */
+        /* ================================================================ */
+        .objectives-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+
+        .objective-card {
+            flex: 1 1 calc(50% - 12px);
+            min-width: 280px;
+            max-width: 580px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--line-on-dark);
+            border-radius: var(--radius-md);
+            padding: 30px 28px;
+            transition: all 0.4s var(--transition);
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+        }
+
+        .objective-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(200, 149, 47, 0.4);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .objective-card .obj-number {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(200, 149, 47, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--gold-soft);
+            font-family: var(--font-body);
+        }
+
+        .objective-card .obj-content h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--paper);
+            margin-bottom: 4px;
+        }
+
+        .objective-card .obj-content p {
+            font-size: 0.9rem;
+            color: rgba(247, 242, 230, 0.7);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* ================================================================ */
+        /* COUNTRIES & USE CASES — 4 Cards (2 per row)                   */
+        /* ================================================================ */
+        .countries-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+
+        .country-card {
+            flex: 1 1 calc(50% - 12px);
+            min-width: 280px;
+            max-width: 580px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s var(--transition);
+            background: var(--paper-card);
+            border: 1px solid var(--line);
+        }
+
+        .country-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--growlight);
+        }
+
+        .country-card .card-image {
+            height: 200px;
+            overflow: hidden;
+            background: var(--moss-deep);
+        }
+
+        .country-card .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s var(--transition);
+        }
+
+        .country-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .country-card .card-body {
+            padding: 24px 26px 28px;
+        }
+
+        .country-card .card-body .card-badge {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--paper);
+            background: var(--moss);
+            padding: 3px 14px;
+            border-radius: 50px;
+            margin-bottom: 8px;
+            font-family: var(--font-body);
+        }
+
+        .country-card .card-body h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .country-card .card-body .country-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--growlight-deep);
+            display: block;
+            margin-bottom: 8px;
+            font-family: var(--font-body);
+        }
+
+        .country-card .card-body p {
+            font-size: 0.92rem;
+            color: var(--mist);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .country-card .card-body .tech-tag {
+            display: inline-block;
+            background: var(--growlight-tint);
+            color: var(--growlight-deep);
+            padding: 3px 14px;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            margin-top: 10px;
+            font-family: var(--font-body);
+        }
+
+        /* ================================================================ */
+        /* TECHNOLOGY — 6 Cards (2 per row)                              */
+        /* ================================================================ */
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+
+        .tech-card {
+            flex: 1 1 calc(50% - 12px);
+            min-width: 280px;
+            max-width: 580px;
+            background: var(--paper-card);
+            border-radius: var(--radius-md);
+            padding: 30px 28px;
+            box-shadow: var(--shadow-neu);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.4s var(--transition);
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--clay-tint);
+        }
+
+        .tech-card .tech-icon {
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: var(--clay-tint);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: var(--clay);
+        }
+
+        .tech-card .tech-content h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .tech-card .tech-content p {
+            font-size: 0.9rem;
+            color: var(--mist);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* ================================================================ */
+        /* TIMELINE — Phase Cards (2 per row)                            */
+        /* ================================================================ */
+        .timeline-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+
+        .timeline-card {
+            flex: 1 1 calc(50% - 12px);
+            min-width: 280px;
+            max-width: 580px;
+            background: var(--paper-card);
+            border-radius: var(--radius-md);
+            padding: 28px 26px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--line);
+            transition: all 0.4s var(--transition);
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--gold);
+        }
+
+        .timeline-card .tl-number {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--paper);
+            background: var(--moss);
+            display: inline-block;
+            padding: 2px 14px;
+            border-radius: 50px;
+            margin-bottom: 8px;
+            font-family: var(--font-body);
+        }
+
+        .timeline-card .tl-period {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 4px;
+            font-family: var(--font-body);
+        }
+
+        .timeline-card h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .timeline-card p {
+            font-size: 0.9rem;
+            color: var(--mist);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* ================================================================ */
+        /* METHODOLOGY — Image + Content                                 */
+        /* ================================================================ */
+        .methodology-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .methodology-image {
+            flex: 1 1 40%;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            min-height: 280px;
+            background: var(--moss-deep);
+        }
+
+        .methodology-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-height: 280px;
+        }
+
+        .methodology-content {
+            flex: 1 1 50%;
+        }
+
+        .methodology-content h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--paper);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+
+        .methodology-content h2 .highlight {
+            color: var(--gold-soft);
+        }
+
+        .methodology-content p {
+            font-size: 1rem;
+            color: rgba(247, 242, 230, 0.8);
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .methodology-content .method-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .methodology-content .method-item:last-child {
+            border-bottom: none;
+        }
+
+        .methodology-content .method-item i {
+            font-size: 1.1rem;
+            color: var(--gold-soft);
+            width: 28px;
+            text-align: center;
+        }
+
+        .methodology-content .method-item span {
+            font-size: 0.92rem;
+            color: rgba(247, 242, 230, 0.8);
+            font-weight: 400;
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                       */
+        /* ================================================================ */
+        @media (max-width: 1024px) {
+            .hero-content h1 { font-size: 2.8rem; }
+            .section-header h2 { font-size: 2.2rem; }
+            .benefit-card { flex: 1 1 100%; max-width: 100%; }
+            .objective-card { flex: 1 1 100%; max-width: 100%; }
+            .country-card { flex: 1 1 100%; max-width: 100%; }
+            .tech-card { flex: 1 1 100%; max-width: 100%; }
+            .timeline-card { flex: 1 1 100%; max-width: 100%; }
+            .overview-text { flex: 1 1 100%; }
+            .overview-image { flex: 1 1 100%; min-height: 240px; }
+            .methodology-image { flex: 1 1 100%; min-height: 200px; }
+            .methodology-content { flex: 1 1 100%; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 64px; }
+
+            .hero { min-height: 70vh; }
+            .hero-content-wrapper { padding: 40px 24px; }
+            .hero-content h1 { font-size: 2.2rem; }
+            .hero-content .hero-sub { font-size: 1rem; }
+            .hero-content .hero-description { font-size: 0.92rem; }
+            .hero-buttons { flex-direction: column; width: 100%; }
+            .hero-buttons .btn-primary,
+            .hero-buttons .btn-secondary { width: 100%; justify-content: center; }
+
+            .section-nav { top: 64px; }
+            .section-nav a { padding: 10px 14px; font-size: 0.6rem; }
+
+            .section { padding: 60px 0; }
+            .section-header h2 { font-size: 1.8rem; }
+            .section-header p { font-size: 0.95rem; }
+
+            .overview-text h2 { font-size: 1.8rem; }
+            .methodology-content h2 { font-size: 1.8rem; }
+
+            .benefit-card { padding: 28px 24px; flex-direction: column; }
+            .objective-card { padding: 24px 22px; flex-direction: column; }
+            .tech-card { padding: 24px 22px; flex-direction: column; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 { font-size: 1.8rem; }
+            .hero-content .hero-sub { font-size: 0.9rem; }
+            .hero-content .hero-description { font-size: 0.85rem; }
+            .container { padding: 0 16px; }
+            .section-header h2 { font-size: 1.5rem; }
+            .overview-text h2 { font-size: 1.5rem; }
+            .methodology-content h2 { font-size: 1.5rem; }
+            .country-card .card-body { padding: 20px; }
+            .benefit-card { padding: 24px 20px; }
+            .tech-card { padding: 20px 18px; }
+            .timeline-card { padding: 22px 20px; }
+            .section-nav a { padding: 8px 12px; font-size: 0.55rem; }
+        }
+
+        /* ================================================================ */
+        /* ACCESSIBILITY                                                    */
+        /* ================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .btn-primary:focus-visible,
+        .btn-secondary:focus-visible,
+        .section-nav a:focus-visible {
+            outline: 2px solid var(--growlight);
+            outline-offset: 2px;
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                        */
+        /* ================================================================ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--paper-alt); }
+        ::-webkit-scrollbar-thumb { background: var(--moss-mid); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--moss); }
+
+        /* ================================================================ */
+        /* REVEAL ANIMATION                                                */
         /* ================================================================ */
         .reveal {
             opacity: 0;
-            transform: translateY(16px);
-            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .reveal.in-view {
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* ================================================================ */
-        /* PROJECT OVERVIEW                                                */
-        /* ================================================================ */
-        .overview-grid {
-            display: grid;
-            grid-template-columns: 1.15fr 0.85fr;
-            gap: 56px;
-            align-items: start;
-        }
-
-        .overview-text {
-            font-size: 1.02rem;
-            color: #453f30;
-            line-height: 1.8;
-        }
-
-        .overview-text p {
-            margin-bottom: 16px;
-        }
-
-        .overview-text .highlight-box {
-            background: #ffffff;
-            border-left: 3px solid var(--teal);
-            padding: 22px 26px;
-            border-radius: 0 6px 6px 0;
-            margin: 22px 0;
-            box-shadow: 0 1px 2px rgba(26, 20, 13, 0.04);
-        }
-
-        .overview-text .highlight-box strong {
-            color: var(--ink);
-            display: block;
-            font-family: var(--font-display);
-            font-size: 1.08rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .overview-text .highlight-box p {
-            margin: 0;
-            font-size: 0.96rem;
-            color: #5e5544;
-        }
-
-        .overview-side .photo-frame {
-            aspect-ratio: 4 / 5;
-            margin-bottom: 20px;
-        }
-
-        .overview-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .stat-box {
-            background: #ffffff;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 18px 14px;
-            text-align: center;
-        }
-
-        .stat-box .stat-number {
-            font-family: var(--font-mono);
-            font-size: 1.7rem;
-            font-weight: 600;
-            color: var(--teal);
-            display: block;
-            line-height: 1;
-        }
-
-        .stat-box .stat-label {
-            color: #6b6252;
-            font-size: 0.76rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            margin-top: 6px;
-            display: block;
-        }
-
-        .meta-box {
-            background: var(--loam);
-            border-radius: 8px;
-            padding: 22px;
-        }
-
-        .meta-box p {
-            font-size: 0.85rem;
-            color: #c7bda2;
-            margin: 0;
-            line-height: 1.9;
-        }
-
-        .meta-box strong {
-            color: #f7f2e2;
-            font-weight: 600;
-        }
-
-        /* ================================================================ */
-        /* OBJECTIVES — honest numbering, no fake gauge graphic            */
-        /* ================================================================ */
-        .objectives-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .objective-card {
-            position: relative;
-            background: rgba(250, 248, 242, 0.04);
-            border: 1px solid var(--line-dark);
-            border-radius: 10px;
-            padding: 26px 24px;
-            transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
-        }
-
-        .objective-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(200, 149, 47, 0.5);
-            background: rgba(250, 248, 242, 0.06);
-        }
-
-        .objective-card .obj-head {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .objective-card .num-badge {
-            width: 34px;
-            height: 34px;
-            border: 1.5px solid rgba(231, 199, 120, 0.4);
-            border-radius: 8px;
-            color: var(--gold-soft);
-            font-size: 0.85rem;
-        }
-
-        .objective-card .obj-count {
-            font-family: var(--font-mono);
-            font-size: 0.68rem;
-            color: #7c7157;
-            letter-spacing: 0.06em;
-        }
-
-        .objective-card h4 {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #f7f2e2;
-            margin-bottom: 8px;
-            letter-spacing: -0.1px;
-        }
-
-        .objective-card p {
-            color: #a89a7d;
-            font-size: 0.89rem;
-            line-height: 1.65;
-            margin: 0;
-        }
-
-        /* ================================================================ */
-        /* COUNTRIES & USE CASES                                           */
-        /* ================================================================ */
-        .countries-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-
-        .country-card {
-            background: #ffffff;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        .country-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 14px 32px rgba(26, 20, 13, 0.09);
-        }
-
-        .country-card .photo-frame {
-            aspect-ratio: 4 / 3;
-            border-radius: 0;
-        }
-
-        .country-card-body {
-            padding: 20px 22px 24px;
-        }
-
-        .country-card h4 {
-            font-size: 1.08rem;
-            font-weight: 700;
-            color: var(--ink);
-        }
-
-        .country-card p {
-            color: #6b6252;
-            font-size: 0.87rem;
-            margin: 4px 0 0;
-        }
-
-        .country-card .use-case-tag {
-            display: inline-block;
-            background: #eef2ef;
-            color: var(--teal);
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-family: var(--font-mono);
-            font-size: 0.68rem;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-
-        /* ================================================================ */
-        /* TECHNOLOGY EXPLAINER                                           */
-        /* ================================================================ */
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .tech-card {
-            background: #ffffff;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 28px 24px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        .tech-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 26px rgba(26, 20, 13, 0.06);
-        }
-
-        .tech-card .tech-icon {
-            width: 50px;
-            height: 50px;
-            background: #eef2ef;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
-        }
-
-        .tech-card .tech-icon svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--teal);
-            fill: none;
-            stroke-width: 1.8;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .tech-card h4 {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--ink);
-            margin-bottom: 6px;
-        }
-
-        .tech-card p {
-            color: #6b6252;
-            font-size: 0.87rem;
-            line-height: 1.65;
-            margin: 0;
-        }
-
-        /* ================================================================ */
-        /* TIMELINE — same honest numeral treatment as objectives           */
-        /* ================================================================ */
-        .timeline {
-            position: relative;
-            padding-left: 44px;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 17px;
-            top: 6px;
-            bottom: 6px;
-            width: 2px;
-            background: var(--line);
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-bottom: 36px;
-        }
-
-        .timeline-item:last-child {
-            padding-bottom: 0;
-        }
-
-        .timeline-item .num-badge {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            background: var(--loam);
-            border: 1.5px solid var(--gold);
-            color: var(--gold-soft);
-            font-size: 0.66rem;
-            position: absolute;
-            left: -44px;
-            top: -2px;
-        }
-
-        .timeline-item.tl-done .num-badge {
-            background: var(--teal);
-            border-color: var(--teal);
-            color: #f7f2e2;
-        }
-
-        .timeline-item .tl-period {
-            font-family: var(--font-mono);
-            font-size: 0.74rem;
-            font-weight: 600;
-            color: var(--gold);
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-        }
-
-        .timeline-item h4 {
-            font-size: 1.08rem;
-            font-weight: 700;
-            color: var(--ink);
-            margin: 4px 0 5px;
-        }
-
-        .timeline-item p {
-            color: #6b6252;
-            font-size: 0.92rem;
-            margin: 0;
-            max-width: 60ch;
-        }
-
-        .timeline-layout {
-            display: grid;
-            grid-template-columns: 1.3fr 0.7fr;
-            gap: 56px;
-            align-items: start;
-        }
-
-        .timeline-layout .photo-frame {
-            aspect-ratio: 3 / 4;
-            position: sticky;
-            top: calc(var(--header-h) + 52px + 24px);
-        }
-
-        /* ================================================================ */
-        /* RESPONSIVE                                                      */
-        /* ================================================================ */
-        @media (max-width: 1024px) {
-            .page-hero h1 {
-                font-size: clamp(2.4rem, 4vw, 3.2rem);
-            }
-
-            .hero-stats {
-                gap: 30px;
-            }
-
-            .hero-stats .stat-number {
-                font-size: 1.6rem;
-            }
-
-            .overview-grid {
-                grid-template-columns: 1fr;
-                gap: 32px;
-            }
-
-            .overview-side .photo-frame { aspect-ratio: 16 / 9; }
-
-            .objectives-grid,
-            .tech-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .countries-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .timeline-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .timeline-layout .photo-frame {
-                position: static;
-                aspect-ratio: 16 / 9;
-                order: -1;
-                margin-bottom: 8px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            :root { --header-h: 64px; }
-
-            .page-hero { min-height: 60vh; }
-            .page-hero-inner { padding: 40px 20px; }
-
-            .page-hero h1 {
-                font-size: clamp(2rem, 5vw, 2.8rem);
-            }
-
-            .page-hero .hero-subtitle {
-                font-size: 1rem;
-            }
-
-            .page-hero .hero-desc {
-                font-size: 0.9rem;
-            }
-
-            .hero-stats {
-                gap: 20px;
-                padding-top: 18px;
-            }
-
-            .hero-stats .stat-number {
-                font-size: 1.4rem;
-            }
-
-            .hero-stats .stat-label {
-                font-size: 0.65rem;
-            }
-
-            .section-nav a { padding: 12px 14px; font-size: 0.68rem; }
-
-            .section { padding: 56px 20px; }
-
-            .overview-stats { grid-template-columns: 1fr 1fr; }
-
-            .objectives-grid,
-            .tech-grid { grid-template-columns: 1fr; }
-
-            .countries-grid { grid-template-columns: 1fr; }
-
-            .timeline { padding-left: 36px; }
-            .timeline::before { left: 13px; }
-            .timeline-item .num-badge { left: -36px; width: 30px; height: 30px; }
-        }
-
-        @media (max-width: 480px) {
-            .page-hero h1 {
-                font-size: 1.8rem;
-            }
-
-            .page-hero .hero-subtitle {
-                font-size: 0.9rem;
-            }
-
-            .page-hero .hero-desc {
-                font-size: 0.85rem;
-            }
-
-            .hero-stats {
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .hero-stats .stat-item {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-            }
-
-            .hero-stats .stat-number {
-                font-size: 1.2rem;
-            }
-
-            .hero-stats .stat-label {
-                font-size: 0.65rem;
-            }
-
-            .hero-cta {
-                padding: 12px 24px;
-                font-size: 0.85rem;
-                width: 100%;
-                justify-content: center;
-            }
-
-            .overview-stats { grid-template-columns: 1fr 1fr; }
-        }
-
-        /* ================================================================ */
-        /* SCROLLBAR                                                       */
-        /* ================================================================ */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--stone); }
-        ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--loam); }
     </style>
 </head>
 <body>
 
-    <!-- ================================================================ -->
-    <!-- LOADING OVERLAY                                                  -->
-    <!-- ================================================================ -->
+    <!-- ============================================================ -->
+    <!-- LOADING OVERLAY                                              -->
+    <!-- ============================================================ -->
     <div id="page-loader">
-        <div class="loader-mark">
-            <svg viewBox="0 0 46 46">
-                <circle class="track" cx="23" cy="23" r="20"></circle>
-                <circle class="sweep" cx="23" cy="23" r="20"></circle>
-            </svg>
-        </div>
+        <div class="loader-spinner"></div>
         <p>Loading</p>
     </div>
 
@@ -1021,50 +975,32 @@
     <main>
 
         <!-- ============================================================ -->
-        <!-- PREMIUM HERO — Full-Width Image with Overlay                -->
+        <!-- HERO — Full Width Background                                -->
         <!-- ============================================================ -->
-        <section class="page-hero">
-            <div class="hero-bg"></div>
-            <div class="hero-overlay"></div>
-            <div class="hero-accent"></div>
-
-            <div class="page-hero-inner">
-                <div class="breadcrumb">
-                    <a href="{{ url_for('public.index') }}">Home</a> / About
+        <section class="hero" id="heroSection">
+            <div class="hero-image-wrapper" id="heroImageWrapper">
+                <div id="heroSlidesContainer">
+                    <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=1600&q=80');"></div>
                 </div>
-
-                <h1>About <span class="highlight">BRIDGE-AI</span></h1>
-
-                <p class="hero-subtitle">
-                    Building ResIlient Development with GEnerative AI in Education &amp; Agriculture
-                </p>
-
-                <p class="hero-desc">
-                    A Horizon Europe Research and Innovation Action improving African rural societies
-                    by integrating GenAI-based solutions into agricultural optimisation and digital skills acquisition.
-                </p>
-
-                <a href="#overview" class="hero-cta">
-                    Explore the Project
-                    <span class="cta-arrow">→</span>
-                </a>
-
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">36</span>
-                        <span class="stat-label">Months</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">3</span>
-                        <span class="stat-label">Countries</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">8</span>
-                        <span class="stat-label">Partners</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">4</span>
-                        <span class="stat-label">Use Cases</span>
+            </div>
+            <div class="hero-content-wrapper">
+                <div class="hero-content">
+                    <h1>
+                        About <span class="highlight">BRIDGE-AI</span>
+                    </h1>
+                    <p class="hero-sub">
+                        Building ResIlient Development with<br>
+                        GEnerative AI in Education &amp; Agriculture
+                    </p>
+                    <p class="hero-description">
+                        A Horizon Europe Research and Innovation Action improving African rural societies
+                        by integrating GenAI-based solutions into agricultural optimisation and digital skills acquisition.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#overview" class="btn-primary">
+                            <i class="fas fa-arrow-right btn-icon"></i>
+                            Explore the Project
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1075,7 +1011,7 @@
         <!-- ============================================================ -->
         <nav class="section-nav" aria-label="Page sections">
             <div class="section-nav-inner">
-                <a href="#overview" data-section="overview">Overview</a>
+                <a href="#overview" data-section="overview" class="active">Overview</a>
                 <a href="#objectives" data-section="objectives">Objectives</a>
                 <a href="#countries" data-section="countries">Countries</a>
                 <a href="#technology" data-section="technology">Technology</a>
@@ -1087,56 +1023,84 @@
         <!-- PROJECT OVERVIEW                                             -->
         <!-- ============================================================ -->
         <section class="section" id="overview">
-            <div class="section-container">
-                <div class="overview-grid">
+            <div class="container">
+                <div class="overview-wrapper">
                     <div class="overview-text reveal">
-                        <span class="eyebrow">Project Overview</span>
-                        <h2 style="font-size: 2rem; font-weight: 700; color: var(--ink); letter-spacing: -0.5px; margin-bottom: 18px;">BRIDGE-AI</h2>
-
-                        <p><strong>BRIDGE-AI - Building ResIlient Development with GEnerative AI in Education &amp; Agriculture</strong> is a Horizon Europe Research and Innovation Action that aims to improve African rural societies by integrating GenAI-based solutions into agricultural optimisation and digital skills acquisition.</p>
-
-                        <p>The project operates across <strong>Kenya, Tunisia and Nigeria</strong> and develops use cases in mushroom cultivation, maize production, pasture prediction and pomegranate cultivation.</p>
-
+                        <h2>Building a <span class="highlight">Climate-Resilient</span> Future</h2>
+                        <p>
+                            <strong>BRIDGE-AI</strong> is a European project that aims to help farmers in Africa make better decisions by using advanced digital tools based on artificial intelligence (AI).
+                        </p>
+                        <p>
+                            The project focuses on rural areas in <strong>Nigeria, Kenya and Tunisia</strong>, where agriculture is essential for people's livelihoods, but is increasingly affected by climate change, water scarcity and soil degradation.
+                        </p>
+                        <p>
+                            At the same time, access to digital tools, data and technical support is often limited. This makes it difficult for farmers to plan their activities and respond to challenges.
+                        </p>
                         <div class="highlight-box">
-                            <strong>Project goal</strong>
-                            <p>The project combines GenAI, Earth Observation data, IoT sensor measurements, digital shadows, semantic interoperability and low-bandwidth advisory interfaces. Its goal is to make context-specific agricultural decision support more accessible to farmers, agronomists, SMEs, developers and local innovation ecosystems.</p>
+                            <strong>Our Mission</strong>
+                            <p>BRIDGE-AI develops tools that combine satellite data, weather information, and field measurements with artificial intelligence. These tools provide farmers with practical advice to help them manage their crops more effectively and sustainably — all presented in a simple and understandable way.</p>
                         </div>
-
-                        <p><strong>JKUAT</strong> is the Kenyan beneficiary and leads <strong>Work Package 5: Capacity Building and Replication</strong>, anchoring the Smart Mushroom case study through the Mushroom Demonstration Farm at the JKUAT Smart Farm Zone in Juja, Kenya.</p>
+                        <p>
+                            <strong>Why it matters:</strong> Farmers get practical guidance on when to plant or harvest, how to detect problems early, how to adapt to changing weather, and how to use water more efficiently.
+                        </p>
                     </div>
+                    <div class="overview-image reveal">
+                        <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?w=800&q=80" alt="African agriculture and farming" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                    <div class="overview-side reveal">
-                        <div class="photo-frame">
-                            <img src="{{ url_for('static', filename='uploads/events/20260710_202916_DrLawrenceNderu-scaled.jpg') }}" alt="Dr Lawrence Nderu at the Mushroom Demonstration Farm, JKUAT Smart Farm Zone, Juja, Kenya">
-                            <div class="photo-caption">JKUAT Smart Farm Zone — Juja, Kenya</div>
+        <!-- ============================================================ -->
+        <!-- BENEFITS — 6 Key Pillars (2 per row)                        -->
+        <!-- ============================================================ -->
+        <section class="section section-alt" id="benefits">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Our <span class="highlight">Impact</span></h2>
+                    <p>BRIDGE-AI is transforming agriculture across Africa through six key pillars</p>
+                </div>
+                <div class="benefits-grid">
+                    <div class="benefit-card reveal">
+                        <div class="benefit-icon"><i class="fas fa-handshake"></i></div>
+                        <div class="benefit-content">
+                            <h4>Europe-Africa Partnership</h4>
+                            <p>A strong collaboration between European and African partners to deliver real impact for farmers across the continent.</p>
                         </div>
-
-                        <div class="overview-stats">
-                            <div class="stat-box">
-                                <span class="stat-number">36</span>
-                                <span class="stat-label">Months</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number">3</span>
-                                <span class="stat-label">Countries</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number">8</span>
-                                <span class="stat-label">Partners</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number">4</span>
-                                <span class="stat-label">Use cases</span>
-                            </div>
+                    </div>
+                    <div class="benefit-card reveal">
+                        <div class="benefit-icon"><i class="fas fa-lightbulb"></i></div>
+                        <div class="benefit-content">
+                            <h4>Better Decision Making</h4>
+                            <p>Digital tools that transform complex environmental data into practical recommendations for everyday farming activities.</p>
                         </div>
-
-                        <div class="meta-box">
-                            <p>
-                                <strong>Grant Agreement:</strong> No. 101299050<br>
-                                <strong>Programme:</strong> Horizon Europe Research and Innovation Action<br>
-                                <strong>Coordinator:</strong> FUNDACIO EURECAT (EURECAT), Spain<br>
-                                <strong>JKUAT Role:</strong> Beneficiary, WP5 Capacity Building and Replication Lead
-                            </p>
+                    </div>
+                    <div class="benefit-card reveal">
+                        <div class="benefit-icon"><i class="fas fa-cloud-sun"></i></div>
+                        <div class="benefit-content">
+                            <h4>Climate-Smart Agriculture</h4>
+                            <p>Helping farmers respond to drought, changing weather patterns and water scarcity with sustainable and resilient practices.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-card reveal">
+                        <div class="benefit-icon"><i class="fas fa-brain"></i></div>
+                        <div class="benefit-content">
+                            <h4>Accessible AI</h4>
+                            <p>Using Generative Artificial Intelligence to make advanced technologies easier to understand and use in rural communities.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-card reveal">
+                        <div class="benefit-icon"><i class="fas fa-users"></i></div>
+                        <div class="benefit-content">
+                            <h4>Working Together</h4>
+                            <p>Farmers, researchers, cooperatives, SMEs and public authorities co-design solutions through Living Labs in three countries.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-card reveal">
+                        <div class="benefit-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="benefit-content">
+                            <h4>Building Skills for the Future</h4>
+                            <p>Training, workshops and educational resources to strengthen digital skills and support adoption of innovative technologies.</p>
                         </div>
                     </div>
                 </div>
@@ -1144,107 +1108,124 @@
         </section>
 
         <!-- ============================================================ -->
-        <!-- OBJECTIVES                                                   -->
+        <!-- OBJECTIVES — 6 Cards (2 per row)                            -->
         <!-- ============================================================ -->
         <section class="section section-dark" id="objectives">
-            <div class="section-container">
-                <div class="section-header centered reveal">
-                    <span class="eyebrow on-dark">Objectives</span>
-                    <h2>What we aim to achieve</h2>
-                    <p>BRIDGE-AI works toward six primary objectives across research, capacity building, and replication</p>
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Our <span style="color:#C89BE8;">Objectives</span></h2>
+                    <p style="color:rgba(247,242,230,0.7);">BRIDGE-AI works toward six primary objectives across research, capacity building, and replication</p>
                 </div>
                 <div class="objectives-grid">
                     <div class="objective-card reveal">
-                        <div class="obj-head">
-                            <span class="num-badge">01</span>
-                            <span class="obj-count">OF 06</span>
+                        <div class="obj-number">01</div>
+                        <div class="obj-content">
+                            <h4>Technology Demonstration</h4>
+                            <p>Deploy and validate GenAI-enhanced solutions across three African countries with documented performance data.</p>
                         </div>
-                        <h4>Technology demonstration</h4>
-                        <p>Deploy and validate the GenAI-enhanced Smart Mushroom system at JKUAT Smart Farm Zone with documented performance data.</p>
                     </div>
                     <div class="objective-card reveal">
-                        <div class="obj-head">
-                            <span class="num-badge">02</span>
-                            <span class="obj-count">OF 06</span>
+                        <div class="obj-number">02</div>
+                        <div class="obj-content">
+                            <h4>Farmer Empowerment</h4>
+                            <p>Equip farmers with smart farming capabilities through accessible digital tools and practical recommendations.</p>
                         </div>
-                        <h4>Farmer empowerment</h4>
-                        <p>Equip 400,000+ farmers across Kenya with smart farming capabilities, starting from Kiambu and Machakos counties.</p>
                     </div>
                     <div class="objective-card reveal">
-                        <div class="obj-head">
-                            <span class="num-badge">03</span>
-                            <span class="obj-count">OF 06</span>
+                        <div class="obj-number">03</div>
+                        <div class="obj-content">
+                            <h4>Youth &amp; Women Inclusion</h4>
+                            <p>Actively engage youth and women through targeted training, mentoring, and leadership pathways in agritech.</p>
                         </div>
-                        <h4>Youth &amp; women inclusion</h4>
-                        <p>Actively engage youth and women through targeted training, mentoring, and leadership pathways in agritech.</p>
                     </div>
                     <div class="objective-card reveal">
-                        <div class="obj-head">
-                            <span class="num-badge">04</span>
-                            <span class="obj-count">OF 06</span>
+                        <div class="obj-number">04</div>
+                        <div class="obj-content">
+                            <h4>Knowledge Transfer</h4>
+                            <p>Deliver modular training, bootcamps, SME mentoring, and replication resources across East and West Africa.</p>
                         </div>
-                        <h4>Knowledge transfer</h4>
-                        <p>Deliver modular training, bootcamps, SME mentoring, and replication resources for East Africa through WP5.</p>
                     </div>
                     <div class="objective-card reveal">
-                        <div class="obj-head">
-                            <span class="num-badge">05</span>
-                            <span class="obj-count">OF 06</span>
+                        <div class="obj-number">05</div>
+                        <div class="obj-content">
+                            <h4>Research &amp; Evidence</h4>
+                            <p>Document pilot outcomes, lessons learned, and best practices for reporting to Horizon Europe and the public.</p>
                         </div>
-                        <h4>Research &amp; evidence</h4>
-                        <p>Document pilot outcomes, lessons learned, and best practices for reporting to Horizon Europe and the public.</p>
                     </div>
                     <div class="objective-card reveal">
-                        <div class="obj-head">
-                            <span class="num-badge">06</span>
-                            <span class="obj-count">OF 06</span>
+                        <div class="obj-number">06</div>
+                        <div class="obj-content">
+                            <h4>Scalability &amp; Replication</h4>
+                            <p>Develop replication playbooks and toolkits for adoption across Africa beyond the pilot regions.</p>
                         </div>
-                        <h4>Scalability &amp; replication</h4>
-                        <p>Develop a replication playbook and toolkit for adoption across Kenya and East Africa.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- ============================================================ -->
-        <!-- COUNTRIES & USE CASES                                        -->
+        <!-- COUNTRIES & USE CASES — 4 Cards (2 per row)                 -->
         <!-- ============================================================ -->
-        <section class="section section-alt" id="countries">
-            <div class="section-container">
-                <div class="section-header centered reveal">
-                    <span class="eyebrow">Countries &amp; use cases</span>
-                    <h2>Operating across Africa</h2>
+        <section class="section" id="countries">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Countries &amp; <span class="highlight">Use Cases</span></h2>
                     <p>BRIDGE-AI works in three African countries with four agricultural use cases</p>
                 </div>
                 <div class="countries-grid">
+                    <!-- Nigeria — Maize -->
                     <div class="country-card reveal">
-                        <div class="photo-frame">
-                            <img src="{{ url_for('static', filename='uploads/DSC_2970.jpg') }}" alt="Smart mushroom cultivation pilot in Kenya">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1536315238512-4c8ceb9af5f0?w=800&q=80" alt="Maize farming in Nigeria" loading="lazy">
                         </div>
-                        <div class="country-card-body">
-                            <h4>Kenya</h4>
-                            <p>Smart Mushroom Cultivation</p>
-                            <span class="use-case-tag">IoT + GenAI</span>
+                        <div class="card-body">
+                            <span class="card-badge">Use Case 1</span>
+                            <h4>Maize Production</h4>
+                            <span class="country-name"><i class="fas fa-map-pin" style="margin-right:6px;"></i>Nigeria</span>
+                            <p>Maize is a key crop for food security and livelihoods in Nigeria. BRIDGE-AI helps farmers better anticipate climate conditions and make informed decisions about planting, harvesting and crop management.</p>
+                            <span class="tech-tag">Digital Shadows</span>
                         </div>
                     </div>
+
+                    <!-- Kenya — Mushroom -->
                     <div class="country-card reveal">
-                        <div class="photo-frame">
-                            <img src="{{ url_for('static', filename='uploads/DSC_2818-2.jpg') }}" alt="Pomegranate cultivation pilot in Tunisia">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1598023696416-0193a0bcd302?w=800&q=80" alt="Mushroom cultivation in Kenya" loading="lazy">
                         </div>
-                        <div class="country-card-body">
-                            <h4>Tunisia</h4>
-                            <p>Pomegranate Cultivation</p>
-                            <span class="use-case-tag">Earth Observation</span>
+                        <div class="card-body">
+                            <span class="card-badge">Use Case 2</span>
+                            <h4>Smart Mushroom Cultivation</h4>
+                            <span class="country-name"><i class="fas fa-map-pin" style="margin-right:6px;"></i>Kenya</span>
+                            <p>Mushroom cultivation requires carefully controlled growing conditions. BRIDGE-AI develops tools that help farmers monitor their production environment and optimise growing conditions. The pilot also promotes the involvement of young people and women in digital agriculture.</p>
+                            <span class="tech-tag">IoT + GenAI</span>
                         </div>
                     </div>
+
+                    <!-- Tunisia — Pasture -->
                     <div class="country-card reveal">
-                        <div class="photo-frame">
-                            <img src="/static/images/about/nigeria-maize.jpg" alt="Maize production and pasture prediction pilot in Nigeria">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80" alt="Pasture management in Tunisia" loading="lazy">
                         </div>
-                        <div class="country-card-body">
-                            <h4>Nigeria</h4>
-                            <p>Maize Production &amp; Pasture Prediction</p>
-                            <span class="use-case-tag">Digital Shadows</span>
+                        <div class="card-body">
+                            <span class="card-badge">Use Case 3</span>
+                            <h4>Pasture Management</h4>
+                            <span class="country-name"><i class="fas fa-map-pin" style="margin-right:6px;"></i>Tunisia</span>
+                            <p>Pasturelands are essential for many farming communities. This pilot combines environmental information and digital tools to help farmers better understand pasture growth and make informed grazing decisions.</p>
+                            <span class="tech-tag">Earth Observation</span>
+                        </div>
+                    </div>
+
+                    <!-- Tunisia — Pomegranate -->
+                    <div class="country-card reveal">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1541344999736-2b9d6a8c5d3e?w=800&q=80" alt="Pomegranate cultivation in Tunisia" loading="lazy">
+                        </div>
+                        <div class="card-body">
+                            <span class="card-badge">Use Case 4</span>
+                            <h4>Pomegranate Cultivation</h4>
+                            <span class="country-name"><i class="fas fa-map-pin" style="margin-right:6px;"></i>Tunisia</span>
+                            <p>Pomegranate growers face increasing challenges related to water availability and changing climate conditions. BRIDGE-AI provides tailored recommendations to improve irrigation, crop management and harvest planning.</p>
+                            <span class="tech-tag">Earth Observation</span>
                         </div>
                     </div>
                 </div>
@@ -1252,143 +1233,170 @@
         </section>
 
         <!-- ============================================================ -->
-        <!-- TECHNOLOGY EXPLAINER                                         -->
+        <!-- TECHNOLOGY EXPLAINER — 6 Cards (2 per row)                  -->
         <!-- ============================================================ -->
-        <section class="section" id="technology">
-            <div class="section-container">
-                <div class="section-header centered reveal">
-                    <span class="eyebrow">Technology</span>
-                    <h2>How it works</h2>
+        <section class="section section-alt" id="technology">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>How It <span class="highlight">Works</span></h2>
                     <p>BRIDGE-AI combines multiple cutting-edge technologies to deliver practical solutions</p>
                 </div>
                 <div class="tech-grid">
                     <div class="tech-card reveal">
-                        <div class="tech-icon">
-                            <!-- AI / generative prediction: spark over a node graph -->
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 3l1.4 3.6L17 8l-3.6 1.4L12 13l-1.4-3.6L7 8l3.6-1.4L12 3z"/>
-                                <circle cx="5" cy="18" r="1.6"/>
-                                <circle cx="12" cy="20" r="1.6"/>
-                                <circle cx="19" cy="18" r="1.6"/>
-                                <path d="M6.3 16.8L10.6 14M13.4 14l3.9 2.8"/>
-                            </svg>
+                        <div class="tech-icon"><i class="fas fa-brain"></i></div>
+                        <div class="tech-content">
+                            <h4>Generative AI (GenAI)</h4>
+                            <p>AI models predict yields, detect anomalies, and provide decision support for farmers and agronomists. GenAI makes advanced technologies easier to understand and use.</p>
                         </div>
-                        <h4>GenAI predictive analytics</h4>
-                        <p>AI models predict yields, detect anomalies, and provide decision support for farmers and agronomists.</p>
                     </div>
                     <div class="tech-card reveal">
-                        <div class="tech-icon">
-                            <!-- IoT sensing: a transmitting sensor node -->
-                            <svg viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="2.2"/>
-                                <path d="M8.5 8.5a5 5 0 000 7"/>
-                                <path d="M15.5 8.5a5 5 0 010 7"/>
-                                <path d="M5.5 5.5a9 9 0 000 13"/>
-                                <path d="M18.5 5.5a9 9 0 010 13"/>
-                            </svg>
+                        <div class="tech-icon"><i class="fas fa-wifi"></i></div>
+                        <div class="tech-content">
+                            <h4>Internet of Things (IoT)</h4>
+                            <p>Real-time monitoring of temperature, humidity, CO₂, light, and substrate moisture using low-power sensors. Data is transmitted wirelessly for continuous analysis.</p>
                         </div>
-                        <h4>IoT sensing</h4>
-                        <p>Real-time monitoring of temperature, humidity, CO₂, light, and substrate moisture for precision agriculture.</p>
                     </div>
                     <div class="tech-card reveal">
-                        <div class="tech-icon">
-                            <!-- Digital shadows: twin/overlapping planes -->
-                            <svg viewBox="0 0 24 24">
-                                <rect x="3" y="7" width="13" height="13" rx="1.5"/>
-                                <path d="M8 7V5.5a1.5 1.5 0 011.5-1.5H19a1.5 1.5 0 011.5 1.5V17a1.5 1.5 0 01-1.5 1.5h-1.5"/>
-                            </svg>
+                        <div class="tech-icon"><i class="fas fa-cubes"></i></div>
+                        <div class="tech-content">
+                            <h4>Digital Shadows</h4>
+                            <p>Virtual replicas of physical systems for "what-if" scenario testing, yield forecasting, and training simulation — without risking real crops.</p>
                         </div>
-                        <h4>Digital shadows</h4>
-                        <p>Virtual replicas of grow rooms for "what-if" scenario testing, yield forecasting, and training simulation.</p>
                     </div>
                     <div class="tech-card reveal">
-                        <div class="tech-icon">
-                            <!-- Semantic interoperability: linked layers -->
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                                <path d="M2 17l10 5 10-5"/>
-                                <path d="M2 12l10 5 10-5"/>
-                            </svg>
+                        <div class="tech-icon"><i class="fas fa-satellite"></i></div>
+                        <div class="tech-content">
+                            <h4>Earth Observation (EO)</h4>
+                            <p>Satellite data integration for monitoring crop health, weather patterns, and environmental conditions. Helps farmers understand their environment better.</p>
                         </div>
-                        <h4>Semantic interoperability</h4>
-                        <p>Using FIWARE/NGSI-LD standards for seamless data exchange between systems and platforms.</p>
                     </div>
                     <div class="tech-card reveal">
-                        <div class="tech-icon">
-                            <!-- Low-bandwidth advisory: SMS / voice message -->
-                            <svg viewBox="0 0 24 24">
-                                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-                                <path d="M8 10h.01M12 10h.01M16 10h.01"/>
-                            </svg>
+                        <div class="tech-icon"><i class="fas fa-code-branch"></i></div>
+                        <div class="tech-content">
+                            <h4>Semantic Interoperability (FIWARE/NGSI-LD)</h4>
+                            <p>Using open standards for seamless data exchange between systems and platforms, ensuring different technologies work together smoothly.</p>
                         </div>
-                        <h4>Low-bandwidth advisory</h4>
-                        <p>Voice alerts and SMS-based advisory in local languages (Swahili, French, Arabic) for farmers with limited connectivity.</p>
                     </div>
                     <div class="tech-card reveal">
-                        <div class="tech-icon">
-                            <!-- Earth observation: orbiting satellite -->
-                            <svg viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="4.5"/>
-                                <path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/>
-                                <path d="M18.5 5.5l-2.2 2.2M7.7 16.3l-2.2 2.2M18.5 18.5l-2.2-2.2M7.7 7.7L5.5 5.5"/>
-                            </svg>
+                        <div class="tech-icon"><i class="fas fa-message"></i></div>
+                        <div class="tech-content">
+                            <h4>Low-Bandwidth Advisory</h4>
+                            <p>Voice alerts and SMS-based advisory in local languages (Swahili, French, Arabic) for farmers with limited connectivity. Simple, accessible, and practical.</p>
                         </div>
-                        <h4>Earth observation</h4>
-                        <p>Satellite data integration for monitoring crop health, weather patterns, and environmental conditions.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- ============================================================ -->
-        <!-- TIMELINE                                                      -->
+        <!-- TIMELINE — 6 Phase Cards (2 per row)                       -->
         <!-- ============================================================ -->
-        <section class="section section-alt" id="timeline">
-            <div class="section-container">
+        <section class="section" id="timeline">
+            <div class="container">
                 <div class="section-header reveal">
-                    <span class="eyebrow">Timeline</span>
-                    <h2>Project milestones</h2>
-                    <p>BRIDGE-AI is a 36-month journey from research to replication</p>
+                    <h2>Project <span class="highlight">Timeline</span></h2>
+                    <p>BRIDGE-AI follows a structured six-phase approach from research to impact</p>
                 </div>
+                <div class="timeline-grid">
+                    <div class="timeline-card reveal">
+                        <span class="tl-number">Phase 01</span>
+                        <span class="tl-period">Listening &amp; Learning</span>
+                        <h4>Understanding Local Needs</h4>
+                        <p>The project starts by working directly with farmers, cooperatives and local communities in Nigeria, Kenya and Tunisia to better understand their needs, challenges and priorities.</p>
+                    </div>
+                    <div class="timeline-card reveal">
+                        <span class="tl-number">Phase 02</span>
+                        <span class="tl-period">Turning Data into Tools</span>
+                        <h4>Developing Digital Solutions</h4>
+                        <p>Combining satellite imagery, weather information, field sensors and artificial intelligence to create digital tools that help farmers make informed decisions.</p>
+                    </div>
+                    <div class="timeline-card reveal">
+                        <span class="tl-number">Phase 03</span>
+                        <span class="tl-period">Testing on Real Farms</span>
+                        <h4>Real-World Validation</h4>
+                        <p>The tools are tested in real agricultural environments through four pilot cases focused on maize, mushrooms, pastures and pomegranates across three countries.</p>
+                    </div>
+                    <div class="timeline-card reveal">
+                        <span class="tl-number">Phase 04</span>
+                        <span class="tl-period">Working Hand in Hand</span>
+                        <h4>Living Labs</h4>
+                        <p>Farmers and local stakeholders are actively involved through Living Labs, allowing users to test tools, share feedback and shape solutions that respond to local needs.</p>
+                    </div>
+                    <div class="timeline-card reveal">
+                        <span class="tl-number">Phase 05</span>
+                        <span class="tl-period">Sharing Knowledge</span>
+                        <h4>Training &amp; Capacity Building</h4>
+                        <p>Providing training, workshops and learning opportunities to help farmers, entrepreneurs and local organisations understand and use new digital technologies.</p>
+                    </div>
+                    <div class="timeline-card reveal">
+                        <span class="tl-number">Phase 06</span>
+                        <span class="tl-period">Expanding Impact</span>
+                        <h4>Scalability &amp; Replication</h4>
+                        <p>Sharing knowledge and solutions so they can be adopted in other regions and agricultural contexts, contributing to a more sustainable and resilient future for agriculture across Africa.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                <div class="timeline-layout">
-                    <div class="timeline reveal">
-                        <div class="timeline-item tl-done">
-                            <span class="num-badge">01</span>
-                            <span class="tl-period">M1–M3 (2026)</span>
-                            <h4>Project launch &amp; foundation</h4>
-                            <p>Publish foundational pages, local outreach inputs, project overview, pilot profile, and contact page.</p>
+        <!-- ============================================================ -->
+        <!-- METHODOLOGY — Image + Content                               -->
+        <!-- ============================================================ -->
+        <section class="section section-dark" id="methodology">
+            <div class="container">
+                <div class="methodology-wrapper">
+                    <div class="methodology-image reveal">
+                        <img src="https://images.unsplash.com/photo-1578574577315-3fbeb0cecd5c?w=800&q=80" alt="BRIDGE-AI methodology" loading="lazy">
+                    </div>
+                    <div class="methodology-content reveal">
+                        <h2>Our <span class="highlight">Methodology</span></h2>
+                        <p>BRIDGE-AI combines technology, local knowledge and collaboration to develop practical solutions for agriculture in Africa.</p>
+                        <div class="method-item">
+                            <i class="fas fa-database"></i>
+                            <span>Combines information from satellites, weather forecasts and field sensors</span>
                         </div>
-                        <div class="timeline-item">
-                            <span class="num-badge">02</span>
-                            <span class="tl-period">M7–M15 (2026–2027)</span>
-                            <h4>Living lab setup</h4>
-                            <p>Document Living Lab setup, stakeholder onboarding, and co-design preparation after ethics/legal clearance.</p>
+                        <div class="method-item">
+                            <i class="fas fa-brain"></i>
+                            <span>Uses Artificial Intelligence to help farmers better understand their environment</span>
                         </div>
-                        <div class="timeline-item">
-                            <span class="num-badge">03</span>
-                            <span class="tl-period">M14–M27 (2027–2028)</span>
-                            <h4>Pilot implementation</h4>
-                            <p>Publish approved pilot implementation updates, training workshops, field setup, sensor deployment, and user-interface testing.</p>
+                        <div class="method-item">
+                            <i class="fas fa-handshake"></i>
+                            <span>Developed together with farmers, cooperatives, researchers and local organisations</span>
                         </div>
-                        <div class="timeline-item">
-                            <span class="num-badge">04</span>
-                            <span class="tl-period">M19–M36 (2027–2029)</span>
-                            <h4>Training &amp; capacity building</h4>
-                            <p>WP5 page becomes active training, bootcamp, SME mentoring, repository, and replication hub.</p>
+                        <div class="method-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Transforms complex information into clear and accessible recommendations</span>
                         </div>
-                        <div class="timeline-item">
-                            <span class="num-badge">05</span>
-                            <span class="tl-period">M28–M36 (2028–2029)</span>
-                            <h4>Replication &amp; sustainability</h4>
-                            <p>Publish replication toolkit, local lessons, sustainability resources, and final project outcomes.</p>
+                        <div class="method-item">
+                            <i class="fas fa-flask"></i>
+                            <span>Validated through pilot projects in different agricultural contexts</span>
+                        </div>
+                        <div class="method-item">
+                            <i class="fas fa-seedling"></i>
+                            <span>Creates solutions that continue to support farmers beyond the project</span>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <div class="photo-frame reveal">
-                        <img src="{{ url_for('static', filename='uploads/WhatsApp Image 2026-07-13 at 6.36.19 PM.jpeg') }}" alt="Field training session with BRIDGE-AI Work Package 5 partners">
-                        <div class="photo-caption">Field training — WP5 partners</div>
-                    </div>
+        <!-- ============================================================ -->
+        <!-- CTA — Stay Connected                                         -->
+        <!-- ============================================================ -->
+        <section class="section" style="padding:60px 0; background:var(--paper-alt);">
+            <div class="container" style="text-align:center;">
+                <div class="section-header reveal" style="max-width:560px; margin:0 auto;">
+                    <h2 style="font-size:2rem;">Stay <span class="highlight">Connected</span></h2>
+                    <p style="font-size:1rem;">Follow our journey and be a part of the BRIDGE-AI community</p>
+                </div>
+                <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-top:8px;">
+                    <a href="{{ url_for('public.contact') }}" class="btn-primary" style="background:var(--growlight); border-color:var(--growlight);">
+                        <i class="fas fa-envelope btn-icon"></i>
+                        Contact Us
+                    </a>
+                    <a href="{{ url_for('public.training_wp5') }}" class="btn-secondary" style="color:var(--ink); border-color:var(--line);">
+                        <i class="fas fa-bell btn-icon"></i>
+                        Subscribe Now
+                    </a>
                 </div>
             </div>
         </section>
@@ -1407,9 +1415,7 @@
         (function() {
             'use strict';
 
-            // ================================================================
-            // PAGE LOADER
-            // ================================================================
+            // ─── PAGE LOADER ──────────────────────────────────────────────
             var loader = document.getElementById('page-loader');
 
             function hideLoader() {
@@ -1430,36 +1436,15 @@
             }
             setTimeout(hideLoader, 3000);
 
-            // ================================================================
-            // SMOOTH SCROLL FOR INTERNAL LINKS
-            // ================================================================
-
-            document.querySelectorAll('a[href^="#"]').forEach(function(link) {
-                link.addEventListener('click', function(e) {
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        e.preventDefault();
-                        const headerHeight = document.querySelector('.site-header')?.offsetHeight || 72;
-                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
-
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-
-            // ================================================================
-            // SECTION NAV — active state on scroll
-            // ================================================================
+            // ─── SECTION NAV ──────────────────────────────────────────────
             var navLinks = document.querySelectorAll('.section-nav a');
-            var sections = Array.prototype.slice.call(navLinks).map(function(link) {
-                return document.getElementById(link.getAttribute('data-section'));
-            }).filter(Boolean);
+            var sections = [];
+
+            navLinks.forEach(function(link) {
+                var sectionId = link.getAttribute('data-section');
+                var section = document.getElementById(sectionId);
+                if (section) sections.push(section);
+            });
 
             if (sections.length && 'IntersectionObserver' in window) {
                 var navObserver = new IntersectionObserver(function(entries) {
@@ -1476,9 +1461,7 @@
                 sections.forEach(function(section) { navObserver.observe(section); });
             }
 
-            // ================================================================
-            // SCROLL REVEAL
-            // ================================================================
+            // ─── SCROLL REVEAL ──────────────────────────────────────────────
             var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             var revealEls = document.querySelectorAll('.reveal');
 
@@ -1492,14 +1475,36 @@
                             revealObserver.unobserve(entry.target);
                         }
                     });
-                }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+                }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
                 revealEls.forEach(function(el) { revealObserver.observe(el); });
             }
 
-            console.log('✅ BRIDGE-AI Kenya About page initialized (Premium Hero)');
+            // ─── SMOOTH SCROLL ──────────────────────────────────────────────
+            document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    var targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    var targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        var header = document.querySelector('.site-header');
+                        var headerHeight = header ? header.offsetHeight : 72;
+                        var targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            console.log('BRIDGE-AI About page initialized ');
 
         })();
     </script>
+
 </body>
 </html>

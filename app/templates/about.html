@@ -378,11 +378,14 @@
             display: flex;
             flex-wrap: wrap;
             gap: 56px;
-            align-items: flex-start;
+            align-items: stretch;           /* ← Makes both sides same height */
         }
 
         .overview-text {
             flex: 1 1 55%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;        /* ← Centers text vertically */
         }
 
         .overview-text h2 {
@@ -433,15 +436,15 @@
             border-radius: var(--radius-lg);
             overflow: hidden;
             box-shadow: var(--shadow-lg);
-            min-height: 320px;
             background: var(--moss-deep);
+            display: flex;                  /* ← Makes image fill height */
+            align-items: stretch;
         }
 
         .overview-image img {
             width: 100%;
-            height: 100%;
+            height: 100%;                  /* ← Fills parent completely */
             object-fit: cover;
-            min-height: 320px;
         }
 
         /* ================================================================ */

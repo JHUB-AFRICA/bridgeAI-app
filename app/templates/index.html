@@ -92,6 +92,7 @@
             --mist: #6E7767;
             --line: #E1D8C0;
             --line-on-dark: rgba(247, 242, 230, 0.14);
+            --gold: #C89B3C;
 
             --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
@@ -226,6 +227,30 @@
             transform: translateY(-3px);
         }
 
+        .btn-light {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.35s var(--transition);
+            cursor: pointer;
+            font-family: var(--font-body);
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-light:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+
         .btn-icon { font-size: 1rem; }
 
         /* ================================================================ */
@@ -319,6 +344,49 @@
             justify-content: center;
             gap: 14px;
             flex-wrap: wrap;
+        }
+
+        /* ================================================================ */
+        /* STICKY SECTION NAV                                              */
+        /* ================================================================ */
+        .section-nav {
+            position: sticky;
+            top: 80px;
+            z-index: 40;
+            background: rgba(255, 253, 247, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .section-nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 28px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .section-nav a {
+            display: inline-flex;
+            align-items: center;
+            padding: 14px 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--mist);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.25s var(--transition);
+            font-family: var(--font-body);
+        }
+
+        .section-nav a:hover { color: var(--ink); }
+        .section-nav a.active {
+            color: var(--moss);
+            border-bottom-color: var(--gold);
         }
 
         /* ================================================================ */
@@ -915,6 +983,8 @@
 
         @media (max-width: 768px) {
             body { padding-top: 64px; }
+            .section-nav { top: 64px; }
+            .section-nav a { padding: 10px 14px; font-size: 0.6rem; }
 
             .hero-content-wrapper { padding: 40px 24px; }
             .hero-content h1 { font-size: 2.2rem; }
@@ -988,7 +1058,8 @@
         .btn-primary:focus-visible,
         .btn-secondary:focus-visible,
         .view-all:focus-visible,
-        .card-link:focus-visible {
+        .card-link:focus-visible,
+        .section-nav a:focus-visible {
             outline: 2px solid var(--growlight);
             outline-offset: 2px;
         }
@@ -1068,6 +1139,20 @@
                 </div>
             </div>
         </section>
+
+        <!-- ============================================================ -->
+        <!-- STICKY SECTION NAV                                            -->
+        <!-- ============================================================ -->
+        <nav class="section-nav" aria-label="Page sections">
+            <div class="section-nav-inner">
+                <a href="#pilot-regions" data-section="pilot-regions" class="active">Pilot Regions</a>
+                <a href="#challenge" data-section="challenge">Challenge</a>
+                <a href="#jkuat-role" data-section="jkuat-role">JKUAT Role</a>
+                <a href="#progress" data-section="progress">Progress</a>
+                <a href="#latest" data-section="latest">Activities</a>
+                <a href="#connect" data-section="connect">Connect</a>
+            </div>
+        </nav>
 
         <!-- ============================================================ -->
         <!-- PILOT REGIONS — 4 Cards (Flexbox, no grids)                 -->
@@ -1607,6 +1692,31 @@
                     }
                 });
             });
+
+            // ─── SECTION NAV ──────────────────────────────────────────────
+            var navLinks = document.querySelectorAll('.section-nav a');
+            var sections = [];
+
+            navLinks.forEach(function(link) {
+                var sectionId = link.getAttribute('data-section');
+                var section = document.getElementById(sectionId);
+                if (section) sections.push(section);
+            });
+
+            if (sections.length && 'IntersectionObserver' in window) {
+                var navObserver = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        var link = document.querySelector('.section-nav a[data-section="' + entry.target.id + '"]');
+                        if (!link) return;
+                        if (entry.isIntersecting) {
+                            navLinks.forEach(function(l) { l.classList.remove('active'); });
+                            link.classList.add('active');
+                        }
+                    });
+                }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+
+                sections.forEach(function(section) { navObserver.observe(section); });
+            }
 
             // ================================================================
             // INIT

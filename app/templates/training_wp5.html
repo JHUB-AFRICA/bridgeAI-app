@@ -13,8 +13,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Training and WP5 - BRIDGE-AI Kenya</title>
+    <title>Training and WP5 - BRIDGE-AI</title>
     <meta name="description" content="Capacity building and replication activities led by JKUAT under BRIDGE-AI WP5.">
+
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
         /* ================================================================ */
@@ -80,31 +88,31 @@
         /* HERO SECTION - Full Width Impact with Clear Image              */
         /* ================================================================ */
         .hero-section {
-    position: relative;
-    min-height: 65vh;  /* Balanced — not too tall, not too short */
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    background: var(--primary-dark);
-    margin-bottom: 0;
-    padding: 20px 0;
-}
+            position: relative;
+            min-height: 65vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: var(--primary-dark);
+            margin-bottom: 0;
+            padding: 20px 0;
+        }
 
-    .hero-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background-image: url('/static/uploads/events/train.jpeg');
-    background-size: cover;
-    background-position: center;
-    filter: brightness(0.65) contrast(1.05);
-}
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-image: url('/static/uploads/events/train.jpeg');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.65) contrast(1.05);
+        }
 
-.hero-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
 
         .hero-grid-pattern {
             position: absolute;
@@ -159,13 +167,12 @@
         }
 
         .hero-grid {
-    display: grid;
-    grid-template-columns: 1fr 280px;
-    gap: 40px;
-    align-items: center;
-    min-height: 55vh;  /* Reduced to fit better */
-}
-
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 40px;
+            align-items: center;
+            min-height: 55vh;
+        }
 
         .hero-content {
             max-width: 100%;
@@ -369,6 +376,52 @@
             text-transform: uppercase;
             letter-spacing: 0.15em;
             color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* ================================================================ */
+        /* STICKY SECTION NAV                                              */
+        /* ================================================================ */
+        .section-nav {
+            position: sticky;
+            top: 72px;
+            z-index: 40;
+            background: rgba(255, 253, 247, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .section-nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .section-nav a {
+            display: inline-flex;
+            align-items: center;
+            padding: 14px 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.25s var(--transition);
+            font-family: var(--font-sans);
+        }
+
+        .section-nav a:hover {
+            color: var(--text-dark);
+        }
+
+        .section-nav a.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
         }
 
         /* ================================================================ */
@@ -836,6 +889,15 @@
                 padding-top: 64px;
             }
 
+            .section-nav {
+                top: 64px;
+            }
+
+            .section-nav a {
+                padding: 10px 14px;
+                font-size: 0.6rem;
+            }
+
             .hero-section {
                 min-height: auto;
             }
@@ -1190,9 +1252,24 @@
         </section>
 
         <!-- ============================================================ -->
+        <!-- STICKY SECTION NAV                                            -->
+        <!-- ============================================================ -->
+        <nav class="section-nav" aria-label="Page sections">
+            <div class="section-nav-inner">
+                <a href="#overview" data-section="overview" class="active">Overview</a>
+                <a href="#events" data-section="events">Events</a>
+                <a href="#materials" data-section="materials">Materials</a>
+                <a href="#mentoring" data-section="mentoring">Mentoring</a>
+                <a href="#community" data-section="community">Community</a>
+                <a href="#replication" data-section="replication">Replication</a>
+                <a href="#register" data-section="register">Register</a>
+            </div>
+        </nav>
+
+        <!-- ============================================================ -->
         <!-- WP5 INTRO SECTION                                            -->
         <!-- ============================================================ -->
-        <section class="intro-section">
+        <section class="intro-section" id="overview">
             <div class="page-container">
                 <div class="intro-grid">
                     <div class="intro-text">
@@ -1233,8 +1310,7 @@
         <!-- ============================================================ -->
         <!-- SECTION 1: TRAINING EVENTS                                   -->
         <!-- ============================================================ -->
-        <section class="feature-section">
-            
+        <section class="feature-section" id="events">
             <div class="page-container">
                 <div class="feature-grid">
                     <div class="feature-image">
@@ -1275,8 +1351,7 @@
         <!-- ============================================================ -->
         <!-- SECTION 2: TRAINING MATERIALS                                -->
         <!-- ============================================================ -->
-        <section class="feature-section">
-            
+        <section class="feature-section" id="materials">
             <div class="page-container">
                 <div class="feature-grid reverse">
                     <div class="feature-image">
@@ -1317,8 +1392,7 @@
         <!-- ============================================================ -->
         <!-- SECTION 3: SME MENTORING                                     -->
         <!-- ============================================================ -->
-        <section class="feature-section">
-            
+        <section class="feature-section" id="mentoring">
             <div class="page-container">
                 <div class="feature-grid">
                     <div class="feature-image">
@@ -1359,8 +1433,7 @@
         <!-- ============================================================ -->
         <!-- SECTION 4: COMMUNITY OF PRACTICE                             -->
         <!-- ============================================================ -->
-        <section class="feature-section">
-            
+        <section class="feature-section" id="community">
             <div class="page-container">
                 <div class="feature-grid reverse">
                     <div class="feature-image">
@@ -1401,8 +1474,7 @@
         <!-- ============================================================ -->
         <!-- SECTION 5: REPLICATION TOOLKIT                               -->
         <!-- ============================================================ -->
-        <section class="feature-section">
-           
+        <section class="feature-section" id="replication">
             <div class="page-container">
                 <div class="feature-grid">
                     <div class="feature-image">
@@ -1443,8 +1515,7 @@
         <!-- ============================================================ -->
         <!-- SECTION 6: REGISTER FOR TRAINING                             -->
         <!-- ============================================================ -->
-        <section class="feature-section">
-            
+        <section class="feature-section" id="register">
             <div class="page-container">
                 <div class="feature-grid reverse">
                     <div class="feature-image">
@@ -1485,7 +1556,7 @@
         <!-- ============================================================ -->
         <!-- CTA SECTION - Ready to Get Involved                          -->
         <!-- ============================================================ -->
-        <section class="register-section">
+        <section class="register-section" id="get-involved">
             <div class="page-container">
                 <div class="register-grid">
                     <div class="register-text">
@@ -1566,6 +1637,31 @@
                         el.style.opacity = '1';
                         el.style.transform = 'translateY(0)';
                     });
+            }
+
+            // ─── SECTION NAV ──────────────────────────────────────────────
+            var navLinks = document.querySelectorAll('.section-nav a');
+            var sections = [];
+
+            navLinks.forEach(function(link) {
+                var sectionId = link.getAttribute('data-section');
+                var section = document.getElementById(sectionId);
+                if (section) sections.push(section);
+            });
+
+            if (sections.length && 'IntersectionObserver' in window) {
+                var navObserver = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        var link = document.querySelector('.section-nav a[data-section="' + entry.target.id + '"]');
+                        if (!link) return;
+                        if (entry.isIntersecting) {
+                            navLinks.forEach(function(l) { l.classList.remove('active'); });
+                            link.classList.add('active');
+                        }
+                    });
+                }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+
+                sections.forEach(function(section) { navObserver.observe(section); });
             }
 
             // ================================================================

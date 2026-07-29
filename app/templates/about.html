@@ -875,32 +875,90 @@
             .methodology-content { flex: 1 1 100%; }
         }
 
-        @media (max-width: 768px) {
-            body { padding-top: 64px; }
+@media (max-width: 768px) {
+    body { padding-top: 64px; }
 
-            .hero { min-height: 70vh; }
-            .hero-content-wrapper { padding: 40px 24px; }
-            .hero-content h1 { font-size: 2.2rem; }
-            .hero-content .hero-sub { font-size: 1rem; }
-            .hero-content .hero-description { font-size: 0.92rem; }
-            .hero-buttons { flex-direction: column; width: 100%; }
-            .hero-buttons .btn-primary,
-            .hero-buttons .btn-secondary { width: 100%; justify-content: center; }
+    .hero { min-height: 70vh; }
+    .hero-content-wrapper { padding: 40px 24px; }
+    .hero-content h1 { font-size: 2.2rem; }
+    .hero-content .hero-sub { font-size: 1rem; }
+    .hero-content .hero-description { font-size: 0.92rem; }
+    .hero-buttons { flex-direction: column; width: 100%; }
+    .hero-buttons .btn-primary,
+    .hero-buttons .btn-secondary { width: 100%; justify-content: center; }
 
-            .section-nav { top: 64px; }
-            .section-nav a { padding: 10px 14px; font-size: 0.6rem; }
+    .section-nav { top: 64px; }
+    .section-nav a { padding: 10px 14px; font-size: 0.6rem; }
 
-            .section { padding: 60px 0; }
-            .section-header h2 { font-size: 1.8rem; }
-            .section-header p { font-size: 0.95rem; }
+    .section { padding: 60px 0; }
+    .section-header h2 { font-size: 1.8rem; }
+    .section-header p { font-size: 0.95rem; }
 
-            .overview-text h2 { font-size: 1.8rem; }
-            .methodology-content h2 { font-size: 1.8rem; }
+    /* ✅ NEW: Center overview text on mobile */
+    .overview-text {
+        text-align: center;
+    }
+    .overview-text h2 { font-size: 1.8rem; }
+    .overview-text .highlight-box {
+        text-align: left;
+    }
 
-            .benefit-card { padding: 28px 24px; flex-direction: column; }
-            .objective-card { padding: 24px 22px; flex-direction: column; }
-            .tech-card { padding: 24px 22px; flex-direction: column; }
-        }
+    /* ✅ NEW: Center methodology content on mobile */
+    .methodology-content {
+        text-align: center;
+    }
+    .methodology-content h2 { font-size: 1.8rem; }
+    .methodology-content .method-item {
+        justify-content: center;
+    }
+
+    .benefit-card { padding: 28px 24px; flex-direction: column; }
+    .objective-card { padding: 24px 22px; flex-direction: column; }
+    .tech-card { padding: 24px 22px; flex-direction: column; }
+
+    /* ✅ NEW: Center card content on mobile */
+    .benefit-card,
+    .objective-card,
+    .tech-card,
+    .timeline-card {
+        text-align: center;
+        align-items: center;
+    }
+
+    /* ✅ NEW: Center card bodies on mobile */
+    .country-card .card-body {
+        text-align: center;
+    }
+
+    /* ✅ NEW: Center the methodology items */
+    .methodology-content .method-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .methodology-content .method-item:last-child {
+        border-bottom: none;
+    }
+
+    .methodology-content .method-item i {
+        font-size: 1.1rem;
+        color: var(--gold-soft);
+        width: 28px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .methodology-content .method-item span {
+        font-size: 0.92rem;
+        color: rgba(247, 242, 230, 0.8);
+        font-weight: 400;
+        text-align: left;
+    }
+}
 
         @media (max-width: 480px) {
             .hero-content h1 { font-size: 1.8rem; }
@@ -1348,7 +1406,7 @@
             <div class="container">
                 <div class="methodology-wrapper">
                     <div class="methodology-image reveal">
-                        <img src="https://images.unsplash.com/photo-1578574577315-3fbeb0cecd5c?w=800&q=80" alt="BRIDGE-AI methodology" loading="lazy">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp50b5yrfqKuvp5G-KSZvGcZZWlG0fqEV9EOWH2fe9fQ&s=10" alt="BRIDGE-AI methodology" loading="lazy">
                     </div>
                     <div class="methodology-content reveal">
                         <h2>Our <span class="highlight">Methodology</span></h2>

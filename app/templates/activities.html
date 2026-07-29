@@ -6,6 +6,8 @@
 <!-- Layout: Flexbox only, no grids                                 -->
 <!-- Font: Inter (uniform, no italics, clearly visible)            -->
 <!-- Hero: Full width background with dark overlay (no glass)       -->
+<!-- Hero Right: Activity Types cards with counts                  -->
+<!-- No section nav, only filter section                           -->
 <!-- ================================================================ -->
 
 <!DOCTYPE html>
@@ -224,30 +226,6 @@
             transform: translateY(-3px);
         }
 
-        .btn-light {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 32px;
-            background: rgba(255, 255, 255, 0.12);
-            color: #fff;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.88rem;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.35s var(--transition);
-            cursor: pointer;
-            font-family: var(--font-body);
-            backdrop-filter: blur(4px);
-        }
-
-        .btn-light:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
-        }
-
         .btn-icon { font-size: 1rem; }
 
         /* ================================================================ */
@@ -261,6 +239,18 @@
             overflow: hidden;
             min-height: 85vh;
             background: var(--moss-deep);
+        }
+
+        .hero-grid {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1280px;
+            padding: 60px 28px;
+            gap: 48px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
         }
 
         .hero-image-wrapper {
@@ -293,16 +283,12 @@
             z-index: 1;
         }
 
-        .hero-content-wrapper {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            max-width: 900px;
-            padding: 60px 40px;
-            text-align: center;
+        .hero-left {
+            flex: 1 1 50%;
+            text-align: left;
         }
 
-        .hero-content h1 {
+        .hero-left h1 {
             font-size: 3.6rem;
             font-weight: 900;
             color: #fff;
@@ -312,94 +298,187 @@
             text-shadow: 0 4px 30px rgba(0,0,0,0.4);
         }
 
-        .hero-content h1 .highlight {
+        .hero-left h1 .highlight {
             color: #C89BE8;
             font-weight: 900;
         }
 
-        .hero-content .hero-sub {
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.85);
+        .hero-left .hero-sub {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
             font-weight: 500;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             text-shadow: 0 2px 15px rgba(0,0,0,0.3);
             letter-spacing: 0.02em;
         }
 
-        .hero-content .hero-description {
+        .hero-left .hero-description {
             font-size: 1.02rem;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255,255,255,0.75);
             line-height: 1.8;
-            margin: 16px auto 28px;
-            max-width: 680px;
+            margin: 16px 0 28px;
+            max-width: 560px;
             text-shadow: 0 2px 15px rgba(0,0,0,0.3);
         }
 
         .hero-buttons {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 14px;
             flex-wrap: wrap;
         }
 
-        /* ================================================================ */
-        /* STICKY SECTION NAV                                              */
-        /* ================================================================ */
-        .section-nav {
-            position: sticky;
-            top: 80px;
-            z-index: 40;
-            background: rgba(255, 253, 247, 0.92);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--line);
+        .hero-right {
+            flex: 1 1 35%;
         }
 
-        .section-nav-inner {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 28px;
+        /* ================================================================ */
+        /* ACTIVITY TYPES CARDS (Hero Right)                              */
+        /* ================================================================ */
+        .activity-types-container {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            padding: 24px 28px;
+            width: 100%;
+        }
+
+        .activity-types-header {
             display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            justify-content: center;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .section-nav a {
-            display: inline-flex;
-            align-items: center;
-            padding: 14px 20px;
-            font-size: 0.7rem;
+        .activity-types-label {
+            font-size: 0.6rem;
             font-weight: 600;
-            letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: var(--mist);
-            text-decoration: none;
-            border-bottom: 2px solid transparent;
-            transition: all 0.25s var(--transition);
+            letter-spacing: 0.12em;
+            color: rgba(255, 255, 255, 0.4);
+            display: block;
             font-family: var(--font-body);
         }
 
-        .section-nav a:hover { color: var(--ink); }
-        .section-nav a.active {
-            color: var(--moss);
-            border-bottom-color: var(--gold);
+        .activity-types-subtitle {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+            font-family: var(--font-body);
+        }
+
+        .activity-types-count-badge {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.35);
+            padding: 3px 14px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: var(--font-body);
+        }
+
+        .activity-types-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .activity-type-card {
+            flex: 1 1 calc(50% - 4px);
+            min-width: 120px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            transition: all 0.3s var(--transition);
+        }
+
+        .activity-type-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .activity-type-card .type-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+
+        .activity-type-card .type-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .activity-type-card .type-name {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            font-family: var(--font-body);
+        }
+
+        .activity-type-card .type-count-badge {
+            font-size: 0.55rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.35);
+            padding: 1px 10px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: inline-block;
+            margin-bottom: 2px;
+            font-family: var(--font-body);
+        }
+
+        .activity-type-card .type-description {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.5;
+            margin: 0;
+            font-family: var(--font-body);
+        }
+
+        .types-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            margin-top: 12px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 0.65rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s var(--transition);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            font-family: var(--font-body);
+        }
+
+        .types-toggle-btn:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .types-toggle-btn .toggle-icon {
+            display: inline-block;
+            transition: transform 0.3s var(--transition);
+        }
+
+        .types-toggle-btn .toggle-icon.rotated {
+            transform: rotate(180deg);
         }
 
         /* ================================================================ */
-        /* SECTION COMMON                                                 */
-        /* ================================================================ */
-        .section {
-            padding: 80px 0;
-            scroll-margin-top: 140px;
-        }
-
-        /* ================================================================ */
-        /* FILTER SECTION                                                  */
+        /* FILTER SECTION (Sticky)                                         */
         /* ================================================================ */
         .filter-section {
             background: var(--paper-card);
-            padding: 20px 0;
+            padding: 16px 0;
             border-bottom: 1px solid var(--line);
             position: sticky;
             top: 80px;
@@ -415,7 +494,7 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .filter-group {
@@ -423,11 +502,11 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .filter-label {
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.08em;
@@ -439,7 +518,7 @@
         .custom-dropdown {
             position: relative;
             display: inline-block;
-            min-width: 140px;
+            min-width: 130px;
         }
 
         .dropdown-trigger {
@@ -447,17 +526,17 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            padding: 8px 16px;
+            padding: 7px 14px;
             background: var(--paper-card);
             border: 1px solid var(--line);
             border-radius: 50px;
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             font-weight: 500;
             color: var(--ink-soft);
             cursor: pointer;
             transition: all 0.3s var(--transition);
             font-family: var(--font-body);
-            gap: 10px;
+            gap: 8px;
         }
 
         .dropdown-trigger:hover {
@@ -465,7 +544,7 @@
         }
 
         .dropdown-trigger .dropdown-arrow {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             color: var(--mist);
             transition: transform 0.3s ease;
         }
@@ -476,20 +555,20 @@
 
         .dropdown-menu {
             position: absolute;
-            top: calc(100% + 6px);
+            top: calc(100% + 4px);
             left: 0;
             right: 0;
-            min-width: 160px;
-            max-height: 200px;
+            min-width: 150px;
+            max-height: 180px;
             overflow-y: auto;
             background: var(--paper-card);
             border: 1px solid var(--line);
-            border-radius: var(--radius-md);
-            padding: 6px 0;
+            border-radius: var(--radius-sm);
+            padding: 4px 0;
             box-shadow: var(--shadow-md);
             opacity: 0;
             visibility: hidden;
-            transform: translateY(-6px);
+            transform: translateY(-4px);
             transition: all 0.25s var(--transition);
             z-index: 1000;
         }
@@ -501,8 +580,8 @@
         }
 
         .dropdown-menu li {
-            padding: 8px 16px;
-            font-size: 0.78rem;
+            padding: 6px 14px;
+            font-size: 0.75rem;
             font-weight: 400;
             color: var(--ink-soft);
             cursor: pointer;
@@ -525,15 +604,15 @@
         .filter-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .filter-clear {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 18px;
-            font-size: 0.7rem;
+            padding: 6px 16px;
+            font-size: 0.68rem;
             font-weight: 600;
             color: var(--mist);
             background: var(--paper-alt);
@@ -552,11 +631,11 @@
         }
 
         .filter-active-count {
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             font-weight: 600;
             color: var(--growlight-deep);
             background: var(--growlight-tint);
-            padding: 4px 14px;
+            padding: 3px 12px;
             border-radius: 50px;
             font-family: var(--font-body);
         }
@@ -622,7 +701,7 @@
             color: var(--paper);
             padding: 3px 14px;
             border-radius: 50px;
-            font-size: 0.6rem;
+            font-size: 0.58rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.04em;
@@ -645,7 +724,7 @@
         }
 
         .activity-card .card-meta .meta-date {
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             color: var(--mist);
             font-weight: 500;
             font-family: var(--font-body);
@@ -653,9 +732,9 @@
 
         .activity-card .card-meta .meta-tag {
             display: inline-block;
-            padding: 2px 12px;
+            padding: 2px 10px;
             border-radius: 50px;
-            font-size: 0.55rem;
+            font-size: 0.52rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.04em;
@@ -678,7 +757,7 @@
         }
 
         .activity-card .card-body h3 {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--ink);
             margin-bottom: 6px;
@@ -696,7 +775,7 @@
         }
 
         .activity-card .card-body .card-summary {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--mist);
             line-height: 1.7;
             margin-bottom: 14px;
@@ -714,7 +793,7 @@
         }
 
         .activity-card .card-footer .card-location {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: var(--mist);
             font-family: var(--font-body);
             display: flex;
@@ -723,7 +802,7 @@
         }
 
         .activity-card .card-footer .card-link {
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--moss);
             text-decoration: none;
@@ -802,180 +881,38 @@
         }
 
         /* ================================================================ */
-        /* ACTIVITY TYPE CARDS (Hero Right)                               */
-        /* ================================================================ */
-        .activity-types-container {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius-md);
-            padding: 24px 28px;
-            max-width: 540px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        .activity-types-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 14px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .activity-types-label {
-            font-size: 0.6rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: rgba(255, 255, 255, 0.4);
-            display: block;
-            font-family: var(--font-body);
-        }
-
-        .activity-types-subtitle {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.7);
-            margin: 0;
-            font-family: var(--font-body);
-        }
-
-        .activity-types-count-badge {
-            font-size: 0.6rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.4);
-            padding: 3px 14px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            font-family: var(--font-body);
-        }
-
-        .activity-types-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .activity-type-card {
-            flex: 1 1 calc(50% - 4px);
-            min-width: 140px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: var(--radius-sm);
-            padding: 12px 14px;
-            transition: all 0.3s var(--transition);
-        }
-
-        .activity-type-card:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .activity-type-card .type-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 2px;
-        }
-
-        .activity-type-card .type-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .activity-type-card .type-name {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.85);
-            font-family: var(--font-body);
-        }
-
-        .activity-type-card .type-count-badge {
-            font-size: 0.55rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.35);
-            padding: 1px 10px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            display: inline-block;
-            margin-bottom: 2px;
-            font-family: var(--font-body);
-        }
-
-        .activity-type-card .type-description {
-            font-size: 0.68rem;
-            color: rgba(255, 255, 255, 0.45);
-            line-height: 1.5;
-            margin: 0;
-            font-family: var(--font-body);
-        }
-
-        .types-toggle-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 0;
-            margin-top: 12px;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.65rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s var(--transition);
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            font-family: var(--font-body);
-        }
-
-        .types-toggle-btn:hover {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .types-toggle-btn .toggle-icon {
-            display: inline-block;
-            transition: transform 0.3s var(--transition);
-        }
-
-        .types-toggle-btn .toggle-icon.rotated {
-            transform: rotate(180deg);
-        }
-
-        /* ================================================================ */
         /* RESPONSIVE                                                       */
         /* ================================================================ */
         @media (max-width: 1024px) {
-            .hero-content h1 { font-size: 2.8rem; }
+            .hero-grid { padding: 40px 20px; gap: 32px; }
+            .hero-left h1 { font-size: 2.8rem; }
             .section-header h2 { font-size: 2.2rem; }
             .activity-card { flex: 1 1 calc(50% - 15px); max-width: none; }
-            .activity-types-container { max-width: 100%; }
+            .hero-right { flex: 1 1 100%; }
         }
 
         @media (max-width: 768px) {
             body { padding-top: 64px; }
-            .section-nav { top: 64px; }
-            .section-nav a { padding: 10px 14px; font-size: 0.6rem; }
             .filter-section { top: 64px; }
 
-            .hero { min-height: 70vh; }
-            .hero-content-wrapper { padding: 40px 24px; }
-            .hero-content h1 { font-size: 2.2rem; }
-            .hero-content .hero-sub { font-size: 1rem; }
-            .hero-content .hero-description { font-size: 0.92rem; }
-            .hero-buttons { flex-direction: column; width: 100%; }
+            .hero { min-height: auto; }
+            .hero-grid { padding: 40px 16px; gap: 24px; }
+            .hero-left { flex: 1 1 100%; text-align: center; }
+            .hero-left h1 { font-size: 2.2rem; }
+            .hero-left .hero-sub { font-size: 1rem; }
+            .hero-left .hero-description { font-size: 0.92rem; max-width: 100%; margin: 12px auto 20px; }
+            .hero-buttons { justify-content: center; flex-direction: column; width: 100%; }
             .hero-buttons .btn-primary,
             .hero-buttons .btn-secondary { width: 100%; justify-content: center; }
+            .hero-right { flex: 1 1 100%; }
 
             .section { padding: 60px 0; }
             .section-header h2 { font-size: 1.8rem; }
             .section-header p { font-size: 0.95rem; }
 
-            .filter-container { padding: 0 16px; flex-direction: column; gap: 8px; }
+            .filter-container { padding: 0 16px; flex-direction: column; gap: 6px; }
             .filter-group { justify-content: center; }
-            .custom-dropdown { min-width: 120px; }
+            .custom-dropdown { min-width: 110px; }
             .filter-actions { flex-wrap: wrap; justify-content: center; }
 
             .activity-card { flex: 1 1 100%; max-width: 400px; }
@@ -988,19 +925,21 @@
         }
 
         @media (max-width: 480px) {
-            .hero-content h1 { font-size: 1.8rem; }
-            .hero-content .hero-sub { font-size: 0.9rem; }
-            .hero-content .hero-description { font-size: 0.85rem; }
+            .hero-left h1 { font-size: 1.8rem; }
+            .hero-left .hero-sub { font-size: 0.9rem; }
+            .hero-left .hero-description { font-size: 0.85rem; }
             .container { padding: 0 16px; }
             .section-header h2 { font-size: 1.5rem; }
             .custom-dropdown { min-width: 100%; }
-            .dropdown-trigger { font-size: 0.72rem; padding: 6px 12px; }
-            .dropdown-menu li { padding: 6px 12px; font-size: 0.72rem; }
+            .dropdown-trigger { font-size: 0.7rem; padding: 6px 12px; }
+            .dropdown-menu li { padding: 6px 12px; font-size: 0.7rem; }
             .activity-card .card-body { padding: 16px 18px 0; }
             .activity-card .card-footer { padding: 12px 0 16px; flex-direction: column; align-items: flex-start; }
-            .section-nav a { padding: 8px 12px; font-size: 0.55rem; }
             .activity-types-count-badge { font-size: 0.5rem; padding: 2px 10px; }
-            .activity-types-subtitle { font-size: 0.8rem; }
+            .activity-types-subtitle { font-size: 0.75rem; }
+            .activity-type-card .type-description { font-size: 0.6rem; }
+            .activity-type-card .type-name { font-size: 0.72rem; }
+            .filter-label { font-size: 0.55rem; }
         }
 
         /* ================================================================ */
@@ -1015,11 +954,10 @@
 
         .btn-primary:focus-visible,
         .btn-secondary:focus-visible,
-        .btn-light:focus-visible,
-        .section-nav a:focus-visible,
         .card-link:focus-visible,
         .filter-clear:focus-visible,
-        .dropdown-trigger:focus-visible {
+        .dropdown-trigger:focus-visible,
+        .types-toggle-btn:focus-visible {
             outline: 2px solid var(--growlight);
             outline-offset: 2px;
         }
@@ -1076,21 +1014,23 @@
                     <!-- Single image populated by JavaScript -->
                 </div>
             </div>
-            <div class="hero-content-wrapper">
-                <div class="hero-content">
-                    <h1>
+
+            <div class="hero-grid">
+                <!-- Left: Content -->
+                <div class="hero-left">
+                    <p style="color:rgba(255,255,255,0.6); font-size:0.9rem; font-weight:500; letter-spacing:0.04em; margin-bottom:4px; text-shadow:0 2px 15px rgba(0,0,0,0.3);">
                         BRIDGE-AI
-                    </h1>
-                    <p style="color:rgba(255,255,255,0.7); font-size:1.1rem; font-weight:500; letter-spacing:0.04em; margin-bottom:4px;">
+                    </p>
+                    <p style="color:rgba(255,255,255,0.5); font-size:0.95rem; font-weight:400; letter-spacing:0.02em; margin-bottom:4px; text-shadow:0 2px 15px rgba(0,0,0,0.3);">
                         Building ResIlient Development with<br>
                         GEnerative AI in Education &amp; Agriculture
                     </p>
-                    <h1 style="font-size:2.8rem; margin-top:4px;">
+                    <h1>
                         <span class="highlight">Activities</span> &amp; Field Updates
                     </h1>
 
                     <p class="hero-sub">
-                        Documenting the journey of BRIDGE-AI Kenya
+                        Documenting the journey of BRIDGE-AI across Africa
                     </p>
 
                     <p class="hero-description">
@@ -1100,36 +1040,155 @@
                     <div class="hero-buttons">
                         <a href="#activities" class="btn-primary">
                             <i class="fas fa-arrow-right btn-icon"></i>
-                            Explore Activities
-                        </a>
+                            Explore Activities                        </a>
                         <a href="{{ url_for('public.gallery') }}" class="btn-secondary">
                             <i class="fas fa-images btn-icon"></i>
                             View Gallery
                         </a>
                     </div>
                 </div>
+
+                <!-- Right: Activity Types -->
+                <div class="hero-right">
+                    <div class="activity-types-container">
+                        <div class="activity-types-header">
+                            <div>
+                                <span class="activity-types-label">Activity Types</span>
+                                <p class="activity-types-subtitle">Explore the diverse activities documented</p>
+                            </div>
+                            <span class="activity-types-count-badge">{{ activity_type_counts|length }}+ types</span>
+                        </div>
+                        <div class="activity-types-list" id="activityTypesList">
+
+                            <!-- 1. Training -->
+                            <div class="activity-type-card" data-type="training">
+                                <div class="type-header">
+                                    <span class="type-dot" style="background: #6FA85C;"></span>
+                                    <span class="type-name">Training</span>
+                                </div>
+                                <span class="type-count-badge">{{ activity_type_counts.get('training', 0) }}</span>
+                                <p class="type-description">Hands-on skill development sessions</p>
+                            </div>
+
+                            <!-- 2. Workshop -->
+                            <div class="activity-type-card" data-type="workshop">
+                                <div class="type-header">
+                                    <span class="type-dot" style="background: #3E7CB1;"></span>
+                                    <span class="type-name">Workshop</span>
+                                </div>
+                                <span class="type-count-badge">{{ activity_type_counts.get('workshop', 0) }}</span>
+                                <p class="type-description">Interactive co-design sessions</p>
+                            </div>
+
+                            <!-- 3. Bootcamp -->
+                            <div class="activity-type-card" data-type="bootcamp">
+                                <div class="type-header">
+                                    <span class="type-dot" style="background: #C98A32;"></span>
+                                    <span class="type-name">Bootcamp</span>
+                                </div>
+                                <span class="type-count-badge">{{ activity_type_counts.get('bootcamp', 0) }}</span>
+                                <p class="type-description">Intensive multi-day programs</p>
+                            </div>
+
+                            <!-- 4. Field Demo -->
+                            <div class="activity-type-card" data-type="field_demo">
+                                <div class="type-header">
+                                    <span class="type-dot" style="background: #8FB63D;"></span>
+                                    <span class="type-name">Field Demo</span>
+                                </div>
+                                <span class="type-count-badge">{{ activity_type_counts.get('field_demo', 0) }}</span>
+                                <p class="type-description">On-farm demonstrations</p>
+                            </div>
+
+                            <!-- 5. Meeting -->
+                            <div class="activity-type-card" data-type="meeting">
+                                <div class="type-header">
+                                    <span class="type-dot" style="background: #7A5CA8;"></span>
+                                    <span class="type-name">Meeting</span>
+                                </div>
+                                <span class="type-count-badge">{{ activity_type_counts.get('meeting', 0) }}</span>
+                                <p class="type-description">Stakeholder coordination</p>
+                            </div>
+
+                            <!-- 6. Media -->
+                            <div class="activity-type-card" data-type="media">
+                                <div class="type-header">
+                                    <span class="type-dot" style="background: #C15C7C;"></span>
+                                    <span class="type-name">Media</span>
+                                </div>
+                                <span class="type-count-badge">{{ activity_type_counts.get('media', 0) }}</span>
+                                <p class="type-description">Press &amp; communication</p>
+                            </div>
+
+                            <!-- 7. Publication -->
+                            <div class="activity-type-card" data-type="publication">
+                                <div class="type-header">
+                                    <span class="type-dot" style="background: #4F8FA6;"></span>
+                                    <span class="type-name">Publication</span>
+                                </div>
+                                <span class="type-count-badge">{{ activity_type_counts.get('publication', 0) }}</span>
+                                <p class="type-description">Reports &amp; research outputs</p>
+                            </div>
+
+                            <!-- 8. Resource -->
+                            <div class="activity-type-card" data-type="resource">
+                                <div class="type-header">
+                                    <span class="type-dot" style="background: #58A87D;"></span>
+                                    <span class="type-name">Resource</span>
+                                </div>
+                                <span class="type-count-badge">{{ activity_type_counts.get('resource', 0) }}</span>
+                                <p class="type-description">Guides &amp; toolkits</p>
+                            </div>
+
+                            <!-- 9. Repository -->
+                            <div class="activity-type-card" data-type="repository">
+                                <div class="type-header">
+                                    <span class="type-dot" style="background: #C97A45;"></span>
+                                    <span class="type-name">Repository</span>
+                                </div>
+                                <span class="type-count-badge">{{ activity_type_counts.get('repository', 0) }}</span>
+                                <p class="type-description">Open-source code &amp; data</p>
+                            </div>
+
+                            <!-- 10. Policy -->
+                            <div class="activity-type-card" data-type="policy">
+                                <div class="type-header">
+                                    <span class="type-dot" style="background: #3FA6A0;"></span>
+                                    <span class="type-name">Policy</span>
+                                </div>
+                                <span class="type-count-badge">{{ activity_type_counts.get('policy', 0) }}</span>
+                                <p class="type-description">Policy engagement</p>
+                            </div>
+
+                            <!-- 11. Stakeholder Engagement -->
+                            <div class="activity-type-card" data-type="stakeholder_engagement">
+                                <div class="type-header">
+                                    <span class="type-dot" style="background: #C1494F;"></span>
+                                    <span class="type-name">Stakeholder</span>
+                                </div>
+                                <span class="type-count-badge">{{ activity_type_counts.get('stakeholder_engagement', 0) }}</span>
+                                <p class="type-description">Community engagement</p>
+                            </div>
+
+                        </div>
+
+                        <!-- Toggle Button -->
+                        <button class="types-toggle-btn" id="typesToggleBtn">
+                            <span id="typesToggleText">Show More</span>
+                            <span class="toggle-icon" id="typesToggleIcon">→</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- ============================================================ -->
-        <!-- STICKY SECTION NAV                                            -->
-        <!-- ============================================================ -->
-        <nav class="section-nav" aria-label="Page sections">
-            <div class="section-nav-inner">
-                <a href="#activities" data-section="activities" class="active">All Activities</a>
-                <a href="#training" data-section="training">Training</a>
-                <a href="#workshops" data-section="workshops">Workshops</a>
-                <a href="#field-demos" data-section="field-demos">Field Demos</a>
-            </div>
-        </nav>
-
-        <!-- ============================================================ -->
-        <!-- FILTER SECTION                                               -->
+        <!-- FILTER SECTION (Sticky)                                     -->
         <!-- ============================================================ -->
         <section class="filter-section" id="filters">
             <div class="filter-container">
                 <div class="filter-group">
-                    <span class="filter-label">Filter by</span>
+                    <span class="filter-label">Filter</span>
 
                     <!-- Custom Dropdown: Work Package -->
                     <div class="custom-dropdown" data-filter="wp">
@@ -1193,7 +1252,7 @@
                         <span class="filter-active-count">Active Filters</span>
                     {% endif %}
                     <a href="{{ url_for('public.activities') }}" class="filter-clear" id="clearFiltersBtn">
-                        <i class="fas fa-times"></i> Clear Filters
+                        <i class="fas fa-times"></i> Clear
                     </a>
                 </div>
             </div>
@@ -1377,31 +1436,6 @@
 
             loadLatestImage();
 
-            // ─── SECTION NAV ──────────────────────────────────────────────
-            var navLinks = document.querySelectorAll('.section-nav a');
-            var sections = [];
-
-            navLinks.forEach(function(link) {
-                var sectionId = link.getAttribute('data-section');
-                var section = document.getElementById(sectionId);
-                if (section) sections.push(section);
-            });
-
-            if (sections.length && 'IntersectionObserver' in window) {
-                var navObserver = new IntersectionObserver(function(entries) {
-                    entries.forEach(function(entry) {
-                        var link = document.querySelector('.section-nav a[data-section="' + entry.target.id + '"]');
-                        if (!link) return;
-                        if (entry.isIntersecting) {
-                            navLinks.forEach(function(l) { l.classList.remove('active'); });
-                            link.classList.add('active');
-                        }
-                    });
-                }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
-
-                sections.forEach(function(section) { navObserver.observe(section); });
-            }
-
             // ─── SCROLL REVEAL ──────────────────────────────────────────────
             var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             var revealEls = document.querySelectorAll('.reveal');
@@ -1563,7 +1597,6 @@
                         '<img src="/static/' + activity.featured_image + '" alt="' + activity.title + '" loading="lazy">' :
                         '<img src="https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=600&h=400&fit=crop&crop=center&auto=format" alt="' + activity.title + '" loading="lazy">';
                     var wpTagImage = activity.wp_tag ? '<span class="image-tag">' + activity.wp_tag + '</span>' : '';
-                    var slug = activity.slug ? activity.slug : '#';
                     var detailUrl = activity.slug ? '/activities/' + activity.slug + '/' : '#';
 
                     html += `
@@ -1638,6 +1671,7 @@
             // ─── ACTIVITY TYPES TOGGLE ──────────────────────────────────────
             var toggleBtn = document.getElementById('typesToggleBtn');
             var toggleIcon = document.getElementById('typesToggleIcon');
+            var toggleText = document.getElementById('typesToggleText');
             var allCards = document.querySelectorAll('.activity-type-card');
             var cardsPerPage = 3;
             var currentPage = 0;
@@ -1671,16 +1705,16 @@
                     }
                     showPage(currentPage);
                     if (currentPage === totalPages - 1) {
-                        document.getElementById('typesToggleText').textContent = 'Show Less';
+                        toggleText.textContent = 'Show Less';
                         toggleIcon.classList.add('rotated');
                     } else {
-                        document.getElementById('typesToggleText').textContent = 'Show More';
+                        toggleText.textContent = 'Show More';
                         toggleIcon.classList.remove('rotated');
                     }
                 });
             }
 
-            console.log('BRIDGE-AI Activities page initialized (Uniform Font, No Glass)');
+            console.log('BRIDGE-AI Activities page initialized (Uniform Font, No Glass, Hero Right)');
 
         })();
     </script>

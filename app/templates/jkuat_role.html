@@ -1,15 +1,11 @@
 <!-- ================================================================ -->
-<!-- BRIDGE-AI KENYA - JKUAT ROLE PAGE                                -->
+<!-- BRIDGE-AI KENYA - JKUAT ROLE PAGE (UNIFORM FONT)               -->
 <!-- ================================================================ -->
-<!-- Same design system as Activities, Gallery, Partners: deep       -->
-<!-- forest, harvest gold, warm paper. Fraunces for display type,    -->
-<!-- Inter for UI, IBM Plex Mono for data and index labels.          -->
-<!-- No emoji anywhere â€” icons are replaced with mono index badges,  -->
-<!-- ghost numerals, and clean typographic hierarchy.                -->
-<!-- Hero and profile section feature the JKUAT Main Campus Gate     -->
-<!-- photograph.                                                      -->
-<!-- Jinja loops, url_for calls, section ids and the JS block are    -->
-<!-- unchanged: styling and content only.                             -->
+<!-- Purpose: Show JKUAT's role in BRIDGE-AI - Smart Mushroom       -->
+<!-- pilot, Kenya Living Lab, WP5 leadership, JHUB Africa value     -->
+<!-- Layout: Flexbox only, no grids                                 -->
+<!-- Font: Inter (uniform, no italics, clearly visible)            -->
+<!-- Sticky section nav, removed badges and hero credit            -->
 <!-- ================================================================ -->
 
 <!DOCTYPE html>
@@ -20,22 +16,22 @@
     <title>JKUAT Role - BRIDGE-AI Kenya</title>
     <meta name="description" content="JKUAT's role in BRIDGE-AI: Leading WP5 Capacity Building, hosting the Smart Mushroom pilot, and driving agritech innovation in Kenya.">
 
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Google Fonts: Inter (Uniform) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
-
         /* ================================================================ */
-        /* PAGE LOADER - Prevents FOUC (kept, unused element per original) */
+        /* PAGE LOADER                                                     */
         /* ================================================================ */
         #page-loader {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #FBF9F3;
+            inset: 0;
+            background: #16281A;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -51,10 +47,10 @@
         }
 
         .loader-spinner {
-            width: 40px;
-            height: 40px;
-            border: 2.5px solid #E4DFCC;
-            border-top-color: #163A26;
+            width: 38px;
+            height: 38px;
+            border: 2.5px solid rgba(255,255,255,0.1);
+            border-top-color: #C89BE8;
             border-radius: 50%;
             animation: loaderSpin 0.8s linear infinite;
         }
@@ -64,725 +60,616 @@
         }
 
         #page-loader p {
-            margin-top: 16px;
-            font-size: 0.72rem;
-            color: #5E6B5F;
-            font-family: 'IBM Plex Mono', ui-monospace, monospace;
+            margin-top: 18px;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.5);
+            font-family: 'Inter', monospace;
             font-weight: 500;
             letter-spacing: 0.12em;
             text-transform: uppercase;
+        }
+
+        /* ================================================================ */
+        /* ROOT VARIABLES                                                  */
+        /* ================================================================ */
+        :root {
+            --ink: #17241B;
+            --ink-soft: #2D3D35;
+            --paper: #F7F2E6;
+            --paper-alt: #EFE6CE;
+            --paper-card: #FFFDF7;
+            --moss: #26432B;
+            --moss-deep: #16281A;
+            --moss-mid: #3E6B45;
+            --growlight: #7C4FA3;
+            --growlight-deep: #5B3878;
+            --growlight-tint: rgba(124, 79, 163, 0.09);
+            --clay: #BE5A2B;
+            --clay-tint: rgba(190, 90, 43, 0.1);
+            --mist: #6E7767;
+            --line: #E1D8C0;
+            --gold: #C89B3C;
+            --gold-soft: #D4B06A;
+
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+            --shadow-sm: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-md: 0 12px 40px rgba(0,0,0,0.08);
+            --shadow-lg: 0 24px 64px rgba(0,0,0,0.12);
+            --shadow-neu: 8px 8px 24px rgba(23, 36, 27, 0.08), -8px -8px 24px rgba(255, 253, 247, 0.7);
+
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+
+            --transition: 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         /* ================================================================ */
         /* RESET & BASE                                                    */
         /* ================================================================ */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --primary-dark: #0B1B14;
-            --primary: #163A26;
-            --primary-light: #2C6B45;
-            --primary-lighter: #4F8F63;
-
-            --gold: #C89B3C;
-            --gold-light: #E8CA82;
-            --gold-pale: #F3E8C9;
-
-            --moss: #6F8F5C;
-            --moss-pale: #E7EEE1;
-            --clay: #B5703F;
-
-            --text-dark: #12201A;
-            --text-body: #2A362F;
-            --text-muted: #5E6B5F;
-            --text-light: #8B9789;
-
-            --bg-white: #FFFFFF;
-            --bg-light: #F5F3EA;
-            --bg-lighter: #FBF9F3;
-            --border-light: #E4DFCC;
-
-            --shadow-sm: 0 2px 10px rgba(18, 32, 24, 0.05);
-            --shadow-md: 0 8px 28px rgba(18, 32, 24, 0.07);
-            --shadow-lg: 0 16px 50px rgba(18, 32, 24, 0.09);
-
-            --radius-sm: 8px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
-
-            --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --font-serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-            --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-        }
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: var(--font-sans);
-            color: var(--text-body);
-            background: var(--bg-white);
+            font-family: var(--font-body);
+            color: var(--ink-soft);
+            background: var(--paper);
             line-height: 1.7;
-            padding-top: 72px;
+            padding-top: 80px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-        a:focus-visible, button:focus-visible {
-            outline: 2px solid var(--gold);
-            outline-offset: 2px;
-        }
+        img { max-width: 100%; height: auto; display: block; }
 
-        /* ================================================================ */
-        /* PAGE HERO â€” JKUAT campus gate photograph                        */
-        /* ================================================================ */
-
-        .page-hero {
-            position: relative;
-            padding: 96px 24px 84px;
-            text-align: left;
-            overflow: hidden;
-            isolation: isolate;
-            background: var(--primary-dark);
-            height: 90vh;
-        }
-
-        .page-hero .hero-bg {
-            position: absolute;
-            inset: 0;
-            background-image: url('{{ url_for("static", filename="images/partners/20260712_232807_JKUAT-Main-Campus-Gate-A_1_2.jpg") }}');
-            background-size: cover;
-            background-position: center 65%;
-            transform: scale(1.06);
-            animation: heroSlowZoom 22s ease-in-out infinite alternate;
-            z-index: -2;
-        }
-
-        @keyframes heroSlowZoom {
-            from { transform: scale(1.06) translateY(0); }
-            to { transform: scale(1.13) translateY(-1%); }
-        }
-
-        .page-hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(150deg, rgba(11,27,20,0.94) 0%, rgba(11,27,20,0.78) 42%, rgba(22,58,38,0.42) 78%, rgba(44,107,69,0.28) 100%);
-            z-index: -1;
-        }
-
-        .page-hero::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(ellipse at 15% 30%, black 0%, transparent 60%);
-            -webkit-mask-image: radial-gradient(ellipse at 15% 30%, black 0%, transparent 60%);
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .page-hero .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: rgba(255, 255, 255, 0.45);
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            margin-bottom: 24px;
-        }
-
-        .page-hero .breadcrumb a {
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            transition: color var(--transition);
-        }
-
-        .page-hero .breadcrumb a:hover {
-            color: var(--gold-light);
-        }
-
-        .page-hero .breadcrumb .sep {
-            color: rgba(255, 255, 255, 0.2);
-        }
-
-        .page-hero .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            background: rgba(232, 202, 130, 0.07);
-            color: var(--gold-light);
-            padding: 7px 18px 7px 14px;
-            border-radius: 50px;
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            border: 1px solid rgba(232, 202, 130, 0.2);
-            margin-bottom: 20px;
-        }
-
-        .page-hero .hero-badge::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--gold-light);
-            box-shadow: 0 0 10px rgba(232, 202, 130, 0.5);
-        }
-
-        .page-hero h1 {
-            font-family: var(--font-serif);
-            font-size: 4rem;
-            font-weight: 600;
-            font-style: italic;
-            color: #ffffff;
-            letter-spacing: -0.01em;
-            line-height: 1.04;
-            margin-bottom: 18px;
-        }
-
-        .page-hero h1 .highlight {
-            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 45%, var(--gold) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .page-hero .hero-subtitle {
-            font-size: 1.12rem;
-            color: rgba(255, 255, 255, 0.6);
-            max-width: 620px;
-            line-height: 1.75;
-            font-weight: 300;
-        }
-
-        .hero-photo-credit {
-            position: absolute;
-            left: 24px;
-            bottom: 22px;
-            z-index: 1;
-            font-family: var(--font-mono);
-            font-size: 0.62rem;
-            font-weight: 500;
-            letter-spacing: 0.06em;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-        }
-
-        /* ================================================================ */
-        /* SECTION COMMON                                                   */
-        /* ================================================================ */
-
-        .section {
-            padding: 76px 24px;
-        }
-
-        .section-container {
+        .container {
             max-width: 1280px;
             margin: 0 auto;
+            padding: 0 28px;
+        }
+
+        ::selection { background: var(--growlight); color: #fff; }
+
+        /* ================================================================ */
+        /* TYPOGRAPHY — Uniform Inter, No Italics                         */
+        /* ================================================================ */
+        h1, h2, h3, h4, h5, h6, p, span, a, li {
+            font-family: var(--font-body);
+            font-style: normal;
         }
 
         .section-header {
+            max-width: 720px;
+            margin: 0 auto 48px;
             text-align: center;
-            margin-bottom: 52px;
-        }
-
-        .section-header .section-tag {
-            display: inline-block;
-            background: var(--bg-light);
-            color: var(--primary-light);
-            padding: 5px 16px;
-            border-radius: 50px;
-            font-family: var(--font-mono);
-            font-size: 0.64rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            margin-bottom: 14px;
-            border: 1px solid var(--border-light);
-        }
-
-        .section-header .section-tag.gold {
-            background: var(--gold-pale);
-            color: #8A6520;
-            border-color: #E9D9A6;
-        }
-
-        .section-header .section-tag.green {
-            background: var(--moss-pale);
-            color: var(--primary-light);
-            border-color: #D2E1CA;
         }
 
         .section-header h2 {
-            font-family: var(--font-serif);
-            font-size: 2.5rem;
-            font-weight: 600;
-            font-style: italic;
-            color: var(--text-dark);
-            letter-spacing: -0.01em;
-            line-height: 1.16;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
         }
 
         .section-header h2 .highlight {
-            background: linear-gradient(135deg, var(--primary-light), var(--moss));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--moss);
+            font-weight: 800;
+        }
+
+        .section-header h2 .highlight.purple {
+            color: var(--growlight-deep);
         }
 
         .section-header p {
-            color: var(--text-muted);
+            font-size: 1.05rem;
+            color: var(--mist);
+            margin-top: 14px;
+            font-weight: 400;
+        }
+
+        .section-alt { background: var(--paper-alt); }
+        .section-dark { background: var(--moss-deep); color: var(--paper); }
+        .section-dark .section-header h2 { color: var(--paper); }
+        .section-dark .section-header p { color: rgba(247, 242, 230, 0.7); }
+
+        /* ================================================================ */
+        /* BUTTONS                                                         */
+        /* ================================================================ */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: var(--moss);
+            color: var(--paper);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            border-radius: 50px;
+            transition: all 0.35s var(--transition);
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+        }
+
+        .btn-primary:hover {
+            background: var(--moss-deep);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(22, 40, 26, 0.3);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: transparent;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            border-radius: 50px;
+            border: 1.5px solid rgba(255,255,255,0.3);
+            transition: all 0.35s var(--transition);
+            cursor: pointer;
+            font-family: var(--font-body);
+        }
+
+        .btn-secondary:hover {
+            border-color: #fff;
+            color: #fff;
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-3px);
+        }
+
+        .btn-light {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.35s var(--transition);
+            cursor: pointer;
+            font-family: var(--font-body);
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-light:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-icon { font-size: 1rem; }
+
+        /* ================================================================ */
+        /* HERO — Full Width Background                                   */
+        /* ================================================================ */
+        .hero {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            min-height: 85vh;
+            background: var(--moss-deep);
+        }
+
+        .hero-image-wrapper {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .hero-image-wrapper .hero-slide-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            will-change: transform;
+            transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+
+        .hero-image-wrapper .hero-slide-bg.active {
+            opacity: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(22, 40, 26, 0.6);
+            z-index: 1;
+        }
+
+        .hero-content-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 900px;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3.6rem;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+        }
+
+        .hero-content h1 .highlight {
+            color: #C89BE8;
+            font-weight: 900;
+        }
+
+        .hero-content .hero-sub {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.85);
+            font-weight: 500;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.3);
+            letter-spacing: 0.02em;
+        }
+
+        .hero-content .hero-description {
             font-size: 1.02rem;
-            max-width: 700px;
-            margin: 14px auto 0;
-            line-height: 1.75;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.8;
+            margin: 16px auto 28px;
+            max-width: 680px;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.3);
         }
 
-        .section-alt {
-            background: var(--bg-lighter);
+        .hero-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
         }
 
         /* ================================================================ */
-        /* PROFILE SECTION                                                  */
+        /* STICKY SECTION NAV                                              */
         /* ================================================================ */
+        .section-nav {
+            position: sticky;
+            top: 80px;
+            z-index: 40;
+            background: rgba(255, 253, 247, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+        }
 
-        .profile-grid {
-            display: grid;
-            grid-template-columns: 1.3fr 1fr;
-            gap: 60px;
-            align-items: start;
+        .section-nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 28px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .section-nav a {
+            display: inline-flex;
+            align-items: center;
+            padding: 14px 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--mist);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.25s var(--transition);
+            font-family: var(--font-body);
+        }
+
+        .section-nav a:hover { color: var(--ink); }
+        .section-nav a.active {
+            color: var(--moss);
+            border-bottom-color: var(--gold);
+        }
+
+        /* ================================================================ */
+        /* SECTION COMMON                                                 */
+        /* ================================================================ */
+        .section {
+            padding: 80px 0;
+            scroll-margin-top: 140px;
+        }
+
+        /* ================================================================ */
+        /* PROFILE — Text Left, Image Right                              */
+        /* ================================================================ */
+        .profile-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 56px;
+            align-items: stretch;
         }
 
         .profile-text {
-            font-size: 1rem;
-            color: var(--text-body);
-            line-height: 1.85;
-        }
-
-        .profile-text .profile-label {
-            display: inline-block;
-            background: var(--bg-light);
-            color: var(--primary-light);
-            padding: 5px 16px;
-            border-radius: 50px;
-            font-family: var(--font-mono);
-            font-size: 0.66rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 16px;
+            flex: 1 1 55%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .profile-text h2 {
-            font-family: var(--font-serif);
-            font-size: 2.15rem;
-            font-weight: 600;
-            font-style: italic;
-            color: var(--text-dark);
-            letter-spacing: -0.005em;
-            margin-bottom: 18px;
-            line-height: 1.24;
-        }
-
-        .profile-text p {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
             margin-bottom: 16px;
         }
 
-        .profile-text strong {
-            color: var(--text-dark);
-            font-weight: 600;
+        .profile-text h2 .highlight {
+            color: var(--moss);
+            font-weight: 800;
+        }
+
+        .profile-text p {
+            font-size: 1.02rem;
+            color: var(--ink-soft);
+            line-height: 1.8;
+            margin-bottom: 16px;
         }
 
         .profile-text .highlight-box {
-            background: var(--bg-lighter);
+            background: var(--paper-card);
             border-left: 3px solid var(--gold);
             padding: 22px 26px;
             border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
             margin: 22px 0;
+            box-shadow: var(--shadow-sm);
         }
 
         .profile-text .highlight-box strong {
-            color: var(--text-dark);
+            color: var(--ink);
             display: block;
-            font-family: var(--font-mono);
-            font-size: 0.66rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 8px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
 
         .profile-text .highlight-box p {
             margin: 0;
-            font-size: 0.94rem;
-            color: var(--text-muted);
+            font-size: 0.96rem;
+            color: var(--mist);
         }
 
-        /* Feature image plate â€” the campus gate, presented again with a caption */
-        .profile-photo-card {
+        .profile-image {
+            flex: 1 1 35%;
             border-radius: var(--radius-lg);
             overflow: hidden;
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-md);
-            margin-bottom: 20px;
+            box-shadow: var(--shadow-lg);
+            min-height: 320px;
+            background: var(--moss-deep);
+            display: flex;
+            align-items: stretch;
         }
 
-        .profile-photo-card img {
+        .profile-image img {
             width: 100%;
-            height: 200px;
+            height: 100%;
             object-fit: cover;
-            display: block;
-        }
-
-        .profile-photo-card .photo-caption {
-            padding: 12px 18px;
-            background: var(--primary-dark);
-            font-family: var(--font-mono);
-            font-size: 0.66rem;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            color: rgba(255,255,255,0.55);
-            text-transform: uppercase;
+            min-height: 320px;
         }
 
         .profile-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 20px;
         }
 
         .stat-box {
-            background: var(--bg-white);
-            border: 1px solid var(--border-light);
+            flex: 1 1 calc(50% - 8px);
+            min-width: 120px;
+            background: var(--paper-card);
+            border: 1px solid var(--line);
             border-radius: var(--radius-md);
             padding: 22px 16px;
             text-align: center;
-            transition: all var(--transition);
+            transition: all 0.3s var(--transition);
         }
 
         .stat-box:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-md);
-            border-color: var(--primary-light);
+            border-color: var(--moss);
         }
 
         .stat-box .stat-number {
-            font-family: var(--font-mono);
-            font-size: 1.85rem;
-            font-weight: 600;
-            color: var(--primary-light);
+            font-family: var(--font-body);
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--moss);
             display: block;
             line-height: 1.1;
         }
 
-        .stat-box .stat-number .stat-suffix {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--gold);
-        }
-
         .stat-box .stat-label {
-            color: var(--text-muted);
+            color: var(--mist);
             font-size: 0.72rem;
             font-weight: 500;
             margin-top: 4px;
             display: block;
-            letter-spacing: 0.01em;
         }
 
-        .info-card {
-            background: var(--bg-light);
-            border-radius: var(--radius-md);
-            padding: 22px 26px;
-            margin-top: 18px;
-            border: 1px solid var(--border-light);
-        }
-
-        .info-row {
+        /* ================================================================ */
+        /* JHUB AFRICA — Flexbox Layout                                   */
+        /* ================================================================ */
+        .jhub-wrapper {
             display: flex;
-            gap: 14px;
-            padding: 9px 0;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-row .info-key {
-            font-family: var(--font-mono);
-            font-size: 0.62rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-light);
-            width: 96px;
-            flex-shrink: 0;
-            padding-top: 2px;
-        }
-
-        .info-row .info-val {
-            font-size: 0.85rem;
-            color: var(--text-body);
-            line-height: 1.6;
-        }
-
-        /* ================================================================ */
-        /* JHUB AFRICA                                                      */
-        /* ================================================================ */
-
-        .jhub-section {
-            background: var(--bg-white);
-            border-radius: var(--radius-lg);
-            padding: 48px 56px;
-            border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-sm);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .jhub-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 320px;
-            height: 320px;
-            background: radial-gradient(circle, rgba(200, 155, 60, 0.06) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .jhub-section .jhub-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
+            flex-wrap: wrap;
+            gap: 48px;
             align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .jhub-section .jhub-text h3 {
-            font-family: var(--font-serif);
-            font-size: 1.6rem;
-            font-weight: 600;
-            font-style: italic;
-            color: var(--text-dark);
-            margin-bottom: 14px;
-            letter-spacing: -0.005em;
-        }
-
-        .jhub-section .jhub-text h3 .highlight {
-            color: var(--primary-light);
-        }
-
-        .jhub-section .jhub-text p {
-            color: var(--text-body);
-            font-size: 0.98rem;
-            line-height: 1.85;
-        }
-
-        .jhub-section .jhub-text p:last-of-type {
-            margin-top: 12px;
-        }
-
-        .jhub-section .jhub-highlights {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        .jhub-highlight-item {
-            background: var(--bg-lighter);
-            border-radius: var(--radius-sm);
-            padding: 18px 20px;
-            text-align: left;
-            border: 1px solid var(--border-light);
-            transition: all var(--transition);
-        }
-
-        .jhub-highlight-item:hover {
-            transform: translateY(-3px);
+            background: var(--paper-card);
+            border-radius: var(--radius-lg);
+            padding: 48px 52px;
+            border: 1px solid var(--line);
             box-shadow: var(--shadow-sm);
-            border-color: var(--primary-light);
         }
 
-        .jhub-highlight-item .jh-index {
-            display: inline-block;
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            font-weight: 600;
-            color: var(--gold);
-            letter-spacing: 0.08em;
-            margin-bottom: 8px;
+        .jhub-content {
+            flex: 1 1 50%;
         }
 
-        .jhub-highlight-item .jh-label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            display: block;
+        .jhub-content h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            margin-bottom: 14px;
         }
 
-        .jhub-highlight-item .jh-desc {
-            font-size: 0.74rem;
-            color: var(--text-muted);
-            display: block;
-            margin-top: 2px;
+        .jhub-content h2 .highlight {
+            color: var(--moss);
+            font-weight: 800;
+        }
+
+        .jhub-content p {
+            font-size: 1.02rem;
+            color: var(--ink-soft);
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .jhub-content p:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .jhub-image {
+            flex: 1 1 35%;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            min-height: 200px;
+            background: var(--moss-deep);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .jhub-image img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            object-fit: contain;
         }
 
         /* ================================================================ */
-        /* WP5 LEADERSHIP                                                   */
+        /* WP5 LEADERSHIP — 6 Cards (2 per row)                          */
         /* ================================================================ */
-
         .wp5-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            display: flex;
+            flex-wrap: wrap;
             gap: 24px;
+            justify-content: center;
         }
 
         .wp5-card {
-            background: var(--bg-white);
-            border: 1px solid var(--border-light);
+            flex: 1 1 calc(50% - 12px);
+            min-width: 280px;
+            max-width: 580px;
+            background: var(--paper-card);
             border-radius: var(--radius-md);
-            padding: 30px 26px 26px;
-            transition: all var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .wp5-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--gold), var(--primary-light));
-            opacity: 0;
-            transition: opacity var(--transition);
-        }
-
-        .wp5-card::after {
-            content: attr(data-ghost);
-            position: absolute;
-            top: 4px;
-            right: 14px;
-            font-family: var(--font-serif);
-            font-style: italic;
-            font-weight: 600;
-            font-size: 3.4rem;
-            color: var(--text-dark);
-            opacity: 0.035;
-            line-height: 1;
-            pointer-events: none;
-        }
-
-        .wp5-card:hover::before {
-            opacity: 1;
+            padding: 30px 28px;
+            box-shadow: var(--shadow-neu);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.4s var(--transition);
         }
 
         .wp5-card:hover {
             transform: translateY(-6px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--primary-light);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--growlight-tint);
         }
 
         .wp5-card .wp5-number {
             display: inline-block;
-            background: var(--gold-pale);
-            color: #8A6520;
-            font-family: var(--font-mono);
-            font-size: 0.62rem;
-            font-weight: 600;
-            padding: 3px 13px;
-            border-radius: 50px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 1;
+            color: var(--paper);
+            background: var(--moss);
+            padding: 3px 14px;
+            border-radius: 50px;
+            margin-bottom: 10px;
+            font-family: var(--font-body);
+        }
+
+        .wp5-card .wp5-number.gold {
+            background: var(--gold);
         }
 
         .wp5-card h4 {
-            font-family: var(--font-serif);
             font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-            position: relative;
-            z-index: 1;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 6px;
         }
 
         .wp5-card p {
-            color: var(--text-muted);
-            font-size: 0.87rem;
+            font-size: 0.9rem;
+            color: var(--mist);
             line-height: 1.7;
             margin: 0;
-            position: relative;
-            z-index: 1;
         }
 
         /* ================================================================ */
-        /* RESPONSIBILITIES                                                 */
+        /* RESPONSIBILITIES                                                */
         /* ================================================================ */
-
         .responsibilities-wrapper {
-            background: var(--bg-white);
+            background: var(--paper-card);
             border-radius: var(--radius-lg);
             padding: 44px 52px;
-            border: 1px solid var(--border-light);
+            border: 1px solid var(--line);
             box-shadow: var(--shadow-sm);
         }
 
         .responsibilities-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px 44px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 40px;
             list-style: none;
             padding: 0;
             margin: 0;
-            counter-reset: resp;
         }
 
         .responsibilities-grid li {
-            counter-increment: resp;
+            flex: 1 1 calc(50% - 20px);
+            min-width: 240px;
             display: flex;
-            align-items: baseline;
-            gap: 16px;
-            padding: 14px 0;
-            color: var(--text-body);
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            color: var(--ink-soft);
             font-size: 0.95rem;
-            border-bottom: 1px solid var(--border-light);
-            transition: all var(--transition);
+            border-bottom: 1px solid var(--line);
+            transition: all 0.3s var(--transition);
         }
 
         .responsibilities-grid li:last-child,
@@ -792,75 +679,56 @@
 
         .responsibilities-grid li:hover {
             padding-left: 6px;
-            color: var(--text-dark);
+            color: var(--ink);
         }
 
-        .responsibilities-grid li::before {
-            content: counter(resp, decimal-leading-zero);
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            font-weight: 600;
+        .responsibilities-grid li .resp-icon {
             color: var(--gold);
+            font-size: 0.8rem;
             flex-shrink: 0;
-            padding-top: 2px;
+            width: 20px;
+            text-align: center;
         }
 
         /* ================================================================ */
-        /* TEAM SECTION                                                     */
+        /* TEAM SECTION                                                    */
         /* ================================================================ */
-
         .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 28px;
+            justify-content: center;
         }
 
         .team-card {
-            background: var(--bg-white);
-            border: 1px solid var(--border-light);
+            flex: 1 1 calc(33.333% - 20px);
+            min-width: 240px;
+            max-width: 360px;
+            background: var(--paper-card);
+            border: 1px solid var(--line);
             border-radius: var(--radius-md);
             padding: 32px 24px 28px;
             text-align: center;
-            transition: all var(--transition);
-            position: relative;
-        }
-
-        .team-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--gold), var(--primary-light));
-            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-            transition: width var(--transition);
-        }
-
-        .team-card:hover::after {
-            width: 80%;
+            transition: all 0.4s var(--transition);
         }
 
         .team-card:hover {
             transform: translateY(-6px);
             box-shadow: var(--shadow-md);
-            border-color: var(--primary-light);
+            border-color: var(--growlight);
         }
 
         .team-card .team-photo {
             width: 106px;
             height: 106px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--bg-light), var(--moss-pale));
+            background: var(--paper-alt);
             margin: 0 auto 16px;
+            overflow: hidden;
+            border: 3px solid var(--line);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            border: 3px solid var(--bg-white);
-            outline: 2px solid var(--border-light);
-            box-shadow: var(--shadow-sm);
         }
 
         .team-card .team-photo img {
@@ -870,130 +738,108 @@
         }
 
         .team-card .team-photo .placeholder {
-            font-family: var(--font-serif);
-            font-style: italic;
             font-size: 2.4rem;
-            color: var(--primary-light);
-            font-weight: 600;
+            font-weight: 700;
+            color: var(--moss);
+            font-family: var(--font-body);
         }
 
         .team-card .team-status {
             display: inline-block;
-            font-family: var(--font-mono);
             font-size: 0.56rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            padding: 3px 13px;
+            letter-spacing: 0.06em;
+            padding: 3px 14px;
             border-radius: 50px;
-            background: var(--moss-pale);
-            color: var(--primary-light);
+            background: var(--growlight-tint);
+            color: var(--growlight-deep);
             margin-bottom: 10px;
+            font-family: var(--font-body);
         }
 
         .team-card h4 {
-            font-family: var(--font-serif);
-            font-size: 1.12rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 3px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 2px;
         }
 
         .team-card .team-role {
-            font-size: 0.84rem;
+            font-size: 0.85rem;
             color: var(--gold);
             font-weight: 600;
         }
 
         .team-card .team-affiliation {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            margin-top: 5px;
+            font-size: 0.78rem;
+            color: var(--mist);
+            margin-top: 4px;
+            font-family: var(--font-body);
         }
 
         .team-card .team-bio {
             font-size: 0.85rem;
-            color: var(--text-muted);
+            color: var(--mist);
             line-height: 1.7;
-            margin-top: 14px;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            margin-top: 12px;
         }
 
         .team-card .team-email {
             display: inline-block;
             font-size: 0.76rem;
-            color: var(--primary-light);
+            color: var(--moss);
             text-decoration: none;
-            margin-top: 14px;
+            margin-top: 12px;
             padding: 7px 20px;
-            border: 1px solid var(--border-light);
+            border: 1px solid var(--line);
             border-radius: 50px;
-            transition: all var(--transition);
+            transition: all 0.3s var(--transition);
+            font-family: var(--font-body);
         }
 
         .team-card .team-email:hover {
-            background: var(--primary-light);
-            color: #ffffff;
-            border-color: var(--primary-light);
-            box-shadow: 0 6px 18px rgba(44, 107, 69, 0.2);
+            background: var(--moss);
+            color: #fff;
+            border-color: var(--moss);
         }
 
         .team-empty {
             text-align: center;
             padding: 70px 20px;
-            background: var(--bg-light);
+            background: var(--paper-alt);
             border-radius: var(--radius-lg);
-            border: 2px dashed var(--border-light);
-            position: relative;
-        }
-
-        .team-empty::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 2px;
-            background: var(--gold);
-            border-radius: 2px;
+            border: 2px dashed var(--line);
+            width: 100%;
         }
 
         .team-empty .empty-icon {
             font-size: 2.6rem;
             display: block;
             margin-bottom: 16px;
-            color: var(--primary-light);
+            color: var(--moss);
             opacity: 0.3;
-            font-weight: 100;
         }
 
         .team-empty h3 {
-            font-family: var(--font-serif);
-            font-style: italic;
-            color: var(--text-dark);
-            margin-bottom: 6px;
             font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 6px;
         }
 
         .team-empty p {
-            color: var(--text-muted);
+            color: var(--mist);
         }
 
         /* ================================================================ */
         /* CTA BANNER                                                     */
         /* ================================================================ */
-
         .cta-banner {
-            background: var(--primary-dark);
+            background: var(--moss-deep);
             border-radius: var(--radius-lg);
-            padding: 56px 56px;
+            padding: 56px 48px;
             text-align: center;
-            margin-top: 20px;
             position: relative;
             overflow: hidden;
         }
@@ -1002,7 +848,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse at 50% 0%, rgba(200,155,60,0.14), transparent 60%);
+            background: radial-gradient(ellipse at 50% 0%, rgba(200,155,60,0.1), transparent 60%);
             pointer-events: none;
         }
 
@@ -1013,21 +859,19 @@
 
         .cta-banner .cta-label {
             display: block;
-            font-family: var(--font-mono);
             font-size: 0.65rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.16em;
-            color: var(--gold-light);
+            color: var(--gold-soft);
             margin-bottom: 14px;
+            font-family: var(--font-body);
         }
 
         .cta-banner h3 {
             color: #ffffff;
-            font-family: var(--font-serif);
             font-size: 2rem;
-            font-weight: 600;
-            font-style: italic;
+            font-weight: 800;
             margin-bottom: 10px;
             letter-spacing: -0.005em;
         }
@@ -1052,209 +896,165 @@
             align-items: center;
             gap: 8px;
             padding: 13px 30px;
-            background: linear-gradient(135deg, var(--gold-light), var(--gold));
-            color: var(--primary-dark);
+            background: var(--gold);
+            color: var(--moss-deep);
             text-decoration: none;
             font-weight: 700;
             font-size: 0.88rem;
             border-radius: 50px;
-            transition: all var(--transition);
-            box-shadow: 0 6px 22px rgba(200, 155, 60, 0.24);
+            transition: all 0.35s var(--transition);
         }
 
         .cta-banner .cta-link:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(200, 155, 60, 0.34);
+            box-shadow: 0 12px 32px rgba(200, 155, 60, 0.3);
         }
 
         .cta-banner .cta-link.outline {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.06);
             color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            box-shadow: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .cta-banner .cta-link.outline:hover {
-            background: rgba(255, 255, 255, 0.09);
+            background: rgba(255, 255, 255, 0.12);
             border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: none;
         }
 
         /* ================================================================ */
-        /* RESPONSIVE                                                      */
+        /* RESPONSIVE                                                       */
         /* ================================================================ */
-
         @media (max-width: 1024px) {
-            .profile-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .wp5-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .jhub-section .jhub-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
-            .page-hero h1 {
-                font-size: 3.2rem;
-            }
+            .hero-content h1 { font-size: 2.8rem; }
+            .section-header h2 { font-size: 2.2rem; }
+            .profile-text h2 { font-size: 2.2rem; }
+            .jhub-content h2 { font-size: 2.2rem; }
+            .profile-image { flex: 1 1 100%; min-height: 240px; }
+            .jhub-wrapper { flex-direction: column; padding: 32px 28px; }
+            .jhub-image { flex: 1 1 100%; min-height: 160px; }
+            .jhub-content { flex: 1 1 100%; }
+            .wp5-card { flex: 1 1 100%; max-width: 100%; }
+            .team-card { flex: 1 1 calc(50% - 14px); max-width: none; }
         }
 
         @media (max-width: 768px) {
-            body {
-                padding-top: 64px;
-            }
+            body { padding-top: 64px; }
+            .section-nav { top: 64px; }
+            .section-nav a { padding: 10px 14px; font-size: 0.6rem; }
 
-            .page-hero {
-                padding: 60px 20px 56px;
-            }
+            .hero { min-height: 70vh; }
+            .hero-content-wrapper { padding: 40px 24px; }
+            .hero-content h1 { font-size: 2.2rem; }
+            .hero-content .hero-sub { font-size: 1rem; }
+            .hero-content .hero-description { font-size: 0.92rem; }
+            .hero-buttons { flex-direction: column; width: 100%; }
+            .hero-buttons .btn-primary,
+            .hero-buttons .btn-secondary { width: 100%; justify-content: center; }
 
-            .page-hero h1 {
-                font-size: 2.4rem;
-            }
+            .section { padding: 60px 0; }
+            .section-header h2 { font-size: 1.8rem; }
+            .section-header p { font-size: 0.95rem; }
 
-            .page-hero .hero-subtitle {
-                font-size: 1rem;
-            }
+            .profile-wrapper { flex-direction: column; gap: 32px; }
+            .profile-text h2 { font-size: 1.8rem; text-align: center; }
+            .profile-text p { text-align: center; }
+            .profile-text .highlight-box { text-align: left; }
+            .profile-image { min-height: 200px; }
 
-            .hero-photo-credit {
-                position: static;
-                display: block;
-                margin-top: 24px;
-            }
+            .profile-stats { justify-content: center; }
+            .stat-box { flex: 1 1 calc(50% - 8px); min-width: 100px; }
 
-            .section {
-                padding: 52px 20px;
-            }
+            .jhub-content h2 { font-size: 1.8rem; text-align: center; }
+            .jhub-content p { text-align: center; }
+            .jhub-image { min-height: 140px; }
 
-            .section-header h2 {
-                font-size: 1.85rem;
-            }
+            .responsibilities-wrapper { padding: 28px 20px; }
+            .responsibilities-grid li { flex: 1 1 100%; min-width: 100%; }
+            .responsibilities-grid li:last-child { border-bottom: none; }
 
-            .profile-stats {
-                grid-template-columns: 1fr 1fr;
-            }
+            .team-card { flex: 1 1 100%; max-width: 320px; margin: 0 auto; }
 
-            .jhub-section {
-                padding: 32px 24px;
-            }
-
-            .jhub-section .jhub-highlights {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .wp5-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .wp5-card::after {
-                font-size: 2.6rem;
-            }
-
-            .responsibilities-wrapper {
-                padding: 30px 22px;
-            }
-
-            .responsibilities-grid {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-
-            .responsibilities-grid li:nth-last-child(2) {
-                border-bottom: 1px solid var(--border-light);
-            }
-
-            .team-grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            }
-
-            .cta-banner {
-                padding: 40px 24px;
-            }
-
-            .cta-banner h3 {
-                font-size: 1.55rem;
-            }
-
-            .cta-banner .cta-links {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .cta-banner .cta-link {
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
-            }
+            .cta-banner { padding: 40px 24px; }
+            .cta-banner h3 { font-size: 1.6rem; }
+            .cta-banner .cta-links { flex-direction: column; align-items: center; }
+            .cta-banner .cta-link { width: 100%; max-width: 300px; justify-content: center; }
         }
 
         @media (max-width: 480px) {
-            .profile-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .jhub-section .jhub-highlights {
-                grid-template-columns: 1fr;
-            }
-
-            .team-grid {
-                grid-template-columns: 1fr;
-                max-width: 320px;
-                margin: 0 auto;
-            }
-
-            .stat-box .stat-number {
-                font-size: 1.5rem;
-            }
-
-            .profile-photo-card img {
-                height: 160px;
-            }
+            .hero-content h1 { font-size: 1.8rem; }
+            .hero-content .hero-sub { font-size: 0.9rem; }
+            .hero-content .hero-description { font-size: 0.85rem; }
+            .container { padding: 0 16px; }
+            .section-header h2 { font-size: 1.5rem; }
+            .profile-text h2 { font-size: 1.5rem; }
+            .jhub-content h2 { font-size: 1.5rem; }
+            .cta-banner h3 { font-size: 1.4rem; }
+            .stat-box .stat-number { font-size: 1.4rem; }
+            .stat-box { padding: 16px 12px; }
+            .profile-stats { gap: 10px; }
+            .stat-box { flex: 1 1 100%; min-width: 100%; }
+            .jhub-wrapper { padding: 24px 18px; }
+            .responsibilities-wrapper { padding: 20px 16px; }
+            .responsibilities-grid li { font-size: 0.85rem; }
+            .team-card { padding: 24px 18px; }
+            .wp5-card { padding: 24px 20px; }
+            .section-nav a { padding: 8px 12px; font-size: 0.55rem; }
         }
 
         /* ================================================================ */
-        /* SCROLLBAR                                                       */
+        /* ACCESSIBILITY                                                    */
+        /* ================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .btn-primary:focus-visible,
+        .btn-secondary:focus-visible,
+        .btn-light:focus-visible,
+        .section-nav a:focus-visible,
+        .card-link:focus-visible {
+            outline: 2px solid var(--growlight);
+            outline-offset: 2px;
+        }
+
+        /* ================================================================ */
+        /* REVEAL ANIMATION                                                */
+        /* ================================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ================================================================ */
+        /* SCROLLBAR                                                        */
         /* ================================================================ */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-light); }
-        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-
-        /* ================================================================ */
-        /* UTILITY - ANIMATIONS                                            */
-        /* ================================================================ */
-
-        @media (prefers-reduced-motion: no-preference) {
-            .fade-up {
-                opacity: 0;
-                transform: translateY(30px);
-                animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            }
-
-            .fade-up:nth-child(1) { animation-delay: 0.05s; }
-            .fade-up:nth-child(2) { animation-delay: 0.1s; }
-            .fade-up:nth-child(3) { animation-delay: 0.15s; }
-            .fade-up:nth-child(4) { animation-delay: 0.2s; }
-            .fade-up:nth-child(5) { animation-delay: 0.25s; }
-            .fade-up:nth-child(6) { animation-delay: 0.3s; }
-
-            @keyframes fadeUp {
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-        }
+        ::-webkit-scrollbar-track { background: var(--paper-alt); }
+        ::-webkit-scrollbar-thumb { background: var(--moss-mid); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--moss); }
     </style>
 </head>
 <body>
 
+    <!-- ============================================================ -->
+    <!-- LOADING OVERLAY                                              -->
+    <!-- ============================================================ -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+        <p>Loading</p>
+    </div>
+
     <!-- ================================================================ -->
-    <!-- HEADER                                                          -->
+    <!-- HEADER (included)                                               -->
     <!-- ================================================================ -->
     {% include 'header.html' %}
 
@@ -1264,32 +1064,62 @@
     <main>
 
         <!-- ============================================================ -->
-        <!-- PAGE HERO                                                    -->
+        <!-- HERO — Full Width Background                                -->
         <!-- ============================================================ -->
-        <section class="page-hero">
-            <div class="hero-bg"></div>
-            <div class="hero-content">
-                <nav class="breadcrumb">
-                    <a href="{{ url_for('public.index') }}">Home</a>
-                    <span class="sep">/</span>
-                    <span>JKUAT Role</span>
-                </nav>
-                <span class="hero-badge">Leading Innovation in Kenya</span>
-                <h1>JKUAT <span class="highlight">Role</span></h1>
-                <p class="hero-subtitle">Leading the Smart Mushroom pilot and WP5 Capacity Building for BRIDGE-AI in Kenya</p>
+        <section class="hero" id="heroSection">
+            <div class="hero-image-wrapper" id="heroImageWrapper">
+                <div id="heroSlidesContainer">
+                    <div class="hero-slide-bg active" style="background-image: url('{{ url_for('static', filename='images/partners/20260712_232807_JKUAT-Main-Campus-Gate-A_1_2.jpg') }}');"></div>
+                </div>
             </div>
-            <span class="hero-photo-credit">JKUAT Main Campus Gate â€” Juja, Kenya</span>
+            <div class="hero-content-wrapper">
+                <div class="hero-content">
+                    <h1>
+                        JKUAT <span class="highlight">Role</span>
+                    </h1>
+                    <p class="hero-sub">
+                        Leading the Smart Mushroom Pilot and<br>
+                        WP5 Capacity Building in Kenya
+                    </p>
+                    <p class="hero-description">
+                        JKUAT is the Kenyan beneficiary in BRIDGE-AI, anchoring the Smart Mushroom case study
+                        through the Mushroom Demonstration Farm at the JKUAT Smart Farm Zone in Juja, Kenya.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#profile" class="btn-primary">
+                            <i class="fas fa-arrow-right btn-icon"></i>
+                            Explore Our Role
+                        </a>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- ============================================================ -->
-        <!-- JKUAT PROFILE & STATS                                        -->
+        <!-- STICKY SECTION NAV                                            -->
+        <!-- ============================================================ -->
+        <nav class="section-nav" aria-label="Page sections">
+            <div class="section-nav-inner">
+                <a href="#profile" data-section="profile" class="active">Profile</a>
+                <a href="#jhub-role" data-section="jhub-role">JHUB Africa</a>
+                <a href="#wp5" data-section="wp5">WP5 Leadership</a>
+                <a href="#responsibilities" data-section="responsibilities">Responsibilities</a>
+                <a href="#team" data-section="team">Team</a>
+            </div>
+        </nav>
+
+        <!-- ============================================================ -->
+        <!-- JKUAT PROFILE                                                -->
         <!-- ============================================================ -->
         <section class="section" id="profile">
-            <div class="section-container">
-                <div class="profile-grid">
-                    <div class="profile-text">
-                        <span class="profile-label">JKUAT Profile</span>
-                        <h2>Jomo Kenyatta University of Agriculture and Technology</h2>
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>JKUAT <span class="highlight">Profile</span></h2>
+                    <p>Jomo Kenyatta University of Agriculture and Technology — leading agricultural innovation in East Africa</p>
+                </div>
+                <div class="profile-wrapper">
+                    <div class="profile-text reveal">
+                        <h2>Jomo Kenyatta University of <span class="highlight">Agriculture and Technology</span></h2>
 
                         <p><strong>JKUAT</strong> is the Kenyan beneficiary in BRIDGE-AI and leads <strong>Work Package 5: Capacity Building and Replication</strong>. At the local level, JKUAT anchors the Smart Mushroom case study through the Mushroom Demonstration Farm at the JKUAT Smart Farm Zone in Juja, Kenya.</p>
 
@@ -1301,90 +1131,50 @@
                         </div>
                     </div>
 
-                    <div>
-                        <div class="profile-photo-card">
-                            <img src="{{ url_for('static', filename='images/partners/20260712_232807_JKUAT-Main-Campus-Gate-A_1_2.jpg') }}" alt="JKUAT Main Campus Gate">
-                            <div class="photo-caption">JKUAT Main Campus Gate, Juja</div>
-                        </div>
+                    <div class="profile-image reveal">
+                        <img src="{{ url_for('static', filename='images/partners/20260712_232807_JKUAT-Main-Campus-Gate-A_1_2.jpg') }}" alt="JKUAT Main Campus Gate" loading="lazy">
+                    </div>
+                </div>
 
-                        <div class="profile-stats">
-                            <div class="stat-box fade-up">
-                                <span class="stat-number">WP5</span>
-                                <span class="stat-label">Capacity Building Lead</span>
-                            </div>
-                            <div class="stat-box fade-up">
-                                <span class="stat-number">1</span>
-                                <span class="stat-label">Smart Mushroom Pilot</span>
-                            </div>
-                            <div class="stat-box fade-up">
-                                <span class="stat-number">400K<span class="stat-suffix">+</span></span>
-                                <span class="stat-label">Farmers Reached</span>
-                            </div>
-                            <div class="stat-box fade-up">
-                                <span class="stat-number">8</span>
-                                <span class="stat-label">Project Partners</span>
-                            </div>
-                        </div>
-
-                        <div class="info-card">
-                            <div class="info-row">
-                                <span class="info-key">Kenya Site</span>
-                                <span class="info-val">Mushroom Demonstration Farm, JKUAT Smart Farm Zone, Juja, Kenya</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-key">Project Role</span>
-                                <span class="info-val">Beneficiary, WP5 Capacity Building and Replication Lead</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-key">Smart Mushroom</span>
-                                <span class="info-val">GenAI-assisted monitoring, IoT sensing, digital shadows</span>
-                            </div>
-                        </div>
+                <div class="profile-stats reveal">
+                    <div class="stat-box">
+                        <span class="stat-number">WP5</span>
+                        <span class="stat-label">Capacity Building Lead</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">1</span>
+                        <span class="stat-label">Smart Mushroom Pilot</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">400K+</span>
+                        <span class="stat-label">Farmers Reached</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Project Partners</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- ============================================================ -->
-        <!-- JHUB AFRICA ROLE                                             -->
+        <!-- JHUB AFRICA                                                  -->
         <!-- ============================================================ -->
         <section class="section section-alt" id="jhub-role">
-            <div class="section-container">
-                <div class="section-header">
-                    <span class="section-tag gold">Innovation Hub</span>
-                    <h2>JHUB Africa: <span class="highlight">Digital Innovation &amp; Outreach</span></h2>
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>JHUB Africa: <span class="highlight">Digital Innovation</span></h2>
                     <p>JHUB Africa provides the local digital innovation and outreach interface for BRIDGE-AI Kenya</p>
                 </div>
-
-                <div class="jhub-section">
-                    <div class="jhub-grid">
-                        <div class="jhub-text">
-                            <h3>JHUB Africa: The <span class="highlight">Innovation Hub</span></h3>
-                            <p>JHUB Africa is JKUAT's digital innovation centre, serving as the local interface for documenting JKUAT-led BRIDGE-AI activities. It engages students and developers, connects SMEs, and communicates project progress to Kenyan and regional stakeholders.</p>
-                            <p>Through JHUB Africa, BRIDGE-AI Kenya builds capacity, fosters innovation, and creates pathways for youth and women to participate in the digital agriculture revolution.</p>
-                        </div>
-                        <div class="jhub-highlights">
-                            <div class="jhub-highlight-item">
-                                <span class="jh-index">01</span>
-                                <span class="jh-label">Student Engagement</span>
-                                <span class="jh-desc">Empowering the next generation</span>
-                            </div>
-                            <div class="jhub-highlight-item">
-                                <span class="jh-index">02</span>
-                                <span class="jh-label">Developer Community</span>
-                                <span class="jh-desc">Building local tech talent</span>
-                            </div>
-                            <div class="jhub-highlight-item">
-                                <span class="jh-index">03</span>
-                                <span class="jh-label">SME Connection</span>
-                                <span class="jh-desc">Supporting agri-businesses</span>
-                            </div>
-                            <div class="jhub-highlight-item">
-                                <span class="jh-index">04</span>
-                                <span class="jh-label">Stakeholder Outreach</span>
-                                <span class="jh-desc">Engaging the ecosystem</span>
-                            </div>
-                        </div>
+                <div class="jhub-wrapper reveal">
+                    <div class="jhub-image">
+                        <img src="https://media.licdn.com/dms/image/v2/D4D0BAQH58-THn1Ksiw/company-logo_200_200/company-logo_200_200/0/1704713792745/jhubafrica_logo?e=2147483647&v=beta&t=zGZfRqax0UPncO0ouHWkzy86bJAOdUnINQBSVvrIQx8" alt="JHUB Africa Logo">
+                    </div>
+                    <div class="jhub-content">
+                        <h2>The <span class="highlight">Innovation Hub</span></h2>
+                        <p>JHUB Africa is JKUAT's digital innovation centre, serving as the local interface for documenting JKUAT-led BRIDGE-AI activities. It engages students and developers, connects SMEs, and communicates project progress to Kenyan and regional stakeholders.</p>
+                        <p>Through JHUB Africa, BRIDGE-AI Kenya builds capacity, fosters innovation, and creates pathways for youth and women to participate in the digital agriculture revolution.</p>
+                        <p><strong>JHUB Africa value:</strong> A local digital innovation interface for students, developers, startups and the agricultural technology ecosystem.</p>
                     </div>
                 </div>
             </div>
@@ -1394,42 +1184,41 @@
         <!-- WP5 LEADERSHIP                                               -->
         <!-- ============================================================ -->
         <section class="section" id="wp5">
-            <div class="section-container">
-                <div class="section-header">
-                    <span class="section-tag green">WP5 Leadership</span>
-                    <h2>Capacity Building <span class="highlight">&amp; Replication</span></h2>
-                    <p>JKUAT leads Work Package 5, focusing on building African capacity in GenAI solutions for agriculture</p>
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>WP5 <span class="highlight">Leadership</span></h2>
+                    <p>JKUAT leads Work Package 5: Capacity Building and Replication — building African expertise in GenAI solutions for agriculture</p>
                 </div>
                 <div class="wp5-grid">
-                    <div class="wp5-card fade-up" data-ghost="01">
+                    <div class="wp5-card reveal">
                         <span class="wp5-number">T5.1</span>
                         <h4>Training Content Development</h4>
                         <p>Modular training kits, video tutorials, downloadable guides, and links to repositories for East African SMEs, developers, and universities.</p>
                     </div>
-                    <div class="wp5-card fade-up" data-ghost="02">
+                    <div class="wp5-card reveal">
                         <span class="wp5-number">T5.2</span>
                         <h4>Local Training Bootcamps</h4>
                         <p>Hands-on training at JKUAT Smart Farm Zone combining GenAI, IoT, APIs, deployment practices, entrepreneurship, and real agricultural case studies.</p>
                     </div>
-                    <div class="wp5-card fade-up" data-ghost="03">
+                    <div class="wp5-card reveal">
                         <span class="wp5-number">T5.3</span>
                         <h4>SME Engagement &amp; Mentoring</h4>
                         <p>SME mentoring, expression-of-interest, challenge statements, hackathon archive, and success stories for agri-business growth.</p>
                     </div>
-                    <div class="wp5-card fade-up" data-ghost="04">
+                    <div class="wp5-card reveal">
                         <span class="wp5-number">T5.4</span>
                         <h4>Community &amp; Repositories</h4>
                         <p>Developer community, GitHub/FIWARE links, contribution guidelines, and community-of-practice for sustained innovation.</p>
                     </div>
-                    <div class="wp5-card fade-up" data-ghost="05">
+                    <div class="wp5-card reveal">
                         <span class="wp5-number">T5.5</span>
                         <h4>Replication Toolkit</h4>
                         <p>Replication playbook, Kenya lessons, localisation templates, and adoption pathway for scaling across East Africa.</p>
                     </div>
-                    <div class="wp5-card fade-up" data-ghost="06">
-                        <span class="wp5-number">Open Access</span>
+                    <div class="wp5-card reveal">
+                        <span class="wp5-number gold">Open</span>
                         <h4>Open Repositories</h4>
-                        <p>Publicly accessible training materials, code repositories, and resources for the global community.</p>
+                        <p>Publicly accessible training materials, code repositories, and resources for the global community to learn from and build upon.</p>
                     </div>
                 </div>
             </div>
@@ -1439,24 +1228,23 @@
         <!-- LOCAL RESPONSIBILITIES                                       -->
         <!-- ============================================================ -->
         <section class="section section-alt" id="responsibilities">
-            <div class="section-container">
-                <div class="section-header">
-                    <span class="section-tag">Responsibilities</span>
-                    <h2>JKUAT's <span class="highlight">Local Role</span></h2>
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Local <span class="highlight">Responsibilities</span></h2>
                     <p>Key responsibilities of JKUAT in implementing BRIDGE-AI Kenya</p>
                 </div>
-                <div class="responsibilities-wrapper">
+                <div class="responsibilities-wrapper reveal">
                     <ul class="responsibilities-grid">
-                        <li>Platform requirements and technical specifications</li>
-                        <li>Sensor and data readiness for the Smart Mushroom pilot</li>
-                        <li>Pilot implementation and monitoring at JKUAT Smart Farm Zone</li>
-                        <li>Gender and inclusion reporting for Horizon Europe</li>
-                        <li>Farmer engagement and community outreach</li>
-                        <li>Training delivery and bootcamp coordination</li>
-                        <li>SME mentoring and entrepreneurship support</li>
-                        <li>Open repositories and knowledge management</li>
-                        <li>Replication planning and toolkit development</li>
-                        <li>EU visibility and compliance reporting</li>
+                        <li><span class="resp-icon"><i class="fas fa-check-circle"></i></span> Platform requirements and technical specifications</li>
+                        <li><span class="resp-icon"><i class="fas fa-check-circle"></i></span> Sensor and data readiness for the Smart Mushroom pilot</li>
+                        <li><span class="resp-icon"><i class="fas fa-check-circle"></i></span> Pilot implementation and monitoring at JKUAT Smart Farm Zone</li>
+                        <li><span class="resp-icon"><i class="fas fa-check-circle"></i></span> Gender and inclusion reporting for Horizon Europe</li>
+                        <li><span class="resp-icon"><i class="fas fa-check-circle"></i></span> Farmer engagement and community outreach</li>
+                        <li><span class="resp-icon"><i class="fas fa-check-circle"></i></span> Training delivery and bootcamp coordination</li>
+                        <li><span class="resp-icon"><i class="fas fa-check-circle"></i></span> SME mentoring and entrepreneurship support</li>
+                        <li><span class="resp-icon"><i class="fas fa-check-circle"></i></span> Open repositories and knowledge management</li>
+                        <li><span class="resp-icon"><i class="fas fa-check-circle"></i></span> Replication planning and toolkit development</li>
+                        <li><span class="resp-icon"><i class="fas fa-check-circle"></i></span> EU visibility and compliance reporting</li>
                     </ul>
                 </div>
             </div>
@@ -1466,17 +1254,16 @@
         <!-- TEAM SECTION                                                 -->
         <!-- ============================================================ -->
         <section class="section" id="team">
-            <div class="section-container">
-                <div class="section-header">
-                    <span class="section-tag gold">Our Team</span>
-                    <h2>JKUAT BRIDGE-AI <span class="highlight">Team</span></h2>
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Our <span class="highlight">Team</span></h2>
                     <p>Meet the team driving BRIDGE-AI Kenya at JKUAT and JHUB Africa</p>
                 </div>
 
                 {% if team_members and team_members|length > 0 %}
                     <div class="team-grid">
                         {% for member in team_members %}
-                        <div class="team-card fade-up">
+                        <div class="team-card reveal">
                             <div class="team-photo">
                                 {% if member.photo %}
                                     <img src="{{ url_for('static', filename=member.photo) }}" alt="{{ member.name }}">
@@ -1494,14 +1281,14 @@
                                 <div class="team-bio">{{ member.bio }}</div>
                             {% endif %}
                             {% if member.email %}
-                                <a href="mailto:{{ member.email }}" class="team-email">Contact</a>
+                                <a href="mailto:{{ member.email }}" class="team-email"><i class="fas fa-envelope" style="margin-right:6px;"></i>Contact</a>
                             {% endif %}
                         </div>
                         {% endfor %}
                     </div>
                 {% else %}
-                    <div class="team-empty">
-                        <span class="empty-icon">âˆ…</span>
+                    <div class="team-empty reveal">
+                        <span class="empty-icon"><i class="fas fa-users"></i></span>
                         <h3>Team Members Coming Soon</h3>
                         <p>Our JKUAT team profiles will be added here as they become available.</p>
                     </div>
@@ -1513,8 +1300,8 @@
         <!-- CTA BANNER                                                   -->
         <!-- ============================================================ -->
         <section class="section" style="padding-top: 0;">
-            <div class="section-container">
-                <div class="cta-banner">
+            <div class="container">
+                <div class="cta-banner reveal">
                     <span class="cta-label">Work With JKUAT</span>
                     <h3>Get Involved</h3>
                     <p>Join us in building capacity and driving innovation in agritech</p>
@@ -1530,31 +1317,94 @@
     </main>
 
     <!-- ================================================================ -->
-    <!-- FOOTER                                                          -->
+    <!-- FOOTER (included)                                               -->
     <!-- ================================================================ -->
     {% include 'footer.html' %}
 
     <!-- ================================================================ -->
-    <!-- PAGE-SPECIFIC JAVASCRIPT (unchanged â€” logic preserved exactly)  -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT                                        -->
     <!-- ================================================================ -->
     <script>
         (function() {
             'use strict';
 
-            // ================================================================
-            // SMOOTH SCROLL FOR INTERNAL LINKS
-            // ================================================================
+            // ─── PAGE LOADER ──────────────────────────────────────────────
+            var loader = document.getElementById('page-loader');
 
+            function hideLoader() {
+                if (loader) {
+                    loader.classList.add('hidden');
+                    setTimeout(function() {
+                        if (loader && loader.parentNode) {
+                            loader.parentNode.removeChild(loader);
+                        }
+                    }, 700);
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', hideLoader);
+            } else {
+                hideLoader();
+            }
+            setTimeout(hideLoader, 3000);
+
+            // ─── SECTION NAV ──────────────────────────────────────────────
+            var navLinks = document.querySelectorAll('.section-nav a');
+            var sections = [];
+
+            navLinks.forEach(function(link) {
+                var sectionId = link.getAttribute('data-section');
+                var section = document.getElementById(sectionId);
+                if (section) sections.push(section);
+            });
+
+            if (sections.length && 'IntersectionObserver' in window) {
+                var navObserver = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        var link = document.querySelector('.section-nav a[data-section="' + entry.target.id + '"]');
+                        if (!link) return;
+                        if (entry.isIntersecting) {
+                            navLinks.forEach(function(l) { l.classList.remove('active'); });
+                            link.classList.add('active');
+                        }
+                    });
+                }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+
+                sections.forEach(function(section) { navObserver.observe(section); });
+            }
+
+            // ─── SCROLL REVEAL ──────────────────────────────────────────────
+            var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var revealEls = document.querySelectorAll('.reveal');
+
+            if (reduceMotion || !('IntersectionObserver' in window)) {
+                revealEls.forEach(function(el) { el.classList.add('in-view'); });
+            } else {
+                var revealObserver = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('in-view');
+                            revealObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+                revealEls.forEach(function(el) { revealObserver.observe(el); });
+            }
+
+            // ─── SMOOTH SCROLL ──────────────────────────────────────────────
             document.querySelectorAll('a[href^="#"]').forEach(function(link) {
                 link.addEventListener('click', function(e) {
-                    const targetId = this.getAttribute('href');
+                    var targetId = this.getAttribute('href');
                     if (targetId === '#') return;
 
-                    const targetElement = document.querySelector(targetId);
+                    var targetElement = document.querySelector(targetId);
                     if (targetElement) {
                         e.preventDefault();
-                        const headerHeight = document.querySelector('.site-header')?.offsetHeight || 72;
-                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+                        var header = document.querySelector('.site-header');
+                        var headerHeight = header ? header.offsetHeight : 72;
+                        var targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
 
                         window.scrollTo({
                             top: targetPosition,
@@ -1564,38 +1414,10 @@
                 });
             });
 
-            // ================================================================
-            // INTERSECTION OBSERVER FOR FADE-UP ANIMATIONS
-            // ================================================================
-
-            if ('IntersectionObserver' in window) {
-                const observer = new IntersectionObserver(function(entries) {
-                    entries.forEach(function(entry) {
-                        if (entry.isIntersecting) {
-                            entry.target.style.opacity = '1';
-                            entry.target.style.transform = 'translateY(0)';
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, {
-                    threshold: 0.1,
-                    rootMargin: '0px 0px -20px 0px'
-                });
-
-                document.querySelectorAll('.fade-up').forEach(function(el) {
-                    observer.observe(el);
-                });
-            } else {
-                // Fallback for older browsers
-                document.querySelectorAll('.fade-up').forEach(function(el) {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                });
-            }
-
-            console.log('BRIDGE-AI Kenya JKUAT Role page initialized');
+            console.log('BRIDGE-AI Kenya JKUAT Role page initialized (Uniform Font)');
 
         })();
     </script>
+
 </body>
 </html>

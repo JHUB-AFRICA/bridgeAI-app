@@ -1,19 +1,13 @@
 <!-- ================================================================ -->
-<!-- BRIDGE-AI KENYA - GALLERY PAGE                                  -->
+<!-- BRIDGE-AI KENYA - GALLERY PAGE (UNIFORM FONT)                  -->
 <!-- ================================================================ -->
-<!-- Public Gallery: Displays published albums with filter tabs      -->
-<!-- Features: Dynamic filters from tags, true masonry layout,       -->
-<!--           hover overlay, lightbox, dynamic title                -->
-<!-- CSS: Fully self-contained in this file                         -->
-<!-- Rules: No emojis Â· No decorative symbols Â· No colons           -->
-<!--        No slashes Â· No hyphens Â· Clean typography              -->
-<!-- ================================================================ -->
-<!-- REDESIGN NOTES                                                   -->
-<!-- Same design system as the Activities page: deep forest / harvest -->
-<!-- gold / warm paper palette, Fraunces for display type, Inter for  -->
-<!-- UI, IBM Plex Mono for data (dates, counts, consent tags) â€” so    -->
-<!-- the two pages read as one site. Every id, class, onclick handler -->
-<!-- and the JS block are unchanged: styling only.                   -->
+<!-- Purpose: Visual evidence of field activities, training         -->
+<!-- workshops, and community engagements                           -->
+<!-- Features: Dynamic filters, masonry layout, lightbox           -->
+<!-- Font: Inter (uniform, no italics, clearly visible)            -->
+<!-- Filters: Sticky navigation like other pages                   -->
+<!-- Lightbox: Font Awesome icons                                  -->
+<!-- No Consent Confirmed displayed anywhere                       -->
 <!-- ================================================================ -->
 
 <!DOCTYPE html>
@@ -21,59 +15,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery - BRIDGE-AI Kenya</title>
-    <meta name="description" content="Visual evidence of field activities, training workshops, and community engagements across the BRIDGE-AI Kenya project sites.">
+    <title>Gallery - BRIDGE-AI</title>
+    <meta name="description" content="Visual evidence of field activities, training workshops, and community engagements across the BRIDGE-AI project sites.">
 
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Google Fonts: Inter (Uniform) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- ================================================================ -->
-    <!-- PAGE-SPECIFIC STYLES                                           -->
-    <!-- ================================================================ -->
     <style>
         /* ================================================================ */
-        /* CSS VARIABLES â€” matches the Activities page design system      */
+        /* CSS VARIABLES                                                   */
         /* ================================================================ */
         :root {
             --primary-dark: #0B1B14;
             --primary: #163A26;
             --primary-light: #2C6B45;
             --primary-lighter: #4F8F63;
-
             --gold: #C89B3C;
             --gold-light: #E8CA82;
             --gold-pale: #F3E8C9;
-
             --moss: #6F8F5C;
             --clay: #B5703F;
-
             --text-dark: #12201A;
             --text-body: #2A362F;
             --text-muted: #5E6B5F;
             --text-light: #8B9789;
-
             --bg-white: #FFFFFF;
             --bg-light: #F5F3EA;
             --bg-lighter: #FBF9F3;
             --border-light: #E4DFCC;
-
             --shadow-sm: 0 2px 10px rgba(18, 32, 24, 0.05);
             --shadow-md: 0 8px 26px rgba(18, 32, 24, 0.07);
             --shadow-lg: 0 14px 46px rgba(18, 32, 24, 0.09);
             --shadow-xl: 0 22px 68px rgba(18, 32, 24, 0.14);
-
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 18px;
             --radius-xl: 26px;
-
             --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
-            --font-serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-            --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
         }
 
         * {
@@ -92,7 +77,7 @@
         }
 
         body {
-            font-family: var(--font-sans);
+            font-family: var(--font-body);
             color: var(--text-body);
             background: var(--bg-white);
             line-height: 1.7;
@@ -147,7 +132,7 @@
             font-weight: 500;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            font-family: var(--font-mono);
+            font-family: var(--font-body);
         }
 
         @keyframes spin {
@@ -220,7 +205,7 @@
             letter-spacing: 0.14em;
             margin-bottom: 18px;
             backdrop-filter: blur(8px);
-            font-family: var(--font-mono);
+            font-family: var(--font-body);
         }
 
         .gallery-hero .hero-badge .badge-dot {
@@ -238,137 +223,112 @@
         }
 
         .gallery-hero .hero-title {
-            font-family: var(--font-serif);
             font-size: 3.2rem;
-            font-weight: 600;
-            font-style: italic;
+            font-weight: 800;
             line-height: 1.06;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.02em;
             color: #ffffff;
             margin: 0 0 12px;
             transition: opacity 0.25s ease;
+            font-family: var(--font-body);
         }
 
         .gallery-hero .hero-title .highlight {
-            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 45%, var(--gold) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--gold-light);
         }
 
         .gallery-hero .hero-subtitle {
             font-size: 0.95rem;
-            font-weight: 300;
+            font-weight: 400;
             color: rgba(255,255,255,0.56);
             max-width: 560px;
             line-height: 1.8;
             margin: 0 0 26px;
             letter-spacing: 0.005em;
             transition: opacity 0.25s ease;
-        }
-        
-        .gallery-hero .hero-stats {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-            flex-wrap: wrap;
-        }
-
-        .gallery-hero .hero-stats .stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .gallery-hero .hero-stats .stat-item .stat-number {
-            font-family: var(--font-mono);
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #ffffff;
-            letter-spacing: -0.01em;
-            line-height: 1.1;
-        }
-
-        .gallery-hero .hero-stats .stat-item .stat-label {
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            font-weight: 500;
-            color: rgba(255,255,255,0.35);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* â”€â”€â”€ Hero Right - Dynamic Filters â”€â”€â”€ */
-        .gallery-hero .hero-right {
-            display: flex;
-            align-items: center;
-            align-self: flex-end;
-            flex-shrink: 0;
-            padding-bottom: 2px;
-            max-width: 100%;
-        }
-
-        .hero-filters {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.09);
-            border-radius: 60px;
-            padding: 5px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .hero-filters .filter-btn {
-            padding: 7px 18px;
-            background: none;
-            border: none;
-            font-size: 0.72rem;
-            font-weight: 500;
-            color: rgba(255,255,255,0.4);
-            cursor: pointer;
-            transition: all var(--transition);
-            font-family: var(--font-sans);
-            border-radius: 60px;
-            white-space: nowrap;
-        }
-
-        .hero-filters .filter-btn:hover {
-            color: rgba(255,255,255,0.85);
-            background: rgba(255,255,255,0.05);
-        }
-
-        .hero-filters .filter-btn.active {
-            color: var(--primary-dark);
-            background: linear-gradient(135deg, var(--gold-light), var(--gold));
-            font-weight: 700;
-            box-shadow: 0 4px 16px rgba(200, 155, 60, 0.28);
-        }
-
-        .hero-filters .filter-btn .filter-count {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 15px;
-            height: 15px;
-            padding: 0 5px;
-            border-radius: 60px;
-            font-family: var(--font-mono);
-            font-size: 0.5rem;
-            font-weight: 600;
-            background: rgba(255,255,255,0.08);
-            color: rgba(255,255,255,0.4);
-            margin-left: 5px;
-        }
-
-        .hero-filters .filter-btn.active .filter-count {
-            background: rgba(11, 27, 20, 0.14);
-            color: var(--primary-dark);
+            font-family: var(--font-body);
         }
 
         /* ================================================================ */
-        /* ALBUM GRID - True Masonry Layout                              */
+        /* STICKY FILTER NAV                                               */
+        /* ================================================================ */
+        .filter-nav {
+            position: sticky;
+            top: 72px;
+            z-index: 40;
+            background: rgba(255, 253, 247, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .filter-nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .filter-nav-inner::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-nav a {
+            display: inline-flex;
+            align-items: center;
+            padding: 14px 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.25s var(--transition);
+            font-family: var(--font-body);
+            white-space: nowrap;
+            cursor: pointer;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .filter-nav a:hover {
+            color: var(--text-dark);
+        }
+
+        .filter-nav a.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        .filter-nav .filter-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 6px;
+            border-radius: 60px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            background: var(--bg-light);
+            color: var(--text-muted);
+            margin-left: 6px;
+            font-family: var(--font-body);
+        }
+
+        .filter-nav a.active .filter-count {
+            background: var(--gold-pale);
+            color: var(--gold);
+        }
+
+        /* ================================================================ */
+        /* GALLERY GRID - True Masonry Layout                            */
         /* ================================================================ */
         .gallery-grid-section {
             padding: 36px 24px 64px;
@@ -393,7 +353,7 @@
             pointer-events: none;
         }
 
-        /* â”€â”€â”€ Album Card - Variable Widths â”€â”€â”€ */
+        /* ─── Album Card ─── */
         .album-card {
             background: var(--bg-white);
             border: 1px solid var(--border-light);
@@ -430,7 +390,9 @@
             border-color: var(--primary-light);
         }
 
-        .album-card:hover::after { opacity: 1; }
+        .album-card:hover::after {
+            opacity: 1;
+        }
 
         /* Width classes */
         .album-card.col-1 { grid-column: span 1; }
@@ -438,7 +400,6 @@
         .album-card.col-3 { grid-column: span 3; }
         .album-card.col-4 { grid-column: span 4; }
 
-        /* Album Image Container - Variable Height */
         .album-card .album-image-container {
             position: relative;
             overflow: hidden;
@@ -460,7 +421,7 @@
             transform: scale(1.045);
         }
 
-        /* â”€â”€â”€ Hover Overlay - Slides from Bottom â”€â”€â”€ */
+        /* ─── Hover Overlay ─── */
         .album-card .album-image-container .album-overlay {
             position: absolute;
             bottom: 0;
@@ -481,10 +442,8 @@
         }
 
         .album-card .album-image-container .album-overlay .overlay-title {
-            font-family: var(--font-serif);
             font-size: 1.08rem;
-            font-weight: 600;
-            font-style: italic;
+            font-weight: 700;
             color: #ffffff;
             margin: 0 0 4px;
             line-height: 1.28;
@@ -492,10 +451,10 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            font-family: var(--font-body);
         }
 
         .album-card .album-image-container .album-overlay .overlay-meta {
-            font-family: var(--font-mono);
             font-size: 0.68rem;
             color: rgba(232, 202, 130, 0.7);
             display: flex;
@@ -503,6 +462,7 @@
             gap: 10px;
             margin-bottom: 6px;
             letter-spacing: 0.01em;
+            font-family: var(--font-body);
         }
 
         .album-card .album-image-container .album-overlay .overlay-description {
@@ -514,6 +474,7 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             margin-bottom: 8px;
+            font-family: var(--font-body);
         }
 
         .album-card .album-image-container .album-overlay .overlay-footer {
@@ -525,28 +486,12 @@
         }
 
         .album-card .album-image-container .album-overlay .overlay-photos {
-            font-family: var(--font-mono);
             font-size: 0.65rem;
             color: rgba(255,255,255,0.38);
             font-weight: 500;
             letter-spacing: 0.04em;
+            font-family: var(--font-body);
         }
-
-        .album-card .album-image-container .album-overlay .overlay-consent {
-            padding: 2px 13px;
-            border-radius: 60px;
-            font-family: var(--font-mono);
-            font-size: 0.5rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            background: rgba(111, 143, 92, 0.5);
-            color: rgba(255,255,255,0.9);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        /* â”€â”€â”€ No Thumbnails, No Info Section â”€â”€â”€ */
-        /* All details shown on hover only */
 
         /* ================================================================ */
         /* EMPTY STATE                                                     */
@@ -583,12 +528,11 @@
         }
 
         .empty-state h3 {
-            font-family: var(--font-serif);
-            font-style: italic;
             font-size: 1.35rem;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-dark);
             margin-bottom: 6px;
+            font-family: var(--font-body);
         }
 
         .empty-state p {
@@ -596,6 +540,7 @@
             max-width: 400px;
             margin: 0 auto;
             font-size: 0.92rem;
+            font-family: var(--font-body);
         }
 
         /* ================================================================ */
@@ -629,16 +574,17 @@
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.1);
             color: rgba(255,255,255,0.55);
-            font-size: 0.68rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-size: 1.2rem;
             cursor: pointer;
             transition: all var(--transition);
-            font-family: var(--font-mono);
-            line-height: 1;
-            padding: 9px 16px;
-            border-radius: 60px;
+            font-family: var(--font-body);
+            padding: 12px;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             z-index: 10;
         }
 
@@ -646,6 +592,7 @@
             color: #ffffff;
             background: rgba(255,255,255,0.09);
             border-color: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
         }
 
         .lightbox-overlay .lightbox-container {
@@ -657,7 +604,6 @@
             position: relative;
         }
 
-        /* Lightbox Header */
         .lightbox-overlay .lightbox-header {
             display: flex;
             align-items: flex-start;
@@ -668,24 +614,22 @@
         }
 
         .lightbox-overlay .lightbox-header .lb-title {
-            font-family: var(--font-serif);
-            font-style: italic;
             font-size: 1.2rem;
-            font-weight: 600;
+            font-weight: 700;
             color: #ffffff;
+            font-family: var(--font-body);
         }
 
         .lightbox-overlay .lightbox-header .lb-meta {
-            font-family: var(--font-mono);
             font-size: 0.7rem;
             color: rgba(232, 202, 130, 0.6);
             display: flex;
             flex-wrap: wrap;
             gap: 14px;
             padding-top: 6px;
+            font-family: var(--font-body);
         }
 
-        /* Lightbox Main Image */
         .lightbox-overlay .lightbox-main {
             position: relative;
             flex: 1;
@@ -713,20 +657,17 @@
             background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.1);
             color: rgba(255,255,255,0.5);
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             cursor: pointer;
             transition: all var(--transition);
-            font-size: 0.6rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            font-family: var(--font-mono);
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(8px);
+            font-family: var(--font-body);
         }
 
         .lightbox-overlay .lightbox-main .lb-nav:hover {
@@ -738,7 +679,6 @@
         .lightbox-overlay .lightbox-main .lb-nav.prev { left: 16px; }
         .lightbox-overlay .lightbox-main .lb-nav.next { right: 16px; }
 
-        /* Lightbox Footer */
         .lightbox-overlay .lightbox-footer {
             display: flex;
             align-items: center;
@@ -752,29 +692,16 @@
             font-size: 0.85rem;
             color: rgba(255,255,255,0.58);
             flex: 1;
+            font-family: var(--font-body);
         }
 
         .lightbox-overlay .lightbox-footer .lb-counter {
-            font-family: var(--font-mono);
             font-size: 0.7rem;
             color: rgba(255,255,255,0.28);
             font-weight: 500;
+            font-family: var(--font-body);
         }
 
-        .lightbox-overlay .lightbox-footer .lb-consent {
-            padding: 3px 14px;
-            border-radius: 60px;
-            font-family: var(--font-mono);
-            font-size: 0.5rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            background: rgba(111, 143, 92, 0.35);
-            color: rgba(255,255,255,0.72);
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        /* Lightbox Thumbnails Strip */
         .lightbox-overlay .lightbox-thumbs {
             display: flex;
             gap: 7px;
@@ -829,26 +756,28 @@
                 align-items: stretch;
             }
 
-            .gallery-hero .hero-right {
-                align-self: flex-start;
-                width: 100%;
-            }
-
-            .hero-filters {
-                width: 100%;
-                justify-content: flex-start;
-                border-radius: var(--radius-md);
-            }
-
             .gallery-grid {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 18px;
+            }
+
+            .filter-nav {
+                top: 72px;
             }
         }
 
         @media (max-width: 768px) {
             body {
                 padding-top: 64px;
+            }
+
+            .filter-nav {
+                top: 64px;
+            }
+
+            .filter-nav a {
+                padding: 10px 14px;
+                font-size: 0.6rem;
             }
 
             .gallery-hero {
@@ -862,25 +791,6 @@
             .gallery-hero .hero-subtitle {
                 font-size: 0.85rem;
                 max-width: 100%;
-            }
-
-            .gallery-hero .hero-stats .stat-item .stat-number {
-                font-size: 1.15rem;
-            }
-
-            .gallery-hero .hero-stats {
-                gap: 18px;
-            }
-
-            .hero-filters {
-                border-radius: var(--radius-sm);
-                padding: 4px;
-                flex-wrap: wrap;
-            }
-
-            .hero-filters .filter-btn {
-                padding: 5px 13px;
-                font-size: 0.65rem;
             }
 
             .gallery-grid-section {
@@ -908,6 +818,7 @@
             .lightbox-overlay .lightbox-main .lb-nav {
                 width: 38px;
                 height: 38px;
+                font-size: 0.9rem;
             }
 
             .lightbox-overlay .lightbox-main .lb-nav.prev { left: 8px; }
@@ -924,6 +835,14 @@
             .lightbox-overlay .lightbox-thumbs .lb-thumb {
                 width: 48px;
                 height: 36px;
+            }
+
+            .lightbox-overlay .lightbox-close {
+                top: 12px;
+                right: 16px;
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
             }
         }
 
@@ -974,9 +893,20 @@
 
             .lightbox-overlay .lightbox-close {
                 top: 12px;
-                right: 16px;
-                padding: 7px 12px;
-                font-size: 0.6rem;
+                right: 12px;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+            }
+
+            .lightbox-overlay .lightbox-thumbs .lb-thumb {
+                width: 40px;
+                height: 30px;
+            }
+
+            .filter-nav a {
+                padding: 8px 12px;
+                font-size: 0.55rem;
             }
         }
 
@@ -1021,32 +951,20 @@
                     </h1>
                     <p class="hero-subtitle" id="heroSubtitle">
                         Visual evidence of our field activities, training workshops,
-                        and community engagements across the BRIDGE-AI Kenya project sites.
+                        and community engagements across the BRIDGE-AI project sites.
                     </p>
-                    <div class="hero-stats">
-                        <div class="stat-item">
-                            <span class="stat-number" id="totalAlbums">0</span>
-                            <span class="stat-label">Albums</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="totalPhotos">0</span>
-                            <span class="stat-label">Photos</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="totalConsent">0</span>
-                            <span class="stat-label">Consent Confirmed</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hero Right - Dynamic Filters -->
-                <div class="hero-right">
-                    <div class="hero-filters" id="heroFilters">
-                        <!-- Dynamically generated by JavaScript -->
-                    </div>
                 </div>
             </div>
         </section>
+
+        <!-- ============================================================ -->
+        <!-- STICKY FILTER NAV                                            -->
+        <!-- ============================================================ -->
+        <nav class="filter-nav" id="filterNav" aria-label="Gallery filters">
+            <div class="filter-nav-inner" id="filterNavInner">
+                <!-- Dynamically populated by JavaScript -->
+            </div>
+        </nav>
 
         <!-- ============================================================ -->
         <!-- GALLERY GRID                                                 -->
@@ -1054,7 +972,7 @@
         <section class="gallery-grid-section">
             <div class="gallery-grid-container">
                 <div class="gallery-grid" id="galleryGrid">
-                    <!-- Dynamically generated by JavaScript -->
+                    <!-- Dynamically populated by JavaScript -->
                 </div>
             </div>
         </section>
@@ -1070,7 +988,9 @@
     <!-- LIGHTBOX                                                        -->
     <!-- ================================================================ -->
     <div class="lightbox-overlay" id="lightboxOverlay">
-        <button class="lightbox-close" onclick="closeLightbox()">Close</button>
+        <button class="lightbox-close" onclick="closeLightbox()">
+            <i class="fas fa-times"></i>
+        </button>
         <div class="lightbox-container">
             <div class="lightbox-header">
                 <span class="lb-title" id="lbTitle">Album Title</span>
@@ -1080,21 +1000,24 @@
                 </div>
             </div>
             <div class="lightbox-main" id="lightboxMain">
-                <button class="lb-nav prev" onclick="navigateLightbox(-1)">Previous</button>
+                <button class="lb-nav prev" onclick="navigateLightbox(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
                 <img class="lb-image" id="lbImage" src="" alt="">
-                <button class="lb-nav next" onclick="navigateLightbox(1)">Next</button>
+                <button class="lb-nav next" onclick="navigateLightbox(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
             <div class="lightbox-footer">
                 <span class="lb-caption" id="lbCaption"></span>
                 <span class="lb-counter" id="lbCounter">1 / 1</span>
-                <span class="lb-consent">Consent Confirmed</span>
             </div>
             <div class="lightbox-thumbs" id="lbThumbs"></div>
         </div>
     </div>
 
     <!-- ================================================================ -->
-    <!-- PAGE-SPECIFIC JAVASCRIPT (unchanged â€” logic preserved exactly)  -->
+    <!-- PAGE-SPECIFIC JAVASCRIPT                                        -->
     <!-- ================================================================ -->
     <script>
         (function() {
@@ -1124,11 +1047,11 @@
                 'resource': 'Resources',
                 'repository': 'Repositories',
                 'policy': 'Policy',
-                'stakeholder_engagement': 'Stakeholder Engagement',
+                'stakeholder_engagement': 'Stakeholder',
                 'bootcamp': 'Bootcamps'
             };
 
-            // Filter display names for dynamic titles
+            // Filter titles
             var filterTitles = {
                 'all': 'Activity Gallery'
             };
@@ -1141,7 +1064,7 @@
             var galleryGrid = document.getElementById('galleryGrid');
             var heroTitle = document.getElementById('heroTitle');
             var heroSubtitle = document.getElementById('heroSubtitle');
-            var heroFilters = document.getElementById('heroFilters');
+            var filterNavInner = document.getElementById('filterNavInner');
 
             // Lightbox
             var lightboxOverlay = document.getElementById('lightboxOverlay');
@@ -1152,11 +1075,6 @@
             var lbCaption = document.getElementById('lbCaption');
             var lbCounter = document.getElementById('lbCounter');
             var lbThumbs = document.getElementById('lbThumbs');
-
-            // Stats
-            var totalAlbumsEl = document.getElementById('totalAlbums');
-            var totalPhotosEl = document.getElementById('totalPhotos');
-            var totalConsentEl = document.getElementById('totalConsent');
 
             // ================================================================
             // LOAD DATA
@@ -1192,21 +1110,6 @@
             // ================================================================
 
             function processData() {
-                // Update stats
-                var totalPhotos = 0;
-                var totalConsent = 0;
-                allAlbums.forEach(function(album) {
-                    var images = album.images || [];
-                    totalPhotos += images.length;
-                    if (album.consent_confirmed) {
-                        totalConsent++;
-                    }
-                });
-
-                totalAlbumsEl.textContent = allAlbums.length;
-                totalPhotosEl.textContent = totalPhotos;
-                totalConsentEl.textContent = totalConsent;
-
                 // Extract unique tags from all albums
                 extractUniqueTags();
 
@@ -1231,23 +1134,19 @@
                     var tags = album.tags || [];
                     var activityType = album.activity_type || '';
 
-                    // Add tags from the tags array
                     tags.forEach(function(tag) {
                         if (tag && tag.trim()) {
                             tagSet.add(tag.trim());
                         }
                     });
 
-                    // Also add activity_type if it's a valid tag
                     if (activityType && activityType.trim()) {
                         tagSet.add(activityType.trim());
                     }
                 });
 
-                // Convert to array and sort
                 filterTags = Array.from(tagSet).sort();
 
-                // Build filter titles dynamically
                 filterTags.forEach(function(tag) {
                     var displayName = tagDisplayNames[tag] || tag.replace(/_/g, ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); });
                     filterTitles[tag] = displayName + ' Gallery';
@@ -1255,20 +1154,21 @@
             }
 
             // ================================================================
-            // BUILD FILTER BUTTONS
+            // BUILD FILTER BUTTONS (for sticky nav)
             // ================================================================
 
             function buildFilterButtons() {
-                if (!heroFilters) return;
+                if (!filterNavInner) return;
 
                 var html = '';
 
                 // Always include "All Photos" first
+                var allCount = allAlbums.length;
                 html += `
-                    <button class="filter-btn active" data-filter="all" onclick="filterAlbums('all', this)">
+                    <a class="filter-btn active" data-filter="all" onclick="filterAlbums('all', this)">
                         All Photos
-                        <span class="filter-count" id="countAll">${allAlbums.length}</span>
-                    </button>
+                        <span class="filter-count">${allCount}</span>
+                    </a>
                 `;
 
                 // Add buttons for each unique tag
@@ -1276,14 +1176,14 @@
                     var displayName = tagDisplayNames[tag] || tag.replace(/_/g, ' ').replace(/\b\w/g, function(l) { return l.toUpperCase(); });
                     var count = countAlbumsWithTag(tag);
                     html += `
-                        <button class="filter-btn" data-filter="${tag}" onclick="filterAlbums('${tag}', this)">
+                        <a class="filter-btn" data-filter="${tag}" onclick="filterAlbums('${tag}', this)">
                             ${displayName}
                             <span class="filter-count">${count}</span>
-                        </button>
+                        </a>
                     `;
                 });
 
-                heroFilters.innerHTML = html;
+                filterNavInner.innerHTML = html;
             }
 
             // ================================================================
@@ -1323,8 +1223,6 @@
             // ================================================================
 
             function updateTitle(filter) {
-                var title = filterTitles[filter] || 'Activity Gallery';
-
                 if (filter === 'all') {
                     heroTitle.innerHTML = 'Activity <span class="highlight">Gallery</span>';
                 } else {
@@ -1332,14 +1230,13 @@
                     heroTitle.innerHTML = displayName + ' <span class="highlight">Gallery</span>';
                 }
 
-                // Update subtitle based on filter
                 var subtitles = {
-                    'all': 'Visual evidence of our field activities, training workshops, and community engagements across the BRIDGE-AI Kenya project sites.',
+                    'all': 'Visual evidence of our field activities, training workshops, and community engagements across the BRIDGE-AI project sites.',
                     'workshop': 'Explore our workshop activities where stakeholders co-design and refine BRIDGE-AI solutions.',
-                    'field_site': 'Discover field demonstrations and on-farm deployments of Smart Mushroom technology.',
-                    'training': 'View training sessions, bootcamps, and capacity building programs from BRIDGE-AI Kenya.'
+                    'field_demo': 'Discover field demonstrations and on-farm deployments of Smart Mushroom technology.',
+                    'training': 'View training sessions, bootcamps, and capacity building programs from BRIDGE-AI.'
                 };
-                heroSubtitle.textContent = subtitles[filter] || 'Explore ' + (filterTitles[filter] || 'gallery') + ' from BRIDGE-AI Kenya.';
+                heroSubtitle.textContent = subtitles[filter] || 'Explore ' + (filterTitles[filter] || 'gallery') + ' from BRIDGE-AI.';
             }
 
             // ================================================================
@@ -1363,7 +1260,7 @@
             };
 
             // ================================================================
-            // RENDER GRID - TRUE MASONRY WITH VARIABLE WIDTHS
+            // RENDER GRID
             // ================================================================
 
             function renderGrid(albums) {
@@ -1372,7 +1269,7 @@
                 if (!albums || albums.length === 0) {
                     galleryGrid.innerHTML = `
                         <div class="empty-state">
-                            <span class="empty-icon">âˆ…</span>
+                            <span class="empty-icon"><i class="fas fa-images"></i></span>
                             <h3>No albums found</h3>
                             <p>There are no albums matching this filter. Try selecting a different category.</p>
                         </div>
@@ -1384,7 +1281,6 @@
                 var columnOptions = [1, 1, 2, 3];
                 var heightOptions = ['280px', '340px', '300px', '360px', '320px', '380px', '290px', '350px', '310px'];
 
-                // Track grid column usage to avoid overflow
                 var colTracker = 0;
                 var maxCols = 4;
 
@@ -1392,7 +1288,6 @@
                     var images = album.images || [];
                     var photoCount = images.length;
 
-                    // Get cover image (featured or first)
                     var coverImage = '';
                     images.forEach(function(img) {
                         if (img.is_featured) {
@@ -1403,10 +1298,8 @@
                         coverImage = images[0].image_path;
                     }
 
-                    // Determine column span (1, 2, or 3)
                     var colSpan = columnOptions[Math.floor(Math.random() * columnOptions.length)];
 
-                    // Ensure we don't exceed grid columns
                     if (colTracker + colSpan > maxCols) {
                         colSpan = maxCols - colTracker;
                         if (colSpan < 1) colSpan = 1;
@@ -1416,10 +1309,8 @@
                         colTracker = 0;
                     }
 
-                    // Random height
                     var height = heightOptions[Math.floor(Math.random() * heightOptions.length)];
 
-                    // Format date
                     var displayDate = album.date || 'Date TBD';
                     if (displayDate !== 'Date TBD') {
                         try {
@@ -1431,10 +1322,6 @@
                             });
                         } catch(e) {}
                     }
-
-                    var consentHtml = album.consent_confirmed ?
-                        '<span class="overlay-consent">Consent Confirmed</span>' :
-                        '';
 
                     var description = album.description || '';
                     if (description.length > 160) {
@@ -1454,11 +1341,9 @@
                                     ${description ? `<p class="overlay-description">${escapeHtml(description)}</p>` : ''}
                                     <div class="overlay-footer">
                                         <span class="overlay-photos">${photoCount} photo${photoCount !== 1 ? 's' : ''}</span>
-                                        ${consentHtml}
                                     </div>
                                 </div>
                             </div>
-                            <!-- No thumbnails, no info section - all details on hover -->
                         </div>
                     `;
                 });
@@ -1496,7 +1381,6 @@
                 lightboxImages = images;
                 lightboxIndex = 0;
 
-                // Find featured image index
                 images.forEach(function(img, idx) {
                     if (img.is_featured) {
                         lightboxIndex = idx;
@@ -1523,7 +1407,6 @@
                 lightboxOverlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
 
-                // Keyboard navigation
                 document.addEventListener('keydown', lightboxKeyHandler);
             }
 
@@ -1538,7 +1421,6 @@
                 lbCaption.textContent = img.caption || '';
                 lbCounter.textContent = (index + 1) + ' / ' + lightboxImages.length;
 
-                // Update thumbnails
                 var thumbHtml = '';
                 lightboxImages.forEach(function(thumb, idx) {
                     var active = idx === index ? 'active' : '';
@@ -1548,7 +1430,6 @@
                 });
                 lbThumbs.innerHTML = thumbHtml;
 
-                // Scroll thumb into view
                 var activeThumb = lbThumbs.querySelector('.lb-thumb.active');
                 if (activeThumb) {
                     activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -1624,7 +1505,7 @@
 
             document.addEventListener('DOMContentLoaded', function() {
                 loadData();
-                console.log('BRIDGE-AI Kenya Gallery initialized with dynamic filters');
+                console.log('BRIDGE-AI Gallery initialized (Uniform Font, Sticky Filters)');
             });
 
         })();

@@ -1,15 +1,18 @@
 <!-- ================================================================ -->
-<!-- BRIDGE-AI KENYA - ULTIMATE PREMIUM FOOTER                       -->
+<!-- BRIDGE-AI KENYA - ULTIMATE PREMIUM FOOTER (UPDATED)            -->
 <!-- ================================================================ -->
-<!-- Design: Clean white · Premium typography · Perfect alignment   -->
+<!-- Design: Clean white · Premium typography · Centered alignment   -->
 <!-- Layout: Symmetrical · Responsive · Editorially refined         -->
+<!-- Logos: No labels below logos                                   -->
+<!-- Mobile: All content centered                                   -->
+<!-- PC: All content centered                                       -->
 <!-- ================================================================ -->
 
 <footer class="footer-ultimate" role="contentinfo">
     <div class="footer-container">
 
         <!-- ============================================================ -->
-        <!-- TOP: LOGO ROW - Perfectly Aligned                           -->
+        <!-- TOP: LOGO ROW - Centered, No Labels                         -->
         <!-- ============================================================ -->
         <div class="footer-logos-row">
             <div class="footer-logo-item">
@@ -17,7 +20,6 @@
                      alt="JHUB Africa"
                      class="footer-logo"
                      loading="lazy">
-                <span class="footer-logo-label">JHUB Africa</span>
             </div>
 
             <div class="footer-logo-item footer-logo-item-bridge">
@@ -25,7 +27,6 @@
                      alt="BRIDGE-AI"
                      class="footer-logo footer-logo-bridge"
                      loading="lazy">
-                <span class="footer-logo-label">BRIDGE-AI Kenya</span>
             </div>
 
             <div class="footer-logo-item footer-logo-item-eu">
@@ -33,12 +34,11 @@
                      alt="European Union"
                      class="footer-logo footer-logo-eu"
                      loading="lazy">
-                <span class="footer-logo-label">Funded by the European Union</span>
             </div>
         </div>
 
         <!-- ============================================================ -->
-        <!-- FUNDING STATEMENT                                           -->
+        <!-- FUNDING STATEMENT - Centered                                -->
         <!-- ============================================================ -->
         <div class="footer-funding">
             <p class="footer-funding-statement">
@@ -54,7 +54,7 @@
         </div>
 
         <!-- ============================================================ -->
-        <!-- MIDDLE: QUICK LINKS GRID                                   -->
+        <!-- MIDDLE: QUICK LINKS GRID - Centered                         -->
         <!-- ============================================================ -->
         <div class="footer-middle">
             <div class="footer-col">
@@ -124,7 +124,7 @@
         </div>
 
         <!-- ============================================================ -->
-        <!-- BOTTOM: COPYRIGHT + CREDITS                                 -->
+        <!-- BOTTOM: COPYRIGHT + CREDITS - Centered                      -->
         <!-- ============================================================ -->
         <div class="footer-bottom">
             <p class="footer-copyright">
@@ -202,12 +202,12 @@
     }
 
     /* ================================================================ */
-    /* LOGO ROW - Perfect Alignment                                   */
+    /* LOGO ROW - Centered, No Labels                                 */
     /* ================================================================ */
     .footer-logos-row {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
         gap: 40px;
         padding-bottom: 28px;
         border-bottom: 1px solid var(--footer-border);
@@ -220,17 +220,17 @@
         align-items: center;
         gap: 6px;
         flex: 0 1 auto;
-        min-width: 120px;
+        min-width: 100px;
     }
 
     .footer-logo-item-bridge {
-        flex: 1;
-        min-width: 140px;
+        flex: 0 1 auto;
+        min-width: 120px;
     }
 
     .footer-logo-item-eu {
-        flex: 1;
-        min-width: 160px;
+        flex: 0 1 auto;
+        min-width: 130px;
     }
 
     .footer-logo {
@@ -239,7 +239,7 @@
         display: block;
         opacity: 0.85;
         transition: opacity 0.3s ease, transform 0.3s ease;
-        filter: none; /* ✅ Logos visible on white background */
+        filter: none;
     }
 
     .footer-logo:hover {
@@ -255,22 +255,13 @@
         height: 42px;
     }
 
-    .footer-logo-label {
-        font-size: 0.62rem;
-        font-weight: 600;
-        color: var(--footer-text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        opacity: 0.6;
-        text-align: center;
-    }
-
     /* ================================================================ */
-    /* FUNDING STATEMENT                                              */
+    /* FUNDING STATEMENT - Centered                                   */
     /* ================================================================ */
     .footer-funding {
         padding: 20px 0 28px;
         border-bottom: 1px solid var(--footer-border);
+        text-align: center;
     }
 
     .footer-funding-statement {
@@ -291,7 +282,7 @@
     }
 
     /* ================================================================ */
-    /* MIDDLE SECTION                                                  */
+    /* MIDDLE SECTION - Centered Grid                                */
     /* ================================================================ */
     .footer-middle {
         display: grid;
@@ -299,6 +290,7 @@
         gap: 32px;
         padding: 32px 0 28px;
         border-bottom: 1px solid var(--footer-border);
+        text-align: left;
     }
 
     .footer-col {
@@ -386,15 +378,16 @@
     }
 
     /* ================================================================ */
-    /* BOTTOM SECTION                                                  */
+    /* BOTTOM SECTION - Centered                                     */
     /* ================================================================ */
     .footer-bottom {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         padding-top: 18px;
         flex-wrap: wrap;
         gap: 10px;
+        text-align: center;
     }
 
     .footer-copyright {
@@ -410,6 +403,7 @@
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
+        justify-content: center;
     }
 
     .footer-badge {
@@ -481,11 +475,19 @@
     @media (max-width: 1024px) {
         .footer-logos-row {
             gap: 30px;
-            justify-content: center;
         }
         .footer-middle {
             grid-template-columns: repeat(2, 1fr);
             gap: 28px;
+        }
+        .footer-logo-item {
+            min-width: 80px;
+        }
+        .footer-logo-item-bridge {
+            min-width: 100px;
+        }
+        .footer-logo-item-eu {
+            min-width: 110px;
         }
     }
 
@@ -499,6 +501,7 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
+            padding-bottom: 20px;
         }
 
         .footer-logo {
@@ -512,18 +515,16 @@
         }
 
         .footer-logo-item {
-            min-width: 80px;
+            min-width: 70px;
             flex: 0 1 auto;
         }
         .footer-logo-item-bridge {
             flex: 0 1 auto;
+            min-width: 80px;
         }
         .footer-logo-item-eu {
             flex: 0 1 auto;
-        }
-
-        .footer-logo-label {
-            font-size: 0.55rem;
+            min-width: 90px;
         }
 
         .footer-funding-statement {
@@ -537,6 +538,32 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
             padding: 24px 0 20px;
+            text-align: center;
+        }
+
+        .footer-col {
+            align-items: center;
+        }
+
+        .footer-col-title::after {
+            margin: 6px auto 0;
+        }
+
+        .footer-col-links {
+            align-items: center;
+        }
+
+        .footer-col-links a {
+            font-size: 0.8rem;
+            padding: 4px 0;
+        }
+
+        .footer-col-links a::before {
+            display: none;
+        }
+
+        .footer-col-links a:hover {
+            transform: none;
         }
 
         .footer-bottom {
@@ -563,72 +590,7 @@
         }
     }
 
-    @media (max-width: 480px) {
-        .footer-logos-row {
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .footer-logo {
-            height: 32px;
-        }
-        .footer-logo-bridge {
-            height: 36px;
-        }
-        .footer-logo-eu {
-            height: 30px;
-        }
-
-        .footer-logo-item {
-            min-width: unset;
-            width: 100%;
-            max-width: 140px;
-        }
-
-        .footer-logo-label {
-            font-size: 0.5rem;
-        }
-
-        .footer-funding-statement {
-            font-size: 0.72rem;
-        }
-        .footer-funding-disclaimer {
-            font-size: 0.6rem;
-        }
-
-        .footer-middle {
-            grid-template-columns: 1fr;
-            gap: 16px;
-            padding: 16px 0 12px;
-        }
-
-        .footer-col-title {
-            font-size: 0.68rem;
-            margin-bottom: 8px;
-        }
-        .footer-col-title::after {
-            width: 24px;
-        }
-        .footer-col-links a {
-            font-size: 0.78rem;
-            padding: 4px 0;
-        }
-
-        .footer-copyright {
-            font-size: 0.62rem;
-        }
-        .footer-credit {
-            font-size: 0.62rem;
-        }
-        .footer-badge {
-            font-size: 0.5rem;
-        }
-        .footer-sep {
-            font-size: 0.55rem;
-        }
-    }
-
+    
     /* ================================================================ */
     /* ACCESSIBILITY                                                   */
     /* ================================================================ */
@@ -722,7 +684,7 @@
             });
         });
 
-        console.log('BRIDGE-AI Kenya Ultimate Footer initialized');
+        console.log('BRIDGE-AI Kenya Ultimate Footer initialized (Centered, No Labels)');
 
     })();
 </script>

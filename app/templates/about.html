@@ -129,6 +129,14 @@
             max-width: 1280px;
             margin: 0 auto;
             padding: 0 28px;
+            
+        }
+        .containero {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 28px;
+            background: white;
+            
         }
 
         ::selection { background: var(--growlight); color: #fff; }
@@ -370,6 +378,11 @@
             padding: 80px 0;
             scroll-margin-top: 140px;
         }
+        .sectiono {
+            padding: 80px 10px;
+            scroll-margin-top: 140px;
+            background: white;
+        }
 
         /* ================================================================ */
         /* OVERVIEW — Modern Split Layout                                 */
@@ -378,7 +391,8 @@
             display: flex;
             flex-wrap: wrap;
             gap: 56px;
-            align-items: stretch;           /* ← Makes both sides same height */
+            align-items: stretch;  
+            background: white;
         }
 
         .overview-text {
@@ -432,19 +446,18 @@
         }
 
         .overview-image {
-            flex: 1 1 35%;
+            flex: 1 1 40%;
             border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            background: var(--moss-deep);
+            background: none;
             display: flex;                  /* ← Makes image fill height */
-            align-items: stretch;
+            
         }
 
         .overview-image img {
             width: 100%;
             height: 100%;                  /* ← Fills parent completely */
-            object-fit: cover;
+           
         }
 
         /* ================================================================ */
@@ -1083,8 +1096,8 @@
         <!-- ============================================================ -->
         <!-- PROJECT OVERVIEW                                             -->
         <!-- ============================================================ -->
-        <section class="section" id="overview">
-            <div class="container">
+        <section class="sectiono" id="overview">
+            <div class="containero">
                 <div class="overview-wrapper">
                     <div class="overview-text reveal">
                         <h2>Building a <span class="highlight">Climate-Resilient</span> Future</h2>
@@ -1106,7 +1119,7 @@
                         </p>
                     </div>
                     <div class="overview-image reveal">
-                        <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?w=800&q=80" alt="African agriculture and farming" loading="lazy">
+                        <img src="{{ url_for('static', filename='uploads/afica.svg') }}" alt="African agriculture and farming" loading="lazy">
                     </div>
                 </div>
             </div>

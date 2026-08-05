@@ -40,5 +40,4 @@ class AuditService:
             return False
 
 
-# Create singleton instance
 audit = AuditService()

@@ -14,6 +14,14 @@
     <title>Resources Hub - BRIDGE-AI Kenya</title>
     <meta name="description" content="Access all public BRIDGE-AI Kenya deliverables, training materials, and research publications.">
 
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Google Fonts: Inter (Uniform) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     <style>
         /* ================================================================ */
         /* CSS VARIABLES                                                   */
@@ -42,7 +50,7 @@
             --radius-lg: 16px;
             --radius-xl: 20px;
             --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
         }
 
         * {
@@ -51,8 +59,17 @@
             box-sizing: border-box;
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
         body {
-            font-family: var(--font-sans);
+            font-family: var(--font-body);
             color: var(--text-body);
             background: var(--bg-white);
             line-height: 1.7;
@@ -61,8 +78,61 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+
         /* ================================================================ */
-        /* RESOURCES HERO                                                 */
+        /* LOADER OVERLAY                                                  */
+        /* ================================================================ */
+        #loaderOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(251, 249, 243, 0.96);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease;
+        }
+
+        #loaderOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-spinner {
+            width: 42px;
+            height: 42px;
+            border: 2.5px solid var(--border-light);
+            border-top-color: var(--primary-light);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        .loader-text {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-family: var(--font-body);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ================================================================ */
+        /* RESOURCES HERO — UNCHANGED                                      */
         /* ================================================================ */
         .resources-hero {
             position: relative;
@@ -128,6 +198,7 @@
             margin-bottom: 14px;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
+            font-family: var(--font-body);
         }
 
         .resources-hero h1 {
@@ -137,6 +208,7 @@
             letter-spacing: -0.03em;
             line-height: 1.08;
             margin-bottom: 10px;
+            font-family: var(--font-body);
         }
 
         .resources-hero h1 .highlight {
@@ -153,6 +225,7 @@
             max-width: 580px;
             line-height: 1.8;
             margin-bottom: 28px;
+            font-family: var(--font-body);
         }
 
         .hero-search {
@@ -180,7 +253,7 @@
             font-size: 0.9rem;
             color: rgb(254, 214, 214);
             outline: none;
-            font-family: var(--font-sans);
+            font-family: var(--font-body);
             min-width: 0;
         }
 
@@ -199,7 +272,7 @@
             font-size: 0.8rem;
             cursor: pointer;
             transition: all var(--transition);
-            font-family: var(--font-sans);
+            font-family: var(--font-body);
         }
 
         .hero-search .search-btn:hover {
@@ -244,6 +317,7 @@
             letter-spacing: 0.08em;
             margin-right: 4px;
             padding: 4px 8px 4px 0;
+            font-family: var(--font-body);
         }
 
         .filter-bar .filter-btn {
@@ -251,12 +325,12 @@
             border: 1.5px solid var(--border-light);
             border-radius: 60px;
             font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--text-muted);
+            font-weight: 600;
+            color: black;
             background: var(--bg-white);
             cursor: pointer;
             transition: all var(--transition);
-            font-family: var(--font-sans);
+            font-family: var(--font-body);
         }
 
         .filter-bar .filter-btn:hover {
@@ -278,6 +352,7 @@
             color: var(--text-light);
             margin-left: 4px;
             transition: color var(--transition);
+            font-family: var(--font-body);
         }
 
         .filter-bar .filter-btn.active .count {
@@ -317,6 +392,7 @@
             color: var(--text-muted);
             margin-top: 14px;
             font-size: 0.9rem;
+            font-family: var(--font-body);
         }
 
         @keyframes spin {
@@ -335,6 +411,7 @@
             font-weight: 600;
             color: var(--text-dark);
             margin-bottom: 4px;
+            font-family: var(--font-body);
         }
 
         /* ================================================================ */
@@ -353,6 +430,8 @@
             padding-bottom: 10px;
             border-bottom: 2px solid var(--border-light);
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .resource-type-section .section-header h2 {
@@ -361,6 +440,7 @@
             color: var(--text-dark);
             letter-spacing: -0.02em;
             position: relative;
+            font-family: var(--font-body);
         }
 
         .resource-type-section .section-header h2::after {
@@ -378,6 +458,7 @@
             font-size: 0.8rem;
             font-weight: 500;
             color: var(--text-light);
+            font-family: var(--font-body);
         }
 
         .resource-type-section .section-header .section-count span {
@@ -386,7 +467,7 @@
         }
 
         /* ================================================================ */
-        /* 1. DELIVERABLES - Premium Stack                                */
+        /* 1. DELIVERABLES — Premium Stack                                */
         /* ================================================================ */
         .deliverable-item {
             padding: 20px 24px;
@@ -444,28 +525,17 @@
             transition: color var(--transition);
             display: block;
             margin-bottom: 4px;
+            font-family: var(--font-body);
         }
 
         .deliverable-item .item-title:hover { color: var(--primary-light); }
-
-        .deliverable-item .file-badge {
-            display: inline-block;
-            padding: 1px 12px;
-            background: var(--primary-light);
-            color: #FFFFFF;
-            border-radius: 4px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 4px;
-        }
 
         .deliverable-item .item-description {
             font-size: 0.88rem;
             color: var(--text-muted);
             line-height: 1.6;
             margin-bottom: 8px;
+            font-family: var(--font-body);
         }
 
         .deliverable-item .item-meta {
@@ -479,6 +549,7 @@
             padding: 6px 0;
             border-top: 1px solid var(--bg-light);
             border-bottom: 1px solid var(--bg-light);
+            font-family: var(--font-body);
         }
 
         .deliverable-item .item-meta .meta-item {
@@ -492,16 +563,149 @@
             font-weight: 500;
         }
 
+        .deliverable-item .item-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 20px;
+            border: none;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-body);
+            cursor: pointer;
+            background: var(--primary-light);
+            color: #FFFFFF;
+        }
+
+        .btn-download:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(26,74,107,0.2);
+        }
+
+        .btn-download-gold {
+            background: var(--gold);
+            color: var(--primary-dark);
+        }
+
+        .btn-download-gold:hover {
+            background: var(--gold-light);
+            box-shadow: 0 4px 16px rgba(212,168,67,0.2);
+        }
+
+        .btn-watch {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 20px;
+            border: none;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-body);
+            cursor: pointer;
+            background: #C0392B;
+            color: #FFFFFF;
+        }
+
+        .btn-watch:hover {
+            background: #A93226;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(192,57,43,0.2);
+        }
+
+        .btn-github {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 20px;
+            border: none;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-body);
+            cursor: pointer;
+            background: #E67E22;
+            color: #FFFFFF;
+        }
+
+        .btn-github:hover {
+            background: #D35400;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(230,126,34,0.2);
+        }
+
+        .btn-view {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 18px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-light);
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-body);
+            cursor: pointer;
+        }
+
+        .btn-view:hover {
+            background: var(--bg-light);
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+        }
+
+        .btn-access {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 20px;
+            border: none;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-body);
+            cursor: pointer;
+            background: #27AE60;
+            color: #FFFFFF;
+        }
+
+        .btn-access:hover {
+            background: #1E8449;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(39,174,96,0.2);
+        }
+
         /* ================================================================ */
         /* 2. POLICY BRIEFS - Card Grid                                   */
         /* ================================================================ */
         .policy-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-wrap: wrap;
             gap: 16px;
         }
 
         .policy-item {
+            flex: 1 1 calc(50% - 8px);
+            min-width: 220px;
             padding: 20px 22px;
             border: 1px solid var(--border-light);
             border-radius: var(--radius-sm);
@@ -543,6 +747,7 @@
             text-transform: uppercase;
             letter-spacing: 0.08em;
             margin-bottom: 6px;
+            font-family: var(--font-body);
         }
 
         .policy-item .policy-title {
@@ -552,6 +757,7 @@
             text-decoration: none;
             transition: color var(--transition);
             display: block;
+            font-family: var(--font-body);
         }
 
         .policy-item .policy-title:hover { color: var(--gold); }
@@ -561,25 +767,28 @@
             color: var(--text-muted);
             font-style: italic;
             line-height: 1.5;
+            font-family: var(--font-body);
         }
 
-        .policy-item .policy-size {
-            font-size: 0.78rem;
-            color: var(--text-light);
-            margin: 6px 0 10px;
-            display: block;
+        .policy-item .policy-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
         }
 
         /* ================================================================ */
         /* 3. VIDEOS - Premium Cards                                      */
         /* ================================================================ */
         .video-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            display: flex;
+            flex-wrap: wrap;
             gap: 16px;
         }
 
         .video-item {
+            flex: 1 1 calc(33.333% - 10px);
+            min-width: 200px;
             padding: 18px 18px;
             border: 1px solid var(--border-light);
             border-radius: var(--radius-sm);
@@ -616,7 +825,6 @@
             font-size: 1.8rem;
             color: #C0392B;
             margin-bottom: 6px;
-            font-weight: 300;
         }
 
         .video-item .video-title {
@@ -626,6 +834,7 @@
             text-decoration: none;
             transition: color var(--transition);
             display: block;
+            font-family: var(--font-body);
         }
 
         .video-item .video-title:hover { color: #C0392B; }
@@ -639,12 +848,21 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            font-family: var(--font-body);
         }
 
         .video-item .video-meta {
             font-size: 0.72rem;
             color: var(--text-light);
             margin-bottom: 10px;
+            font-family: var(--font-body);
+        }
+
+        .video-item .video-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
         }
 
         /* ================================================================ */
@@ -660,9 +878,10 @@
             display: flex;
             align-items: center;
             gap: 20px;
-            box-shadow: var(--shadow-sm);
             position: relative;
             overflow: hidden;
+            border-color: #8E44AD;
+            box-shadow: var(--shadow-md);
         }
 
         .presentation-item:last-child { margin-bottom: 0; }
@@ -679,13 +898,9 @@
             transition: opacity 0.4s ease;
         }
 
-        .presentation-item:hover {
-            border-color: #8E44AD;
-            box-shadow: var(--shadow-md);
-            transform: translateY(-3px);
-        }
+        
 
-        .presentation-item:hover::after { opacity: 1; }
+        .presentation-item::after { opacity: 1; }
 
         .presentation-item .pres-left {
             flex-shrink: 0;
@@ -700,7 +915,6 @@
             font-size: 1.6rem;
             color: #8E44AD;
             display: block;
-            font-weight: 300;
         }
 
         .presentation-item .pres-left .pres-slides {
@@ -708,12 +922,14 @@
             font-weight: 600;
             color: var(--text-muted);
             display: block;
+            font-family: var(--font-body);
         }
 
         .presentation-item .pres-left .pres-date {
             font-size: 0.7rem;
             color: var(--text-light);
             display: block;
+            font-family: var(--font-body);
         }
 
         .presentation-item .pres-right { flex: 1; }
@@ -725,6 +941,7 @@
             text-decoration: none;
             transition: color var(--transition);
             display: block;
+            font-family: var(--font-body);
         }
 
         .presentation-item .pres-right .pres-title:hover { color: #8E44AD; }
@@ -734,6 +951,13 @@
             color: var(--text-muted);
             line-height: 1.5;
             margin: 2px 0 8px;
+            font-family: var(--font-body);
+        }
+
+        .presentation-item .pres-right .pres-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         /* ================================================================ */
@@ -778,7 +1002,6 @@
             color: var(--text-light);
             transition: transform 0.3s ease;
             flex-shrink: 0;
-            font-weight: 300;
         }
 
         .training-item .training-header .toggle-icon.open { transform: rotate(90deg); }
@@ -790,6 +1013,7 @@
             letter-spacing: 0.08em;
             color: #27AE60;
             flex-shrink: 0;
+            font-family: var(--font-body);
         }
 
         .training-item .training-header .training-title {
@@ -797,6 +1021,7 @@
             font-weight: 600;
             color: var(--text-dark);
             flex: 1;
+            font-family: var(--font-body);
         }
 
         .training-item .training-body {
@@ -813,6 +1038,13 @@
             line-height: 1.6;
             margin-bottom: 10px;
             padding-top: 12px;
+            font-family: var(--font-body);
+        }
+
+        .training-item .training-body .training-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         /* ================================================================ */
@@ -846,6 +1078,7 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-top: 2px;
+            font-family: var(--font-body);
         }
 
         .publication-item .pub-content { flex: 1; min-width: 0; }
@@ -857,6 +1090,7 @@
             text-decoration: none;
             transition: color var(--transition);
             display: block;
+            font-family: var(--font-body);
         }
 
         .publication-item .pub-content .pub-title:hover { color: #5D6D7E; }
@@ -865,6 +1099,7 @@
             font-size: 0.8rem;
             color: var(--text-muted);
             font-style: italic;
+            font-family: var(--font-body);
         }
 
         .publication-item .pub-content .pub-meta {
@@ -875,6 +1110,14 @@
             flex-wrap: wrap;
             gap: 4px 16px;
             align-items: center;
+            font-family: var(--font-body);
+        }
+
+        .publication-item .pub-content .pub-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 6px;
         }
 
         /* ================================================================ */
@@ -886,9 +1129,10 @@
             border-radius: var(--radius-md);
             background: var(--bg-white);
             transition: all var(--transition);
-            box-shadow: var(--shadow-sm);
             position: relative;
             overflow: hidden;
+            border-color: #E67E22;
+            box-shadow: var(--shadow-lg);
         }
 
         .opensource-card::after {
@@ -903,19 +1147,15 @@
             transition: opacity 0.4s ease;
         }
 
-        .opensource-card:hover {
-            border-color: #E67E22;
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-3px);
-        }
 
-        .opensource-card:hover::after { opacity: 1; }
+        .opensource-card::after { opacity: 1; }
 
         .opensource-card .os-intro {
             font-size: 0.88rem;
             color: var(--text-muted);
             line-height: 1.6;
             margin-bottom: 14px;
+            font-family: var(--font-body);
         }
 
         .opensource-card .os-list {
@@ -932,6 +1172,7 @@
             align-items: center;
             gap: 4px 12px;
             font-size: 0.88rem;
+            font-family: var(--font-body);
         }
 
         .opensource-card .os-list li:last-child { border-bottom: none; }
@@ -964,6 +1205,7 @@
             border-top: 1px solid var(--border-light);
             border-bottom: 1px solid var(--border-light);
             margin-bottom: 14px;
+            font-family: var(--font-body);
         }
 
         .opensource-card .os-contributors strong {
@@ -971,144 +1213,10 @@
             font-weight: 700;
         }
 
-        /* ================================================================ */
-        /* SHARED ACTION BUTTONS - Premium                               */
-        /* ================================================================ */
-        .deliverable-item .item-actions,
-        .policy-item .policy-actions,
-        .video-item .video-actions,
-        .presentation-item .pres-right .pres-actions,
-        .training-item .training-body .training-actions,
-        .publication-item .pub-content .pub-actions,
         .opensource-card .os-actions {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-        }
-
-        .btn-download {
-            padding: 6px 20px;
-            border: none;
-            border-radius: 60px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: var(--font-sans);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--primary-light);
-            color: #FFFFFF;
-        }
-
-        .btn-download:hover {
-            background: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(26,74,107,0.2);
-        }
-
-        .btn-download-gold {
-            background: var(--gold);
-            color: var(--primary-dark);
-        }
-
-        .btn-download-gold:hover {
-            background: var(--gold-light);
-            box-shadow: 0 4px 16px rgba(212,168,67,0.2);
-        }
-
-        .btn-watch {
-            padding: 6px 20px;
-            border: none;
-            border-radius: 60px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: var(--font-sans);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #C0392B;
-            color: #FFFFFF;
-        }
-
-        .btn-watch:hover {
-            background: #A93226;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(192,57,43,0.2);
-        }
-
-        .btn-github {
-            padding: 6px 20px;
-            border: none;
-            border-radius: 60px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: var(--font-sans);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #E67E22;
-            color: #FFFFFF;
-        }
-
-        .btn-github:hover {
-            background: #D35400;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(230,126,34,0.2);
-        }
-
-        .btn-view {
-            padding: 6px 18px;
-            background: transparent;
-            color: var(--text-muted);
-            border: 1px solid var(--border-light);
-            border-radius: 60px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: var(--font-sans);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .btn-view:hover {
-            background: var(--bg-light);
-            border-color: var(--primary-light);
-            color: var(--primary-light);
-        }
-
-        .btn-action {
-            padding: 6px 20px;
-            border: none;
-            border-radius: 60px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: var(--font-sans);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #27AE60;
-            color: #FFFFFF;
-        }
-
-        .btn-action:hover {
-            background: #1E8449;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(39,174,96,0.2);
         }
 
         /* ================================================================ */
@@ -1131,7 +1239,7 @@
             font-weight: 500;
             cursor: pointer;
             transition: all var(--transition);
-            font-family: var(--font-sans);
+            font-family: var(--font-body);
         }
 
         .show-more-btn:hover {
@@ -1149,9 +1257,8 @@
         /* RESPONSIVE                                                      */
         /* ================================================================ */
         @media (max-width: 1024px) {
-            .video-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .video-item { flex: 1 1 calc(50% - 8px); }
+            .policy-item { flex: 1 1 100%; }
         }
 
         @media (max-width: 768px) {
@@ -1160,6 +1267,7 @@
             .resources-hero {
                 padding: 40px 16px 36px;
                 min-height: 260px;
+                height: auto;
             }
 
             .resources-hero .hero-bg { background-attachment: scroll; }
@@ -1177,10 +1285,8 @@
             .resource-type-section { margin-bottom: 32px; }
             .resource-type-section .section-header h2 { font-size: 1.05rem; }
 
-            /* ─── Deliverables ─── */
             .deliverable-item { padding: 14px 16px; }
             .deliverable-item .item-title { font-size: 0.95rem; }
-            .deliverable-item .item-description { font-size: 0.82rem; }
             .deliverable-item .item-actions { flex-direction: column; align-items: stretch; }
             .deliverable-item .item-actions .btn-download,
             .deliverable-item .item-actions .btn-view {
@@ -1189,13 +1295,18 @@
                 padding: 8px 16px;
             }
 
-            /* ─── Policy Briefs ─── */
-            .policy-grid { grid-template-columns: 1fr; }
+            .policy-item { padding: 16px 18px; }
+            .policy-item .policy-actions { flex-direction: column; align-items: stretch; }
+            .policy-item .policy-actions .btn-download,
+            .policy-item .policy-actions .btn-view {
+                text-align: center;
+                justify-content: center;
+                padding: 8px 16px;
+            }
 
-            /* ─── Videos ─── */
-            .video-grid { grid-template-columns: 1fr 1fr; }
+            .video-grid { flex-direction: column; }
+            .video-item { flex: 1 1 100%; }
 
-            /* ─── Presentations ─── */
             .presentation-item {
                 flex-direction: column;
                 align-items: flex-start;
@@ -1222,7 +1333,6 @@
                 padding: 8px 16px;
             }
 
-            /* ─── Training Kits ─── */
             .training-item .training-header {
                 padding: 12px 16px;
                 flex-wrap: wrap;
@@ -1236,14 +1346,13 @@
 
             .training-item .training-body { padding: 0 16px 14px 16px; }
             .training-item .training-body .training-actions { flex-direction: column; align-items: stretch; }
-            .training-item .training-body .training-actions .btn-action,
+            .training-item .training-body .training-actions .btn-access,
             .training-item .training-body .training-actions .btn-view {
                 text-align: center;
                 justify-content: center;
                 padding: 8px 16px;
             }
 
-            /* ─── Publications ─── */
             .publication-item {
                 flex-direction: column;
                 align-items: flex-start;
@@ -1259,7 +1368,6 @@
                 padding: 6px 16px;
             }
 
-            /* ─── Open Source ─── */
             .opensource-card { padding: 16px 18px; }
             .opensource-card .os-list li { flex-wrap: wrap; padding: 4px 8px; }
             .opensource-card .os-list .os-stars { margin-left: 0; }
@@ -1270,14 +1378,16 @@
                 justify-content: center;
                 padding: 8px 16px;
             }
+
+            .filter-bar .filter-label { width: 100%; margin-bottom: 2px; }
         }
 
         @media (max-width: 480px) {
             .resources-hero h1 { font-size: 1.8rem; }
             .resources-hero .hero-subtitle { font-size: 0.82rem; }
             .resources-hero .hero-badge { font-size: 0.5rem; padding: 3px 14px; }
-            .filter-bar .filter-label { font-size: 0.6rem; width: 100%; margin-bottom: 2px; }
-            .video-grid { grid-template-columns: 1fr; }
+            .filter-bar .filter-label { font-size: 0.6rem; }
+            .video-item { flex: 1 1 100%; }
         }
 
         /* ================================================================ */
@@ -1292,6 +1402,14 @@
 <body>
 
     <!-- ================================================================ -->
+    <!-- LOADER OVERLAY                                                  -->
+    <!-- ================================================================ -->
+    <div id="loaderOverlay">
+        <div class="loader-spinner"></div>
+        <p class="loader-text">Loading resources</p>
+    </div>
+
+    <!-- ================================================================ -->
     <!-- HEADER                                                          -->
     <!-- ================================================================ -->
     {% include 'header.html' %}
@@ -1302,7 +1420,7 @@
     <main>
 
         <!-- ============================================================ -->
-        <!-- RESOURCES HERO                                              -->
+        <!-- RESOURCES HERO — UNCHANGED                                   -->
         <!-- ============================================================ -->
         <section class="resources-hero">
             <div class="hero-bg"></div>
@@ -1318,7 +1436,7 @@
 
                 <div class="hero-search">
                     <input type="text" id="resourceSearch" placeholder="Search materials..." onkeyup="filterResources()">
-                    <button class="search-btn" onclick="filterResources()">Search</button>
+                    <button class="search-btn" onclick="filterResources()"><i class="fas fa-search"></i> Search</button>
                 </div>
             </div>
         </section>
@@ -1630,7 +1748,6 @@
             // ================================================================
 
             function buildDeliverableItem(item) {
-                var fileBadge = item.file_path ? item.file_path.split('.').pop().toUpperCase() : 'FILE';
                 var actionsHtml = buildActions(item);
                 var metaHtml = buildMeta(item);
 
@@ -1639,32 +1756,29 @@
                         <a href="/resources/${escapeHtml(item.slug)}/" class="item-title">
                             ${escapeHtml(item.title)}
                         </a>
-                        <span class="file-badge">${escapeHtml(fileBadge)}</span>
                         ${item.description ? `<p class="item-description">${escapeHtml(item.description)}</p>` : ''}
                         ${metaHtml}
                         <div class="item-actions">
-                            ${actionsHtml}
-                            <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view">View Details</a>
+                            
+                            <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view"><i class="fas fa-arrow-right"></i> View Details</a>
                         </div>
                     </div>
                 `;
             }
 
             function buildPolicyItem(item) {
-                var badge = item.policy_type || 'Policy Brief';
                 var actionsHtml = buildActions(item);
 
                 return `
                     <div class="policy-item">
-                        <span class="policy-badge">${escapeHtml(badge)}</span>
+                        <span class="policy-badge"><i class="fas fa-file-alt"></i> Policy Brief</span>
                         <a href="/resources/${escapeHtml(item.slug)}/" class="policy-title">
                             ${escapeHtml(item.title)}
                         </a>
                         ${item.journal ? `<span class="policy-journal">${escapeHtml(item.journal)}</span>` : ''}
-                        ${item.file_size ? `<span class="policy-size">${escapeHtml(item.file_size)}</span>` : ''}
                         <div class="policy-actions">
-                            ${actionsHtml}
-                            <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view">View Details</a>
+                            
+                            <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view"><i class="fas fa-arrow-right"></i> View Details</a>
                         </div>
                     </div>
                 `;
@@ -1675,18 +1789,18 @@
 
                 return `
                     <div class="video-item">
-                        <span class="video-icon">▶</span>
+                        <span class="video-icon"><i class="fas fa-play-circle"></i></span>
                         <a href="/resources/${escapeHtml(item.slug)}/" class="video-title">
                             ${escapeHtml(item.title)}
                         </a>
                         ${item.description ? `<p class="video-description">${escapeHtml(item.description)}</p>` : ''}
                         <div class="video-meta">
-                            ${item.duration ? 'Duration: ' + escapeHtml(item.duration) : ''}
-                            ${item.updated_at ? (item.duration ? '  ' : '') + 'Modified: ' + formatDate(item.updated_at) : ''}
+                            ${item.duration ? '<i class="fas fa-clock"></i> ' + escapeHtml(item.duration) : ''}
+                            ${item.updated_at ? (item.duration ? '  ' : '') + '<i class="fas fa-calendar"></i> ' + formatDate(item.updated_at) : ''}
                         </div>
                         <div class="video-actions">
-                            ${actionsHtml}
-                            <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view">View Details</a>
+                            
+                            <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view"><i class="fas fa-arrow-right"></i> View Details</a>
                         </div>
                     </div>
                 `;
@@ -1698,19 +1812,7 @@
                 return `
                     <div class="presentation-item">
                         <div class="pres-left">
-                            <span class="pres-icon">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8E44AD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="2" y="4" width="20" height="16" rx="2"/>
-                                    <line x1="8" y1="20" x2="16" y2="20"/>
-                                    <line x1="12" y1="16" x2="12" y2="20"/>
-                                    <rect x="6" y="8" width="12" height="6" rx="1" fill="#8E44AD" fill-opacity="0.15"/>
-                                    <circle cx="10" cy="11" r="0.8" fill="#8E44AD"/>
-                                    <circle cx="14" cy="11" r="0.8" fill="#8E44AD"/>
-                                    <line x1="8" y1="8" x2="8" y2="7"/>
-                                    <line x1="12" y1="8" x2="12" y2="7"/>
-                                    <line x1="16" y1="8" x2="16" y2="7"/>
-                                </svg>
-                            </span>
+                            <span class="pres-icon"><i class="fa-solid fa-file-powerpoint"></i></span>
                             ${item.slide_count ? `<span class="pres-slides">${escapeHtml(item.slide_count)} slides</span>` : ''}
                             ${item.updated_at ? `<span class="pres-date">${formatDate(item.updated_at)}</span>` : ''}
                         </div>
@@ -1720,8 +1822,8 @@
                             </a>
                             ${item.description ? `<p class="pres-description">${escapeHtml(item.description)}</p>` : ''}
                             <div class="pres-actions">
-                                ${actionsHtml}
-                                <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view">View Details</a>
+                                
+                                <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view"><i class="fas fa-arrow-right"></i> View Details</a>
                             </div>
                         </div>
                     </div>
@@ -1734,15 +1836,15 @@
                 return `
                     <div class="training-item">
                         <div class="training-header" onclick="toggleTraining(this)">
-                            <span class="toggle-icon">▸</span>
+                            <span class="toggle-icon"><i class="fas fa-chevron-right"></i></span>
                             ${item.module_label ? `<span class="training-label">${escapeHtml(item.module_label)}</span>` : ''}
                             <span class="training-title">${escapeHtml(item.title)}</span>
                         </div>
                         <div class="training-body">
                             ${item.description ? `<p class="training-description">${escapeHtml(item.description)}</p>` : ''}
                             <div class="training-actions">
-                                ${actionsHtml}
-                                <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view">View Details</a>
+                                
+                                <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view"><i class="fas fa-arrow-right"></i> View Details</a>
                             </div>
                         </div>
                     </div>
@@ -1750,24 +1852,23 @@
             }
 
             function buildPublicationItem(item) {
-                var badge = item.publication_type || 'Publication';
                 var actionsHtml = buildActions(item);
 
                 return `
                     <div class="publication-item">
-                        <span class="pub-badge">${escapeHtml(badge)}</span>
+                        <span class="pub-badge"><i class="fas fa-book"></i> ${escapeHtml(item.publication_type || 'Publication')}</span>
                         <div class="pub-content">
                             <a href="/resources/${escapeHtml(item.slug)}/" class="pub-title">
                                 ${escapeHtml(item.title)}
                             </a>
                             ${item.journal ? `<span class="pub-journal">${escapeHtml(item.journal)}</span>` : ''}
                             <div class="pub-meta">
-                                ${item.file_size ? `<span>${escapeHtml(item.file_size)}</span>` : ''}
-                                ${item.published_date ? `<span>Published: ${formatDate(item.published_date)}</span>` : ''}
+                                ${item.file_size ? `<span><i class="fas fa-file"></i> ${escapeHtml(item.file_size)}</span>` : ''}
+                                ${item.published_date ? `<span><i class="fas fa-calendar"></i> Published: ${formatDate(item.published_date)}</span>` : ''}
                             </div>
                             <div class="pub-actions">
-                                ${actionsHtml}
-                                <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view">View Details</a>
+                                
+                                <a href="/resources/${escapeHtml(item.slug)}/" class="btn-view"><i class="fas fa-arrow-right"></i> View Details</a>
                             </div>
                         </div>
                     </div>
@@ -1779,11 +1880,11 @@
                 items.forEach(function(item) {
                     listHtml += `
                         <li>
-                            <span class="os-name">${escapeHtml(item.repo_name || item.title)}</span>
+                            <span class="os-name"><i class="fas fa-code-branch"></i> ${escapeHtml(item.repo_name || item.title)}</span>
                             ${item.language ? `<span class="os-lang">${escapeHtml(item.language)}</span>` : ''}
                             ${item.license ? `<span class="os-license">${escapeHtml(item.license)}</span>` : ''}
-                            ${item.stars ? `<span class="os-stars">${escapeHtml(item.stars)} stars</span>` : ''}
-                            <a href="/resources/${escapeHtml(item.slug)}/" style="margin-left:auto;font-size:0.7rem;color:var(--text-light);text-decoration:none;">View Details</a>
+                            ${item.stars ? `<span class="os-stars"><i class="fas fa-star"></i> ${escapeHtml(item.stars)}</span>` : ''}
+                            <a href="/resources/${escapeHtml(item.slug)}/" style="margin-left:auto;font-size:0.7rem;color:var(--text-light);text-decoration:none;"><i class="fas fa-arrow-right"></i> View Details</a>
                         </li>
                     `;
                 });
@@ -1799,14 +1900,12 @@
                         <ul class="os-list">
                             ${listHtml}
                         </ul>
-                        <div class="os-contributors">
-                            <strong>${escapeHtml(contributors)}</strong> Active Contributors
-                        </div>
+                        
                         <div class="os-actions">
                             ${items.length > 0 && items[0].github_url ? `
-                                <a href="${escapeHtml(items[0].github_url)}" class="btn-github" target="_blank" rel="noopener">Visit GitHub Org</a>
+                                <a href="${escapeHtml(items[0].github_url)}" class="btn-github" target="_blank" rel="noopener"><i class="fab fa-github"></i> Visit GitHub Org</a>
                             ` : ''}
-                            <a href="/resources/" class="btn-view">View All</a>
+                            
                         </div>
                     </div>
                 `;
@@ -1825,31 +1924,31 @@
                     if (type === 'policy_brief') {
                         actionsHtml += `
                             <a href="${fileUrl}" class="btn-download btn-download-gold" target="_blank" onclick="event.stopPropagation();">
-                                Download
+                                <i class="fas fa-download"></i> Download
                             </a>
                         `;
                     } else if (type === 'video') {
                         actionsHtml += `
                             <a href="${fileUrl}" class="btn-watch" target="_blank" onclick="event.stopPropagation();">
-                                Watch
+                                <i class="fas fa-play"></i> Watch
                             </a>
                         `;
                     } else if (type === 'open_source') {
                         actionsHtml += `
                             <a href="${fileUrl}" class="btn-github" target="_blank" onclick="event.stopPropagation();">
-                                View Repository
+                                <i class="fab fa-github"></i> View Repository
                             </a>
                         `;
                     } else if (type === 'training_kit') {
                         actionsHtml += `
-                            <a href="${fileUrl}" class="btn-action" target="_blank" onclick="event.stopPropagation();">
-                                Access Kit
+                            <a href="${fileUrl}" class="btn-access" target="_blank" onclick="event.stopPropagation();">
+                                <i class="fas fa-download"></i> Access Kit
                             </a>
                         `;
                     } else {
                         actionsHtml += `
                             <a href="${fileUrl}" class="btn-download" target="_blank" onclick="event.stopPropagation();">
-                                Download
+                                <i class="fas fa-download"></i> Download
                             </a>
                         `;
                     }
@@ -1857,7 +1956,7 @@
                 if (item.external_url && !item.file_path) {
                     actionsHtml += `
                         <a href="${escapeHtml(item.external_url)}" class="btn-view" target="_blank" rel="noopener noreferrer">
-                            View Resource
+                            <i class="fas fa-external-link-alt"></i> View Resource
                         </a>
                     `;
                 }
@@ -1880,7 +1979,7 @@
                     if (version) {
                         metaHtml += `
                             <span class="meta-item">
-                                <span class="meta-label">Version</span>
+                                <span class="meta-label"><i class="fas fa-tag"></i> Version</span>
                                 ${escapeHtml(version)}
                             </span>
                         `;
@@ -1891,7 +1990,7 @@
                     if (formattedDate) {
                         metaHtml += `
                             <span class="meta-item">
-                                <span class="meta-label">Modified</span>
+                                <span class="meta-label"><i class="fas fa-calendar"></i> Modified</span>
                                 ${formattedDate}
                             </span>
                         `;
@@ -1902,7 +2001,7 @@
                     if (license) {
                         metaHtml += `
                             <span class="meta-item">
-                                <span class="meta-label">License</span>
+                                <span class="meta-label"><i class="fas fa-scale-balanced"></i> License</span>
                                 ${escapeHtml(license)}
                             </span>
                         `;
@@ -2032,12 +2131,24 @@
             }
 
             function showLoading() {
+                var loader = document.getElementById('loaderOverlay');
+                if (loader) {
+                    loader.classList.remove('hidden');
+                    loader.style.display = 'flex';
+                }
                 if (loadingIndicator) {
                     loadingIndicator.style.display = 'block';
                 }
             }
 
             function hideLoading() {
+                var loader = document.getElementById('loaderOverlay');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    setTimeout(function() {
+                        loader.style.display = 'none';
+                    }, 600);
+                }
                 if (loadingIndicator) {
                     loadingIndicator.style.display = 'none';
                 }
@@ -2069,7 +2180,7 @@
             document.addEventListener('DOMContentLoaded', function() {
                 loadResources();
                 handleStickyFilter();
-                console.log('BRIDGE-AI Kenya Resources Hub initialized');
+                console.log('BRIDGE-AI Kenya Resources Hub initialized (Modern)');
             });
 
         })();

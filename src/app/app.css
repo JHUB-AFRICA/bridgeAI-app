@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.app-shell {
+  display: block;
+  min-height: 100vh;
+  padding-top: 92px;
+}
+
+.page-content {
+  display: block;
+  width: 100%;
+}

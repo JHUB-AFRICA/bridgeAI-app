@@ -19,7 +19,7 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
       <div class="login-container">
         <div class="login-card">
           <div class="login-header">
-            <img src="/assets/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="login-logo" />
+            <img src="assets/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="login-logo" />
             <h1 class="login-title">{{ appName }}</h1>
             <p class="login-subtitle">Administration Panel</p>
           </div>

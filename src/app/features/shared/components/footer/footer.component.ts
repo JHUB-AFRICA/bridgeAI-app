@@ -16,15 +16,15 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
       <div class="footer-container">
         <div class="footer-logos-row" aria-label="Project partners">
           <div class="footer-logo-item">
-            <img src="/assets/images/logos/jhub_logo.svg" alt="JHUB Africa" class="footer-logo" loading="lazy" />
+            <img src="assets/images/logos/jhub_logo.svg" alt="JHUB Africa" class="footer-logo" loading="lazy" />
           </div>
 
           <div class="footer-logo-item footer-logo-item-bridge">
-            <img src="/assets/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI" class="footer-logo footer-logo-bridge" loading="lazy" />
+            <img src="assets/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI" class="footer-logo footer-logo-bridge" loading="lazy" />
           </div>
 
           <div class="footer-logo-item footer-logo-item-eu">
-            <img src="/assets/images/logos/eu_emblem.svg" alt="European Union" class="footer-logo footer-logo-eu" loading="lazy" />
+            <img src="assets/images/logos/eu_emblem.svg" alt="European Union" class="footer-logo footer-logo-eu" loading="lazy" />
           </div>
         </div>
 

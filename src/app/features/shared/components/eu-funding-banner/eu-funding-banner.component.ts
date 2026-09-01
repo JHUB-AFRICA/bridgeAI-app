@@ -14,7 +14,7 @@ import { FUNDING, APP } from '../../../core/constants/app.constants';
     <div class="eu-banner" [class.compact]="compact">
       <div class="eu-banner-container">
         <div class="eu-emblem">
-          <img src="/assets/images/logos/eu_emblem.svg" alt="EU Emblem" class="eu-emblem-img" />
+          <img src="assets/images/logos/eu_emblem.svg" alt="EU Emblem" class="eu-emblem-img" />
         </div>
         <div class="eu-content">
           <p class="eu-title">{{ fundingText }}</p>

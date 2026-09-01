@@ -21,10 +21,15 @@ interface NavItem {
     <header class="site-header" role="banner">
       <div class="header-container">
         <div class="header-left">
-          <a [routerLink]="['/']" class="logo" aria-label="BRIDGE-AI home">
-            <img src="/assets/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="logo-img" />
-          </a>
+          <div class="logo-group">
+            <a [routerLink]="['/']" class="logo" aria-label="BRIDGE-AI home">
+              <img src="assets/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="logo-img bridge-logo" />
+            </a>
+            <img src="assets/images/logos/eu_emblem.svg" alt="European Union emblem" class="logo-img eu-logo" />
+          </div>
         </div>
+
+        <div class="brand-center" aria-label="BRIDGE-AI Kenya">BRIDGE-AI Kenya</div>
 
         <button class="mobile-toggle" type="button" (click)="toggleMobileMenu()" aria-label="Toggle navigation" aria-expanded="{{ mobileOpen }}">
           @if (!mobileOpen) {
@@ -68,8 +73,10 @@ interface NavItem {
     }
 
     .site-header {
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
       z-index: 1000;
       background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(10px);
@@ -86,12 +93,22 @@ interface NavItem {
       align-items: center;
       justify-content: space-between;
       gap: 24px;
+      position: relative;
+      min-height: 74px;
     }
 
     .header-left {
       display: flex;
       align-items: center;
       flex-shrink: 0;
+      z-index: 2;
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .logo {
@@ -106,11 +123,41 @@ interface NavItem {
       height: 46px;
     }
 
+    .bridge-logo {
+      height: 46px;
+      max-width: 190px;
+      object-fit: contain;
+    }
+
+    .eu-logo {
+      height: 38px;
+      max-width: 110px;
+      object-fit: contain;
+      opacity: 1;
+      filter: drop-shadow(0 1px 0 rgba(15, 23, 42, 0.04));
+    }
+
+    .brand-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #0b4d3b;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 1;
+      display: none;
+    }
+
     .main-nav {
       display: flex;
       align-items: center;
       justify-content: center;
       flex: 1;
+      z-index: 2;
     }
 
     .nav-list {
@@ -141,10 +188,29 @@ interface NavItem {
       position: relative;
     }
 
+    .nav-item a::after {
+      content: '';
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 5px;
+      height: 2px;
+      border-radius: 999px;
+      background: #0b4d3b;
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.25s ease;
+    }
+
     .nav-item a:hover {
       color: #0b4d3b;
       background: rgba(11, 77, 59, 0.06);
       transform: translateY(-1px);
+    }
+
+    .nav-item a:hover::after,
+    .nav-item a.active::after {
+      transform: scaleX(1);
     }
 
     .nav-item a.active {
@@ -170,6 +236,7 @@ interface NavItem {
       justify-content: center;
       cursor: pointer;
       transition: background 0.2s ease, border-color 0.2s ease;
+      z-index: 2;
     }
 
     .mobile-toggle:hover {
@@ -198,6 +265,10 @@ interface NavItem {
     @media (max-width: 980px) {
       .site-header {
         border-bottom-color: #edf2f6;
+      }
+
+      .brand-center {
+        display: block;
       }
 
       .mobile-toggle {
@@ -239,6 +310,11 @@ interface NavItem {
         font-size: 0.88rem;
         border-radius: 10px;
       }
+
+      .nav-item a::after {
+        left: 14px;
+        right: 14px;
+      }
     }
 
     @media (max-width: 640px) {
@@ -248,6 +324,11 @@ interface NavItem {
 
       .logo-img {
         height: 38px;
+      }
+
+      .brand-center {
+        font-size: 0.66rem;
+        letter-spacing: 0.08em;
       }
 
       .main-nav {

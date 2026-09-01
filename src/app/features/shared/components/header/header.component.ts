@@ -23,9 +23,9 @@ interface NavItem {
         <div class="header-left">
           <div class="logo-group">
             <a [routerLink]="['/']" class="logo" aria-label="BRIDGE-AI home">
-              <img src="assets/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="logo-img bridge-logo" />
+              <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="logo-img bridge-logo" />
             </a>
-            <img src="assets/images/logos/eu_emblem.svg" alt="European Union emblem" class="logo-img eu-logo" />
+            <img src="/images/logos/eu_emblem.svg" alt="European Union emblem" class="logo-img eu-logo" />
           </div>
         </div>
 
@@ -88,13 +88,13 @@ interface NavItem {
       max-width: 1280px;
       width: 100%;
       margin: 0 auto;
-      padding: 16px 24px;
+      padding: 18px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 24px;
       position: relative;
-      min-height: 74px;
+      min-height: 92px;
     }
 
     .header-left {
@@ -120,18 +120,18 @@ interface NavItem {
     .logo-img {
       display: block;
       width: auto;
-      height: 46px;
+      height: 56px;
     }
 
     .bridge-logo {
-      height: 46px;
-      max-width: 190px;
+      height: 56px;
+      max-width: 240px;
       object-fit: contain;
     }
 
     .eu-logo {
-      height: 38px;
-      max-width: 110px;
+      height: 46px;
+      max-width: 130px;
       object-fit: contain;
       opacity: 1;
       filter: drop-shadow(0 1px 0 rgba(15, 23, 42, 0.04));
@@ -268,7 +268,7 @@ interface NavItem {
       }
 
       .brand-center {
-        display: block;
+        display: none;
       }
 
       .mobile-toggle {
@@ -320,15 +320,29 @@ interface NavItem {
     @media (max-width: 640px) {
       .header-container {
         padding: 12px 16px;
+        min-height: 78px;
+      }
+
+      .header-left {
+        flex: 1;
+      }
+
+      .logo-group {
+        gap: 8px;
       }
 
       .logo-img {
-        height: 38px;
+        height: 40px;
       }
 
-      .brand-center {
-        font-size: 0.66rem;
-        letter-spacing: 0.08em;
+      .bridge-logo {
+        height: 44px;
+        max-width: 170px;
+      }
+
+      .eu-logo {
+        height: 32px;
+        max-width: 74px;
       }
 
       .main-nav {

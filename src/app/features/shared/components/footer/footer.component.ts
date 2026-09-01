@@ -16,15 +16,15 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
       <div class="footer-container">
         <div class="footer-logos-row" aria-label="Project partners">
           <div class="footer-logo-item">
-            <img src="assets/images/logos/jhub_logo.svg" alt="JHUB Africa" class="footer-logo" loading="lazy" />
+            <img src="/images/logos/jhub_logo.svg" alt="JHUB Africa" class="footer-logo" loading="lazy" />
           </div>
 
           <div class="footer-logo-item footer-logo-item-bridge">
-            <img src="assets/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI" class="footer-logo footer-logo-bridge" loading="lazy" />
+            <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI" class="footer-logo footer-logo-bridge" loading="lazy" />
           </div>
 
           <div class="footer-logo-item footer-logo-item-eu">
-            <img src="assets/images/logos/eu_emblem.svg" alt="European Union" class="footer-logo footer-logo-eu" loading="lazy" />
+            <img src="/images/logos/eu_emblem.svg" alt="European Union" class="footer-logo footer-logo-eu" loading="lazy" />
           </div>
         </div>
 
@@ -178,7 +178,7 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 40px;
+      gap: 52px;
       padding-bottom: 28px;
       border-bottom: 1px solid var(--footer-border);
       flex-wrap: wrap;
@@ -188,23 +188,24 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 100px;
-    }
-
-    .footer-logo-item-bridge {
       min-width: 120px;
     }
 
+    .footer-logo-item-bridge {
+      min-width: 180px;
+    }
+
     .footer-logo-item-eu {
-      min-width: 130px;
+      min-width: 150px;
     }
 
     .footer-logo {
       display: block;
-      height: 44px;
+      height: 58px;
       width: auto;
-      opacity: 0.85;
+      opacity: 0.9;
       transition: opacity 0.3s ease, transform 0.3s ease;
+      object-fit: contain;
     }
 
     .footer-logo:hover {
@@ -213,11 +214,11 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
     }
 
     .footer-logo-bridge {
-      height: 48px;
+      height: 68px;
     }
 
     .footer-logo-eu {
-      height: 42px;
+      height: 52px;
     }
 
     .footer-funding {

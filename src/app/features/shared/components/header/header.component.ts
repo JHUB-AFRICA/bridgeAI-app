@@ -312,4 +312,6 @@ export class HeaderComponent {
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
+
+  
 }

@@ -1,0 +1,87 @@
+/* ================================================================ */
+/* BRIDGE-AI Kenya - Global Styles
+/* ================================================================ */
+
+:root {
+  --ink: #17241B;
+  --ink-soft: #2D3D35;
+  --paper: #F7F2E6;
+  --paper-alt: #EFE6CE;
+  --paper-card: #FFFDF7;
+  --moss: #26432B;
+  --moss-deep: #16281A;
+  --moss-mid: #3E6B45;
+  --growlight: #7C4FA3;
+  --growlight-deep: #5B3878;
+  --growlight-tint: rgba(124, 79, 163, 0.09);
+  --clay: #BE5A2B;
+  --clay-tint: rgba(190, 90, 43, 0.1);
+  --mist: #6E7767;
+  --line: #E1D8C0;
+  --line-on-dark: rgba(247, 242, 230, 0.14);
+  --gold: #C89B3C;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --transition: 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink-soft);
+  background: var(--paper);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+::selection {
+  background: var(--growlight);
+  color: #fff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--paper-alt);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--moss-mid);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--moss);
+}
+
+/* Utility */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

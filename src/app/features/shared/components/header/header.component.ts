@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Header Component
 // ============================================================
 
-import { Component, HostListener, signal } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -11,7 +11,6 @@ import { APP } from '../../../core/constants/app.constants';
 interface NavItem {
   path: string;
   label: string;
-  icon: string;
 }
 
 @Component({
@@ -19,18 +18,15 @@ interface NavItem {
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <header class="site-header">
+    <header class="site-header" role="banner">
       <div class="header-container">
-        <!-- Logo -->
         <div class="header-left">
-          <a [routerLink]="['/']" class="logo">
+          <a [routerLink]="['/']" class="logo" aria-label="BRIDGE-AI home">
             <img src="/assets/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="logo-img" />
-            <span class="logo-text">{{ appName }}</span>
           </a>
         </div>
 
-        <!-- Mobile Toggle -->
-        <button class="mobile-toggle" (click)="toggleMobileMenu()" aria-label="Toggle navigation">
+        <button class="mobile-toggle" type="button" (click)="toggleMobileMenu()" aria-label="Toggle navigation" aria-expanded="{{ mobileOpen }}">
           @if (!mobileOpen) {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
               <line x1="3" y1="6" x2="21" y2="6" />
@@ -45,12 +41,11 @@ interface NavItem {
           }
         </button>
 
-        <!-- Navigation -->
-        <nav class="main-nav" [class.open]="mobileOpen">
+        <nav class="main-nav" [class.open]="mobileOpen" aria-label="Main navigation">
           <ul class="nav-list">
             @for (item of navItems; track item.path) {
               <li class="nav-item">
-                <a [routerLink]="[item.path]" routerLinkActive="active" (click)="closeMobileMenu()">
+                <a [routerLink]="[item.path]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }" (click)="closeMobileMenu()">
                   {{ item.label }}
                 </a>
               </li>
@@ -58,7 +53,6 @@ interface NavItem {
             @if (isLoggedIn()) {
               <li class="nav-item admin-link">
                 <a [routerLink]="['/admin']" routerLinkActive="active" class="admin-link-btn" (click)="closeMobileMenu()">
-                  <i class="fas fa-user-shield"></i>
                   Dashboard
                 </a>
               </li>
@@ -69,34 +63,31 @@ interface NavItem {
     </header>
   `,
   styles: [`
-    /* ================================================================ */
-    /* HEADER                                                           */
-    /* ================================================================ */
+    :host {
+      display: block;
+    }
+
     .site-header {
-      position: fixed;
+      position: sticky;
       top: 0;
-      left: 0;
-      right: 0;
-      z-index: 50;
-      background: #ffffff;
-      border-bottom: 1px solid #e5e7eb;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      height: 80px;
-      display: flex;
-      align-items: center;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #e8edf2;
+      box-shadow: 0 4px 18px rgba(8, 32, 45, 0.04);
     }
 
     .header-container {
       max-width: 1280px;
       width: 100%;
       margin: 0 auto;
-      padding: 0 28px;
+      padding: 16px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 24px;
     }
 
-    /* Logo */
     .header-left {
       display: flex;
       align-items: center;
@@ -104,110 +95,130 @@ interface NavItem {
     }
 
     .logo {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       text-decoration: none;
-      gap: 12px;
     }
 
     .logo-img {
-      height: 40px;
+      display: block;
       width: auto;
+      height: 46px;
     }
 
-    .logo-text {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1f2937;
-      letter-spacing: -0.5px;
-      font-family: 'Inter', sans-serif;
-    }
-
-    /* Mobile Toggle */
-    .mobile-toggle {
-      display: none;
-      background: none;
-      border: none;
-      color: #374151;
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 6px;
-      transition: background 0.2s;
-    }
-
-    .mobile-toggle:hover {
-      background: #f3f4f6;
-    }
-
-    /* Navigation */
     .main-nav {
       display: flex;
       align-items: center;
+      justify-content: center;
+      flex: 1;
     }
 
     .nav-list {
       display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
       list-style: none;
       margin: 0;
       padding: 0;
-      gap: 4px;
-      align-items: center;
     }
 
     .nav-item a {
-      display: block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
       padding: 8px 12px;
-      color: #4b5563;
+      color: #243742;
       text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      border-radius: 6px;
-      transition: all 0.2s;
-      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      border-radius: 999px;
+      transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+      position: relative;
     }
 
     .nav-item a:hover {
-      background: #f3f4f6;
-      color: #1f2937;
+      color: #0b4d3b;
+      background: rgba(11, 77, 59, 0.06);
+      transform: translateY(-1px);
     }
 
     .nav-item a.active {
-      color: #3b82f6;
-      background: #eff6ff;
+      color: #0b4d3b;
+      background: rgba(11, 77, 59, 0.08);
+      box-shadow: inset 0 0 0 1px rgba(11, 77, 59, 0.08);
     }
 
     .admin-link-btn {
-      display: flex;
+      color: #0b4d3b !important;
+      font-weight: 700;
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid #dfe7ee;
+      border-radius: 10px;
+      color: #1a2a35;
+      width: 42px;
+      height: 42px;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
     }
 
-    .admin-link-btn i {
-      font-size: 14px;
+    .mobile-toggle:hover {
+      background: rgba(11, 77, 59, 0.04);
+      border-color: #cfe0d7;
     }
 
-    /* ================================================================ */
-    /* RESPONSIVE                                                       */
-    /* ================================================================ */
-    @media (max-width: 1024px) {
+    .nav-item a:focus-visible,
+    .mobile-toggle:focus-visible {
+      outline: 2px solid #0b4d3b;
+      outline-offset: 3px;
+      border-radius: 999px;
+    }
+
+    @media (max-width: 1100px) {
+      .header-container {
+        padding-inline: 18px;
+      }
+
+      .nav-item a {
+        padding: 7px 10px;
+        font-size: 0.74rem;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .site-header {
+        border-bottom-color: #edf2f6;
+      }
+
       .mobile-toggle {
-        display: block;
+        display: inline-flex;
+      }
+
+      .header-container {
+        position: relative;
       }
 
       .main-nav {
         position: absolute;
-        top: 80px;
+        top: calc(100% + 8px);
         left: 0;
         right: 0;
-        background: #ffffff;
-        border-bottom: 1px solid #e5e7eb;
-        padding: 16px 20px;
+        padding: 14px 18px 20px;
+        background: rgba(255, 255, 255, 0.98);
+        border: 1px solid #edf2f6;
+        border-top: none;
+        box-shadow: 0 20px 30px rgba(8, 32, 45, 0.08);
         display: none;
-        flex-direction: column;
-        align-items: stretch;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        max-height: calc(100vh - 80px);
-        overflow-y: auto;
       }
 
       .main-nav.open {
@@ -215,64 +226,33 @@ interface NavItem {
       }
 
       .nav-list {
-        flex-direction: column;
-        gap: 4px;
         width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
       }
 
       .nav-item a {
-        padding: 12px 16px;
         width: 100%;
-        font-size: 15px;
-      }
-
-      .admin-link {
-        border-top: 1px solid #f3f4f6;
-        padding-top: 8px;
-        margin-top: 4px;
+        justify-content: flex-start;
+        padding: 12px 14px;
+        font-size: 0.88rem;
+        border-radius: 10px;
       }
     }
 
     @media (max-width: 640px) {
-      .site-header {
-        height: 64px;
+      .header-container {
+        padding: 12px 16px;
+      }
+
+      .logo-img {
+        height: 38px;
       }
 
       .main-nav {
-        top: 64px;
-        max-height: calc(100vh - 64px);
+        padding-inline: 14px;
       }
-
-      .header-container {
-        padding: 0 16px;
-      }
-
-      .logo-img {
-        height: 32px;
-      }
-
-      .logo-text {
-        font-size: 15px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .logo-text {
-        font-size: 13px;
-      }
-
-      .logo-img {
-        height: 28px;
-      }
-    }
-
-    /* ================================================================ */
-    /* FOCUS VISIBLE                                                    */
-    /* ================================================================ */
-    .nav-item a:focus-visible,
-    .mobile-toggle:focus-visible {
-      outline: 2px solid #7C4FA3;
-      outline-offset: 2px;
     }
   `]
 })
@@ -281,22 +261,22 @@ export class HeaderComponent {
   protected mobileOpen = false;
 
   protected navItems: NavItem[] = [
-    { path: '/about', label: 'About', icon: 'fa-about' },
-    { path: '/jkuat-role', label: 'JKUAT Role', icon: 'fa-role' },
-    { path: '/smart-mushrooms', label: 'Smart Mushrooms', icon: 'fa-mushroom' },
-    { path: '/activities', label: 'Activities', icon: 'fa-activities' },
-    { path: '/training-wp5', label: 'Training & WP5', icon: 'fa-training' },
-    { path: '/resources', label: 'Resources', icon: 'fa-resources' },
-    { path: '/partners', label: 'Partners', icon: 'fa-partners' },
-    { path: '/gallery', label: 'Gallery', icon: 'fa-gallery' },
-    { path: '/contact', label: 'Contact', icon: 'fa-contact' }
+    { path: '/about', label: 'About' },
+    { path: '/jkuat-role', label: 'JKUAT Role' },
+    { path: '/smart-mushrooms', label: 'Smart Mushrooms' },
+    { path: '/activities', label: 'Activities' },
+    { path: '/training-wp5', label: 'Training & WP5' },
+    { path: '/resources', label: 'Resources' },
+    { path: '/partners', label: 'Partners' },
+    { path: '/gallery', label: 'Gallery' },
+    { path: '/contact', label: 'Contact' }
   ];
 
   constructor(private authService: AuthService) {}
 
   @HostListener('window:resize')
   onResize(): void {
-    if (window.innerWidth > 1024) {
+    if (window.innerWidth > 980) {
       this.mobileOpen = false;
     }
   }
@@ -312,6 +292,4 @@ export class HeaderComponent {
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
-
-  
 }

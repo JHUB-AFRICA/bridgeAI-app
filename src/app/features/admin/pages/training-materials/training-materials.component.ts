@@ -10,6 +10,7 @@ import { TrainingMaterialService } from '../../../../services/training-material.
 import { TrainingMaterial } from '../../../core/models/training-material.model';
 import { DocumentUploadComponent } from '../../../shared/components/document-upload/document-upload.component';
 import { NotificationService } from '../../../core/services/notification.service';
+import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
 
 @Component({
   selector: 'app-admin-training-materials',
@@ -58,6 +59,7 @@ import { NotificationService } from '../../../core/services/notification.service
                 </span>
               </td>
               <td class="actions-cell">
+                <button class="btn-icon view" (click)="detailsModal.open(material)" title="View"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                 <button class="btn-icon edit" (click)="openEditModal(material)" title="Edit">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -459,7 +461,8 @@ export class AdminTrainingMaterialsComponent implements OnInit {
 
   constructor(
     private materialService: TrainingMaterialService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    protected detailsModal: AdminDetailsModalService
   ) {}
 
   ngOnInit(): void {

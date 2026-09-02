@@ -14,8 +14,8 @@ import { Challenge } from '../../../core/models/challenge.model';
 import { Hackathon } from '../../../core/models/hackathon.model';
 import { SuccessStory } from '../../../core/models/success-story.model';
 import { SMESubmission } from '../../../core/models/submission.model';
-import { ImageUploadComponent } from '../../../shared/components/image-upload/image-upload.component';
 import { NotificationService } from '../../../core/services/notification.service';
+import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
 
 interface Tab {
   id: string;
@@ -26,7 +26,7 @@ interface Tab {
 @Component({
   selector: 'app-admin-sme',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ImageUploadComponent],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="admin-sme-page">
       <div class="page-header">
@@ -74,6 +74,7 @@ interface Tab {
                   </span>
                 </td>
                 <td class="actions-cell">
+                  <button class="btn-icon view" (click)="detailsModal.open(item)" title="View"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                   <button class="btn-icon edit" (click)="editChallenge(item)">✏️</button>
                   <button class="btn-icon delete" (click)="deleteChallenge(item.id)">🗑️</button>
                 </td>
@@ -110,6 +111,7 @@ interface Tab {
                 <td>{{ item.location }}</td>
                 <td><span class="status-badge" [class]="item.status">{{ item.status }}</span></td>
                 <td class="actions-cell">
+                  <button class="btn-icon view" (click)="detailsModal.open(item)" title="View"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                   <button class="btn-icon edit" (click)="editHackathon(item)">✏️</button>
                   <button class="btn-icon delete" (click)="deleteHackathon(item.id)">🗑️</button>
                 </td>
@@ -150,6 +152,7 @@ interface Tab {
                   </span>
                 </td>
                 <td class="actions-cell">
+                  <button class="btn-icon view" (click)="detailsModal.open(item)" title="View"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                   <button class="btn-icon edit" (click)="editStory(item)">✏️</button>
                   <button class="btn-icon delete" (click)="deleteStory(item.id)">🗑️</button>
                 </td>
@@ -193,6 +196,7 @@ interface Tab {
                 </td>
                 <td class="actions-cell">
                   <button class="btn-icon view" (click)="viewSubmission(item)">👁️</button>
+                  <button class="btn-icon read" (click)="viewSubmission(item)" title="Mark as read"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
                   <button class="btn-icon delete" (click)="deleteSubmission(item.id)">🗑️</button>
                 </td>
               </tr>
@@ -494,7 +498,8 @@ export class AdminSmeComponent implements OnInit {
     private hackathonService: HackathonService,
     private storyService: SuccessStoryService,
     private submissionService: SmeSubmissionService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    protected detailsModal: AdminDetailsModalService
   ) {}
 
   ngOnInit(): void {
@@ -722,9 +727,7 @@ export class AdminSmeComponent implements OnInit {
       item.is_read = true;
       this.updateTabCounts();
     }
-    alert(
-      `Name: ${item.name}\nOrganisation: ${item.organisation}\nIndustry: ${item.industry}\nInterest: ${item.interest}\nMessage: ${item.message || 'N/A'}`
-    );
+    this.detailsModal.open(item);
   }
 
   deleteSubmission(id: number | undefined): void {

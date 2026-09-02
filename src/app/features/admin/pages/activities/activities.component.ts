@@ -15,6 +15,7 @@ import { WORK_PACKAGES } from '../../../core/constants/wp-constants';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
 
 @Component({
   selector: 'app-admin-activities',
@@ -66,6 +67,7 @@ import { ToastModule } from 'primeng/toast';
                 </span>
               </td>
               <td class="actions-cell">
+                <button class="btn-icon view" (click)="detailsModal.open(activity)" title="View"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                 <button class="btn-icon edit" (click)="openEditModal(activity)" title="Edit">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -460,7 +462,8 @@ export class AdminActivitiesComponent implements OnInit {
 
   constructor(
     private activityService: ActivityService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    protected detailsModal: AdminDetailsModalService
   ) {}
 
   ngOnInit(): void {

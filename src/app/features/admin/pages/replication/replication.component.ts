@@ -14,6 +14,7 @@ import { ReplicationTemplate } from '../../../core/models/replication-template.m
 import { ReplicationLesson } from '../../../core/models/replication-lesson.model';
 import { DocumentUploadComponent } from '../../../shared/components/document-upload/document-upload.component';
 import { NotificationService } from '../../../core/services/notification.service';
+import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
 
 @Component({
   selector: 'app-admin-replication',
@@ -58,6 +59,7 @@ import { NotificationService } from '../../../core/services/notification.service
                 <td>{{ item.description }}</td>
                 <td><a *ngIf="item.file_path" [href]="item.file_path" target="_blank">View</a></td>
                 <td class="actions-cell">
+                  <button class="btn-icon view" (click)="detailsModal.open(item)" title="View"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                   <button class="btn-icon edit" (click)="editResource(item)">✏️</button>
                   <button class="btn-icon delete" (click)="deleteResource(item.id)">🗑️</button>
                 </td>
@@ -92,6 +94,7 @@ import { NotificationService } from '../../../core/services/notification.service
                 <td>{{ item.description }}</td>
                 <td><a *ngIf="item.file_path" [href]="item.file_path" target="_blank">View</a></td>
                 <td class="actions-cell">
+                  <button class="btn-icon view" (click)="detailsModal.open(item)" title="View"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                   <button class="btn-icon edit" (click)="editTemplate(item)">✏️</button>
                   <button class="btn-icon delete" (click)="deleteTemplate(item.id)">🗑️</button>
                 </td>
@@ -130,6 +133,7 @@ import { NotificationService } from '../../../core/services/notification.service
                   </span>
                 </td>
                 <td class="actions-cell">
+                  <button class="btn-icon view" (click)="detailsModal.open(item)" title="View"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                   <button class="btn-icon edit" (click)="editLesson(item)">✏️</button>
                   <button class="btn-icon delete" (click)="deleteLesson(item.id)">🗑️</button>
                 </td>
@@ -565,7 +569,8 @@ export class AdminReplicationComponent implements OnInit {
     private resourceService: ReplicationResourceService,
     private templateService: ReplicationTemplateService,
     private lessonService: ReplicationLessonService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    protected detailsModal: AdminDetailsModalService
   ) {}
 
   ngOnInit(): void {

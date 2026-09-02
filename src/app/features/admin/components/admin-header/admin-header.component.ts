@@ -85,8 +85,8 @@ import { APP } from '../../../core/constants/app.constants';
     .home-link:focus-visible { outline: 3px solid rgba(59, 130, 246, 0.35); outline-offset: 3px; border-radius: 4px; }
     .logout-btn { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: none; background: none; border-radius: 8px; color: #ef4444; cursor: pointer; transition: background 0.2s; }
     .logout-btn:hover { background: #fef2f2; }
-    @media (max-width: 768px) { .admin-header { padding: 0 12px; } .brand-name { font-size: 16px; } .center-brand img { width: 96px; } }
-    @media (max-width: 480px) { .home-link span { display: none; } .center-brand img { width: 82px; } }
+    @media (max-width: 768px) { .admin-header { padding: 0 12px; } .brand-name { display: none; } .center-brand img { width: 96px; } }
+    @media (max-width: 480px) {  .center-brand img { width: 82px; } }
   `]
 })
 export class AdminHeaderComponent {

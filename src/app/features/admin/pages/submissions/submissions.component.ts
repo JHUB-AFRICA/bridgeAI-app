@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SubmissionService } from '../../../../services/submission.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
 
 @Component({
   selector: 'app-admin-submissions',
@@ -63,6 +64,7 @@ import { NotificationService } from '../../../core/services/notification.service
               </td>
               <td class="actions-cell">
                 <button class="btn-icon view" (click)="viewSubmission(item)">👁️</button>
+                <button class="btn-icon read" (click)="markSubmissionRead(item)" title="Mark as read"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
                 <button class="btn-icon delete" (click)="deleteSubmission(item.id)">🗑️</button>
               </td>
             </tr>
@@ -288,7 +290,8 @@ export class AdminSubmissionsComponent implements OnInit {
 
   constructor(
     private submissionService: SubmissionService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    protected detailsModal: AdminDetailsModalService
   ) {}
 
   ngOnInit(): void {
@@ -330,19 +333,14 @@ export class AdminSubmissionsComponent implements OnInit {
       item.is_read = true;
     }
 
-    let details = `Name: ${item.name}\nEmail: ${item.email}\nType: ${item.form_type}\nSubmitted: ${new Date(item.submitted_at).toLocaleString()}\n\n`;
+    this.detailsModal.open(item);
+  }
 
-    if (item.form_type === 'contact') {
-      details += `Organisation: ${item.organisation || 'N/A'}\nAudience: ${item.audience}\nMessage: ${item.message}`;
-    } else if (item.form_type === 'training') {
-      details += `Phone: ${item.phone || 'N/A'}\nCounty: ${item.county || 'N/A'}\nTraining Interest: ${item.training_interest}\nMessage: ${item.message || 'N/A'}`;
-    } else if (item.form_type === 'media') {
-      details += `Outlet: ${item.outlet}\nRequest Type: ${item.request_type}\nDeadline: ${item.deadline || 'N/A'}\nMessage: ${item.message}`;
-    } else if (item.form_type === 'sme') {
-      details += `Organisation: ${item.organisation}\nIndustry: ${item.industry}\nInterest: ${item.interest}\nMessage: ${item.message || 'N/A'}`;
+  markSubmissionRead(item: any): void {
+    if (!item.is_read) {
+      this.submissionService.markAsRead(item.id).subscribe();
+      item.is_read = true;
     }
-
-    alert(details);
   }
 
   deleteSubmission(id: number | undefined): void {

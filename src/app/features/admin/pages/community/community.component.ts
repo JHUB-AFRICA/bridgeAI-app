@@ -13,6 +13,7 @@ import { Repository } from '../../../core/models/repository.model';
 import { CommunityEvent } from '../../../core/models/community-event.model';
 import { CommunitySubmission } from '../../../core/models/submission.model';
 import { NotificationService } from '../../../core/services/notification.service';
+import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
 
 @Component({
   selector: 'app-admin-community',
@@ -63,6 +64,7 @@ import { NotificationService } from '../../../core/services/notification.service
                   </span>
                 </td>
                 <td class="actions-cell">
+                  <button class="btn-icon view" (click)="detailsModal.open(item)" title="View"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                   <button class="btn-icon edit" (click)="editRepository(item)">✏️</button>
                   <button class="btn-icon delete" (click)="deleteRepository(item.id)">🗑️</button>
                 </td>
@@ -99,6 +101,7 @@ import { NotificationService } from '../../../core/services/notification.service
                 <td>{{ item.location }}</td>
                 <td><span class="status-badge" [class]="item.status">{{ item.status }}</span></td>
                 <td class="actions-cell">
+                  <button class="btn-icon view" (click)="detailsModal.open(item)" title="View"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                   <button class="btn-icon edit" (click)="editCommunityEvent(item)">✏️</button>
                   <button class="btn-icon delete" (click)="deleteCommunityEvent(item.id)">🗑️</button>
                 </td>
@@ -142,6 +145,7 @@ import { NotificationService } from '../../../core/services/notification.service
                 </td>
                 <td class="actions-cell">
                   <button class="btn-icon view" (click)="viewSubmission(item)">👁️</button>
+                  <button class="btn-icon read" (click)="viewSubmission(item)" title="Mark as read"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
                   <button class="btn-icon delete" (click)="deleteSubmission(item.id)">🗑️</button>
                 </td>
               </tr>
@@ -415,7 +419,8 @@ export class AdminCommunityComponent implements OnInit {
     private repositoryService: RepositoryService,
     private communityEventService: CommunityEventService,
     private submissionService: CommunitySubmissionService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    protected detailsModal: AdminDetailsModalService
   ) {}
 
   ngOnInit(): void {
@@ -545,9 +550,7 @@ export class AdminCommunityComponent implements OnInit {
       this.submissionService.markAsRead(item.id!).subscribe();
       item.is_read = true;
     }
-    alert(
-      `Name: ${item.name}\nRole: ${item.role}\nInterest: ${item.interest}\nGitHub: ${item.github || 'N/A'}\nMessage: ${item.message || 'N/A'}`
-    );
+    this.detailsModal.open(item);
   }
 
   deleteSubmission(id: number | undefined): void {

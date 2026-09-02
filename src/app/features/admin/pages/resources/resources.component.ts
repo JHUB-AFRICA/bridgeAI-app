@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Admin Resources Component
 // ============================================================
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -11,6 +11,7 @@ import { Resource } from '../../../core/models/resource.model';
 import { DocumentUploadComponent } from '../../../shared/components/document-upload/document-upload.component';
 import { NotificationService } from '../../../core/services/notification.service';
 import { WORK_PACKAGES } from '../../../core/constants/wp-constants';
+import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
 
 @Component({
   selector: 'app-admin-resources',
@@ -53,6 +54,7 @@ import { WORK_PACKAGES } from '../../../core/constants/wp-constants';
                 </span>
               </td>
               <td class="actions-cell">
+                <button class="btn-icon view" (click)="detailsModal.open(resource)" title="View"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
                 <button class="btn-icon edit" (click)="openEditModal(resource)" title="Edit">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -450,6 +452,8 @@ export class AdminResourcesComponent implements OnInit {
     private resourceService: ResourceService,
     private notificationService: NotificationService
   ) {}
+
+  protected detailsModal = inject(AdminDetailsModalService);
 
   ngOnInit(): void {
     this.loadResources();

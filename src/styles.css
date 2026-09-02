@@ -76,6 +76,48 @@ img {
   padding: 0 28px;
 }
 
+/* Keep wide admin tables contained within the content column. */
+.admin-content {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.admin-content .table-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto !important;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+}
+
+.admin-content .data-table {
+  min-width: 640px;
+}
+
+.admin-content .actions-cell {
+  white-space: nowrap;
+}
+
+.admin-content .btn-icon.view {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.admin-content .btn-icon.view:hover {
+  background: #d1fae5;
+}
+
+.admin-content .btn-icon.read {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.admin-content .btn-icon.read:hover {
+  background: #dbeafe;
+}
+
 /* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   *,

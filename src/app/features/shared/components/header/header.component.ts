@@ -24,6 +24,7 @@ interface NavItem {
           <div class="logo-group">
             <a [routerLink]="['/']" class="logo" aria-label="BRIDGE-AI home">
               <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="logo-img bridge-logo" />
+              
             </a>
             <img src="/images/logos/eu_emblem.svg" alt="European Union emblem" class="logo-img eu-logo" />
           </div>

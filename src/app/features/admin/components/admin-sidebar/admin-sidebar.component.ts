@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Admin Sidebar Component
 // ============================================================
 
-import { Component, Input, signal, computed } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -19,19 +19,21 @@ export interface AdminNavItem {
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <aside class="admin-sidebar" [class.collapsed]="collapsed">
+    <aside class="admin-sidebar" [class.collapsed]="collapsed" [class.mobile-open]="mobileOpen">
       <nav class="sidebar-nav">
         <ul class="nav-list">
           <li *ngFor="let item of navItems()" class="nav-item">
             <a
-              [routerLink]="['/admin', item.path]"
+              [routerLink]="item.path ? ['/admin', item.path] : ['/admin']"
               routerLinkActive="active"
               class="nav-link"
               [class.active]="isActive(item.path)"
-              [title]="collapsed ? item.label : ''"
+              [attr.aria-label]="collapsed ? item.label : null"
+              (click)="navigationSelected.emit()"
             >
-              <span class="nav-icon" [innerHTML]="item.icon"></span>
+              <span class="nav-icon"><i [class]="item.icon" aria-hidden="true"></i></span>
               <span *ngIf="!collapsed" class="nav-label">{{ item.label }}</span>
+              <span *ngIf="collapsed" class="nav-tooltip" role="tooltip">{{ item.label }}</span>
             </a>
           </li>
         </ul>
@@ -39,13 +41,7 @@ export interface AdminNavItem {
 
       <div class="sidebar-footer">
         <button (click)="logout()" class="logout-btn" [title]="collapsed ? 'Logout' : ''">
-          <span class="nav-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-          </span>
+          <span class="nav-icon"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i></span>
           <span *ngIf="!collapsed" class="nav-label">Logout</span>
         </button>
       </div>
@@ -88,6 +84,7 @@ export interface AdminNavItem {
     }
 
     .nav-link {
+      position: relative;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -124,14 +121,15 @@ export interface AdminNavItem {
       flex-shrink: 0;
     }
 
-    .nav-icon svg {
+    .nav-icon i {
       width: 20px;
-      height: 20px;
-      stroke: #6b7280;
+      font-size: 18px;
+      color: #6b7280;
+      text-align: center;
     }
 
-    .nav-link.active .nav-icon svg {
-      stroke: #3b82f6;
+    .nav-link.active .nav-icon i {
+      color: #3b82f6;
     }
 
     .nav-label {
@@ -146,6 +144,44 @@ export interface AdminNavItem {
     .admin-sidebar.collapsed .nav-link {
       justify-content: center;
       padding: 10px;
+    }
+
+    .nav-tooltip {
+      position: absolute;
+      left: calc(100% + 10px);
+      top: 50%;
+      z-index: 60;
+      padding: 7px 10px;
+      border-radius: 6px;
+      background: #1f2937;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.2;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-50%) translateX(-4px);
+      transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+    }
+
+    .nav-tooltip::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -5px;
+      width: 10px;
+      height: 10px;
+      background: #1f2937;
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    .admin-sidebar.collapsed .nav-link:hover .nav-tooltip,
+    .admin-sidebar.collapsed .nav-link:focus-visible .nav-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(-50%) translateX(0);
     }
 
     .sidebar-footer {
@@ -173,8 +209,8 @@ export interface AdminNavItem {
       background: #fef2f2;
     }
 
-    .logout-btn .nav-icon svg {
-      stroke: #ef4444;
+    .logout-btn .nav-icon i {
+      color: #ef4444;
     }
 
     .admin-sidebar.collapsed .logout-btn {
@@ -210,6 +246,10 @@ export interface AdminNavItem {
         padding: 10px 12px;
       }
 
+      .admin-sidebar.collapsed .nav-tooltip {
+        display: none;
+      }
+
       .admin-sidebar.collapsed .logout-btn {
         justify-content: flex-start;
         padding: 10px 12px;
@@ -223,6 +263,8 @@ export interface AdminNavItem {
 })
 export class AdminSidebarComponent {
   @Input() collapsed: boolean = false;
+  @Input() mobileOpen: boolean = false;
+  @Output() navigationSelected = new EventEmitter<void>();
 
   protected navItems = signal<AdminNavItem[]>([
     { path: '', label: 'Dashboard', icon: this.getDashboardIcon(), active: false },
@@ -246,55 +288,55 @@ export class AdminSidebarComponent {
   ) {}
 
   getDashboardIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`;
+    return 'fa-solid fa-table-cells-large';
   }
 
   getActivityIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`;
+    return 'fa-solid fa-chart-line';
   }
 
   getEventIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+    return 'fa-solid fa-calendar-days';
   }
 
   getResourceIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`;
+    return 'fa-solid fa-folder-open';
   }
 
   getPartnerIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+    return 'fa-solid fa-handshake';
   }
 
   getTeamIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+    return 'fa-solid fa-users';
   }
 
   getGalleryIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
+    return 'fa-solid fa-images';
   }
 
   getFaqIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+    return 'fa-solid fa-circle-question';
   }
 
   getTrainingIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>`;
+    return 'fa-solid fa-graduation-cap';
   }
 
   getSmeIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`;
+    return 'fa-solid fa-lightbulb';
   }
 
   getCommunityIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+    return 'fa-solid fa-people-group';
   }
 
   getReplicationIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>`;
+    return 'fa-solid fa-arrows-rotate';
   }
 
   getSubmissionsIcon(): string {
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`;
+    return 'fa-solid fa-inbox';
   }
 
   isActive(path: string): boolean {

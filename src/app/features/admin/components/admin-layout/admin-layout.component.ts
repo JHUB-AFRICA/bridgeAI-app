@@ -22,7 +22,14 @@ import { AdminHeaderComponent } from '../admin-header/admin-header.component';
     <div class="admin-layout">
       <app-admin-header (toggleSidebar)="toggleSidebar()"></app-admin-header>
       <div class="admin-body">
-        <app-admin-sidebar [collapsed]="sidebarCollapsed()"></app-admin-sidebar>
+        @if (mobileSidebarOpen()) {
+          <button class="sidebar-backdrop" type="button" aria-label="Close navigation" (click)="closeMobileSidebar()"></button>
+        }
+        <app-admin-sidebar
+          [collapsed]="sidebarCollapsed()"
+          [mobileOpen]="mobileSidebarOpen()"
+          (navigationSelected)="closeMobileSidebar()"
+        ></app-admin-sidebar>
         <main class="admin-main" [class.expanded]="sidebarCollapsed()">
           <div class="admin-content">
             <router-outlet></router-outlet>
@@ -40,6 +47,7 @@ import { AdminHeaderComponent } from '../admin-header/admin-header.component';
     }
 
     .admin-body {
+      position: relative;
       display: flex;
       flex: 1;
       margin-top: 64px;
@@ -62,7 +70,22 @@ import { AdminHeaderComponent } from '../admin-header/admin-header.component';
       margin: 0 auto;
     }
 
+    .sidebar-backdrop {
+      display: none;
+    }
+
     @media (max-width: 768px) {
+      .sidebar-backdrop {
+        position: fixed;
+        inset: 64px 0 0;
+        display: block;
+        width: 100%;
+        border: 0;
+        background: rgba(15, 23, 42, 0.42);
+        cursor: pointer;
+        z-index: 35;
+      }
+
       .admin-main {
         margin-left: 0;
         padding: 16px;
@@ -76,8 +99,18 @@ import { AdminHeaderComponent } from '../admin-header/admin-header.component';
 })
 export class AdminLayoutComponent {
   protected sidebarCollapsed = signal(false);
+  protected mobileSidebarOpen = signal(false);
 
   toggleSidebar(): void {
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      this.mobileSidebarOpen.update(value => !value);
+      return;
+    }
+
     this.sidebarCollapsed.update(value => !value);
+  }
+
+  closeMobileSidebar(): void {
+    this.mobileSidebarOpen.set(false);
   }
 }

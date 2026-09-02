@@ -17,9 +17,9 @@ import { AuthService } from '../../../core/services/auth.service';
       <div class="login-container">
         <div class="login-card">
           <div class="login-header">
-            <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="login-logo" />
-            <h1 class="login-title">BRIDGE-AI Kenya</h1>
-            <p class="login-subtitle">Administration Panel</p>
+            <a routerLink="/" class="logo-link" aria-label="Go to BRIDGE-AI home page">
+              <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI home" class="login-logo" />
+            </a>
           </div>
 
           <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
@@ -40,17 +40,29 @@ import { AuthService } from '../../../core/services/auth.service';
 
             <div class="form-group">
               <label for="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                [(ngModel)]="password"
-                required
-                class="form-control"
-                placeholder="Enter your password"
-                autocomplete="current-password"
-                [disabled]="isLoading()"
-              />
+              <div class="password-control">
+                <input
+                  [type]="showPassword() ? 'text' : 'password'"
+                  id="password"
+                  name="password"
+                  [(ngModel)]="password"
+                  required
+                  class="form-control"
+                  placeholder="Enter your password"
+                  autocomplete="current-password"
+                  [disabled]="isLoading()"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+                  [attr.aria-pressed]="showPassword()"
+                  [disabled]="isLoading()"
+                  (click)="togglePasswordVisibility()"
+                >
+                  {{ showPassword() ? 'Hide' : 'Show' }}
+                </button>
+              </div>
             </div>
 
             <div *ngIf="errorMessage()" class="error-message">
@@ -67,21 +79,17 @@ import { AuthService } from '../../../core/services/auth.service';
             </button>
           </form>
 
-          <div class="login-footer">
-            <p class="grant-text">Grant Agreement No. 101299050</p>
-            <p class="disclaimer-text">Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or the European Health and Digital Executive Agency. Neither the European Union nor the granting authority can be held responsible for them.</p>
-          </div>
         </div>
       </div>
     </div>
   `,
   styles: [`
     .login-page {
-      min-height: 100vh;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 100%);
+      background: none;
       padding: 20px;
     }
 
@@ -94,7 +102,7 @@ import { AuthService } from '../../../core/services/auth.service';
       background: #ffffff;
       border-radius: 16px;
       padding: 40px 36px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      
     }
 
     .login-header {
@@ -102,23 +110,15 @@ import { AuthService } from '../../../core/services/auth.service';
       margin-bottom: 32px;
     }
 
+    .logo-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .login-logo {
       height: 60px;
       width: auto;
-      margin-bottom: 12px;
-    }
-
-    .login-title {
-      font-size: 24px;
-      font-weight: 700;
-      color: #1f2937;
-      margin: 0 0 4px 0;
-    }
-
-    .login-subtitle {
-      font-size: 14px;
-      color: #6b7280;
-      margin: 0;
     }
 
     .login-form {
@@ -140,6 +140,7 @@ import { AuthService } from '../../../core/services/auth.service';
     }
 
     .form-control {
+      width: 100%;
       padding: 10px 14px;
       border: 1px solid #d1d5db;
       border-radius: 8px;
@@ -151,6 +152,43 @@ import { AuthService } from '../../../core/services/auth.service';
       outline: none;
       border-color: #3b82f6;
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .password-control {
+      position: relative;
+    }
+
+    .password-control .form-control {
+      padding-right: 64px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      padding: 4px;
+      border: 0;
+      background: transparent;
+      color: #2563eb;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transform: translateY(-50%);
+    }
+
+    .password-toggle:hover:not(:disabled) {
+      color: #1d4ed8;
+    }
+
+    .password-toggle:focus-visible,
+    .logo-link:focus-visible {
+      outline: 3px solid rgba(59, 130, 246, 0.35);
+      outline-offset: 3px;
+    }
+
+    .password-toggle:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
     }
 
     .form-control:disabled {
@@ -196,34 +234,11 @@ import { AuthService } from '../../../core/services/auth.service';
       cursor: not-allowed;
     }
 
-    .login-footer {
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid #f3f4f6;
-      text-align: center;
-    }
-
-    .grant-text {
-      font-size: 12px;
-      color: #6b7280;
-      margin: 0 0 8px 0;
-    }
-
-    .disclaimer-text {
-      font-size: 11px;
-      color: #9ca3af;
-      line-height: 1.5;
-      margin: 0;
-    }
-
     @media (max-width: 480px) {
       .login-card {
         padding: 28px 20px;
       }
 
-      .login-title {
-        font-size: 20px;
-      }
     }
   `]
 })
@@ -232,6 +247,7 @@ export class LoginComponent implements OnInit {
   password: string = '';
   isLoading = signal(false);
   errorMessage = signal('');
+  showPassword = signal(false);
   returnUrl: string = '/admin';
 
   constructor(
@@ -246,6 +262,10 @@ export class LoginComponent implements OnInit {
     if (this.authService.isLoggedIn()) {
       this.router.navigate([this.returnUrl]);
     }
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword.update(visible => !visible);
   }
 
   onSubmit(): void {

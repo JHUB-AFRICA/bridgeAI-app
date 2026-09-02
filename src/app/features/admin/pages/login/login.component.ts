@@ -2,13 +2,11 @@
 // BRIDGE-AI Kenya - Login Component
 // ============================================================
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { NotificationService } from '../../../core/services/notification.service';
-import { APP, FUNDING } from '../../../core/constants/app.constants';
 
 @Component({
   selector: 'app-login',
@@ -19,8 +17,8 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
       <div class="login-container">
         <div class="login-card">
           <div class="login-header">
-            <img src="assets/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="login-logo" />
-            <h1 class="login-title">{{ appName }}</h1>
+            <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="login-logo" />
+            <h1 class="login-title">BRIDGE-AI Kenya</h1>
             <p class="login-subtitle">Administration Panel</p>
           </div>
 
@@ -36,6 +34,7 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
                 class="form-control"
                 placeholder="Enter your username"
                 autocomplete="username"
+                [disabled]="isLoading()"
               />
             </div>
 
@@ -50,26 +49,27 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
                 class="form-control"
                 placeholder="Enter your password"
                 autocomplete="current-password"
+                [disabled]="isLoading()"
               />
             </div>
 
-            <div *ngIf="errorMessage" class="error-message">
+            <div *ngIf="errorMessage()" class="error-message">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                 <circle cx="12" cy="12" r="10" />
                 <line x1="12" y1="8" x2="12" y2="12" />
                 <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
-              {{ errorMessage }}
+              {{ errorMessage() }}
             </div>
 
-            <button type="submit" class="btn-login" [disabled]="isLoading">
-              {{ isLoading ? 'Logging in...' : 'Sign In' }}
+            <button type="submit" class="btn-login" [disabled]="isLoading()">
+              {{ isLoading() ? 'Logging in...' : 'Sign In' }}
             </button>
           </form>
 
           <div class="login-footer">
-            <p class="grant-text">{{ grantNumber }}</p>
-            <p class="disclaimer-text">{{ disclaimer }}</p>
+            <p class="grant-text">Grant Agreement No. 101299050</p>
+            <p class="disclaimer-text">Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or the European Health and Digital Executive Agency. Neither the European Union nor the granting authority can be held responsible for them.</p>
           </div>
         </div>
       </div>
@@ -153,6 +153,11 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
+    .form-control:disabled {
+      background-color: #f3f4f6;
+      cursor: not-allowed;
+    }
+
     .error-message {
       display: flex;
       align-items: center;
@@ -223,21 +228,16 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
   `]
 })
 export class LoginComponent implements OnInit {
-  protected appName = APP.ACRONYM + ' Kenya';
-  protected grantNumber = FUNDING.GRANT_AGREEMENT;
-  protected disclaimer = FUNDING.DISCLAIMER;
-
   username: string = '';
   password: string = '';
-  isLoading: boolean = false;
-  errorMessage: string = '';
+  isLoading = signal(false);
+  errorMessage = signal('');
   returnUrl: string = '/admin';
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute,
-    private notificationService: NotificationService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -250,22 +250,25 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (!this.username || !this.password) {
-      this.errorMessage = 'Please enter your username and password.';
+      this.errorMessage.set('Please enter your username and password.');
       return;
     }
 
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
 
     this.authService.login(this.username, this.password).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.notificationService.showSuccess('Welcome back!');
-        this.router.navigate([this.returnUrl]);
+      next: (response) => {
+        this.isLoading.set(false);
+        if (response.success) {
+          this.router.navigate([this.returnUrl]);
+        } else {
+          this.errorMessage.set(response.message || 'Invalid credentials.');
+        }
       },
       error: (error) => {
-        this.isLoading = false;
-        this.errorMessage = error.message || 'Invalid username or password.';
+        this.isLoading.set(false);
+        this.errorMessage.set(error.message || 'Login failed. Please try again.');
       }
     });
   }

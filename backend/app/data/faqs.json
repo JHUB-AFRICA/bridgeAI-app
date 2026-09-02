@@ -1,0 +1,50 @@
+[
+  {
+    "question": "What is BRIDGE-AI?",
+    "answer": "BRIDGE-AI (Building ResIlient Development with GEnerative AI in Education & Agriculture) is a Horizon Europe Research and Innovation Action that aims to improve African rural societies by integrating GenAI-based solutions into agricultural optimisation and digital skills acquisition. The project operates across Kenya, Tunisia and Nigeria.",
+    "audience_tag": "public",
+    "category": "general",
+    "display_order": 1,
+    "reviewer": "System",
+    "is_published": true,
+    "id": 1,
+    "created_at": "2026-06-25T03:04:46.263201",
+    "updated_at": "2026-06-25T03:04:46.263211"
+  },
+  {
+    "question": "What is the Smart Mushroom project?",
+    "answer": "The Smart Mushroom project is JKUAT's flagship agritech initiative using IoT sensors, GenAI analytics, and low-bandwidth dashboards to help Kenyan mushroom farmers monitor and optimize growing conditions. It uses a 40-foot shipping container as a climate-controlled grow room with remote smartphone access. The project has reached over 400,000 farmers across Kenya.",
+    "audience_tag": "farmers",
+    "category": "pilot",
+    "display_order": 2,
+    "reviewer": "System",
+    "is_published": true,
+    "id": 2,
+    "created_at": "2026-06-25T03:04:46.276663",
+    "updated_at": "2026-06-25T03:04:46.276672"
+  },
+  {
+    "question": "How can I participate in training?",
+    "answer": "Visit our Training & WP5 page to register for upcoming bootcamps and workshops. You can also express interest through our contact form. Training includes hands-on experience with IoT sensors, GenAI tools, and Smart Mushroom monitoring.",
+    "audience_tag": "youth",
+    "category": "training",
+    "display_order": 3,
+    "reviewer": "System",
+    "is_published": true,
+    "id": 3,
+    "created_at": "2026-06-25T03:04:46.287727",
+    "updated_at": "2026-06-25T03:04:46.287738"
+  },
+  {
+    "question": "What technology is used in the Smart Mushroom pilot?",
+    "answer": "The Smart Mushroom pilot uses: (1) IoT sensors for temperature, humidity, CO₂, and light monitoring, (2) PID control loops for automated climate regulation, (3) GenAI for predictive analytics and anomaly detection, (4) Digital Shadows for scenario testing, and (5) Swahili NLP voice alerts for farmers.",
+    "audience_tag": "farmers",
+    "category": "technology",
+    "display_order": 5,
+    "reviewer": "System",
+    "is_published": true,
+    "id": 5,
+    "created_at": "2026-06-25T03:04:46.312330",
+    "updated_at": "2026-06-25T03:04:46.312343"
+  }
+]

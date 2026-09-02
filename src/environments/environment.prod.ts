@@ -1,6 +1,6 @@
-export const environment = {
+﻿export const environment = {
   production: true,
-  apiUrl: 'https://api.bridge-ai-kenya.com/api',
+  apiUrl: '/api',
   cloudinary: {
     cloudName: 'rn4dhrdb',
     uploadPreset: 'bridge-ai-uploads',

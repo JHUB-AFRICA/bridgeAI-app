@@ -1,0 +1,70 @@
+[
+  {
+    "title": "AI-Powered Smart Mushroom Farming Training Workshop",
+    "slug": "ai-powered-smart-mushroom-farming-training-workshop",
+    "body": "BRIDGE-AI Kenya organized a one-day practical workshop at the JKUAT Smart Farm to demonstrate how Artificial Intelligence and Internet of Things technologies can improve mushroom production. Participants learned about smart environmental monitoring, automated humidity and temperature control, AI-assisted disease detection, and cloud-based farm management systems. Live demonstrations allowed attendees to configure sensors, visualize real-time data through dashboards, and understand predictive analytics for optimizing crop yields. The event also featured discussions on digital agriculture entrepreneurship, sustainability, and collaborative research opportunities within the BRIDGE-AI project.",
+    "date": "2026-08-15",
+    "created_at": "2026-07-02T02:06:22.562050",
+    "updated_at": "2026-07-10T01:57:57.073764",
+    "evidence_status": "published",
+    "summary": "A practical training workshop introducing farmers, students, and researchers to AI-enabled smart mushroom farming using IoT sensors, environmental monitoring, and predictive analytics.",
+    "location": "JKUAT Smart Farm Zone, Juja, Kenya",
+    "wp_tag": "WP5",
+    "activity_type": "training",
+    "audience": "students",
+    "author": "BRIDGE-AI Kenya Communications Team",
+    "featured_image": "uploads/activities/20260702_020622_WhatsApp_Image_2026-07-02_at_2.03.01_AM.jpeg",
+    "gallery_images": [
+      {
+        "id": 1,
+        "image_path": "uploads/activities/20260702_020622_WhatsApp_Image_2026-07-02_at_2.02.18_AM.jpeg",
+        "caption": "Facilitators demonstrate real-time environmental monitoring using smart sensors and digital dashboards, showing how data-driven insights support healthier mushroom cultivation.",
+        "display_order": 0
+      },
+      {
+        "id": 2,
+        "image_path": "uploads/activities/20260702_020622_WhatsApp_Image_2026-07-02_at_2.01.49_AM.jpeg",
+        "caption": "Workshop participants engage in hands-on activities and collaborative discussions, gaining practical skills in applying artificial intelligence and digital technologies to modern agriculture.",
+        "display_order": 1
+      }
+    ],
+    "id": 5
+  },
+  {
+    "title": "Hands-On Learning During the Mushroom Incubation Preparation Process",
+    "slug": "hands-on-learning-mushroom-incubation-preparation-process",
+    "body": "The BRIDGE-AI Smart Mushroom Project recently conducted a practical field activity focused on the mushroom incubation preparation process. Team members joined experienced farmers at a partner mushroom farm to gain firsthand experience in preparing mushroom grow bags for incubation, one of the most important stages in mushroom production. Participants learned how substrates are prepared, how mushroom spawn is introduced using the spooning method, and why consistency, hygiene, and careful handling are essential for successful cultivation. During the session, the team actively participated in filling mushroom bags, organizing the prepared bags, and loading them onto a lorry for transportation to the incubation facility. The experience demonstrated the importance of teamwork, efficient workflow, and proper handling throughout the production process. Beyond the practical training, the activity provided valuable opportunities for discussions with farmers about the challenges and opportunities within commercial mushroom farming. These insights help BRIDGE-AI identify practical applications for artificial intelligence, including environmental monitoring, disease detection, production planning, knowledge sharing, and decision support systems. The field exercise reinforced the project's commitment to combining practical agricultural experience with innovative digital technologies. By working directly with farming communities, participants strengthened their technical knowledge while contributing to the development of AI solutions that address real-world agricultural needs and promote sustainable food systems.",
+    "date": "2026-06-30",
+    "created_at": "2026-07-02T21:53:58.189355",
+    "updated_at": "2026-08-15T01:58:10.642846",
+    "evidence_status": "published",
+    "summary": "Members of the BRIDGE-AI Smart Mushroom Project participated in a practical field activity, working alongside experienced farmers to prepare mushroom grow bags for incubation while gaining firsthand knowledge of commercial mushroom cultivation and exploring opportunities for AI-driven agricultural innovation.",
+    "location": "JKUAT Smart Farm Zone",
+    "wp_tag": "WP5",
+    "activity_type": "field_demo",
+    "audience": "farmers",
+    "author": "BRIDGE-AI Kenya Communications Team",
+    "featured_image": "uploads/activities/20260702_215358_DSC_7238_1.jpg",
+    "gallery_images": [
+      {
+        "id": 2,
+        "image_path": "uploads/activities/20260702_215358_DSC_7245.jpg",
+        "caption": "Participants receive practical instruction on smart mushroom cultivation techniques, exploring modern farming practices and the role of digital technologies in improving productivity and crop quality.",
+        "display_order": 1
+      },
+      {
+        "id": 3,
+        "image_path": "uploads/activities/20260702_215358_DSC_7244.jpg",
+        "caption": "Facilitators demonstrate the microcontroller and its connected sensors, explaining how embedded systems enable real-time data collection, automated climate control, and intelligent decision-making in smart mushroom cultivation.",
+        "display_order": 2
+      },
+      {
+        "id": 4,
+        "image_path": "uploads/activities/20260702_215358_DSC_7241.jpg",
+        "caption": "Participants examine the microcontroller powering the Smart Mushroom system, learning how it collects sensor data and automates environmental monitoring to support optimal mushroom growth.",
+        "display_order": 3
+      }
+    ],
+    "id": 6
+  }
+]

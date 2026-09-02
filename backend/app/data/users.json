@@ -1,0 +1,14 @@
+[
+  {
+    "username": "admin",
+    "password_hash": "pbkdf2:sha256:600000$UQ5BhLz51gIcKiGp$bb45f9d146c026f7bb6da19f3958aed23c76f9e502a13a209aa5c2334a12d8a4",
+    "email": "admin@jkuat.ac.ke",
+    "full_name": "Admin User",
+    "role": "admin",
+    "is_active": true,
+    "last_login": "2026-08-15T01:56:33.656863",
+    "created_at": "2026-06-25T10:00:00",
+    "updated_at": "2026-08-15T01:56:33.657279",
+    "id": 1
+  }
+]

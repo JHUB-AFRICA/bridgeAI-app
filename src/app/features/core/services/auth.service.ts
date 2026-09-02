@@ -4,11 +4,11 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { Observable, BehaviorSubject, throwError, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { API_ENDPOINTS, buildApiUrl, HTTP_HEADERS } from '../constants/api.constants';
-import { User, LoginRequest, LoginResponse } from '../models/user.model';
+import { environment } from '../../../../environments/environment';
+import { LoginResponse, User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -43,10 +43,9 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<LoginResponse> {
-    const url = buildApiUrl(API_ENDPOINTS.AUTH.LOGIN);
-    const body = { username, password };
+    const url = `${environment.apiUrl}/admin/login`;
 
-    return this.http.post<LoginResponse>(url, body).pipe(
+    return this.http.post<LoginResponse>(url, { username, password }).pipe(
       tap((response) => {
         if (response.success && response.user) {
           this.setSession(response.user, response.token);
@@ -54,13 +53,13 @@ export class AuthService {
       }),
       catchError((error) => {
         console.error('Login error:', error);
-        return throwError(() => new Error('Login failed. Please check your credentials.'));
+        return throwError(() => new Error('Login failed. Please check your credentials and try again.'));
       })
     );
   }
 
   logout(): Observable<any> {
-    const url = buildApiUrl(API_ENDPOINTS.AUTH.LOGOUT);
+    const url = `${environment.apiUrl}/admin/logout`;
 
     return this.http.post(url, {}).pipe(
       tap(() => {
@@ -152,13 +151,13 @@ export class AuthService {
   }
 
   verifySession(): Observable<boolean> {
-    const url = buildApiUrl(API_ENDPOINTS.AUTH.VERIFY);
+    const url = `${environment.apiUrl}/admin/verify`;
 
     return this.http.get<{ valid: boolean }>(url).pipe(
       map((response) => response.valid),
       catchError(() => {
         this.clearSession();
-        return [false];
+        return of(false);
       })
     );
   }
@@ -170,16 +169,16 @@ export class AuthService {
       return;
     }
 
-    const url = buildApiUrl(API_ENDPOINTS.AUTH.SESSION);
+    const url = `${environment.apiUrl}/admin/session`;
 
     this.http.get<{ user: User }>(url).pipe(
       catchError(() => {
         this.clearSession();
-        return [];
+        return of(null);
       })
     ).subscribe({
       next: (response) => {
-        if (response.user) {
+        if (response && response.user) {
           localStorage.setItem(this.userKey, JSON.stringify(response.user));
           this.currentUserSubject.next(response.user);
           this.isAuthenticatedSubject.next(true);

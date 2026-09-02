@@ -389,7 +389,7 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
       background: #f7f2e6;
       color: #2d3d35;
       line-height: 1.7;
-      overflow-x: hidden;
+      overflow-x: clip;
     }
 
     .container {

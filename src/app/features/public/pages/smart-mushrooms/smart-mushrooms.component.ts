@@ -8,13 +8,13 @@ import { RouterLink } from '@angular/router';
 import { FaqService } from '../../../../services/faq.service';
 import { FAQ } from '../../../core/models/faq.model';
 import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
-import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-image/cloudinary-image.component';
 
 @Component({
   selector: 'app-smart-mushrooms',
-  standalone: true,
-  imports: [CommonModule, RouterLink, EuFundingBannerComponent, CloudinaryImageComponent],
-  template: `
+  imports: [CommonModule, RouterLink, EuFundingBannerComponent],
+  templateUrl: './smart-mushrooms.component.html',
+  styleUrl: './smart-mushrooms.component.css'
+  /* template: `
     <div class="smart-mushrooms-page">
       <div class="container">
         <h1 class="page-title">Smart Mushrooms: Harnessing Generative AI for Sustainable Mushroom Farming in Kenya</h1>
@@ -342,7 +342,7 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
         grid-template-columns: 1fr;
       }
     }
-  `]
+  `] */
 })
 export class SmartMushroomsComponent implements OnInit {
   protected faqs = signal<FAQ[]>([]);
@@ -351,19 +351,12 @@ export class SmartMushroomsComponent implements OnInit {
   constructor(private faqService: FaqService) {}
 
   ngOnInit(): void {
-    this.loadFaqs();
-  }
-
-  private loadFaqs(): void {
     this.faqService.getFaqsByAudience('farmers').subscribe({
-      next: (faqs) => {
-        this.faqs.set(faqs.filter(f => f.is_published));
-      },
-      error: () => {
-        this.faqs.set([]);
-      }
+      next: (faqs) => this.faqs.set(faqs.filter((faq) => faq.is_published)),
+      error: () => this.faqs.set([])
     });
   }
+
 
   toggleFaq(id: number | undefined): void {
     if (id === undefined) return;

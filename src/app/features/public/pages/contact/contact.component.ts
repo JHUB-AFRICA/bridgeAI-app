@@ -2,10 +2,10 @@
 // BRIDGE-AI Kenya - Contact Component
 // ============================================================
 
-import { Component, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SubmissionService } from '../../../../services/submission.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
@@ -282,7 +282,7 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
     }
   `]
 })
-export class ContactComponent {
+export class ContactComponent implements OnInit {
   protected pilotSite = LOCAL_CONTEXT.PILOT_SITE;
   protected isSubmitting = false;
 
@@ -297,8 +297,19 @@ export class ContactComponent {
 
   constructor(
     private submissionService: SubmissionService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private route: ActivatedRoute
   ) {}
+
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      const audience = params.get('type');
+      const validAudiences = ['general', 'farmer', 'student', 'developer', 'sme', 'researcher', 'media', 'partner'];
+      if (audience && validAudiences.includes(audience)) {
+        this.formData.audience = audience;
+      }
+    });
+  }
 
   onSubmit(): void {
     if (this.isSubmitting || !this.formData.consent) {

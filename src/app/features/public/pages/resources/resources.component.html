@@ -1,0 +1,54 @@
+<div class="resources-page">
+	<section class="resources-hero">
+		<div class="hero-bg"></div><div class="hero-overlay"></div><div class="hero-spotlight"></div>
+		<div class="hero-container">
+			<span class="hero-badge">Centralized Library</span>
+			<h1>Resources <span>Hub</span></h1>
+			<p class="hero-subtitle">Access all public BRIDGE-AI Kenya deliverables, training materials, and research publications. All assets are published under open-source compliance frameworks.</p>
+			<label class="hero-search"><span aria-hidden="true">Search</span><input type="search" placeholder="Search materials..." aria-label="Search materials" (input)="setSearch($event)"></label>
+		</div>
+	</section>
+
+	<nav class="filter-bar" aria-label="Filter resources">
+		<div class="filter-container"><span class="filter-label">Filter</span>
+			<button type="button" class="filter-btn" [class.active]="currentFilter() === 'all'" (click)="setFilter('all')">All <b>{{ allResources().length }}</b></button>
+			@for (type of types; track type.value) {
+				<button type="button" class="filter-btn" [class.active]="currentFilter() === type.value" (click)="setFilter(type.value)">{{ type.label }} <b>{{ countFor(type.value) }}</b></button>
+			}
+		</div>
+	</nav>
+
+	<main class="resources-section"><div class="resources-container">
+		@if (loading()) { <div class="loading"><div class="spinner"></div><p>Loading resources...</p></div> }
+		@else if (!filteredResources().length) { <div class="no-results"><h2>No resources found</h2><p>Try adjusting your search or filter criteria.</p></div> }
+		@else {
+			@for (type of types; track type.value) {
+				@if (itemsFor(type.value).length) {
+					<section class="resource-type-section">
+						<header class="section-header"><h2>{{ type.label }}</h2><span>{{ countFor(type.value) }} item{{ countFor(type.value) === 1 ? '' : 's' }}</span></header>
+						<div class="type-items-container" [class.grid]="type.value === 'policy_brief' || type.value === 'video'">
+							@for (resource of visibleItems(type.value, type.limit); track resource.id || resource.slug) {
+								@if (type.value === 'deliverable') {
+									<article class="deliverable-item"><a class="item-title" [routerLink]="['/resources', resource.slug]">{{ resource.title }}</a><p class="item-description">{{ resource.description }}</p><div class="item-meta"><span>{{ resource.language }}</span><span>{{ formatDate(resource.updated_at || resource.created_at) }}</span><span>{{ resource.license || 'Open access' }}</span></div><a class="btn-view" [routerLink]="['/resources', resource.slug]">View Details</a></article>
+								} @else if (type.value === 'policy_brief') {
+									<article class="policy-item"><span class="badge gold">Policy Brief</span><a class="item-title" [routerLink]="['/resources', resource.slug]">{{ resource.title }}</a><em>{{ resource.journal }}</em><a class="btn-view" [routerLink]="['/resources', resource.slug]">View Details</a></article>
+								} @else if (type.value === 'video') {
+									<article class="video-item"><strong class="video-icon" aria-hidden="true">&#9654;</strong><a class="item-title" [routerLink]="['/resources', resource.slug]">{{ resource.title }}</a><p>{{ resource.description }}</p><small>{{ resource.duration }} {{ formatDate(resource.updated_at) }}</small><a class="btn-view" [routerLink]="['/resources', resource.slug]">View Details</a></article>
+								} @else if (type.value === 'presentation') {
+									<article class="presentation-item"><div class="pres-left" aria-hidden="true">&#9638;<strong>{{ resource.slide_count || '' }} slides</strong><small>{{ formatDate(resource.updated_at) }}</small></div><div><a class="item-title" [routerLink]="['/resources', resource.slug]">{{ resource.title }}</a><p>{{ resource.description }}</p><a class="btn-view" [routerLink]="['/resources', resource.slug]">View Details</a></div></article>
+								} @else if (type.value === 'training_kit') {
+									<article class="training-item"><button type="button" class="training-header" (click)="toggleTraining(resource)" [attr.aria-expanded]="isTrainingOpen(resource)"><span aria-hidden="true">{{ isTrainingOpen(resource) ? '&#9660;' : '&#9654;' }}</span><b>{{ resource.module_label }}</b><strong>{{ resource.title }}</strong></button>@if (isTrainingOpen(resource)) {<div class="training-body"><p>{{ resource.description }}</p><a class="btn-view" [routerLink]="['/resources', resource.slug]">View Details</a></div>}</article>
+								} @else if (type.value === 'publication') {
+									<article class="publication-item"><span class="badge slate">{{ resource.publication_type || 'Publication' }}</span><div><a class="item-title" [routerLink]="['/resources', resource.slug]">{{ resource.title }}</a><em>{{ resource.journal }}</em><small>{{ resource.language }} {{ formatDate(resource.updated_at || resource.created_at) }}</small><br><a class="btn-view" [routerLink]="['/resources', resource.slug]">View Details</a></div></article>
+								} @else {
+									<article class="opensource-card"><ul><li><strong>{{ resource.repo_name || resource.title }}</strong><span>{{ resource.language }}</span><span>{{ resource.license }}</span><span class="stars">&#9733; {{ resource.stars || 0 }}</span><a [routerLink]="['/resources', resource.slug]">View Details</a></li></ul><a class="btn-github" [href]="resource.github_url || resourceUrl(resource)" target="_blank" rel="noopener">Visit GitHub Org</a></article>
+								}
+							}
+						</div>
+						@if (itemsFor(type.value).length > type.limit && type.limit !== 9007199254740991) { <div class="show-more"><button type="button" (click)="toggleMore(type.value)">{{ expandedTypes().has(type.value) ? 'Show Less' : 'Show More' }} <span>({{ expandedTypes().has(type.value) ? '' : '+' + (itemsFor(type.value).length - type.limit) }})</span></button></div> }
+					</section>
+				}
+			}
+		}
+	</div></main>
+</div>

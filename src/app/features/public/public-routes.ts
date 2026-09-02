@@ -35,7 +35,7 @@ export const PublicRoutes: Routes = [
   },
   {
     path: 'training-events',
-    loadComponent: () => import('./pages/training-events/training-events.component').then(m => m.TrainingEventsComponent)
+    loadComponent: () => import('./pages/training-events/training-events').then(m => m.TrainingEvents)
   },
   {
     path: 'training-events/:slug',
@@ -43,7 +43,7 @@ export const PublicRoutes: Routes = [
   },
   {
     path: 'training-materials',
-    loadComponent: () => import('./pages/training-materials/training-materials.component').then(m => m.TrainingMaterialsComponent)
+    loadComponent: () => import('./pages/training-materials/training-materials').then(m => m.TrainingMaterialsComponent)
   },
   {
     path: 'training-materials/:slug',

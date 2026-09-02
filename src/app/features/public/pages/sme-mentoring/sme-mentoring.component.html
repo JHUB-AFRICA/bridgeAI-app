@@ -1,0 +1,55 @@
+<main class="sme-page">
+	<section class="hero" aria-labelledby="page-title">
+		<div class="hero-pattern" aria-hidden="true"></div>
+		<div class="container hero-content">
+			<p class="eyebrow">BRIDGE-AI Kenya</p>
+			<h1 id="page-title">Grow your idea.<br><span>Build what matters.</span></h1>
+			<p class="hero-copy">Practical mentorship, meaningful connections, and opportunities for small and medium enterprises shaping a smarter, more resilient future.</p>
+			<a class="hero-link" href="#interest-form">Join the programme <span aria-hidden="true">&#8594;</span></a>
+		</div>
+		<div class="hero-note" aria-hidden="true">SME<br>MENTORING</div>
+	</section>
+
+	<div class="container page-content">
+		<section class="intro-grid" aria-labelledby="intro-title">
+			<div><p class="section-label">A bridge to your next step</p><h2 id="intro-title">Ideas become impact with the right people around them.</h2></div>
+			<p class="intro-copy">BRIDGE-AI connects ambitious SMEs with experts, peers, researchers, and real-world opportunities. Bring your challenge; we will help you find a way forward.</p>
+		</section>
+		<section class="benefits" aria-label="Programme benefits">
+			<article class="benefit"><span class="benefit-number">01</span><h3>Find your direction</h3><p>Turn a complex business challenge into a practical path with focused guidance.</p></article>
+			<article class="benefit"><span class="benefit-number">02</span><h3>Meet your network</h3><p>Connect with people who understand the work and can open the next door.</p></article>
+			<article class="benefit"><span class="benefit-number">03</span><h3>Test and grow</h3><p>Discover challenges, hackathons, training, and pilots built for action.</p></article>
+		</section>
+
+		<section class="content-section" aria-labelledby="opportunities-title">
+			<div class="section-heading-row"><div><p class="section-label">Make your move</p><h2 id="opportunities-title">Current opportunities</h2></div><span class="section-count">{{ challenges().length + hackathons().length }} available</span></div>
+			<div class="opportunity-grid">
+				<article class="opportunity-card challenge-card" *ngFor="let challenge of challenges()"><span class="card-tag">Open challenge</span><h3>{{ challenge.title }}</h3><p>{{ challenge.description }}</p><span *ngIf="challenge.deadline" class="card-meta">Closes {{ challenge.deadline | date:'dd MMM yyyy' }} <span aria-hidden="true">&#8594;</span></span></article>
+				<article class="opportunity-card hackathon-card" *ngFor="let hackathon of hackathons()"><span class="card-tag">Upcoming hackathon</span><h3>{{ hackathon.title }}</h3><p>{{ hackathon.description }}</p><span class="card-meta">{{ hackathon.date | date:'dd MMM yyyy' }}<span *ngIf="hackathon.location"> · {{ hackathon.location }}</span> <span aria-hidden="true">&#8594;</span></span></article>
+			</div>
+			<div *ngIf="challenges().length === 0 && hackathons().length === 0" class="empty-state">New opportunities are on their way. Register your interest and we will keep you informed.</div>
+		</section>
+
+		<section class="content-section stories-section" aria-labelledby="stories-title">
+			<div class="section-heading-row"><div><p class="section-label">From the community</p><h2 id="stories-title">People moving the work forward</h2></div></div>
+			<div class="stories-grid" *ngIf="stories().length; else noStories"><article class="story-card" *ngFor="let story of stories()"><div class="story-mark" aria-hidden="true">&ldquo;</div><p class="story-content">{{ story.story }}</p><div class="story-person"><span class="story-avatar">{{ getStoryInitials(story) }}</span><span><strong>{{ story.sme_name }}</strong><small *ngIf="story.industry">{{ story.industry }}</small></span></div></article></div>
+			<ng-template #noStories><div class="empty-state">Success stories from our SME community will appear here.</div></ng-template>
+		</section>
+
+		<section class="interest-section" id="interest-form" aria-labelledby="interest-title">
+			<div class="form-intro"><p class="section-label">Start a conversation</p><h2 id="interest-title">Tell us where you want to go.</h2><p>Share a little about your organisation and we will connect you with the right BRIDGE-AI opportunity.</p></div>
+			<form (ngSubmit)="onSubmit()" #interestForm="ngForm" class="interest-form">
+				<div class="form-grid">
+					<div class="form-group"><label for="name">Full name <span>*</span></label><input id="name" name="name" type="text" [(ngModel)]="formData.name" required placeholder="Your full name"></div>
+					<div class="form-group"><label for="email">Email address <span>*</span></label><input id="email" name="email" type="email" [(ngModel)]="formData.email" required placeholder="you@organisation.com"></div>
+					<div class="form-group"><label for="organisation">Organisation <span>*</span></label><input id="organisation" name="organisation" type="text" [(ngModel)]="formData.organisation" required placeholder="Organisation name"></div>
+					<div class="form-group"><label for="industry">Industry <span>*</span></label><select id="industry" name="industry" [(ngModel)]="formData.industry" required><option value="">Choose an industry</option><option value="agriculture">Agriculture</option><option value="technology">Technology</option><option value="agritech">Agritech</option><option value="manufacturing">Manufacturing</option><option value="services">Services</option><option value="other">Other</option></select></div>
+					<div class="form-group full-width"><label for="interest">I am interested in <span>*</span></label><select id="interest" name="interest" [(ngModel)]="formData.interest" required><option value="">Choose an opportunity</option><option value="mentoring">Mentoring</option><option value="funding">Funding opportunities</option><option value="collaboration">Collaboration</option><option value="training">Training</option><option value="pilot">Pilot participation</option><option value="other">Other</option></select></div>
+					<div class="form-group full-width"><label for="message">Your message</label><textarea id="message" name="message" [(ngModel)]="formData.message" rows="4" placeholder="What are you working on?"></textarea></div>
+				</div>
+				<button type="submit" class="submit-button" [disabled]="isSubmitting">{{ isSubmitting ? 'Sending...' : 'Submit your interest' }} <span aria-hidden="true">&#8594;</span></button>
+			</form>
+		</section>
+		<div class="eu-section"><app-eu-funding-banner></app-eu-funding-banner></div>
+	</div>
+</main>

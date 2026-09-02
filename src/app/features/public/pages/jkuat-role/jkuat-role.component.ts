@@ -4,6 +4,7 @@
 
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TeamService } from '../../../../services/team.service';
 import { TeamMember } from '../../../core/models/team.model';
 import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
@@ -11,13 +12,8 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
 @Component({
   selector: 'app-jkuat-role',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   template: `
-    <div id="page-loader" [class.hidden]="!isLoading">
-      <div class="loader-spinner"></div>
-      <p>Loading</p>
-    </div>
-
     <main class="jkuat-role-page">
       <section class="hero" id="heroSection">
         <div class="hero-image-wrapper">
@@ -254,9 +250,9 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
             <h3>Get Involved</h3>
             <p>Join us in building capacity and driving innovation in agritech</p>
             <div class="cta-links">
-              <a href="#" class="cta-link">Join Training</a>
-              <a href="#" class="cta-link outline">Contact Us</a>
-              <a href="#" class="cta-link outline">Partner With Us</a>
+              <a [routerLink]="['/training-events']" class="cta-link">Join Training</a>
+              <a [routerLink]="['/contact']" class="cta-link outline">Contact Us</a>
+              <a [routerLink]="['/partners']" class="cta-link outline">Partner With Us</a>
             </div>
           </div>
         </div>
@@ -305,41 +301,6 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
       font-weight: 400;
     }
     .section-alt { background: #efe6ce; }
-
-    #page-loader {
-      position: fixed;
-      inset: 0;
-      background: #16281a;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 99999;
-      transition: opacity 0.6s ease, visibility 0.6s ease;
-    }
-    #page-loader.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    .loader-spinner {
-      width: 38px;
-      height: 38px;
-      border: 2.5px solid rgba(255,255,255,0.1);
-      border-top-color: #c89be8;
-      border-radius: 50%;
-      animation: loader-spin 0.8s linear infinite;
-    }
-    @keyframes loader-spin { to { transform: rotate(360deg); } }
-    #page-loader p {
-      margin-top: 18px;
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.5);
-      font-family: 'Inter', monospace;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
 
     .hero {
       position: relative;
@@ -975,7 +936,6 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
 })
 export class JkuatRoleComponent implements OnInit, AfterViewInit {
   protected teamMembers = signal<TeamMember[]>([]);
-  protected isLoading = true;
 
   protected pilotSite = LOCAL_CONTEXT.PILOT_SITE;
   protected hostInstitution = LOCAL_CONTEXT.HOST_INSTITUTION;
@@ -986,9 +946,6 @@ export class JkuatRoleComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loadTeamMembers();
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 700);
   }
 
   ngAfterViewInit(): void {

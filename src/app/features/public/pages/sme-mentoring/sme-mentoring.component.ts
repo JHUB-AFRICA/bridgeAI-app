@@ -17,9 +17,10 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
 
 @Component({
   selector: 'app-sme-mentoring',
-  standalone: true,
   imports: [CommonModule, FormsModule, EuFundingBannerComponent],
-  template: `
+  templateUrl: './sme-mentoring.component.html',
+  styleUrl: './sme-mentoring.component.css'
+  /* template: `
     <div class="sme-mentoring-page">
       <div class="container">
         <h1 class="page-title">SME Mentoring</h1>
@@ -30,17 +31,7 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
           <div *ngIf="challenges().length === 0" class="empty-state">
             <p>No open challenges at this time.</p>
           </div>
-          <div class="challenges-grid">
-            <div *ngFor="let challenge of challenges()" class="challenge-card">
-              <h3 class="challenge-title">{{ challenge.title }}</h3>
-              <p class="challenge-description">{{ challenge.description }}</p>
-              <div class="challenge-meta">
-                <span *ngIf="challenge.deadline" class="challenge-deadline">
-                  Deadline: {{ challenge.deadline | date:'dd MMM yyyy' }}
-                </span>
-              </div>
-            </div>
-          </div>
+        template: `
         </section>
 
         <!-- Hackathons -->
@@ -431,7 +422,7 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
         grid-template-columns: 1fr;
       }
     }
-  `]
+  `]*/
 })
 export class SmeMentoringComponent implements OnInit {
   protected challenges = signal<Challenge[]>([]);

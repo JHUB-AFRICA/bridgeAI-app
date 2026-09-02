@@ -50,8 +50,8 @@ interface NavItem {
         <nav class="main-nav" [class.open]="mobileOpen" aria-label="Main navigation">
           <ul class="nav-list">
             @for (item of navItems; track item.path) {
-              <li class="nav-item">
-                <a [routerLink]="[item.path]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }" (click)="closeMobileMenu()">
+              <li class="nav-item" [class.home-nav]="item.path === '/'">
+                <a [routerLink]="[item.path]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: item.path === '/' }" (click)="closeMobileMenu()">
                   {{ item.label }}
                 </a>
               </li>
@@ -220,6 +220,10 @@ interface NavItem {
       box-shadow: inset 0 0 0 1px rgba(11, 77, 59, 0.08);
     }
 
+    .home-nav {
+      display: none;
+    }
+
     .admin-link-btn {
       color: #0b4d3b !important;
       font-weight: 700;
@@ -280,6 +284,14 @@ interface NavItem {
         position: relative;
       }
 
+      .eu-logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 68px;
+        max-width: 120px;
+      }
+
       .main-nav {
         position: absolute;
         top: calc(100% + 8px);
@@ -312,6 +324,10 @@ interface NavItem {
         border-radius: 10px;
       }
 
+      .home-nav {
+        display: list-item;
+      }
+
       .nav-item a::after {
         left: 14px;
         right: 14px;
@@ -341,10 +357,7 @@ interface NavItem {
         max-width: 170px;
       }
 
-      .eu-logo {
-        height: 32px;
-        max-width: 74px;
-      }
+      
 
       .main-nav {
         padding-inline: 14px;

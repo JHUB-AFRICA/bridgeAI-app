@@ -14,11 +14,6 @@ import { Partner } from '../../../core/models/partner.model';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="partners-page">
-      <div id="loaderOverlay" [class.hidden]="!isLoading()">
-        <div class="loader-spinner"></div>
-        <div class="loader-text">Loading partners</div>
-      </div>
-
       <main>
         <section class="partners-hero">
           <div class="hero-bg"></div>
@@ -196,51 +191,6 @@ import { Partner } from '../../../core/models/partner.model';
 
     * {
       box-sizing: border-box;
-    }
-
-    #loaderOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(251, 249, 243, 0.96);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.5s ease;
-    }
-
-    #loaderOverlay.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .loader-spinner {
-      width: 42px;
-      height: 42px;
-      border: 2.5px solid var(--border-light);
-      border-top-color: var(--primary-light);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin-bottom: 16px;
-    }
-
-    .loader-text {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
     }
 
     .partners-hero {
@@ -1399,7 +1349,6 @@ export class PartnersComponent implements OnInit {
   protected totalPartners = signal(0);
   protected countryCount = signal(0);
   protected ecosystemImpact = signal('Over 250 local researchers and 50 technology hubs integrated into the BRIDGE-AI network across the Nairobi metropolitan area.');
-  protected isLoading = signal(true);
 
   private readonly colorClasses = ['color-1', 'color-2', 'color-3', 'color-4'];
 
@@ -1442,14 +1391,12 @@ export class PartnersComponent implements OnInit {
         if (local.length) {
           this.ecosystemImpact.set(local[0].ecosystem_impact || 'Over 250 local researchers and 50 technology hubs integrated into the BRIDGE-AI network across the Nairobi metropolitan area.');
         }
-        this.isLoading.set(false);
       },
       error: () => {
         this.consortiumPartners.set([]);
         this.localPartners.set([]);
         this.totalPartners.set(0);
         this.countryCount.set(0);
-        this.isLoading.set(false);
       }
     });
   }

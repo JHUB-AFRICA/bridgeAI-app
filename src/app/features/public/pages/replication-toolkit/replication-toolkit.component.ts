@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Replication Toolkit Component
 // ============================================================
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReplicationResourceService } from '../../../../services/replication-resource.service';
 import { ReplicationTemplateService } from '../../../../services/replication-template.service';
@@ -12,11 +12,22 @@ import { ReplicationTemplate } from '../../../core/models/replication-template.m
 import { ReplicationLesson } from '../../../core/models/replication-lesson.model';
 import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 
+type ToolkitItem = {
+  type: 'resource' | 'template' | 'lesson';
+  title: string;
+  description?: string;
+  content?: string;
+  subtext?: string;
+  file_path?: string;
+  created_at?: string;
+};
+
 @Component({
   selector: 'app-replication-toolkit',
-  standalone: true,
   imports: [CommonModule, EuFundingBannerComponent],
-  template: `
+  templateUrl: './replication-toolkit.component.html',
+  styleUrl: './replication-toolkit.component.css'
+  /* template: `
     <div class="replication-toolkit-page">
       <div class="container">
         <h1 class="page-title">Replication Toolkit</h1>
@@ -264,12 +275,30 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
         grid-template-columns: 1fr;
       }
     }
-  `]
+  `] */
 })
 export class ReplicationToolkitComponent implements OnInit {
   protected resources = signal<ReplicationResource[]>([]);
   protected templates = signal<ReplicationTemplate[]>([]);
   protected lessons = signal<ReplicationLesson[]>([]);
+  protected activeFilter = signal<'all' | 'resource' | 'template' | 'lesson'>('all');
+  protected sortOrder = signal<'newest' | 'oldest' | 'alpha'>('newest');
+  protected isLoading = signal(true);
+  protected items = computed<ToolkitItem[]>(() => [
+    ...this.resources().map((item) => ({ ...item, type: 'resource' as const })),
+    ...this.templates().map((item) => ({ ...item, type: 'template' as const })),
+    ...this.lessons().map((item) => ({ ...item, type: 'lesson' as const }))
+  ]);
+  protected filteredItems = computed(() => {
+    const filter = this.activeFilter();
+    const items = this.items().filter((item) => filter === 'all' || item.type === filter);
+    return [...items].sort((first, second) => {
+      if (this.sortOrder() === 'alpha') return first.title.localeCompare(second.title);
+      const firstDate = new Date(first.created_at || '').getTime() || 0;
+      const secondDate = new Date(second.created_at || '').getTime() || 0;
+      return this.sortOrder() === 'newest' ? secondDate - firstDate : firstDate - secondDate;
+    });
+  });
 
   constructor(
     private resourceService: ReplicationResourceService,
@@ -281,31 +310,57 @@ export class ReplicationToolkitComponent implements OnInit {
     this.loadData();
   }
 
+  protected setFilter(filter: 'all' | 'resource' | 'template' | 'lesson'): void {
+    this.activeFilter.set(filter);
+  }
+
+  protected setSort(order: 'newest' | 'oldest' | 'alpha'): void {
+    this.sortOrder.set(order);
+  }
+
+  protected count(type: 'all' | 'resource' | 'template' | 'lesson'): number {
+    return type === 'all' ? this.items().length : this.items().filter((item) => item.type === type).length;
+  }
+
+  protected itemDescription(item: { description?: string; content?: string; subtext?: string }): string {
+    return item.description || item.content || item.subtext || 'No description available.';
+  }
+
+  protected fileUrl(path: string): string {
+    return path.startsWith('http') || path.startsWith('/') ? path : `/assets/${path}`;
+  }
+
   private loadData(): void {
     this.resourceService.getPublicResources().subscribe({
       next: (resources) => {
         this.resources.set(resources);
+        this.isLoading.set(false);
       },
       error: () => {
         this.resources.set([]);
+        this.isLoading.set(false);
       }
     });
 
     this.templateService.getPublicTemplates().subscribe({
       next: (templates) => {
         this.templates.set(templates);
+        this.isLoading.set(false);
       },
       error: () => {
         this.templates.set([]);
+        this.isLoading.set(false);
       }
     });
 
     this.lessonService.getPublishedLessons().subscribe({
       next: (lessons) => {
         this.lessons.set(lessons);
+        this.isLoading.set(false);
       },
       error: () => {
         this.lessons.set([]);
+        this.isLoading.set(false);
       }
     });
   }

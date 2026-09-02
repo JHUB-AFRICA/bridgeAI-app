@@ -21,6 +21,18 @@ export interface Resource {
   /** Description of the resource */
   description: string;
 
+  /** Optional publication or resource metadata returned by the API */
+  journal?: string;
+  duration?: string;
+  slide_count?: number;
+  module_label?: string;
+  publication_type?: string;
+  repo_name?: string;
+  stars?: number | string;
+  contributors?: number | string;
+  github_url?: string;
+  version?: string;
+
   /** Type of resource (public-deliverable, training-guide, slide-deck, etc.) */
   resource_type: string;
 

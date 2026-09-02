@@ -1,0 +1,90 @@
+<div class="training-events-page">
+	<nav class="breadcrumb-bar" aria-label="Breadcrumb">
+		<div class="breadcrumb-container">
+			<a routerLink="/">Home</a><span class="sep">·</span>
+			<a routerLink="/training-wp5">Training and WP5</a><span class="sep">·</span>
+			<span class="current">Training Events</span>
+		</div>
+	</nav>
+
+	<section class="hero-section">
+		<div class="hero-accent-line"></div>
+		<div class="hero-container">
+			<div class="hero-grid">
+				<div class="hero-left">
+					<span class="hero-badge">T5.2 Local Training Bootcamps</span>
+					<h1 class="hero-title">Training <span class="gold">Events</span></h1>
+					<p class="hero-subtitle">Upcoming bootcamps, workshops, and training sessions hosted by JKUAT's Smart Farm Zone. Discover opportunities to build your skills in AI, IoT, and smart agriculture.</p>
+					<div class="hero-actions">
+						<a routerLink="/training-events" fragment="events" class="btn-primary">Explore Events <span class="btn-arrow">→</span></a>
+						<a routerLink="/training-events" fragment="filters" class="btn-outline">Filter Events</a>
+					</div>
+				</div>
+				<div class="hero-right">
+					<div class="hero-image-wrapper">
+						<img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Training event at JKUAT Smart Farm Zone">
+						<div class="hero-image-overlay"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="stats-strip" aria-label="Event statistics">
+		<div class="stats-container">
+			<div class="stat-item"><span class="stat-number gold">{{ counts().upcoming }}</span><span class="stat-label">Upcoming</span></div>
+			<span class="stat-divider"></span>
+			<div class="stat-item"><span class="stat-number">{{ counts().ongoing }}</span><span class="stat-label">Ongoing</span></div>
+			<span class="stat-divider"></span>
+			<div class="stat-item"><span class="stat-number">{{ counts().completed }}</span><span class="stat-label">Completed</span></div>
+			<span class="stat-divider"></span>
+			<div class="stat-item"><span class="stat-number">{{ counts().total }}</span><span class="stat-label">Total Events</span></div>
+		</div>
+	</section>
+
+	<section class="filter-section" id="filters" aria-label="Filter events">
+		<div class="filter-container">
+			<div class="filter-group">
+				<span class="filter-label">Filter</span>
+				<select aria-label="Filter by status" [value]="status()" (change)="setFilter('status', $event)">
+					<option value="">All Status</option><option value="upcoming">Upcoming</option><option value="ongoing">Ongoing</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option>
+				</select>
+				<select aria-label="Filter by audience" [value]="audience()" (change)="setFilter('audience', $event)">
+					<option value="">All Audiences</option>@for (value of audiences(); track value) {<option [value]="value">{{ value | titlecase }}</option>}
+				</select>
+				<select aria-label="Filter by year" [value]="year()" (change)="setFilter('year', $event)">
+					<option value="">All Years</option>@for (value of years(); track value) {<option [value]="value">{{ value }}</option>}
+				</select>
+				<select aria-label="Filter by month" [value]="month()" (change)="setFilter('month', $event)">
+					<option value="">All Months</option>@for (value of monthNames; track value; let index = $index) {<option [value]="index + 1">{{ value }}</option>}
+				</select>
+			</div>
+			<div class="filter-group results-group"><span class="filter-results"><strong>{{ filteredEvents().length }}</strong> events found</span><button class="filter-clear" type="button" (click)="clearFilters()">Clear Filters</button></div>
+		</div>
+	</section>
+
+	<section class="section-timeline" id="events">
+		<div class="timeline-container">
+			@if (isLoading()) {
+				<div class="loading-state" role="status"><div class="spinner"></div><p>Loading events...</p></div>
+			} @else if (!timeline().length) {
+				<div class="empty-state"><h2>No Events Found</h2><p>There are no events matching your filters. Try clearing the filters or check back later.</p><a routerLink="/training-wp5" class="btn-back">Back to Training →</a></div>
+			} @else {
+				@for (yearGroup of timeline(); track yearGroup.year) {
+					<div class="timeline-year"><span class="year-text">{{ yearGroup.year }}</span></div>
+					@for (monthGroup of yearGroup.months; track monthGroup.name) {
+						<div class="timeline-month"><span class="month-dot"></span><span class="month-name">{{ monthGroup.name }}</span><span class="month-line"></span><span class="month-count">{{ monthGroup.events.length }}</span></div>
+						@for (event of monthGroup.events; track event.id ?? event.slug) {
+							<article class="event-card">
+								<div class="card-image"><img [src]="imageFor(event)" [alt]="event.title" title="Training event" loading="lazy"><span class="status-overlay" [class]="'status-overlay ' + event.status">{{ event.status | titlecase }}</span><div class="date-badge"><span class="day">{{ eventDay(event) }}</span><span class="month">{{ eventMonth(event) }}</span></div></div>
+								<div class="card-body"><div class="event-top"><span class="status-dot" [class]="'status-dot ' + event.status"></span><span class="status-text">{{ event.status | titlecase }}</span></div><a class="event-title" [routerLink]="['/training-events', event.slug]">{{ event.title }}</a><div class="event-meta">@if (event.location) {<span class="meta-item"><span class="meta-label">Location</span>{{ event.location }}</span>} @if (event.audience) {<span class="meta-item"><span class="meta-label">Audience</span>{{ event.audience | titlecase }}</span>} @if (event.speakers) {<span class="meta-item"><span class="meta-label">Speakers</span>{{ event.speakers }}</span>}</div>@if (event.agenda || event.description) {<div class="event-desc">{{ event.agenda || event.description }}</div>}<div class="event-footer"><div class="event-actions"><a class="btn-detail" [routerLink]="['/training-events', event.slug]">View Details <span class="arrow">→</span></a>@if ((event.status === 'upcoming' || event.status === 'ongoing') && event.registration_link) {<a class="btn-register" [href]="event.registration_link" target="_blank" rel="noopener">Register <span class="reg-arrow">→</span></a>}</div>@if (event.capacity) {<span class="event-capacity">Capacity {{ event.capacity }}</span>}</div></div>
+							</article>
+						}
+					}
+				}
+			}
+		</div>
+	</section>
+
+	<section class="back-section"><a routerLink="/training-wp5" class="back-link">← Back to Training and WP5</a></section>
+</div>

@@ -356,6 +356,7 @@ export class HeaderComponent {
   protected mobileOpen = false;
 
   protected navItems: NavItem[] = [
+    { path: '/', label: 'Home' },
     { path: '/about', label: 'About' },
     { path: '/jkuat-role', label: 'JKUAT Role' },
     { path: '/smart-mushrooms', label: 'Smart Mushrooms' },

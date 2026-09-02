@@ -4,118 +4,1391 @@
 
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { PartnerService } from '../../../../services/partner.service';
 import { Partner } from '../../../core/models/partner.model';
-import { PartnerCardComponent } from '../../../shared/components/partner-card/partner-card.component';
-import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 
 @Component({
   selector: 'app-partners',
   standalone: true,
-  imports: [CommonModule, PartnerCardComponent, EuFundingBannerComponent],
+  imports: [CommonModule, RouterModule],
   template: `
     <div class="partners-page">
-      <div class="container">
-        <h1 class="page-title">Our Partners</h1>
-
-        <!-- Consortium Partners -->
-        <section class="section">
-          <h2 class="section-heading">Consortium Partners</h2>
-          <div class="partners-grid">
-            <app-partner-card
-              *ngFor="let partner of consortiumPartners()"
-              [partner]="partner"
-            ></app-partner-card>
-          </div>
-        </section>
-
-        <!-- Local Partners -->
-        <section class="section">
-          <h2 class="section-heading">Ecosystem Partners</h2>
-          <div *ngIf="localPartners().length === 0" class="empty-state">
-            <p>No local partners added yet.</p>
-          </div>
-          <div class="partners-grid">
-            <app-partner-card
-              *ngFor="let partner of localPartners()"
-              [partner]="partner"
-            ></app-partner-card>
-          </div>
-        </section>
-
-        <div class="eu-section">
-          <app-eu-funding-banner></app-eu-funding-banner>
-        </div>
+      <div id="loaderOverlay" [class.hidden]="!isLoading()">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Loading partners</div>
       </div>
+
+      <main>
+        <section class="partners-hero">
+          <div class="hero-bg"></div>
+          <div class="hero-overlay"></div>
+          <div class="hero-container">
+            <h1>Partners <span class="highlight">and Consortium</span></h1>
+            <p class="hero-subtitle">
+              A multi-stakeholder alliance bridging <strong>European expertise</strong> with <strong>Kenyan innovation</strong> to transform agritech through AI-driven sustainability.
+            </p>
+
+            <div class="hero-stats-row" id="heroStatsRow">
+              <div class="stat-item">
+                <span class="stat-number"><span class="stat-accent">{{ totalPartners() }}</span></span>
+                <span class="stat-label">Total Partners</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{{ consortiumPartners().length }}</span>
+                <span class="stat-label">Consortium Members</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{{ localPartners().length }}</span>
+                <span class="stat-label">Local Partners</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{{ countryCount() }}</span>
+                <span class="stat-label">Countries Represented</span>
+              </div>
+            </div>
+
+            <div class="eu-funding-block">
+              <div class="eu-emblem">
+                <img src="/images/logos/eu_emblem.svg" alt="Funded by the European Union" loading="lazy" />
+              </div>
+              <div class="eu-text">
+                <p class="eu-statement">
+                  <strong>This project has received funding</strong> from the European Union's Horizon Europe research and innovation programme under grant agreement No. 101299050.
+                </p>
+                <p class="eu-disclaimer">
+                  Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or the European Health and Digital Executive Agency. Neither the European Union nor the granting authority can be held responsible for them.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="model-section">
+          <div class="model-container">
+            <div class="model-tile tile-global">
+              <span class="model-index">Global Tier</span>
+              <h3>Official Consortium</h3>
+              <p>
+                The European and international institutions that hold formal roles in the BRIDGE-AI grant agreement, setting research direction, coordinating funding, and contributing specialist technical expertise across the project's work packages.
+              </p>
+            </div>
+            <div class="model-tile tile-local">
+              <span class="model-index">Local Tier</span>
+              <h3>Local Ecosystem</h3>
+              <p>
+                The Kenyan universities, hubs, cooperatives, and county institutions that carry the work into the field, hosting training, running field demonstrations, and connecting the project to the farmers and communities it serves.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="partners-section" id="partnersSection">
+          <div class="partners-container">
+            <div class="section-header">
+              <span class="section-label">Official Consortium</span>
+              <h2>Global Partners</h2>
+              <p class="section-desc">
+                Core European and International implementing organizations driving the BRIDGE-AI mission.
+              </p>
+            </div>
+
+            <div class="hexagon-grid" id="consortiumGrid">
+              <div *ngFor="let partner of consortiumPartners(); let i = index" class="hexagon-card {{ colorClass(i) }}">
+                <div class="hex-content">
+                  <div class="hex-logo-wrap">
+                    <img *ngIf="partner.logo; else initialsFallback" [src]="partner.logo" [alt]="partner.short_name" class="hex-logo" loading="lazy" />
+                    <ng-template #initialsFallback>
+                      <span class="hex-logo-fallback">{{ getInitials(partner.short_name || partner.name) }}</span>
+                    </ng-template>
+                  </div>
+                  <div class="hex-name">{{ partner.short_name || partner.name }}</div>
+                  <div *ngIf="partner.name" class="hex-short">{{ partner.name }}</div>
+                  <div class="hex-meta">
+                    <span *ngIf="partner.country" class="hex-country">{{ partner.country }}</span>
+                    <span *ngIf="partner.role" class="hex-role">{{ partner.role }}</span>
+                  </div>
+                  <div *ngIf="partner.description" class="hex-desc">{{ partner.description }}</div>
+                  <a *ngIf="partner.website" [href]="partner.website" class="hex-link" target="_blank" rel="noopener noreferrer">
+                    Visit
+                    <span class="link-arrow">→</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="local-section" id="localSection">
+              <div class="section-header">
+                <span class="section-label">Local Ecosystem</span>
+                <h2>Kenya Partners</h2>
+                <p class="section-desc">
+                  The backbone of our operations in Kenya. These institutions provide the groundwork, local talent, and operational hubs for BRIDGE-AI initiatives.
+                </p>
+              </div>
+
+              <div class="ecosystem-impact" id="ecosystemImpact">
+                <span class="impact-mark"></span>
+                <span class="impact-text">
+                  <span class="impact-label">Ecosystem Impact</span>
+                  <span id="impactText">{{ ecosystemImpact() }}</span>
+                </span>
+              </div>
+
+              <div class="local-partners" id="localPartners">
+                <div *ngFor="let partner of localPartners(); let i = index" class="local-card" [class.reverse]="i % 2 === 1">
+                  <div class="local-card-image">
+                    <img *ngIf="partner.logo; else localFallback" [src]="partner.logo" [alt]="partner.short_name" loading="lazy" />
+                    <ng-template #localFallback>
+                      <div class="local-card-fallback">{{ getInitials(partner.short_name || partner.name) }}</div>
+                    </ng-template>
+                    <div class="image-overlay">
+                      <span class="image-tag">{{ partner.country || 'Kenya' }}</span>
+                    </div>
+                  </div>
+
+                  <div class="local-card-content">
+                    <span class="partner-badge">Local Partner</span>
+                    <h3 class="partner-name">{{ partner.short_name || partner.name }}</h3>
+                    <span class="partner-fullname">{{ partner.name }}</span>
+                    <p *ngIf="partner.description" class="partner-description">{{ partner.description }}</p>
+                    <div *ngIf="partner.tags && partner.tags.length" class="partner-tags">
+                      <span *ngFor="let tag of partner.tags" class="tag">{{ tag }}</span>
+                    </div>
+                    <a *ngIf="partner.website" [href]="partner.website" class="partner-link" target="_blank" rel="noopener noreferrer">
+                      Visit Website
+                      <span class="link-arrow">→</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="partners-cta">
+          <div class="cta-container">
+            <span class="cta-label">Join The Network</span>
+            <h2>Building agritech that reaches the field</h2>
+            <p>
+              BRIDGE-AI grows through partnership. If your institution works in agricultural research, rural innovation, or community outreach in Kenya, reach out to explore working together.
+            </p>
+            <a [routerLink]="['/contact']" [queryParams]="{ type: 'sme' }" class="cta-button">
+              Reach Out to Our Team
+              <span class="cta-arrow">→</span>
+            </a>
+          </div>
+        </section>
+      </main>
     </div>
   `,
   styles: [`
-    .partners-page {
-      padding: 48px 0 64px 0;
-      background: #f8fafc;
+    :host {
+      display: block;
     }
 
-    .container {
+    .partners-page {
+      background: var(--bg-white);
+      color: var(--text-body);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    #loaderOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(251, 249, 243, 0.96);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease;
+    }
+
+    #loaderOverlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-spinner {
+      width: 42px;
+      height: 42px;
+      border: 2.5px solid var(--border-light);
+      border-top-color: var(--primary-light);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    .loader-text {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .partners-hero {
+      position: relative;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: var(--primary-dark);
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-color: var(--primary-dark);
+      background-image:
+        linear-gradient(120deg, rgba(11, 27, 20, 0.78), rgba(11, 27, 20, 0.62)),
+        url('/images/hero/partners-hero.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(11, 27, 20, 0.55);
+      z-index: 1;
+    }
+
+    .partners-hero .hero-container {
+      position: relative;
+      z-index: 2;
       max-width: 1280px;
       margin: 0 auto;
-      padding: 0 16px;
+      padding: 60px 28px 50px;
+      width: 100%;
     }
 
-    .page-title {
-      font-size: 32px;
-      font-weight: 700;
-      color: #1f2937;
-      margin: 0 0 32px 0;
+    .partners-hero h1 {
+      font-size: 3.6rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: -0.02em;
+      line-height: 1.06;
+      margin-bottom: 16px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
-    .section {
-      margin-bottom: 40px;
+    .partners-hero h1 .highlight {
+      color: var(--gold-light);
     }
 
-    .section-heading {
-      font-size: 22px;
+    .partners-hero .hero-subtitle {
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.58);
+      max-width: 680px;
+      line-height: 1.85;
+      margin-bottom: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .partners-hero .hero-subtitle strong {
+      color: rgba(255, 255, 255, 0.85);
       font-weight: 600;
-      color: #1f2937;
-      margin: 0 0 16px 0;
     }
 
-    .partners-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+    .hero-stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      margin-top: 38px;
+      border-top: 1px solid rgba(255, 255, 255, 0.09);
+      padding-top: 26px;
+    }
+
+    .hero-stats-row .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-right: 44px;
+      margin-right: 44px;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-stats-row .stat-item:last-child {
+      border-right: none;
+      padding-right: 0;
+      margin-right: 0;
+    }
+
+    .hero-stats-row .stat-number {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+      line-height: 1;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .hero-stats-row .stat-number .stat-accent {
+      color: var(--gold-light);
+    }
+
+    .hero-stats-row .stat-label {
+      font-size: 0.6rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.36);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .eu-funding-block {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
       gap: 20px;
-    }
-
-    .empty-state {
-      padding: 24px;
-      background: #ffffff;
-      border-radius: 8px;
-      text-align: center;
-      color: #6b7280;
-    }
-
-    .eu-section {
       margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .eu-funding-block .eu-emblem {
+      flex-shrink: 0;
+      width: 150px;
+      height: auto;
+    }
+
+    .eu-funding-block .eu-emblem img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .eu-funding-block .eu-text {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .eu-funding-block .eu-text .eu-statement {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.55);
+      line-height: 1.6;
+      font-weight: 400;
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .eu-funding-block .eu-text .eu-statement strong {
+      color: rgba(255, 255, 255, 0.75);
+      font-weight: 600;
+    }
+
+    .eu-funding-block .eu-text .eu-disclaimer {
+      font-size: 0.6rem;
+      color: rgba(255, 255, 255, 0.3);
+      line-height: 1.5;
+      margin-top: 4px;
+      font-weight: 400;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .model-section {
+      padding: 56px 24px 8px;
+      background: var(--bg-lighter);
+    }
+
+    .model-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .model-tile {
+      flex: 1 1 calc(50% - 12px);
+      min-width: 280px;
+      background: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 30px 32px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .model-tile:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+      border-color: var(--primary-light);
+    }
+
+    .model-tile .model-index {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      display: block;
+      margin-bottom: 12px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .model-tile h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .model-tile p {
+      font-size: 0.94rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      max-width: 480px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .model-tile.tile-global::before,
+    .model-tile.tile-local::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--gold), var(--gold-light));
+    }
+
+    .partners-section {
+      padding: 56px 24px 60px;
+      background: var(--bg-lighter);
+    }
+
+    .partners-container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 34px;
+    }
+
+    .section-header .section-label {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      margin-bottom: 8px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .section-header h2 {
+      font-size: 2.15rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .section-header .section-desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 640px;
+      line-height: 1.75;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .hexagon-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+      margin-top: 8px;
+      padding: 20px 0;
+    }
+
+    .hexagon-card {
+      flex: 0 0 350px;
+      min-width: 260px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 36px 24px 32px;
+      background: var(--bg-white);
+      border: 1.9px solid rgb(76, 127, 0);
+      border-radius: var(--radius-lg);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+      min-height: 450px;
+      max-width: 380px;
+    }
+
+    .hexagon-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(44, 107, 69, 0.03), rgba(200, 155, 60, 0.03));
+      border-radius: var(--radius-lg);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hexagon-card::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, transparent 40%, rgba(200, 155, 60, 0.08) 100%);
+      border-radius: var(--radius-lg);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hexagon-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--gold);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 0 30px rgba(200, 155, 60, 0.04);
+    }
+
+    .hexagon-card:hover::after {
+      background: linear-gradient(135deg, transparent 30%, rgba(200, 155, 60, 0.15) 100%);
+    }
+
+    .hexagon-card .hex-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+      justify-content: flex-start;
+      padding-top: 8px;
+    }
+
+    .hexagon-card .hex-logo-wrap {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      background: var(--bg-light);
+      border: 2px solid var(--border-light);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
+      border-color: var(--gold);
+      background: var(--gold-pale);
+    }
+
+    .hexagon-card .hex-logo {
+      max-width: 60px;
+      max-height: 60px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .hexagon-card .hex-logo-fallback {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .hexagon-card .hex-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.3;
+      margin-bottom: 2px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .hexagon-card .hex-short {
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-light);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin-bottom: 4px;
+    }
+
+    .hexagon-card .hex-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+
+    .hexagon-card .hex-country {
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .hexagon-card .hex-role {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: #8A6520;
+      padding: 3px 12px;
+      background: var(--gold-pale);
+      border-radius: 60px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .hexagon-card .hex-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      max-width: 230px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      flex: 1;
+    }
+
+    .hexagon-card .hex-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: auto;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 2px;
+    }
+
+    .hexagon-card .hex-link:hover {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+      gap: 8px;
+    }
+
+    .hexagon-card .hex-link .link-arrow {
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-block;
+      font-size: 0.6rem;
+    }
+
+    .hexagon-card .hex-link:hover .link-arrow {
+      transform: translateX(4px);
+    }
+
+    .hexagon-card.color-1 .hex-logo-wrap { border-color: var(--primary-light); }
+    .hexagon-card.color-2 .hex-logo-wrap { border-color: var(--gold); }
+    .hexagon-card.color-3 .hex-logo-wrap { border-color: var(--moss); }
+    .hexagon-card.color-4 .hex-logo-wrap { border-color: var(--clay); }
+
+    .local-section {
+      margin-top: 66px;
+      padding-top: 52px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .local-section .ecosystem-impact {
+      background: var(--primary-dark);
+      border-radius: var(--radius-lg);
+      padding: 26px 32px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .local-section .ecosystem-impact::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 85% 20%, rgba(200, 155, 60, 0.14), transparent 55%);
+      pointer-events: none;
+    }
+
+    .local-section .ecosystem-impact .impact-mark {
+      width: 4px;
+      align-self: stretch;
+      min-height: 40px;
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .local-section .ecosystem-impact .impact-text {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.68);
+      flex: 1;
+      position: relative;
+      z-index: 1;
+      line-height: 1.7;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .local-section .ecosystem-impact .impact-text .impact-label {
+      display: block;
+      font-size: 0.62rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold-light);
+      margin-bottom: 6px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .local-partners {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .local-card {
+      display: flex;
+      flex-wrap: wrap;
+      min-height: 50vh;
+      background: var(--bg-white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .local-card.reverse .local-card-image {
+      order: 2;
+    }
+
+    .local-card.reverse .local-card-content {
+      order: 1;
+    }
+
+    .local-card:hover {
+      box-shadow: var(--shadow-xl);
+      border-color: var(--primary-light);
+      transform: translateY(-4px);
+    }
+
+    .local-card-image {
+      flex: 1 1 50%;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-light);
+      min-height: 300px;
+    }
+
+    .local-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .local-card:hover .local-card-image img {
+      transform: scale(1.03);
+    }
+
+    .local-card-image .image-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 30px 28px 24px;
+      background: linear-gradient(0deg, rgba(11, 27, 20, 0.60) 0%, transparent 100%);
+    }
+
+    .local-card-image .image-overlay .image-tag {
+      font-size: 0.6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.6);
+      display: block;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .local-card-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      color: var(--gold-pale);
+      font-size: 4rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .local-card-content {
+      flex: 1 1 40%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 52px 48px 44px;
+      background: var(--bg-white);
+    }
+
+    .local-card-content .partner-badge {
+      display: inline-block;
+      padding: 3px 14px;
+      background: var(--gold-pale);
+      border-radius: 60px;
+      font-size: 0.55rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #8A6520;
+      margin-bottom: 14px;
+      width: fit-content;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .local-card-content .partner-name {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.1;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .local-card-content .partner-fullname {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      display: block;
+      margin-bottom: 16px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .local-card-content .partner-description {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 560px;
+      margin-bottom: 22px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .local-card-content .partner-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .local-card-content .partner-tags .tag {
+      display: inline-block;
+      padding: 4px 16px;
+      background: var(--bg-light);
+      border: 1px solid var(--border-light);
+      border-radius: 60px;
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .local-card-content .partner-tags .tag:hover {
+      background: var(--primary-light);
+      color: #FFFFFF;
+      border-color: var(--primary-light);
+    }
+
+    .local-card-content .partner-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 28px;
+      background: transparent;
+      color: var(--primary-light);
+      border: 1.5px solid var(--primary-light);
+      border-radius: 60px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      width: fit-content;
+    }
+
+    .local-card-content .partner-link:hover {
+      background: var(--primary-light);
+      color: #FFFFFF;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(44, 107, 69, 0.22);
+    }
+
+    .local-card-content .partner-link .link-arrow {
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-block;
+    }
+
+    .local-card-content .partner-link:hover .link-arrow {
+      transform: translateX(4px);
+    }
+
+    .partners-cta {
+      background: var(--primary-dark);
+      padding: 64px 24px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .partners-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(200, 155, 60, 0.12), transparent 60%);
+      pointer-events: none;
+    }
+
+    .partners-cta .cta-container {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .partners-cta .cta-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--gold-light);
+      display: block;
+      margin-bottom: 14px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .partners-cta h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.25;
+      margin-bottom: 14px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .partners-cta p {
+      font-size: 0.98rem;
+      color: rgba(255, 255, 255, 0.55);
+      line-height: 1.8;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .partners-cta .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      padding: 14px 36px;
+      background: var(--gold);
+      color: var(--primary-dark);
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border-radius: 60px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(200, 155, 60, 0.2);
+    }
+
+    .partners-cta .cta-button:hover {
+      background: var(--gold-light);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(200, 155, 60, 0.35);
+    }
+
+    .partners-cta .cta-button .cta-arrow {
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-block;
+    }
+
+    .partners-cta .cta-button:hover .cta-arrow {
+      transform: translateX(6px);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-light);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-light);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
+    ::selection {
+      background: var(--gold-pale);
+      color: var(--text-dark);
     }
 
     @media (max-width: 1024px) {
-      .partners-grid {
-        grid-template-columns: repeat(3, 1fr);
+      .hexagon-card {
+        flex: 0 0 260px;
+        min-width: 220px;
+        padding: 30px 20px 28px;
+        min-height: 380px;
+      }
+
+      .partners-hero h1 {
+        font-size: 2.9rem;
+      }
+
+      .model-tile {
+        flex: 1 1 100%;
+      }
+
+      .local-card {
+        flex-direction: column;
+        min-height: auto;
+      }
+
+      .local-card-image {
+        flex: 1 1 100%;
+        min-height: 320px;
+        max-height: 420px;
+      }
+
+      .local-card-content {
+        flex: 1 1 100%;
+        padding: 32px 32px 40px;
+      }
+
+      .local-card-content .partner-name {
+        font-size: 1.8rem;
       }
     }
 
     @media (max-width: 768px) {
-      .page-title {
-        font-size: 26px;
+      .partners-hero {
+        min-height: auto;
+        padding: 44px 0 0;
       }
 
-      .partners-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .partners-hero .hero-container {
+        padding: 40px 16px 32px;
+      }
+
+      .partners-hero h1 {
+        font-size: 2.25rem;
+      }
+
+      .partners-hero .hero-subtitle {
+        font-size: 0.92rem;
+      }
+
+      .hero-stats-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px 30px;
+        margin-top: 28px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.09);
+      }
+
+      .hero-stats-row .stat-item {
+        padding-right: 0;
+        margin-right: 0;
+        border-right: none;
+        text-align: center;
+        min-width: 80px;
+        flex: 0 1 auto;
+      }
+
+      .hero-stats-row .stat-number {
+        font-size: 1.35rem;
+      }
+
+      .eu-funding-block {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .eu-funding-block .eu-emblem {
+        width: 150px;
+      }
+
+      .eu-funding-block .eu-text .eu-statement {
+        font-size: 0.65rem;
+      }
+
+      .eu-funding-block .eu-text .eu-disclaimer {
+        font-size: 0.55rem;
+      }
+
+      .model-section {
+        padding: 40px 16px 4px;
+      }
+
+      .model-tile {
+        padding: 24px 22px;
+      }
+
+      .partners-section {
+        padding: 36px 16px 44px;
+      }
+
+      .section-header h2 {
+        font-size: 1.7rem;
+      }
+
+      .section-header .section-desc {
+        font-size: 0.92rem;
+      }
+
+      .hexagon-grid {
+        gap: 24px;
+      }
+
+      .hexagon-card {
+        flex: 0 0 220px;
+        min-width: 190px;
+        padding: 24px 16px 22px;
+        min-height: 340px;
+        max-width: none;
+      }
+
+      .hexagon-card .hex-logo-wrap {
+        width: 70px;
+        height: 70px;
+      }
+
+      .hexagon-card .hex-logo {
+        max-width: 42px;
+        max-height: 42px;
+      }
+
+      .hexagon-card .hex-name {
+        font-size: 0.9rem;
+      }
+
+      .hexagon-card .hex-desc {
+        font-size: 0.68rem;
+        max-width: 160px;
+      }
+
+      .hexagon-card .hex-role {
+        font-size: 0.5rem;
+        padding: 2px 10px;
+      }
+
+      .hexagon-card .hex-link {
+        font-size: 0.6rem;
+        margin-top: 6px;
+      }
+
+      .local-section {
+        margin-top: 44px;
+        padding-top: 36px;
+      }
+
+      .local-section .ecosystem-impact {
+        padding: 20px 22px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .local-section .ecosystem-impact .impact-mark {
+        width: 100%;
+        height: 3px;
+        min-height: 0;
+      }
+
+      .local-card-image {
+        min-height: 240px;
+        max-height: 320px;
+      }
+
+      .local-card-content {
+        padding: 24px 22px 32px;
+      }
+
+      .local-card-content .partner-name {
+        font-size: 1.5rem;
+      }
+
+      .local-card-content .partner-description {
+        font-size: 0.9rem;
+      }
+
+      .local-card-content .partner-tags .tag {
+        font-size: 0.62rem;
+        padding: 2px 12px;
+      }
+
+      .partners-cta {
+        padding: 48px 20px;
+      }
+
+      .partners-cta h2 {
+        font-size: 1.55rem;
       }
     }
 
     @media (max-width: 480px) {
-      .partners-grid {
-        grid-template-columns: 1fr;
+      .partners-hero h1 {
+        font-size: 1.85rem;
+      }
+
+      .partners-hero .hero-subtitle {
+        font-size: 0.85rem;
+      }
+
+      .hero-stats-row .stat-item {
+        padding-right: 16px;
+        margin-right: 16px;
+        min-width: 40%;
+      }
+
+      .hexagon-grid {
+        gap: 16px;
+      }
+
+      .hexagon-card {
+        flex: 0 0 180px;
+        min-width: 160px;
+        padding: 20px 14px 18px;
+        min-height: 300px;
+      }
+
+      .hexagon-card .hex-logo-wrap {
+        width: 60px;
+        height: 60px;
+      }
+
+      .hexagon-card .hex-logo {
+        max-width: 35px;
+        max-height: 35px;
+      }
+
+      .hexagon-card .hex-name {
+        font-size: 0.8rem;
+      }
+
+      .hexagon-card .hex-short {
+        font-size: 0.5rem;
+      }
+
+      .hexagon-card .hex-desc {
+        font-size: 0.62rem;
+        max-width: 130px;
+      }
+
+      .hexagon-card .hex-country {
+        font-size: 0.6rem;
+      }
+
+      .hexagon-card .hex-role {
+        font-size: 0.45rem;
+        padding: 2px 8px;
+      }
+
+      .hexagon-card .hex-link {
+        font-size: 0.55rem;
+      }
+
+      .section-header h2 {
+        font-size: 1.5rem;
+      }
+
+      .local-card-image {
+        min-height: 180px;
+        max-height: 240px;
+      }
+
+      .local-card-content {
+        padding: 20px 16px 28px;
+      }
+
+      .local-card-content .partner-name {
+        font-size: 1.2rem;
+      }
+
+      .local-card-content .partner-description {
+        font-size: 0.85rem;
+      }
+
+      .local-card-content .partner-tags {
+        gap: 6px;
+      }
+
+      .local-card-content .partner-tags .tag {
+        font-size: 0.6rem;
+        padding: 2px 10px;
+      }
+
+      .local-section .ecosystem-impact {
+        padding: 16px 18px;
+      }
+
+      .local-section .ecosystem-impact .impact-text {
+        font-size: 0.85rem;
+      }
+
+      .eu-funding-block .eu-emblem {
+        width: 140px;
+      }
+
+      .eu-funding-block .eu-text .eu-statement {
+        font-size: 0.6rem;
+      }
+
+      .eu-funding-block .eu-text .eu-disclaimer {
+        font-size: 0.5rem;
       }
     }
   `]
@@ -123,6 +1396,12 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
 export class PartnersComponent implements OnInit {
   protected consortiumPartners = signal<Partner[]>([]);
   protected localPartners = signal<Partner[]>([]);
+  protected totalPartners = signal(0);
+  protected countryCount = signal(0);
+  protected ecosystemImpact = signal('Over 250 local researchers and 50 technology hubs integrated into the BRIDGE-AI network across the Nairobi metropolitan area.');
+  protected isLoading = signal(true);
+
+  private readonly colorClasses = ['color-1', 'color-2', 'color-3', 'color-4'];
 
   constructor(private partnerService: PartnerService) {}
 
@@ -130,15 +1409,47 @@ export class PartnersComponent implements OnInit {
     this.loadPartners();
   }
 
+  protected colorClass(index: number): string {
+    return this.colorClasses[index % this.colorClasses.length];
+  }
+
+  protected getInitials(name: string): string {
+    if (!name) {
+      return '';
+    }
+
+    const words = name.trim().split(/\s+/).filter(Boolean);
+    if (words.length === 0) {
+      return '';
+    }
+    if (words.length === 1) {
+      return words[0].substring(0, 2).toUpperCase();
+    }
+    return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+  }
+
   private loadPartners(): void {
     this.partnerService.getPublishedPartners().subscribe({
       next: (partners) => {
-        this.consortiumPartners.set(partners.filter(p => p.is_consortium));
-        this.localPartners.set(partners.filter(p => !p.is_consortium));
+        const sorted = [...partners].sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
+        const consortium = sorted.filter((p) => p.is_consortium);
+        const local = sorted.filter((p) => !p.is_consortium);
+
+        this.consortiumPartners.set(consortium);
+        this.localPartners.set(local);
+        this.totalPartners.set(sorted.length);
+        this.countryCount.set(new Set(sorted.map((p) => p.country).filter(Boolean)).size);
+        if (local.length) {
+          this.ecosystemImpact.set(local[0].ecosystem_impact || 'Over 250 local researchers and 50 technology hubs integrated into the BRIDGE-AI network across the Nairobi metropolitan area.');
+        }
+        this.isLoading.set(false);
       },
       error: () => {
         this.consortiumPartners.set([]);
         this.localPartners.set([]);
+        this.totalPartners.set(0);
+        this.countryCount.set(0);
+        this.isLoading.set(false);
       }
     });
   }

@@ -153,12 +153,19 @@ export class CloudinaryImageComponent implements OnInit, OnChanges {
   @Input() dpr: number = 1;
   @Input() showPlaceholder: boolean = true;
 
+  private readonly fallbackImageUrl = 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1200&q=80';
+
   protected isLoaded = signal(false);
   protected hasError = signal(false);
+  protected fallbackUsed = signal(false);
 
   protected imageUrl = computed(() => {
+    if (this.fallbackUsed()) {
+      return this.fallbackImageUrl;
+    }
+
     if (!this.publicId) {
-      return '';
+      return this.fallbackImageUrl;
     }
 
     const cloudName = environment.cloudinary.cloudName;
@@ -213,23 +220,27 @@ export class CloudinaryImageComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.isLoaded.set(false);
     this.hasError.set(false);
+    this.fallbackUsed.set(false);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['publicId']) {
       this.isLoaded.set(false);
       this.hasError.set(false);
+      this.fallbackUsed.set(false);
     }
   }
 
   protected onLoad(): void {
     this.isLoaded.set(true);
     this.hasError.set(false);
+    this.fallbackUsed.set(false);
   }
 
   protected onError(): void {
-    this.isLoaded.set(false);
-    this.hasError.set(true);
+    this.hasError.set(false);
+    this.fallbackUsed.set(true);
+    this.isLoaded.set(true);
   }
 
   getPublicIdFromUrl(url: string): string {

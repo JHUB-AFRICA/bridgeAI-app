@@ -137,7 +137,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               </div>
               <div class="form-group">
                 <label>Add Images</label>
-                <app-image-upload (imageUploaded)="addImage($event)"></app-image-upload>
+                <app-image-upload [folder]="'bridge-ai/gallery'" (imageUploaded)="addImage($event)"></app-image-upload>
                 <div *ngIf="formData.images && formData.images.length > 0" class="image-list">
                   <div *ngFor="let img of formData.images; let i = index" class="image-item">
                     <img [src]="img.image_path" [alt]="img.caption || 'Image'" />

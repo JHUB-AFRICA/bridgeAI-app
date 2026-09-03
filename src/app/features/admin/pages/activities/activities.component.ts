@@ -157,7 +157,12 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               </div>
               <div class="form-group">
                 <label>Featured Image</label>
-                <app-image-upload (imageUploaded)="formData.featured_image = $event"></app-image-upload>
+                <app-image-upload
+                  [folder]="'bridge-ai/activities'"
+                  [initialImage]="formData.featured_image || null"
+                  (imageUploaded)="formData.featured_image = $event"
+                  (imageRemoved)="formData.featured_image = ''"
+                ></app-image-upload>
               </div>
               <div class="form-actions">
                 <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>
@@ -494,7 +499,8 @@ export class AdminActivitiesComponent implements OnInit {
       location: '',
       summary: '',
       body: '',
-      evidence_status: 'draft'
+      evidence_status: 'draft',
+      featured_image: ''
     };
     this.showModal = true;
   }
@@ -511,7 +517,10 @@ export class AdminActivitiesComponent implements OnInit {
   }
 
   saveActivity(): void {
-    const data = this.formData;
+    const data = {
+      ...this.formData,
+      featured_image: this.formData.featured_image || ''
+    };
 
     if (this.editingActivity) {
       this.activityService.updateActivityJson(this.editingActivity.id!, data).subscribe({

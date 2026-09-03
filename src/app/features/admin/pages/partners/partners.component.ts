@@ -144,7 +144,12 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               </div>
               <div class="form-group">
                 <label>Logo</label>
-                <app-image-upload (imageUploaded)="formData.logo = $event"></app-image-upload>
+                <app-image-upload
+                  [folder]="'bridge-ai/partners'"
+                  [initialImage]="formData.logo || null"
+                  (imageUploaded)="formData.logo = $event"
+                  (imageRemoved)="formData.logo = ''"
+                ></app-image-upload>
               </div>
               <div class="form-group">
                 <label>Tags (comma separated)</label>

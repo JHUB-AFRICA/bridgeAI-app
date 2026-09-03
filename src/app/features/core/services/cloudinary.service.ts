@@ -58,8 +58,9 @@ export class CloudinaryService {
     formData.append('file', file);
     formData.append('upload_preset', this.uploadPreset);
 
-    if (this.folder) {
-      formData.append('folder', this.folder);
+    const folder = options?.folder || this.folder;
+    if (folder) {
+      formData.append('folder', folder);
     }
 
     if (options) {
@@ -221,7 +222,7 @@ export class CloudinaryService {
   }
 
   deleteFile(publicId: string): Observable<any> {
-    return this.http.post('/api/cloudinary/delete', { publicId }).pipe(
+    return this.http.delete(`${environment.apiUrl}/upload/delete`, { body: { public_id: publicId } }).pipe(
       catchError((error) => {
         console.error('Cloudinary delete error:', error);
         return throwError(() => new Error('Failed to delete file from Cloudinary'));

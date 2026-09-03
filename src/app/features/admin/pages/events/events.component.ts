@@ -158,7 +158,12 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               </div>
               <div class="form-group">
                 <label>Featured Image</label>
-                <app-image-upload (imageUploaded)="formData.featured_image = $event"></app-image-upload>
+                <app-image-upload
+                  [folder]="'bridge-ai/events'"
+                  [initialImage]="formData.featured_image || null"
+                  (imageUploaded)="formData.featured_image = $event"
+                  (imageRemoved)="formData.featured_image = ''"
+                ></app-image-upload>
               </div>
               <div class="form-actions">
                 <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>

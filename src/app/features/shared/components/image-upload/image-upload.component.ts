@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Image Upload Component
 // ============================================================
 
-import { Component, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CloudinaryService } from '../../../core/services/cloudinary.service';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -365,11 +365,14 @@ import { FileSizePipe } from '../../pipes/file-size.pipe';
     }
   `]
 })
-export class ImageUploadComponent implements OnDestroy {
+export class ImageUploadComponent implements OnDestroy, OnChanges {
   @Output() imageUploaded = new EventEmitter<string>();
   @Output() uploadComplete = new EventEmitter<{ url: string; publicId: string }>();
+  @Output() imageRemoved = new EventEmitter<void>();
 
   @Input() maxFileSize: number = MEDIA.MAX_IMAGE_SIZE;
+  @Input() folder = '';
+  @Input() initialImage: string | null = null;
 
   selectedFile: File | null = null;
   previewUrl: string | null = null;
@@ -383,6 +386,12 @@ export class ImageUploadComponent implements OnDestroy {
     private cloudinaryService: CloudinaryService,
     private notificationService: NotificationService
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['initialImage'] && !this.selectedFile) {
+      this.previewUrl = this.initialImage;
+    }
+  }
 
   get maxSize(): string {
     return this.formatFileSize(this.maxFileSize);
@@ -441,6 +450,7 @@ export class ImageUploadComponent implements OnDestroy {
   }
 
   removeFile(): void {
+    this.deleteStoredImage();
     if (this.previewUrl) {
       URL.revokeObjectURL(this.previewUrl);
     }
@@ -449,6 +459,7 @@ export class ImageUploadComponent implements OnDestroy {
     this.uploadResult = null;
     this.uploadError = null;
     this.uploadProgress = 0;
+    this.imageRemoved.emit();
   }
 
   startUpload(): void {
@@ -465,11 +476,18 @@ export class ImageUploadComponent implements OnDestroy {
 
     this.simulateProgress();
 
-    this.cloudinaryService.uploadImage(file).subscribe({
+    this.cloudinaryService.uploadFile(file, {
+      resource_type: 'image',
+      folder: this.folder || undefined,
+      tags: ['bridge-ai', 'image']
+    }).subscribe({
       next: (response) => {
         this.isUploading = false;
         this.uploadProgress = 100;
         this.uploadResult = response.secure_url;
+
+        this.deleteStoredImage();
+        this.initialImage = response.secure_url;
 
         this.imageUploaded.emit(response.secure_url);
         this.uploadComplete.emit({
@@ -513,6 +531,19 @@ export class ImageUploadComponent implements OnDestroy {
     if (bytes === 0) return '0 Bytes';
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
     return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  private deleteStoredImage(): void {
+    if (!this.initialImage || !this.initialImage.startsWith('http')) {
+      return;
+    }
+
+    const publicId = this.cloudinaryService.extractPublicId(this.initialImage);
+    if (publicId) {
+      this.cloudinaryService.deleteFile(publicId).subscribe({
+        error: () => this.notificationService.showError('The image was removed from the form, but could not be deleted from Cloudinary')
+      });
+    }
   }
 
   ngOnDestroy(): void {

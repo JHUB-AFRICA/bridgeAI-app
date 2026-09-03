@@ -47,7 +47,14 @@ export class AdminDetailsModalService {
             </header>
             <dl class="details-body">
               @for (entry of detailsEntries(item); track entry[0]) {
-                <div class="detail-row"><dt>{{ formatDetailLabel(entry[0]) }}</dt><dd>{{ formatDetailValue(entry[1]) }}</dd></div>
+                <div class="detail-row">
+                  <dt>{{ formatDetailLabel(entry[0]) }}</dt>
+                  @if (isImageValue(entry[1])) {
+                    <img class="detail-image" [src]="asImageUrl(entry[1])" [alt]="formatDetailLabel(entry[0])" />
+                  } @else {
+                    <dd>{{ formatDetailValue(entry[1]) }}</dd>
+                  }
+                </div>
               }
             </dl>
           </section>
@@ -151,6 +158,7 @@ export class AdminDetailsModalService {
     .detail-row { min-width: 0; padding: 12px; background: #fff; }
     dt { margin-bottom: 5px; color: #6b7280; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
     dd { margin: 0; color: #1f2937; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; white-space: pre-wrap; }
+    .detail-image { display: block; width: min(100%, 280px); max-height: 220px; margin-top: 4px; border-radius: 8px; object-fit: contain; background: #f8fafc; }
 
     @media (max-width: 768px) {
       .sidebar-backdrop {
@@ -326,5 +334,13 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
 
   formatDetailValue(value: unknown): string {
     return value === null || value === undefined || value === '' ? 'Not provided' : typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
+  }
+
+  isImageValue(value: unknown): value is string {
+    return typeof value === 'string' && /^https?:\/\/.*\.(?:jpe?g|png|gif|webp|svg)(?:\?.*)?$/i.test(value);
+  }
+
+  asImageUrl(value: unknown): string {
+    return typeof value === 'string' ? value : '';
   }
 }

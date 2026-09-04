@@ -1,16 +1,17 @@
 [
   {
-    "title": "Hands-On Smart Mushroom Farming and Incubation Preparation",
+    "title": "Mushroom Farm Hygiene and Contamination Prevention Activity",
     "slug": "",
-    "date": "2026-09-03",
-    "wp_tag": "WP2",
+    "date": "2026-09-04",
+    "wp_tag": "",
     "activity_type": "Field Demo",
-    "audience": "public",
+    "audience": "farmers",
     "location": "JKUAT Smart Farm Zone, Juja, Kenya",
-    "summary": "A practical field activity where the BRIDGE-AI Kenya team participated in mushroom bag preparation and incubation activities while learning directly from experienced farmers.",
-    "body": "The BRIDGE-AI Kenya team participated in a hands-on Smart Mushroom farming activity at a partner mushroom farm in Juja, Kenya. The session focused on the preparation of mushroom grow bags for incubation, providing participants with practical experience in substrate handling, bag filling, spawn application, hygiene, and organization of the production process. Team members worked alongside experienced farmers and actively participated in preparing and arranging the mushroom bags before transporting them to the incubation facility. The activity provided valuable insight into the practical realities of mushroom production and highlighted opportunities where artificial intelligence, IoT sensors, and digital monitoring technologies can support farmers. The field experience also strengthened collaboration between the project team and farming communities while contributing to the capacity-building objectives of the Smart Mushroom Project.",
+    "summary": "A practical session focused on identifying contamination risks and improving hygiene practices throughout the mushroom production process.",
+    "body": "The BRIDGE-AI Kenya team participated in a practical activity focused on hygiene, biosecurity and contamination prevention in mushroom production. Participants examined key areas where contamination can occur, including substrate preparation, handling of mushroom bags, incubation areas and growing rooms. The session emphasized proper cleaning, careful handling of materials, controlled movement within growing areas and early identification of abnormal growth. Participants also discussed how digital monitoring and IoT technologies could support the early detection of unusual environmental conditions that may increase contamination risks. The activity provided practical knowledge that can help improve mushroom production quality, reduce avoidable losses and strengthen farm management practices.",
     "evidence_status": "published",
-    "featured_image": "",
+    "featured_image": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1788533698/bridge-ai/activities/gnvfdtiptrqzpunjdt4g.jpg",
+    "gallery_images": [],
     "id": 1
   }
 ]

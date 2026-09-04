@@ -4,10 +4,12 @@
 
 import { Component, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CloudinaryService } from '../../../core/services/cloudinary.service';
+import { CloudinaryService, CloudinaryUploadResult } from '../../../core/services/cloudinary.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { MEDIA } from '../../../core/constants/app.constants';
 import { FileSizePipe } from '../../pipes/file-size.pipe';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 export interface DocumentFileType {
   extension: string;
@@ -86,15 +88,6 @@ export interface DocumentFileType {
         <span class="result-text">{{ uploadError }}</span>
       </div>
 
-      <div class="upload-actions" *ngIf="selectedFile && !isUploading && !uploadResult">
-        <button
-          (click)="startUpload()"
-          class="upload-btn"
-          [disabled]="!selectedFile"
-        >
-          Upload Document
-        </button>
-      </div>
     </div>
   `,
   styles: [`
@@ -337,6 +330,7 @@ export class DocumentUploadComponent implements OnDestroy {
 
   @Input() acceptedTypes: string = '.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.txt,.csv,.json,.xml';
   @Input() maxFileSize: number = MEDIA.MAX_FILE_SIZE;
+  @Input() folder = '';
 
   selectedFile: File | null = null;
   isUploading: boolean = false;
@@ -430,11 +424,8 @@ export class DocumentUploadComponent implements OnDestroy {
     this.uploadProgress = 0;
   }
 
-  startUpload(): void {
-    if (!this.selectedFile) {
-      return;
-    }
-
+  uploadPending(): Observable<CloudinaryUploadResult | null> {
+    if (!this.selectedFile) return of(null);
     this.isUploading = true;
     this.uploadProgress = 0;
     this.uploadError = null;
@@ -444,11 +435,12 @@ export class DocumentUploadComponent implements OnDestroy {
 
     this.simulateProgress();
 
-    this.cloudinaryService.uploadDocument(file).subscribe({
-      next: (response) => {
+    return this.cloudinaryService.uploadDocument(file, this.folder || undefined).pipe(
+      tap((response) => {
         this.isUploading = false;
         this.uploadProgress = 100;
         this.uploadResult = response.secure_url;
+        this.selectedFile = null;
 
         this.documentUploaded.emit(response.secure_url);
         this.uploadComplete.emit({
@@ -456,15 +448,21 @@ export class DocumentUploadComponent implements OnDestroy {
           publicId: response.public_id
         });
 
-        this.notificationService.showSuccess('Document uploaded successfully');
-      },
-      error: (error) => {
+      }),
+      catchError((error) => {
         this.isUploading = false;
         this.uploadProgress = 0;
         const errorMsg = error.message || 'Upload failed. Please try again.';
         this.uploadError = errorMsg;
-        this.notificationService.showError(errorMsg);
-      }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  startUpload(): void {
+    this.uploadPending().subscribe({
+      next: () => this.notificationService.showSuccess('Document uploaded successfully'),
+      error: () => this.notificationService.showError(this.uploadError || 'Upload failed. Please try again.')
     });
   }
 

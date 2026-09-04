@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Admin Gallery Component
 // ============================================================
 
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -10,7 +10,9 @@ import { GalleryService } from '../../../../services/gallery.service';
 import { GalleryAlbum } from '../../../core/models/gallery.model';
 import { ImageUploadComponent } from '../../../shared/components/image-upload/image-upload.component';
 import { NotificationService } from '../../../core/services/notification.service';
+import { CloudinaryService } from '../../../core/services/cloudinary.service';
 import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-gallery',
@@ -137,7 +139,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               </div>
               <div class="form-group">
                 <label>Add Images</label>
-                <app-image-upload [folder]="'bridge-ai/gallery'" (imageUploaded)="addImage($event)"></app-image-upload>
+                <app-image-upload [folder]="'gallery'" [multiple]="true"></app-image-upload>
                 <div *ngIf="formData.images && formData.images.length > 0" class="image-list">
                   <div *ngFor="let img of formData.images; let i = index" class="image-item">
                     <img [src]="img.image_path" [alt]="img.caption || 'Image'" />
@@ -472,6 +474,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
   `]
 })
 export class AdminGalleryComponent implements OnInit {
+  @ViewChild(ImageUploadComponent) imageUpload?: ImageUploadComponent;
   protected albums = signal<GalleryAlbum[]>([]);
   protected showModal = false;
   protected editingAlbum: GalleryAlbum | null = null;
@@ -479,7 +482,8 @@ export class AdminGalleryComponent implements OnInit {
 
   constructor(
     private galleryService: GalleryService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private cloudinaryService: CloudinaryService
   ) {}
 
   protected detailsModal = inject(AdminDetailsModalService);
@@ -542,7 +546,17 @@ export class AdminGalleryComponent implements OnInit {
   }
 
   removeImage(index: number): void {
+    const image = this.formData.images[index];
     this.formData.images.splice(index, 1);
+
+    const publicId = image?.image_path ? this.cloudinaryService.extractPublicId(image.image_path) : null;
+    if (publicId) {
+      this.notificationService.showInfo('Deleting image...');
+      this.cloudinaryService.deleteFile(publicId).subscribe({
+        next: () => this.notificationService.showSuccess('Image deleted successfully'),
+        error: () => this.notificationService.showError('Image removed from the album, but could not be deleted from Cloudinary')
+      });
+    }
   }
 
   saveAlbum(): void {
@@ -553,42 +567,48 @@ export class AdminGalleryComponent implements OnInit {
       data.tags = [];
     }
     delete data.tags_string;
+    const isEditing = !!this.editingAlbum;
+    this.notificationService.showInfo(isEditing ? 'Updating album...' : 'Creating album...');
 
-    if (this.editingAlbum) {
-      this.galleryService.updateAlbumJson(this.editingAlbum.id!, data).subscribe({
+    this.imageUpload!.uploadPendingAll().pipe(switchMap(uploads => {
+      const existingImages = data.images || [];
+      data.images = [
+        ...existingImages,
+        ...uploads.map((upload, index) => ({
+          image_path: upload.secure_url,
+          is_approved: true,
+          display_order: existingImages.length + index
+        }))
+      ];
+      return isEditing
+        ? this.galleryService.updateAlbumJson(this.editingAlbum!.id!, data)
+        : this.galleryService.createAlbumJson(data);
+    })).subscribe({
         next: () => {
-          this.notificationService.showSuccess('Album updated successfully');
+          this.notificationService.showSuccess(isEditing ? 'Album updated successfully' : 'Album created successfully');
           this.loadAlbums();
           this.closeModal();
         },
         error: () => {
-          this.notificationService.showError('Failed to update album');
+          this.notificationService.showError(isEditing ? 'Failed to update album' : 'Failed to create album');
         }
       });
-    } else {
-      this.galleryService.createAlbumJson(data).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Album created successfully');
-          this.loadAlbums();
-          this.closeModal();
-        },
-        error: () => {
-          this.notificationService.showError('Failed to create album');
-        }
-      });
-    }
   }
 
   deleteAlbum(id: number | undefined): void {
     if (!id) return;
     if (confirm('Are you sure you want to delete this album?')) {
-      this.galleryService.deleteAlbum(id).subscribe({
+      const album = this.albums().find(item => item.id === id);
+      const imageUrls = (album?.images || []).map(image => image.image_path);
+      this.cloudinaryService.deleteUrls(imageUrls).pipe(
+        switchMap(() => this.galleryService.deleteAlbum(id))
+      ).subscribe({
         next: () => {
           this.notificationService.showSuccess('Album deleted successfully');
           this.loadAlbums();
         },
         error: () => {
-          this.notificationService.showError('Failed to delete album');
+          this.notificationService.showError('Failed to delete album and its images');
         }
       });
     }

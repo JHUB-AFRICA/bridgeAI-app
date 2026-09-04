@@ -21,8 +21,15 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
         <section class="detail-hero" [style.background-image]="'linear-gradient(rgba(22,40,26,.55), rgba(22,40,26,.55)), url(' + getHeroImage(act) + ')'">
           <div class="detail-hero-inner">
             <div class="detail-kicker-row">
-              <span class="wp-tag" [style.background]="getWpColor(act.wp_tag)">{{ act.wp_tag }}</span>
-              <span class="activity-type">{{ act.activity_type | titlecase }}</span>
+              @if (act.wp_tag) {
+                <span class="wp-tag" [style.background]="getWpColor(act.wp_tag)">{{ act.wp_tag }}</span>
+              }
+              @if (act.activity_type) {
+                <span class="activity-type">{{ act.activity_type | titlecase }}</span>
+              }
+              @if (act.audience) {
+                <span class="activity-type">For {{ act.audience | titlecase }}</span>
+              }
               <span class="activity-date">{{ act.date | date:'dd MMMM yyyy' }}</span>
             </div>
             <h1>{{ act.title }}</h1>
@@ -34,6 +41,10 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
 
         <div class="container detail-shell">
           <article class="detail-card">
+            @if (act.summary) {
+              <p class="activity-summary">{{ act.summary }}</p>
+            }
+
             @if (act.featured_image) {
               <div class="featured-image">
                 <app-cloudinary-image
@@ -54,7 +65,7 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
                 <h2 class="gallery-title">Gallery</h2>
                 <div class="gallery-grid">
                   @for (image of act.gallery_images; track image.image_path) {
-                    <div class="gallery-item">
+                    <figure class="gallery-item">
                       <app-cloudinary-image
                         [publicId]="image.image_path"
                         [alt]="image.caption || act.title"
@@ -63,7 +74,10 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
                         crop="fill"
                         quality="auto"
                       ></app-cloudinary-image>
-                    </div>
+                      @if (image.caption) {
+                        <figcaption>{{ image.caption }}</figcaption>
+                      }
+                    </figure>
                   }
                 </div>
               </div>
@@ -73,6 +87,12 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
               <app-eu-funding-banner></app-eu-funding-banner>
             </div>
           </article>
+        </div>
+      } @else if (notFound()) {
+        <div class="loading-state">
+          <h1>Activity not found</h1>
+          <p>The activity may have been moved or is no longer available.</p>
+          <a routerLink="/activities" class="back-link">Back to Activities</a>
         </div>
       } @else {
         <div class="loading-state">
@@ -101,6 +121,7 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
     .activity-location { margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; font-size: 0.92rem; color: rgba(255,255,255,0.86); }
     .detail-shell { margin-top: -30px; padding-bottom: 64px; position: relative; z-index: 2; }
     .detail-card { background: #fffdf7; border: 1px solid #e1d8c0; border-radius: 24px; box-shadow: 0 24px 64px rgba(0,0,0,0.08); overflow: hidden; padding: 28px; }
+    .activity-summary { margin: 0 0 28px; padding: 18px 20px; border-left: 4px solid #c89b3c; background: #f5efe1; color: #48564a; font-size: 1.12rem; line-height: 1.75; }
     .featured-image { border-radius: 16px; overflow: hidden; margin-bottom: 28px; background: #f3f4f6; }
     .featured-image app-cloudinary-image { display: block; width: 100%; height: 440px; }
     .activity-body { font-size: 1.02rem; line-height: 1.9; color: #2d3d35; }
@@ -113,8 +134,9 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
     .gallery-section { margin-top: 32px; padding-top: 28px; border-top: 1px solid #e1d8c0; }
     .gallery-title { margin: 0 0 18px; font-size: 1.8rem; color: #17241b; }
     .gallery-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-    .gallery-item { border-radius: 12px; overflow: hidden; background: #f3f4f6; height: 200px; }
+    .gallery-item { margin: 0; border-radius: 12px; overflow: hidden; background: #f3f4f6; height: auto; }
     .gallery-item app-cloudinary-image { display: block; width: 100%; height: 100%; }
+    .gallery-item figcaption { padding: 10px 12px; background: #fffdf7; color: #667267; font-size: .78rem; line-height: 1.45; }
     .eu-section { margin-top: 32px; }
     .loading-state { min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #6e7767; }
     .spinner { width: 40px; height: 40px; border: 4px solid #efe6ce; border-top-color: #26432b; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
@@ -125,6 +147,7 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
 })
 export class ActivityDetailComponent implements OnInit {
   protected activity = signal<Activity | null>(null);
+  protected notFound = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -141,7 +164,10 @@ export class ActivityDetailComponent implements OnInit {
   private loadActivity(slug: string): void {
     this.activityService.getActivityBySlug(slug).subscribe({
       next: (activity) => this.activity.set(activity),
-      error: () => this.activity.set(null)
+      error: () => {
+        this.activity.set(null);
+        this.notFound.set(true);
+      }
     });
   }
 

@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Admin Partners Component
 // ============================================================
 
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -11,6 +11,8 @@ import { Partner } from '../../../core/models/partner.model';
 import { ImageUploadComponent } from '../../../shared/components/image-upload/image-upload.component';
 import { NotificationService } from '../../../core/services/notification.service';
 import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
+import { switchMap } from 'rxjs/operators';
+import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
 @Component({
   selector: 'app-admin-partners',
@@ -145,7 +147,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               <div class="form-group">
                 <label>Logo</label>
                 <app-image-upload
-                  [folder]="'bridge-ai/partners'"
+                  [folder]="'partners'"
                   [initialImage]="formData.logo || null"
                   (imageUploaded)="formData.logo = $event"
                   (imageRemoved)="formData.logo = ''"
@@ -479,6 +481,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
   `]
 })
 export class AdminPartnersComponent implements OnInit {
+  @ViewChild(ImageUploadComponent) imageUpload?: ImageUploadComponent;
   protected partners = signal<Partner[]>([]);
   protected showModal = false;
   protected editingPartner: Partner | null = null;
@@ -486,7 +489,8 @@ export class AdminPartnersComponent implements OnInit {
 
   constructor(
     private partnerService: PartnerService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private cloudinaryService: CloudinaryService
   ) {}
 
   protected detailsModal = inject(AdminDetailsModalService);
@@ -547,42 +551,39 @@ export class AdminPartnersComponent implements OnInit {
       data.tags = [];
     }
     delete data.tags_string;
+    const isEditing = !!this.editingPartner;
+    this.notificationService.showInfo(isEditing ? 'Updating partner...' : 'Creating partner...');
 
-    if (this.editingPartner) {
-      this.partnerService.updatePartnerJson(this.editingPartner.id!, data).subscribe({
+    this.imageUpload!.uploadPending().pipe(switchMap(upload => {
+      if (upload) data.logo = upload.secure_url;
+      return isEditing
+        ? this.partnerService.updatePartnerJson(this.editingPartner!.id!, data)
+        : this.partnerService.createPartnerJson(data);
+    })).subscribe({
         next: () => {
-          this.notificationService.showSuccess('Partner updated successfully');
+          this.notificationService.showSuccess(isEditing ? 'Partner updated successfully' : 'Partner created successfully');
           this.loadPartners();
           this.closeModal();
         },
         error: () => {
-          this.notificationService.showError('Failed to update partner');
+          this.notificationService.showError(isEditing ? 'Failed to update partner' : 'Failed to create partner');
         }
       });
-    } else {
-      this.partnerService.createPartnerJson(data).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Partner created successfully');
-          this.loadPartners();
-          this.closeModal();
-        },
-        error: () => {
-          this.notificationService.showError('Failed to create partner');
-        }
-      });
-    }
   }
 
   deletePartner(id: number | undefined): void {
     if (!id) return;
     if (confirm('Are you sure you want to delete this partner?')) {
-      this.partnerService.deletePartner(id).subscribe({
+      const partner = this.partners().find(item => item.id === id);
+      this.cloudinaryService.deleteUrls([partner?.logo]).pipe(
+        switchMap(() => this.partnerService.deletePartner(id))
+      ).subscribe({
         next: () => {
           this.notificationService.showSuccess('Partner deleted successfully');
           this.loadPartners();
         },
         error: () => {
-          this.notificationService.showError('Failed to delete partner');
+          this.notificationService.showError('Failed to delete partner and its logo');
         }
       });
     }

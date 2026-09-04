@@ -5,10 +5,12 @@
 import { Component, EventEmitter, Output, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CloudinaryService } from '../../../core/services/cloudinary.service';
+import { CloudinaryService, CloudinaryUploadResult } from '../../../core/services/cloudinary.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { MEDIA } from '../../../core/constants/app.constants';
 import { FileSizePipe } from '../../pipes/file-size.pipe';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-file-upload',
@@ -79,15 +81,6 @@ import { FileSizePipe } from '../../pipes/file-size.pipe';
         <span class="result-text">{{ uploadError }}</span>
       </div>
 
-      <div class="upload-actions" *ngIf="selectedFile && !isUploading && !uploadResult">
-        <button
-          (click)="startUpload()"
-          class="upload-btn"
-          [disabled]="!selectedFile"
-        >
-          Upload File
-        </button>
-      </div>
     </div>
   `,
   styles: [`
@@ -201,11 +194,8 @@ export class FileUploadComponent implements OnDestroy {
     this.uploadProgress = 0;
   }
 
-  startUpload(): void {
-    if (!this.selectedFile) {
-      return;
-    }
-
+  uploadPending(): Observable<CloudinaryUploadResult | null> {
+    if (!this.selectedFile) return of(null);
     this.isUploading = true;
     this.uploadProgress = 0;
     this.uploadError = null;
@@ -215,11 +205,12 @@ export class FileUploadComponent implements OnDestroy {
 
     this.simulateProgress();
 
-    this.cloudinaryService.uploadFileByType(file).subscribe({
-      next: (response) => {
+    return this.cloudinaryService.uploadFileByType(file).pipe(
+      tap((response) => {
         this.isUploading = false;
         this.uploadProgress = 100;
         this.uploadResult = response.secure_url;
+        this.selectedFile = null;
 
         this.fileUploaded.emit(response.secure_url);
         this.uploadComplete.emit({
@@ -227,15 +218,21 @@ export class FileUploadComponent implements OnDestroy {
           publicId: response.public_id
         });
 
-        this.notificationService.showSuccess('File uploaded successfully');
-      },
-      error: (error) => {
+      }),
+      catchError((error) => {
         this.isUploading = false;
         this.uploadProgress = 0;
         const errorMsg = error.message || 'Upload failed. Please try again.';
         this.uploadError = errorMsg;
-        this.notificationService.showError(errorMsg);
-      }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  startUpload(): void {
+    this.uploadPending().subscribe({
+      next: () => this.notificationService.showSuccess('File uploaded successfully'),
+      error: () => this.notificationService.showError(this.uploadError || 'Upload failed. Please try again.')
     });
   }
 

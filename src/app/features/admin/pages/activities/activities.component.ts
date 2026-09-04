@@ -16,6 +16,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
+import { switchMap } from 'rxjs/operators';
+import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
 @Component({
   selector: 'app-admin-activities',
@@ -158,11 +160,25 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               <div class="form-group">
                 <label>Featured Image</label>
                 <app-image-upload
-                  [folder]="'bridge-ai/activities'"
+                  [folder]="'activities'"
+                  #featuredUpload
                   [initialImage]="formData.featured_image || null"
-                  (imageUploaded)="formData.featured_image = $event"
                   (imageRemoved)="formData.featured_image = ''"
                 ></app-image-upload>
+              </div>
+              <div class="form-group">
+                <label>Additional Activity Images</label>
+                <app-image-upload
+                  #galleryUpload
+                  [folder]="'activities'"
+                  [multiple]="true"
+                ></app-image-upload>
+                <div *ngIf="formData.gallery_images?.length" class="activity-image-list">
+                  <div *ngFor="let image of formData.gallery_images; let i = index" class="activity-image-item">
+                    <img [src]="image.image_path" alt="Activity gallery preview" />
+                    <button type="button" (click)="removeGalleryImage(i)" aria-label="Remove activity image">Remove</button>
+                  </div>
+                </div>
               </div>
               <div class="form-actions">
                 <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>
@@ -458,6 +474,8 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
 })
 export class AdminActivitiesComponent implements OnInit {
   @ViewChild('activityForm') activityForm: any;
+  @ViewChild('featuredUpload') featuredUpload?: ImageUploadComponent;
+  @ViewChild('galleryUpload') galleryUpload?: ImageUploadComponent;
 
   protected activities = signal<Activity[]>([]);
   protected showModal = false;
@@ -468,6 +486,7 @@ export class AdminActivitiesComponent implements OnInit {
   constructor(
     private activityService: ActivityService,
     private notificationService: NotificationService,
+    private cloudinaryService: CloudinaryService,
     protected detailsModal: AdminDetailsModalService
   ) {}
 
@@ -500,7 +519,8 @@ export class AdminActivitiesComponent implements OnInit {
       summary: '',
       body: '',
       evidence_status: 'draft',
-      featured_image: ''
+      featured_image: '',
+      gallery_images: []
     };
     this.showModal = true;
   }
@@ -521,28 +541,45 @@ export class AdminActivitiesComponent implements OnInit {
       ...this.formData,
       featured_image: this.formData.featured_image || ''
     };
+    const action = this.editingActivity ? 'Updating activity...' : 'Creating activity...';
+    const success = this.editingActivity ? 'Activity updated successfully' : 'Activity created successfully';
+    this.notificationService.showInfo(action);
 
-    if (this.editingActivity) {
-      this.activityService.updateActivityJson(this.editingActivity.id!, data).subscribe({
+    this.featuredUpload!.uploadPending().pipe(switchMap(featuredUpload => {
+      if (featuredUpload) data.featured_image = featuredUpload.secure_url;
+      return this.galleryUpload!.uploadPendingAll();
+    }), switchMap(galleryUploads => {
+      data.gallery_images = [
+        ...(data.gallery_images || []),
+        ...galleryUploads.map((upload: { secure_url: string }, index: number) => ({
+          image_path: upload.secure_url,
+          display_order: (data.gallery_images || []).length + index
+        }))
+      ];
+      return this.editingActivity
+        ? this.activityService.updateActivityJson(this.editingActivity.id!, data)
+        : this.activityService.createActivityJson(data);
+    })).subscribe({
         next: () => {
-          this.notificationService.showSuccess('Activity updated successfully');
+          this.notificationService.showSuccess(success);
           this.loadActivities();
           this.closeModal();
         },
         error: () => {
-          this.notificationService.showError('Failed to update activity');
+          this.notificationService.showError(this.editingActivity ? 'Failed to update activity' : 'Failed to create activity');
         }
       });
-    } else {
-      this.activityService.createActivityJson(data).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Activity created successfully');
-          this.loadActivities();
-          this.closeModal();
-        },
-        error: () => {
-          this.notificationService.showError('Failed to create activity');
-        }
+  }
+
+  removeGalleryImage(index: number): void {
+    const image = (this.formData.gallery_images || [])[index];
+    this.formData.gallery_images = (this.formData.gallery_images || []).filter((_: unknown, imageIndex: number) => imageIndex !== index);
+    const publicId = image?.image_path ? this.cloudinaryService.extractPublicId(image.image_path) : null;
+    if (publicId) {
+      this.notificationService.showInfo('Deleting image...');
+      this.cloudinaryService.deleteFile(publicId).subscribe({
+        next: () => this.notificationService.showSuccess('Image deleted successfully'),
+        error: () => this.notificationService.showError('Failed to delete image from Cloudinary')
       });
     }
   }
@@ -550,13 +587,17 @@ export class AdminActivitiesComponent implements OnInit {
   deleteActivity(id: number | undefined): void {
     if (!id) return;
     if (confirm('Are you sure you want to delete this activity?')) {
-      this.activityService.deleteActivity(id).subscribe({
+      const activity = this.activities().find(item => item.id === id);
+      const galleryUrls = (activity?.gallery_images || []).map(image => image.image_path);
+      this.cloudinaryService.deleteUrls([activity?.featured_image, ...galleryUrls]).pipe(
+        switchMap(() => this.activityService.deleteActivity(id))
+      ).subscribe({
         next: () => {
           this.notificationService.showSuccess('Activity deleted successfully');
           this.loadActivities();
         },
         error: () => {
-          this.notificationService.showError('Failed to delete activity');
+          this.notificationService.showError('Failed to delete activity and its media');
         }
       });
     }

@@ -12,6 +12,7 @@ export interface Notification {
   message: string;
   duration?: number;
   id?: number;
+  persistent?: boolean;
 }
 
 @Injectable({
@@ -37,7 +38,7 @@ export class NotificationService {
     this.show('warning', message, title, duration);
   }
 
-  showInfo(message: string, title?: string, duration?: number): void {
+  showInfo(message: string, title?: string, duration = 0): void {
     this.show('info', message, title, duration);
   }
 

@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Admin Replication Component
 // ============================================================
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -15,6 +15,8 @@ import { ReplicationLesson } from '../../../core/models/replication-lesson.model
 import { DocumentUploadComponent } from '../../../shared/components/document-upload/document-upload.component';
 import { NotificationService } from '../../../core/services/notification.service';
 import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
+import { switchMap } from 'rxjs/operators';
+import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
 @Component({
   selector: 'app-admin-replication',
@@ -165,7 +167,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               </div>
               <div class="form-group">
                 <label>Upload File</label>
-                <app-document-upload (documentUploaded)="resourceForm.file_path = $event"></app-document-upload>
+                <app-document-upload #resourceUpload [folder]="'resources'"></app-document-upload>
               </div>
               <div class="form-actions">
                 <button type="button" class="btn-secondary" (click)="closeResourceModal()">Cancel</button>
@@ -195,7 +197,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               </div>
               <div class="form-group">
                 <label>Upload File</label>
-                <app-document-upload (documentUploaded)="templateForm.file_path = $event"></app-document-upload>
+                <app-document-upload #templateUpload [folder]="'resources'"></app-document-upload>
               </div>
               <div class="form-actions">
                 <button type="button" class="btn-secondary" (click)="closeTemplateModal()">Cancel</button>
@@ -541,6 +543,8 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
   `]
 })
 export class AdminReplicationComponent implements OnInit {
+  @ViewChild('resourceUpload') resourceUpload?: DocumentUploadComponent;
+  @ViewChild('templateUpload') templateUpload?: DocumentUploadComponent;
   protected tabs = [
     { id: 'resources', label: 'Resources' },
     { id: 'templates', label: 'Templates' },
@@ -570,6 +574,7 @@ export class AdminReplicationComponent implements OnInit {
     private templateService: ReplicationTemplateService,
     private lessonService: ReplicationLessonService,
     private notificationService: NotificationService,
+    private cloudinaryService: CloudinaryService,
     protected detailsModal: AdminDetailsModalService
   ) {}
 
@@ -612,36 +617,36 @@ export class AdminReplicationComponent implements OnInit {
   }
 
   saveResource(): void {
-    if (this.editingResource) {
-      this.resourceService.updateResourceJson(this.editingResource.id!, this.resourceForm).subscribe({
+    const data = { ...this.resourceForm };
+    const isEditing = !!this.editingResource;
+    this.notificationService.showInfo(isEditing ? 'Updating replication resource...' : 'Creating replication resource...');
+    this.resourceUpload!.uploadPending().pipe(switchMap(upload => {
+      if (upload) data.file_path = upload.secure_url;
+      return isEditing
+        ? this.resourceService.updateResourceJson(this.editingResource!.id!, data)
+        : this.resourceService.createResourceJson(data);
+    })).subscribe({
         next: () => {
-          this.notificationService.showSuccess('Resource updated');
+          this.notificationService.showSuccess(isEditing ? 'Resource updated' : 'Resource created');
           this.loadData();
           this.closeResourceModal();
         },
-        error: () => this.notificationService.showError('Failed to update resource')
+        error: () => this.notificationService.showError(isEditing ? 'Failed to update resource' : 'Failed to create resource')
       });
-    } else {
-      this.resourceService.createResourceJson(this.resourceForm).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Resource created');
-          this.loadData();
-          this.closeResourceModal();
-        },
-        error: () => this.notificationService.showError('Failed to create resource')
-      });
-    }
   }
 
   deleteResource(id: number | undefined): void {
     if (!id) return;
     if (confirm('Delete this resource?')) {
-      this.resourceService.deleteResource(id).subscribe({
+      const resource = this.resources().find(item => item.id === id);
+      this.cloudinaryService.deleteUrls([resource?.file_path]).pipe(
+        switchMap(() => this.resourceService.deleteResource(id))
+      ).subscribe({
         next: () => {
           this.notificationService.showSuccess('Resource deleted');
           this.loadData();
         },
-        error: () => this.notificationService.showError('Failed to delete resource')
+        error: () => this.notificationService.showError('Failed to delete resource and its file')
       });
     }
   }
@@ -664,36 +669,36 @@ export class AdminReplicationComponent implements OnInit {
   }
 
   saveTemplate(): void {
-    if (this.editingTemplate) {
-      this.templateService.updateTemplateJson(this.editingTemplate.id!, this.templateForm).subscribe({
+    const data = { ...this.templateForm };
+    const isEditing = !!this.editingTemplate;
+    this.notificationService.showInfo(isEditing ? 'Updating template...' : 'Creating template...');
+    this.templateUpload!.uploadPending().pipe(switchMap(upload => {
+      if (upload) data.file_path = upload.secure_url;
+      return isEditing
+        ? this.templateService.updateTemplateJson(this.editingTemplate!.id!, data)
+        : this.templateService.createTemplateJson(data);
+    })).subscribe({
         next: () => {
-          this.notificationService.showSuccess('Template updated');
+          this.notificationService.showSuccess(isEditing ? 'Template updated' : 'Template created');
           this.loadData();
           this.closeTemplateModal();
         },
-        error: () => this.notificationService.showError('Failed to update template')
+        error: () => this.notificationService.showError(isEditing ? 'Failed to update template' : 'Failed to create template')
       });
-    } else {
-      this.templateService.createTemplateJson(this.templateForm).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Template created');
-          this.loadData();
-          this.closeTemplateModal();
-        },
-        error: () => this.notificationService.showError('Failed to create template')
-      });
-    }
   }
 
   deleteTemplate(id: number | undefined): void {
     if (!id) return;
     if (confirm('Delete this template?')) {
-      this.templateService.deleteTemplate(id).subscribe({
+      const template = this.templates().find(item => item.id === id);
+      this.cloudinaryService.deleteUrls([template?.file_path]).pipe(
+        switchMap(() => this.templateService.deleteTemplate(id))
+      ).subscribe({
         next: () => {
           this.notificationService.showSuccess('Template deleted');
           this.loadData();
         },
-        error: () => this.notificationService.showError('Failed to delete template')
+        error: () => this.notificationService.showError('Failed to delete template and its file')
       });
     }
   }
@@ -716,8 +721,11 @@ export class AdminReplicationComponent implements OnInit {
   }
 
   saveLesson(): void {
-    if (this.editingLesson) {
-      this.lessonService.updateLesson(this.editingLesson.id!, this.lessonForm).subscribe({
+    const editingLesson = this.editingLesson;
+    const isEditing = !!editingLesson;
+    this.notificationService.showInfo(isEditing ? 'Updating lesson...' : 'Creating lesson...');
+    if (editingLesson) {
+      this.lessonService.updateLesson(editingLesson.id!, this.lessonForm).subscribe({
         next: () => {
           this.notificationService.showSuccess('Lesson updated');
           this.loadData();

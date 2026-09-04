@@ -451,6 +451,7 @@ export class AdminCommunityComponent implements OnInit {
       if (description) {
         const url = prompt('Enter repository URL:');
         if (url) {
+          this.notificationService.showInfo('Creating repository...');
           this.repositoryService.createRepository({ 
             name, 
             description, 
@@ -471,6 +472,7 @@ export class AdminCommunityComponent implements OnInit {
   editRepository(item: Repository): void {
     const newName = prompt('Edit name:', item.name);
     if (newName && newName !== item.name) {
+      this.notificationService.showInfo('Updating repository...');
       this.repositoryService.updateRepository(item.id!, { ...item, name: newName }).subscribe({
         next: () => {
           this.notificationService.showSuccess('Repository updated');
@@ -501,6 +503,7 @@ export class AdminCommunityComponent implements OnInit {
       if (description) {
         const date = prompt('Enter date (YYYY-MM-DD):');
         if (date) {
+          this.notificationService.showInfo('Creating community event...');
           this.communityEventService.createEvent({ 
             title, 
             description, 
@@ -522,6 +525,7 @@ export class AdminCommunityComponent implements OnInit {
   editCommunityEvent(item: CommunityEvent): void {
     const newTitle = prompt('Edit title:', item.title);
     if (newTitle && newTitle !== item.title) {
+      this.notificationService.showInfo('Updating community event...');
       this.communityEventService.updateEvent(item.id!, { ...item, title: newTitle }).subscribe({
         next: () => {
           this.notificationService.showSuccess('Community event updated');

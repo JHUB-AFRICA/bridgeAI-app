@@ -444,9 +444,12 @@ export class AdminFaqsComponent implements OnInit {
 
   saveFaq(): void {
     const data = this.formData;
+    const editingFaq = this.editingFaq;
+    const isEditing = !!editingFaq;
+    this.notificationService.showInfo(isEditing ? 'Updating FAQ...' : 'Creating FAQ...');
 
-    if (this.editingFaq) {
-      this.faqService.updateFaq(this.editingFaq.id!, data).subscribe({
+    if (editingFaq) {
+      this.faqService.updateFaq(editingFaq.id!, data).subscribe({
         next: () => {
           this.notificationService.showSuccess('FAQ updated successfully');
           this.loadFaqs();

@@ -32,6 +32,10 @@ export class HttpInterceptorService implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const isCloudinaryRequest = request.url.includes('cloudinary.com');
 
+    if (request.method === 'DELETE') {
+      this.notificationService.showInfo('Deleting...');
+    }
+
     let modifiedRequest = request;
 
     if (!isCloudinaryRequest) {

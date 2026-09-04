@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Admin Resources Component
 // ============================================================
 
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -12,6 +12,8 @@ import { DocumentUploadComponent } from '../../../shared/components/document-upl
 import { NotificationService } from '../../../core/services/notification.service';
 import { WORK_PACKAGES } from '../../../core/constants/wp-constants';
 import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
+import { switchMap } from 'rxjs/operators';
+import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
 @Component({
   selector: 'app-admin-resources',
@@ -154,7 +156,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               </div>
               <div class="form-group">
                 <label>Upload Document</label>
-                <app-document-upload (documentUploaded)="formData.file_path = $event"></app-document-upload>
+                <app-document-upload [folder]="'resources'"></app-document-upload>
               </div>
               <div class="form-group">
                 <label>External URL (if hosted elsewhere)</label>
@@ -442,6 +444,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
   `]
 })
 export class AdminResourcesComponent implements OnInit {
+  @ViewChild(DocumentUploadComponent) documentUpload?: DocumentUploadComponent;
   protected resources = signal<Resource[]>([]);
   protected showModal = false;
   protected editingResource: Resource | null = null;
@@ -450,7 +453,8 @@ export class AdminResourcesComponent implements OnInit {
 
   constructor(
     private resourceService: ResourceService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private cloudinaryService: CloudinaryService
   ) {}
 
   protected detailsModal = inject(AdminDetailsModalService);
@@ -501,43 +505,40 @@ export class AdminResourcesComponent implements OnInit {
   }
 
   saveResource(): void {
-    const data = this.formData;
+    const data = { ...this.formData };
+    const isEditing = !!this.editingResource;
+    this.notificationService.showInfo(isEditing ? 'Updating resource...' : 'Creating resource...');
 
-    if (this.editingResource) {
-      this.resourceService.updateResourceJson(this.editingResource.id!, data).subscribe({
+    this.documentUpload!.uploadPending().pipe(switchMap(upload => {
+      if (upload) data.file_path = upload.secure_url;
+      return isEditing
+        ? this.resourceService.updateResourceJson(this.editingResource!.id!, data)
+        : this.resourceService.createResourceJson(data);
+    })).subscribe({
         next: () => {
-          this.notificationService.showSuccess('Resource updated successfully');
+          this.notificationService.showSuccess(isEditing ? 'Resource updated successfully' : 'Resource created successfully');
           this.loadResources();
           this.closeModal();
         },
         error: () => {
-          this.notificationService.showError('Failed to update resource');
+          this.notificationService.showError(isEditing ? 'Failed to update resource' : 'Failed to create resource');
         }
       });
-    } else {
-      this.resourceService.createResourceJson(data).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Resource created successfully');
-          this.loadResources();
-          this.closeModal();
-        },
-        error: () => {
-          this.notificationService.showError('Failed to create resource');
-        }
-      });
-    }
   }
 
   deleteResource(id: number | undefined): void {
     if (!id) return;
     if (confirm('Are you sure you want to delete this resource?')) {
-      this.resourceService.deleteResource(id).subscribe({
+      const resource = this.resources().find(item => item.id === id);
+      this.cloudinaryService.deleteUrls([resource?.file_path]).pipe(
+        switchMap(() => this.resourceService.deleteResource(id))
+      ).subscribe({
         next: () => {
           this.notificationService.showSuccess('Resource deleted successfully');
           this.loadResources();
         },
         error: () => {
-          this.notificationService.showError('Failed to delete resource');
+          this.notificationService.showError('Failed to delete resource and its file');
         }
       });
     }

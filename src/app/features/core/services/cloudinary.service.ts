@@ -4,7 +4,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 
@@ -54,11 +54,37 @@ export class CloudinaryService {
   constructor(private http: HttpClient) {}
 
   uploadFile(file: File, options?: CloudinaryUploadOptions): Observable<CloudinaryUploadResult> {
+    const module = this.getUploadModule(options?.folder);
+    if (options?.resource_type === 'image' && module) {
+      const formData = new FormData();
+      formData.append('file', file);
+      return this.http.post<{
+        success: boolean;
+        url: string;
+        public_id: string;
+        format: string;
+        width: number;
+        height: number;
+      }>(`${environment.apiUrl}/upload/${module}`, formData).pipe(
+        map(response => ({
+          ...response,
+          secure_url: response.url,
+          public_id: response.public_id
+        } as unknown as CloudinaryUploadResult)),
+        catchError((error) => {
+          console.error('Cloudinary upload error:', error);
+          return throwError(() => new Error('Failed to upload file to Cloudinary'));
+        })
+      );
+    }
+
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', this.uploadPreset);
 
-    const folder = options?.folder || this.folder;
+    const folder = options?.folder
+      ? (options.folder.startsWith('bridge-ai/') ? options.folder : `bridge-ai/${options.folder}`)
+      : this.folder;
     if (folder) {
       formData.append('folder', folder);
     }
@@ -86,6 +112,13 @@ export class CloudinaryService {
     );
   }
 
+  private getUploadModule(folder?: string): string | null {
+    const module = folder?.replace(/^bridge-ai\//, '').replace(/\/$/, '');
+    return module && ['activities', 'events', 'gallery', 'team', 'resources', 'stories', 'partners'].includes(module)
+      ? module
+      : null;
+  }
+
   uploadImage(file: File): Observable<CloudinaryUploadResult> {
     return this.uploadFile(file, {
       resource_type: 'image',
@@ -100,9 +133,10 @@ export class CloudinaryService {
     });
   }
 
-  uploadDocument(file: File): Observable<CloudinaryUploadResult> {
+  uploadDocument(file: File, folder?: string): Observable<CloudinaryUploadResult> {
     return this.uploadFile(file, {
       resource_type: 'raw',
+      folder,
       tags: ['bridge-ai', 'document']
     });
   }
@@ -221,13 +255,40 @@ export class CloudinaryService {
     }
   }
 
-  deleteFile(publicId: string): Observable<any> {
-    return this.http.delete(`${environment.apiUrl}/upload/delete`, { body: { public_id: publicId } }).pipe(
+  deleteFile(publicId: string, resourceType: 'image' | 'raw' | 'video' = 'image'): Observable<any> {
+    return this.http.delete(`${environment.apiUrl}/upload/delete`, { body: { public_id: publicId, resource_type: resourceType } }).pipe(
+      map((response: any) => {
+        if (response?.success === false) {
+          throw new Error('Cloudinary did not delete the file');
+        }
+        return response;
+      }),
       catchError((error) => {
         console.error('Cloudinary delete error:', error);
         return throwError(() => new Error('Failed to delete file from Cloudinary'));
       })
     );
+  }
+
+  deleteUrls(urls: Array<string | undefined>): Observable<void> {
+    const media = urls
+      .filter((url): url is string => !!url)
+      .map(url => ({ publicId: this.extractPublicId(url), resourceType: this.extractResourceType(url) }))
+      .filter((item): item is { publicId: string; resourceType: 'image' | 'raw' | 'video' } => !!item.publicId);
+    const uniqueMedia = [...new Map(media.map(item => [`${item.resourceType}:${item.publicId}`, item])).values()];
+
+    if (uniqueMedia.length === 0) return of(void 0);
+
+    return forkJoin(uniqueMedia.map(item => this.deleteFile(item.publicId, item.resourceType))).pipe(
+      map(() => void 0)
+    );
+  }
+
+  private extractResourceType(url: string): 'image' | 'raw' | 'video' {
+    const parts = url.split('/');
+    const resourceTypeIndex = parts.indexOf('res.cloudinary.com') + 2;
+    const resourceType = parts[resourceTypeIndex];
+    return resourceType === 'raw' || resourceType === 'video' ? resourceType : 'image';
   }
 
   generateDeliveryUrl(publicId: string, options?: {

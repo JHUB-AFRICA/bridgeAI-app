@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Activities Component
 // ============================================================
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ActivityService } from '../../../../services/activity.service';
@@ -22,8 +22,10 @@ type ActivityFilters = {
   template: `
     <div class="activities-page">
       <section class="hero" id="heroSection">
-        <div class="hero-image-wrapper">
-          <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?auto=format&fit=crop&w=1600&q=80');"></div>
+        <div class="hero-image-wrapper" aria-hidden="true">
+          @for (image of heroImages(); track image; let index = $index) {
+            <div class="hero-slide-bg" [class.active]="index === heroIndex()" [style.background-image]="'url(' + image + ')'" ></div>
+          }
         </div>
 
         <div class="hero-grid">
@@ -45,30 +47,6 @@ type ActivityFilters = {
             </div>
           </div>
 
-          <div class="hero-right">
-            <div class="activity-types-container">
-              <div class="activity-types-header">
-                <div>
-                  <span class="activity-types-label">Activity Types</span>
-                  <p class="activity-types-subtitle">BRIDGE-AI engagement areas</p>
-                </div>
-                <span class="activity-types-count-badge">{{ activityTypeLabels().length }} topics</span>
-              </div>
-
-              <div class="activity-types-list">
-                @for (type of activityTypeLabels(); track type) {
-                  <div class="activity-type-card">
-                    <div class="type-header">
-                      <span class="type-dot" [style.background]="getTypeColor(type)"></span>
-                      <span class="type-name">{{ type }}</span>
-                    </div>
-                    <span class="type-count-badge">{{ countType(type) }}</span>
-                    <p class="type-description">{{ getTypeDescription(type) }}</p>
-                  </div>
-                }
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -174,7 +152,7 @@ type ActivityFilters = {
                     </div>
 
                     <h3>
-                      <a [routerLink]="['/activities', activity.slug]">{{ activity.title }}</a>
+                      <a [routerLink]="['/activities', activity.slug || activity.id]">{{ activity.title }}</a>
                     </h3>
 
                     <p class="card-summary">
@@ -185,7 +163,7 @@ type ActivityFilters = {
                       @if (activity.location) {
                         <span class="card-location"><i class="fas fa-map-pin"></i> {{ activity.location }}</span>
                       }
-                      <a [routerLink]="['/activities', activity.slug]" class="card-link">
+                      <a [routerLink]="['/activities', activity.slug || activity.id]" class="card-link">
                         Read More <i class="fas fa-arrow-right"></i>
                       </a>
                     </div>
@@ -219,11 +197,13 @@ type ActivityFilters = {
     .container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
     .hero { position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 85vh; background: #16281a; }
     .hero-image-wrapper { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-    .hero-slide-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 1; filter: none; }
+    .hero-slide-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; filter: none; transition: opacity 1.2s ease; }
+    .hero-slide-bg.active { opacity: 1; animation: hero-zoom 8s ease-in-out both; }
+    @keyframes hero-zoom { from { transform: scale(1); } to { transform: scale(1.06); } }
     .hero::after { content: ''; position: absolute; inset: 0; background: rgba(22, 40, 26, 0.52); z-index: 1; }
     .hero-grid { position: relative; z-index: 2; width: 100%; max-width: 1280px; display: flex; align-items: center; gap: 48px; padding: 60px 28px; }
     .hero-left { flex: 1 1 50%; text-align: left; }
-    .hero-right { flex: 1 1 35%; }
+    .hero-right { display: none; }
     .hero-left h1 { font-size: 3.6rem; font-weight: 900; line-height: 1.08; letter-spacing: -0.02em; color: #fff; margin: 0 0 12px; text-shadow: 0 4px 30px rgba(0,0,0,0.35); }
     .hero-left .highlight { color: #c89be8; }
     .hero-sub { font-size: 1.12rem; color: rgba(255,255,255,0.8); margin: 0 0 8px; letter-spacing: 0.02em; }
@@ -234,18 +214,6 @@ type ActivityFilters = {
     .btn-primary:hover { background: #16281a; transform: translateY(-3px); }
     .btn-secondary { background: transparent; color: #fff; padding: 14px 32px; border: 1.5px solid rgba(255,255,255,0.3); text-decoration: none; }
     .btn-secondary:hover { background: rgba(255,255,255,0.08); transform: translateY(-3px); }
-    .activity-types-container { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px 28px; }
-    .activity-types-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .activity-types-label { display: block; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); font-weight: 600; }
-    .activity-types-subtitle { margin: 4px 0 0; font-size: 0.85rem; color: rgba(255,255,255,0.75); }
-    .activity-types-count-badge { display: inline-block; padding: 4px 12px; border: 1px solid rgba(255,255,255,0.09); border-radius: 50px; font-size: 0.6rem; color: rgba(255,255,255,0.5); white-space: nowrap; }
-    .activity-types-list { display: flex; flex-wrap: wrap; gap: 8px; }
-    .activity-type-card { flex: 1 1 calc(50% - 4px); min-width: 120px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px 14px; }
-    .type-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-    .type-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-    .type-name { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.85); }
-    .type-count-badge { display: inline-block; margin-bottom: 4px; padding: 2px 10px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.05); font-size: 0.56rem; color: rgba(255,255,255,0.45); }
-    .type-description { margin: 0; font-size: 0.64rem; line-height: 1.5; color: rgba(255,255,255,0.45); }
     .filter-section { position: sticky; top: var(--site-header-offset, 80px); z-index: 40; background: rgba(255, 253, 247, 0.94); backdrop-filter: blur(12px); border-bottom: 1px solid #e1d8c0; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
     .filter-container { max-width: 1280px; margin: 0 auto; padding: 16px 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; }
     .filter-group { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
@@ -296,7 +264,7 @@ type ActivityFilters = {
     @media (max-width: 480px) { .container { padding: 0 16px; } .hero-left h1 { font-size: 1.8rem; } .section-header h2 { font-size: 1.5rem; } .card-body { padding: 16px 18px 0; } .card-footer { flex-direction: column; align-items: flex-start; } }
   `]
 })
-export class ActivitiesComponent implements OnInit {
+export class ActivitiesComponent implements OnInit, OnDestroy {
   protected allActivities = signal<Activity[]>([]);
   protected filteredActivities = signal<Activity[]>([]);
   protected selectedFilters: ActivityFilters = { wp: '', audience: '', type: '', year: '' };
@@ -308,6 +276,12 @@ export class ActivitiesComponent implements OnInit {
   protected audienceOpen = false;
   protected typeOpen = false;
   protected yearOpen = false;
+  protected heroIndex = signal(0);
+  protected heroImages = computed(() => {
+    const images = this.allActivities().map(activity => activity.featured_image).filter((image): image is string => !!image);
+    return images.length > 0 ? images : [this.fallbackImage];
+  });
+  private heroTimer?: number;
 
   protected readonly fallbackImage = 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1200&q=80';
 
@@ -318,6 +292,14 @@ export class ActivitiesComponent implements OnInit {
     this.syncStickyOffset();
     window.addEventListener('resize', this.syncStickyOffset.bind(this));
     document.addEventListener('click', this.handleDocumentClick);
+    this.heroTimer = window.setInterval(() => {
+      this.heroIndex.update(index => (index + 1) % this.heroImages().length);
+    }, 7000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.heroTimer) window.clearInterval(this.heroTimer);
+    document.removeEventListener('click', this.handleDocumentClick);
   }
 
   private syncStickyOffset(): void {

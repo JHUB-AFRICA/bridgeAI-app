@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Admin Training Materials Component
 // ============================================================
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -11,6 +11,8 @@ import { TrainingMaterial } from '../../../core/models/training-material.model';
 import { DocumentUploadComponent } from '../../../shared/components/document-upload/document-upload.component';
 import { NotificationService } from '../../../core/services/notification.service';
 import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
+import { switchMap } from 'rxjs/operators';
+import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
 @Component({
   selector: 'app-admin-training-materials',
@@ -161,7 +163,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               </div>
               <div class="form-group">
                 <label>Upload File</label>
-                <app-document-upload (documentUploaded)="formData.file_path = $event"></app-document-upload>
+                <app-document-upload [folder]="'resources'"></app-document-upload>
               </div>
               <div class="form-actions">
                 <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>
@@ -454,6 +456,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
   `]
 })
 export class AdminTrainingMaterialsComponent implements OnInit {
+  @ViewChild(DocumentUploadComponent) documentUpload?: DocumentUploadComponent;
   protected materials = signal<TrainingMaterial[]>([]);
   protected showModal = false;
   protected editingMaterial: TrainingMaterial | null = null;
@@ -462,6 +465,7 @@ export class AdminTrainingMaterialsComponent implements OnInit {
   constructor(
     private materialService: TrainingMaterialService,
     private notificationService: NotificationService,
+    private cloudinaryService: CloudinaryService,
     protected detailsModal: AdminDetailsModalService
   ) {}
 
@@ -521,42 +525,39 @@ export class AdminTrainingMaterialsComponent implements OnInit {
       data.tags = [];
     }
     delete data.tags_string;
+    const isEditing = !!this.editingMaterial;
+    this.notificationService.showInfo(isEditing ? 'Updating training material...' : 'Creating training material...');
 
-    if (this.editingMaterial) {
-      this.materialService.updateMaterialJson(this.editingMaterial.id!, data).subscribe({
+    this.documentUpload!.uploadPending().pipe(switchMap(upload => {
+      if (upload) data.file_path = upload.secure_url;
+      return isEditing
+        ? this.materialService.updateMaterialJson(this.editingMaterial!.id!, data)
+        : this.materialService.createMaterialJson(data);
+    })).subscribe({
         next: () => {
-          this.notificationService.showSuccess('Training material updated successfully');
+          this.notificationService.showSuccess(isEditing ? 'Training material updated successfully' : 'Training material created successfully');
           this.loadMaterials();
           this.closeModal();
         },
         error: () => {
-          this.notificationService.showError('Failed to update training material');
+          this.notificationService.showError(isEditing ? 'Failed to update training material' : 'Failed to create training material');
         }
       });
-    } else {
-      this.materialService.createMaterialJson(data).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Training material created successfully');
-          this.loadMaterials();
-          this.closeModal();
-        },
-        error: () => {
-          this.notificationService.showError('Failed to create training material');
-        }
-      });
-    }
   }
 
   deleteMaterial(id: number | undefined): void {
     if (!id) return;
     if (confirm('Are you sure you want to delete this training material?')) {
-      this.materialService.deleteMaterial(id).subscribe({
+      const material = this.materials().find(item => item.id === id);
+      this.cloudinaryService.deleteUrls([material?.file_path]).pipe(
+        switchMap(() => this.materialService.deleteMaterial(id))
+      ).subscribe({
         next: () => {
           this.notificationService.showSuccess('Training material deleted successfully');
           this.loadMaterials();
         },
         error: () => {
-          this.notificationService.showError('Failed to delete training material');
+          this.notificationService.showError('Failed to delete training material and its file');
         }
       });
     }

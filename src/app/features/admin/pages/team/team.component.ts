@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Admin Team Component
 // ============================================================
 
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -11,6 +11,8 @@ import { TeamMember } from '../../../core/models/team.model';
 import { ImageUploadComponent } from '../../../shared/components/image-upload/image-upload.component';
 import { NotificationService } from '../../../core/services/notification.service';
 import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
+import { switchMap } from 'rxjs/operators';
+import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
 @Component({
   selector: 'app-admin-team',
@@ -146,7 +148,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               <div class="form-group">
                 <label>Photo</label>
                 <app-image-upload
-                  [folder]="'bridge-ai/team'"
+                  [folder]="'team'"
                   [initialImage]="formData.photo || null"
                   (imageUploaded)="formData.photo = $event"
                   (imageRemoved)="formData.photo = ''"
@@ -463,6 +465,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
   `]
 })
 export class AdminTeamComponent implements OnInit {
+  @ViewChild(ImageUploadComponent) imageUpload?: ImageUploadComponent;
   protected team = signal<TeamMember[]>([]);
   protected showModal = false;
   protected editingMember: TeamMember | null = null;
@@ -470,7 +473,8 @@ export class AdminTeamComponent implements OnInit {
 
   constructor(
     private teamService: TeamService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private cloudinaryService: CloudinaryService
   ) {}
 
   protected detailsModal = inject(AdminDetailsModalService);
@@ -518,43 +522,40 @@ export class AdminTeamComponent implements OnInit {
   }
 
   saveMember(): void {
-    const data = this.formData;
+    const data = { ...this.formData };
+    const isEditing = !!this.editingMember;
+    this.notificationService.showInfo(isEditing ? 'Updating team member...' : 'Creating team member...');
 
-    if (this.editingMember) {
-      this.teamService.updateTeamMemberJson(this.editingMember.id!, data).subscribe({
+    this.imageUpload!.uploadPending().pipe(switchMap(upload => {
+      if (upload) data.photo = upload.secure_url;
+      return isEditing
+        ? this.teamService.updateTeamMemberJson(this.editingMember!.id!, data)
+        : this.teamService.createTeamMemberJson(data);
+    })).subscribe({
         next: () => {
-          this.notificationService.showSuccess('Team member updated successfully');
+          this.notificationService.showSuccess(isEditing ? 'Team member updated successfully' : 'Team member created successfully');
           this.loadTeam();
           this.closeModal();
         },
         error: () => {
-          this.notificationService.showError('Failed to update team member');
+          this.notificationService.showError(isEditing ? 'Failed to update team member' : 'Failed to create team member');
         }
       });
-    } else {
-      this.teamService.createTeamMemberJson(data).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Team member created successfully');
-          this.loadTeam();
-          this.closeModal();
-        },
-        error: () => {
-          this.notificationService.showError('Failed to create team member');
-        }
-      });
-    }
   }
 
   deleteMember(id: number | undefined): void {
     if (!id) return;
     if (confirm('Are you sure you want to delete this team member?')) {
-      this.teamService.deleteTeamMember(id).subscribe({
+      const member = this.team().find(item => item.id === id);
+      this.cloudinaryService.deleteUrls([member?.photo]).pipe(
+        switchMap(() => this.teamService.deleteTeamMember(id))
+      ).subscribe({
         next: () => {
           this.notificationService.showSuccess('Team member deleted successfully');
           this.loadTeam();
         },
         error: () => {
-          this.notificationService.showError('Failed to delete team member');
+          this.notificationService.showError('Failed to delete team member and its photo');
         }
       });
     }

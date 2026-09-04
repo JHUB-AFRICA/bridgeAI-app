@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { AdminSidebarComponent } from '../admin-sidebar/admin-sidebar.component';
 import { AdminHeaderComponent } from '../admin-header/admin-header.component';
+import { Notification, NotificationService } from '../../../core/services/notification.service';
 
 @Injectable({ providedIn: 'root' })
 export class AdminDetailsModalService {
@@ -38,6 +39,15 @@ export class AdminDetailsModalService {
   template: `
     <div class="admin-layout">
       <app-admin-header (toggleSidebar)="toggleSidebar()"></app-admin-header>
+      <div class="admin-notifications" aria-live="polite" aria-atomic="false">
+        @for (notification of notifications(); track notification.id) {
+          <div class="admin-notification" [class]="'notification-' + notification.type" role="alert">
+            <strong><span *ngIf="notification.type === 'info'" class="notification-spinner" aria-hidden="true"></span>{{ notification.title || (notification.type | titlecase) }}</strong>
+            <span>{{ notification.message }}</span>
+            <button type="button" aria-label="Dismiss notification" (click)="dismissNotification(notification.id)"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+          </div>
+        }
+      </div>
       @if (detailsModal.item(); as item) {
         <div class="details-overlay" role="presentation" (click)="detailsModal.close()">
           <section class="details-modal" role="dialog" aria-modal="true" aria-labelledby="details-title" (click)="$event.stopPropagation()">
@@ -109,6 +119,19 @@ export class AdminDetailsModalService {
       min-height: 100vh;
       background: #f1f5f9;
     }
+
+    .admin-notifications { position: fixed; top: 78px; right: 24px; z-index: 200; display: grid; gap: 10px; width: min(380px, calc(100vw - 32px)); }
+    .admin-notification { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 13px 14px; border-left: 4px solid; border-radius: 8px; background: #fff; box-shadow: 0 10px 28px rgba(15, 23, 42, .16); color: #1f2937; animation: notification-enter .2s ease-out; }
+    .admin-notification span { grid-column: 1; font-size: 13px; line-height: 1.4; }
+    .admin-notification strong { font-size: 14px; }
+    .admin-notification button { grid-column: 2; grid-row: 1 / span 2; align-self: center; border: 0; background: transparent; color: #64748b; cursor: pointer; }
+    .notification-success { border-color: #16a34a; }
+    .notification-error { border-color: #dc2626; }
+    .notification-warning { border-color: #d97706; }
+    .notification-info { border-color: #2563eb; }
+    .notification-spinner { display: inline-block; width: 12px; height: 12px; margin-right: 7px; border: 2px solid #bfdbfe; border-top-color: #2563eb; border-radius: 50%; vertical-align: -1px; animation: notification-spin .8s linear infinite; }
+    @keyframes notification-spin { to { transform: rotate(360deg); } }
+    @keyframes notification-enter { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 
     .admin-body {
       position: relative;
@@ -219,6 +242,8 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
   protected sidebarCollapsed = signal(false);
   protected mobileSidebarOpen = signal(false);
   protected detailsModal = inject(AdminDetailsModalService);
+  private notificationService = inject(NotificationService);
+  protected notifications = signal<Notification[]>([]);
   protected tableSearch = '';
   protected tableColumns = signal<string[]>([]);
   protected tableFilterValues = signal<string[]>([]);
@@ -227,6 +252,22 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
   private document = inject(DOCUMENT);
   private tableObserver?: MutationObserver;
   private updatingTables = false;
+
+  constructor() {
+    this.notificationService.notifications$.subscribe(notification => {
+      this.notifications.update(current => notification.type === 'info'
+        ? [...current, notification]
+        : [...current.filter(item => item.type !== 'info'), notification]);
+      if ((notification.duration ?? 0) > 0) {
+        window.setTimeout(() => this.dismissNotification(notification.id), notification.duration);
+      }
+    });
+  }
+
+  dismissNotification(id?: number): void {
+    if (id === undefined) return;
+    this.notifications.update(current => current.filter(notification => notification.id !== id));
+  }
 
   toggleSidebar(): void {
     if (window.matchMedia('(max-width: 768px)').matches) {

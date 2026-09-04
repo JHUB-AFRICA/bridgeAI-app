@@ -4,10 +4,12 @@
 
 import { Component, EventEmitter, Output, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CloudinaryService } from '../../../core/services/cloudinary.service';
+import { CloudinaryService, CloudinaryUploadResult } from '../../../core/services/cloudinary.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { MEDIA } from '../../../core/constants/app.constants';
 import { FileSizePipe } from '../../pipes/file-size.pipe';
+import { Observable, forkJoin, of, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-image-upload',
@@ -47,6 +49,7 @@ import { FileSizePipe } from '../../pipes/file-size.pipe';
           #fileInput
           type="file"
           accept="image/*"
+          [multiple]="multiple"
           (change)="onFileSelected($event)"
           class="hidden-input"
           [disabled]="isUploading"
@@ -87,15 +90,6 @@ import { FileSizePipe } from '../../pipes/file-size.pipe';
         <span class="result-text">{{ uploadError }}</span>
       </div>
 
-      <div class="upload-actions" *ngIf="selectedFile && !isUploading && !uploadResult">
-        <button
-          (click)="startUpload()"
-          class="upload-btn"
-          [disabled]="!selectedFile"
-        >
-          Upload Image
-        </button>
-      </div>
     </div>
   `,
   styles: [`
@@ -373,8 +367,10 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
   @Input() maxFileSize: number = MEDIA.MAX_IMAGE_SIZE;
   @Input() folder = '';
   @Input() initialImage: string | null = null;
+  @Input() multiple = false;
 
   selectedFile: File | null = null;
+  private pendingFiles: File[] = [];
   previewUrl: string | null = null;
   isUploading: boolean = false;
   uploadProgress: number = 0;
@@ -400,7 +396,12 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.validateAndSetFile(input.files[0]);
+      if (this.multiple) {
+        this.pendingFiles = [];
+        Array.from(input.files).forEach(file => this.validateAndAddFile(file));
+      } else {
+        this.validateAndSetFile(input.files[0]);
+      }
     }
   }
 
@@ -423,11 +424,21 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
 
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
-      this.validateAndSetFile(files[0]);
+      if (this.multiple) {
+        this.pendingFiles = [];
+        Array.from(files).forEach(file => this.validateAndAddFile(file));
+      } else {
+        this.validateAndSetFile(files[0]);
+      }
     }
   }
 
   private validateAndSetFile(file: File): void {
+    this.pendingFiles = [];
+    this.validateAndAddFile(file);
+  }
+
+  private validateAndAddFile(file: File): void {
     this.uploadError = null;
     this.uploadResult = null;
 
@@ -445,8 +456,10 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
       return;
     }
 
-    this.selectedFile = file;
-    this.previewUrl = URL.createObjectURL(file);
+    this.pendingFiles.push(file);
+    this.selectedFile = this.pendingFiles[0];
+    if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);
+    this.previewUrl = URL.createObjectURL(this.selectedFile);
   }
 
   removeFile(): void {
@@ -455,6 +468,7 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
       URL.revokeObjectURL(this.previewUrl);
     }
     this.selectedFile = null;
+    this.pendingFiles = [];
     this.previewUrl = null;
     this.uploadResult = null;
     this.uploadError = null;
@@ -462,48 +476,58 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
     this.imageRemoved.emit();
   }
 
-  startUpload(): void {
-    if (!this.selectedFile) {
-      return;
-    }
+  uploadPending(): Observable<CloudinaryUploadResult | null> {
+    return this.uploadPendingAll().pipe(map(responses => responses[0] || null));
+  }
 
+  uploadPendingAll(): Observable<CloudinaryUploadResult[]> {
+    const files = this.pendingFiles.length > 0 ? this.pendingFiles : (this.selectedFile ? [this.selectedFile] : []);
+    if (files.length === 0) return of([]);
     this.isUploading = true;
     this.uploadProgress = 0;
     this.uploadError = null;
     this.uploadResult = null;
 
-    const file = this.selectedFile;
-
     this.simulateProgress();
 
-    this.cloudinaryService.uploadFile(file, {
+    return forkJoin(files.map(file => this.cloudinaryService.uploadFile(file, {
       resource_type: 'image',
       folder: this.folder || undefined,
       tags: ['bridge-ai', 'image']
-    }).subscribe({
-      next: (response) => {
+    }))).pipe(
+      tap((responses) => {
         this.isUploading = false;
         this.uploadProgress = 100;
-        this.uploadResult = response.secure_url;
+        this.uploadResult = responses[0]?.secure_url || null;
 
-        this.deleteStoredImage();
-        this.initialImage = response.secure_url;
+        this.deleteStoredImage(false);
+        this.initialImage = responses[0]?.secure_url || null;
+        this.selectedFile = null;
+        this.pendingFiles = [];
 
-        this.imageUploaded.emit(response.secure_url);
-        this.uploadComplete.emit({
-          url: response.secure_url,
-          publicId: response.public_id
+        responses.forEach(response => {
+          this.imageUploaded.emit(response.secure_url);
+          this.uploadComplete.emit({
+            url: response.secure_url,
+            publicId: response.public_id
+          });
         });
 
-        this.notificationService.showSuccess('Image uploaded successfully');
-      },
-      error: (error) => {
+      }),
+      catchError((error) => {
         this.isUploading = false;
         this.uploadProgress = 0;
         const errorMsg = error.message || 'Upload failed. Please try again.';
         this.uploadError = errorMsg;
-        this.notificationService.showError(errorMsg);
-      }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  startUpload(): void {
+    this.uploadPending().subscribe({
+      next: () => this.notificationService.showSuccess('Image uploaded successfully'),
+      error: () => this.notificationService.showError(this.uploadError || 'Upload failed. Please try again.')
     });
   }
 
@@ -533,14 +557,22 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
     return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
-  private deleteStoredImage(): void {
+  private deleteStoredImage(showProgress = true): void {
     if (!this.initialImage || !this.initialImage.startsWith('http')) {
       return;
     }
 
     const publicId = this.cloudinaryService.extractPublicId(this.initialImage);
     if (publicId) {
+      if (showProgress) {
+        this.notificationService.showInfo('Deleting image...');
+      }
       this.cloudinaryService.deleteFile(publicId).subscribe({
+        next: () => {
+          if (showProgress) {
+            this.notificationService.showSuccess('Image deleted successfully');
+          }
+        },
         error: () => this.notificationService.showError('The image was removed from the form, but could not be deleted from Cloudinary')
       });
     }

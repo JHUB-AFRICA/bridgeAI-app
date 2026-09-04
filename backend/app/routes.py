@@ -32,9 +32,9 @@ def _get_cloudinary_service():
             except Exception as error:
                 return {'success': False, 'error': str(error)}
 
-        def delete_image(self, public_id):
+        def delete_image(self, public_id, resource_type='image'):
             try:
-                result = cloudinary.uploader.destroy(public_id, resource_type='image')
+                result = cloudinary.uploader.destroy(public_id, resource_type=resource_type)
                 return {'success': result.get('result') == 'ok', 'result': result.get('result')}
             except Exception as error:
                 return {'success': False, 'error': str(error)}
@@ -83,7 +83,7 @@ def upload_file(module):
     if cloudinary_service is None:
         return jsonify({'error': 'Cloudinary service is unavailable'}), 503
 
-    allowed_modules = ['activities', 'events', 'gallery', 'team', 'resources', 'stories']
+    allowed_modules = ['activities', 'events', 'gallery', 'team', 'resources', 'stories', 'partners']
     if module not in allowed_modules:
         return jsonify({'error': 'Invalid module'}), 400
 
@@ -116,7 +116,7 @@ def upload_multiple_files(module):
     if cloudinary_service is None:
         return jsonify({'error': 'Cloudinary service is unavailable'}), 503
 
-    allowed_modules = ['activities', 'events', 'gallery', 'team', 'resources', 'stories']
+    allowed_modules = ['activities', 'events', 'gallery', 'team', 'resources', 'stories', 'partners']
     if module not in allowed_modules:
         return jsonify({'error': 'Invalid module'}), 400
 
@@ -160,11 +160,14 @@ def delete_file():
 
     data = request.get_json()
     public_id = data.get('public_id')
+    resource_type = data.get('resource_type', 'image')
 
     if not public_id:
         return jsonify({'error': 'public_id is required'}), 400
+    if resource_type not in ['image', 'raw', 'video']:
+        return jsonify({'error': 'Invalid resource type'}), 400
 
-    result = cloudinary_service.delete_image(public_id)
+    result = cloudinary_service.delete_image(public_id, resource_type)
     return jsonify(result)
 
 # ============================================================
@@ -177,6 +180,12 @@ def get_activities():
 @api_bp.route('/activities/<int:id>', methods=['GET'])
 def get_activity(id):
     activity = json_service.get_by_id('activities.json', id)
+    return jsonify(activity) if activity else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/activities/<string:slug>', methods=['GET'])
+def get_activity_by_slug(slug):
+    activities = json_service.get_all('activities.json')
+    activity = next((item for item in activities if item.get('slug') == slug), None)
     return jsonify(activity) if activity else (jsonify({'error': 'Not found'}), 404)
 
 @api_bp.route('/activities', methods=['POST'])

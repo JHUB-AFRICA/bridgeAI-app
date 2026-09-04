@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Admin Events Component
 // ============================================================
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -11,6 +11,8 @@ import { Event } from '../../../core/models/event.model';
 import { ImageUploadComponent } from '../../../shared/components/image-upload/image-upload.component';
 import { NotificationService } from '../../../core/services/notification.service';
 import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
+import { switchMap } from 'rxjs/operators';
+import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
 @Component({
   selector: 'app-admin-events',
@@ -159,7 +161,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
               <div class="form-group">
                 <label>Featured Image</label>
                 <app-image-upload
-                  [folder]="'bridge-ai/events'"
+                  [folder]="'events'"
                   [initialImage]="formData.featured_image || null"
                   (imageUploaded)="formData.featured_image = $event"
                   (imageRemoved)="formData.featured_image = ''"
@@ -449,6 +451,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
   `]
 })
 export class AdminEventsComponent implements OnInit {
+  @ViewChild(ImageUploadComponent) imageUpload?: ImageUploadComponent;
   protected events = signal<Event[]>([]);
   protected showModal = false;
   protected editingEvent: Event | null = null;
@@ -457,6 +460,7 @@ export class AdminEventsComponent implements OnInit {
   constructor(
     private eventService: EventService,
     private notificationService: NotificationService,
+    private cloudinaryService: CloudinaryService,
     protected detailsModal: AdminDetailsModalService
   ) {}
 
@@ -492,7 +496,8 @@ export class AdminEventsComponent implements OnInit {
       speakers: '',
       registration_link: '',
       status: 'upcoming',
-      post_event_report: ''
+      post_event_report: '',
+      featured_image: ''
     };
     this.showModal = true;
   }
@@ -509,43 +514,40 @@ export class AdminEventsComponent implements OnInit {
   }
 
   saveEvent(): void {
-    const data = this.formData;
+    const data = { ...this.formData };
+    const isEditing = !!this.editingEvent;
+    this.notificationService.showInfo(isEditing ? 'Updating event...' : 'Creating event...');
 
-    if (this.editingEvent) {
-      this.eventService.updateEventJson(this.editingEvent.id!, data).subscribe({
+    this.imageUpload!.uploadPending().pipe(switchMap(upload => {
+      if (upload) data.featured_image = upload.secure_url;
+      return isEditing
+        ? this.eventService.updateEventJson(this.editingEvent!.id!, data)
+        : this.eventService.createEventJson(data);
+    })).subscribe({
         next: () => {
-          this.notificationService.showSuccess('Event updated successfully');
+          this.notificationService.showSuccess(isEditing ? 'Event updated successfully' : 'Event created successfully');
           this.loadEvents();
           this.closeModal();
         },
         error: () => {
-          this.notificationService.showError('Failed to update event');
+          this.notificationService.showError(isEditing ? 'Failed to update event' : 'Failed to create event');
         }
       });
-    } else {
-      this.eventService.createEventJson(data).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Event created successfully');
-          this.loadEvents();
-          this.closeModal();
-        },
-        error: () => {
-          this.notificationService.showError('Failed to create event');
-        }
-      });
-    }
   }
 
   deleteEvent(id: number | undefined): void {
     if (!id) return;
     if (confirm('Are you sure you want to delete this event?')) {
-      this.eventService.deleteEvent(id).subscribe({
+      const event = this.events().find(item => item.id === id);
+      this.cloudinaryService.deleteUrls([event?.featured_image]).pipe(
+        switchMap(() => this.eventService.deleteEvent(id))
+      ).subscribe({
         next: () => {
           this.notificationService.showSuccess('Event deleted successfully');
           this.loadEvents();
         },
         error: () => {
-          this.notificationService.showError('Failed to delete event');
+          this.notificationService.showError('Failed to delete event and its image');
         }
       });
     }

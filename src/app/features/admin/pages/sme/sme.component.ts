@@ -578,6 +578,7 @@ export class AdminSmeComponent implements OnInit {
     if (title) {
       const description = prompt('Enter challenge description:');
       if (description) {
+        this.notificationService.showInfo('Creating challenge...');
         this.challengeService.createChallenge({
           title,
           description,
@@ -597,6 +598,7 @@ export class AdminSmeComponent implements OnInit {
   editChallenge(item: Challenge): void {
     const newTitle = prompt('Edit title:', item.title);
     if (newTitle && newTitle !== item.title) {
+      this.notificationService.showInfo('Updating challenge...');
       this.challengeService.updateChallenge(item.id!, { ...item, title: newTitle }).subscribe({
         next: () => {
           this.notificationService.showSuccess('Challenge updated');
@@ -627,6 +629,7 @@ export class AdminSmeComponent implements OnInit {
       if (description) {
         const date = prompt('Enter date (YYYY-MM-DD):');
         if (date) {
+          this.notificationService.showInfo('Creating hackathon...');
           this.hackathonService.createHackathon({
             title,
             description,
@@ -648,6 +651,7 @@ export class AdminSmeComponent implements OnInit {
   editHackathon(item: Hackathon): void {
     const newTitle = prompt('Edit title:', item.title);
     if (newTitle && newTitle !== item.title) {
+      this.notificationService.showInfo('Updating hackathon...');
       this.hackathonService.updateHackathon(item.id!, { ...item, title: newTitle }).subscribe({
         next: () => {
           this.notificationService.showSuccess('Hackathon updated');
@@ -678,6 +682,7 @@ export class AdminSmeComponent implements OnInit {
       if (title) {
         const story = prompt('Enter story content:');
         if (story) {
+          this.notificationService.showInfo('Creating success story...');
           this.storyService.createStoryJson({
             sme_name: smeName,
             title,
@@ -698,6 +703,7 @@ export class AdminSmeComponent implements OnInit {
   editStory(item: SuccessStory): void {
     const newTitle = prompt('Edit title:', item.title);
     if (newTitle && newTitle !== item.title) {
+      this.notificationService.showInfo('Updating success story...');
       this.storyService.updateStoryJson(item.id!, { ...item, title: newTitle }).subscribe({
         next: () => {
           this.notificationService.showSuccess('Success story updated');

@@ -20,13 +20,13 @@ import { catchError, map, tap } from 'rxjs/operators';
       <div
         class="image-drop-zone"
         [class.dragover]="isDragover"
-        [class.has-image]="previewUrl"
+        [class.has-image]="previewUrl || (multiple && pendingPreviews.length > 0)"
         (dragover)="onDragOver($event)"
         (dragleave)="onDragLeave($event)"
         (drop)="onDrop($event)"
         (click)="fileInput.click()"
       >
-        <div *ngIf="!previewUrl" class="drop-content">
+        <div *ngIf="!previewUrl && (!multiple || !pendingPreviews.length)" class="drop-content">
           <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
             <circle cx="8.5" cy="8.5" r="1.5" />
@@ -38,7 +38,20 @@ import { catchError, map, tap } from 'rxjs/operators';
           <p class="file-size-limit">Max: {{ maxSize }}</p>
         </div>
 
-        <div *ngIf="previewUrl" class="image-preview">
+        <div *ngIf="multiple && pendingPreviews.length" class="image-preview-grid" (click)="$event.stopPropagation()">
+          <div *ngFor="let preview of pendingPreviews; let i = index" class="image-preview-item">
+            <img [src]="preview.url" [alt]="preview.file.name" class="preview-image" />
+            <button type="button" class="preview-remove-btn" (click)="removePendingFile(i)" [attr.aria-label]="'Remove ' + preview.file.name">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <button type="button" class="add-more-btn" (click)="fileInput.click()">Add images</button>
+        </div>
+
+        <div *ngIf="!multiple && previewUrl" class="image-preview">
           <img [src]="previewUrl" alt="Image preview" class="preview-image" />
           <div class="preview-overlay">
             <span>Click to change</span>
@@ -177,6 +190,54 @@ import { catchError, map, tap } from 'rxjs/operators';
       align-items: center;
       justify-content: center;
       position: relative;
+    }
+
+    .image-preview-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .image-preview-item {
+      min-width: 0;
+      aspect-ratio: 1;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #e5e7eb;
+    }
+
+    .image-preview-item .preview-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-remove-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(127, 29, 29, 0.9);
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .add-more-btn {
+      min-height: 120px;
+      border: 1px dashed #9ca3af;
+      border-radius: 8px;
+      background: #f9fafb;
+      color: #374151;
+      cursor: pointer;
     }
 
     .preview-image {
@@ -372,6 +433,7 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
   selectedFile: File | null = null;
   private pendingFiles: File[] = [];
   previewUrl: string | null = null;
+  pendingPreviews: Array<{ file: File; url: string }> = [];
   isUploading: boolean = false;
   uploadProgress: number = 0;
   uploadResult: string | null = null;
@@ -397,7 +459,6 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       if (this.multiple) {
-        this.pendingFiles = [];
         Array.from(input.files).forEach(file => this.validateAndAddFile(file));
       } else {
         this.validateAndSetFile(input.files[0]);
@@ -425,7 +486,6 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
       if (this.multiple) {
-        this.pendingFiles = [];
         Array.from(files).forEach(file => this.validateAndAddFile(file));
       } else {
         this.validateAndSetFile(files[0]);
@@ -458,8 +518,24 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
 
     this.pendingFiles.push(file);
     this.selectedFile = this.pendingFiles[0];
-    if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);
-    this.previewUrl = URL.createObjectURL(this.selectedFile);
+    const previewUrl = URL.createObjectURL(file);
+    if (this.multiple) {
+      this.pendingPreviews.push({ file, url: previewUrl });
+    } else {
+      if (this.previewUrl) URL.revokeObjectURL(this.previewUrl);
+      this.previewUrl = previewUrl;
+    }
+  }
+
+  removePendingFile(index: number): void {
+    const preview = this.pendingPreviews[index];
+    if (!preview) return;
+
+    URL.revokeObjectURL(preview.url);
+    this.pendingPreviews = this.pendingPreviews.filter((_, previewIndex) => previewIndex !== index);
+    this.pendingFiles = this.pendingFiles.filter((_, fileIndex) => fileIndex !== index);
+    this.selectedFile = this.pendingFiles[0] || null;
+    this.uploadError = null;
   }
 
   removeFile(): void {
@@ -469,6 +545,8 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
     }
     this.selectedFile = null;
     this.pendingFiles = [];
+    this.pendingPreviews.forEach(preview => URL.revokeObjectURL(preview.url));
+    this.pendingPreviews = [];
     this.previewUrl = null;
     this.uploadResult = null;
     this.uploadError = null;
@@ -504,6 +582,8 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
         this.initialImage = responses[0]?.secure_url || null;
         this.selectedFile = null;
         this.pendingFiles = [];
+        this.pendingPreviews.forEach(preview => URL.revokeObjectURL(preview.url));
+        this.pendingPreviews = [];
 
         responses.forEach(response => {
           this.imageUploaded.emit(response.secure_url);
@@ -582,6 +662,7 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
     if (this.previewUrl) {
       URL.revokeObjectURL(this.previewUrl);
     }
+    this.pendingPreviews.forEach(preview => URL.revokeObjectURL(preview.url));
     this.isUploading = false;
   }
 }

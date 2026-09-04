@@ -17,6 +17,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
 import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
 @Component({
@@ -176,7 +177,12 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
                 <div *ngIf="formData.gallery_images?.length" class="activity-image-list">
                   <div *ngFor="let image of formData.gallery_images; let i = index" class="activity-image-item">
                     <img [src]="image.image_path" alt="Activity gallery preview" />
-                    <button type="button" (click)="removeGalleryImage(i)" aria-label="Remove activity image">Remove</button>
+                    <button type="button" class="activity-image-remove" (click)="removeGalleryImage(i)" aria-label="Remove activity image" title="Remove image">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -420,6 +426,47 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       margin-bottom: 4px;
     }
 
+    .activity-image-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .activity-image-item {
+      aspect-ratio: 1;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #f3f4f6;
+    }
+
+    .activity-image-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .activity-image-remove {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(127, 29, 29, 0.9);
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .activity-image-remove:hover {
+      background: #991b1b;
+    }
+
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -577,7 +624,11 @@ export class AdminActivitiesComponent implements OnInit {
     const publicId = image?.image_path ? this.cloudinaryService.extractPublicId(image.image_path) : null;
     if (publicId) {
       this.notificationService.showInfo('Deleting image...');
-      this.cloudinaryService.deleteFile(publicId).subscribe({
+      this.cloudinaryService.deleteFile(publicId).pipe(
+        switchMap(() => this.editingActivity
+          ? this.activityService.updateActivityJson(this.editingActivity.id!, { ...this.formData, gallery_images: this.formData.gallery_images })
+          : of(null))
+      ).subscribe({
         next: () => this.notificationService.showSuccess('Image deleted successfully'),
         error: () => this.notificationService.showError('Failed to delete image from Cloudinary')
       });

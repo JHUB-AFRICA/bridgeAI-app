@@ -56,7 +56,7 @@ type ActivityFilters = {
             <span class="filter-label">Filter</span>
 
             <div class="custom-dropdown">
-              <button type="button" class="dropdown-trigger" [class.open]="wpOpen" (click)="toggleDropdown('wp')">
+              <button type="button" class="dropdown-trigger" [class.open]="wpOpen" (click)="$event.stopPropagation(); toggleDropdown('wp')">
                 <span>{{ selectedFilters.wp || 'All Work Packages' }}</span>
                 <span class="dropdown-arrow">&#9662;</span>
               </button>
@@ -69,7 +69,7 @@ type ActivityFilters = {
             </div>
 
             <div class="custom-dropdown">
-              <button type="button" class="dropdown-trigger" [class.open]="audienceOpen" (click)="toggleDropdown('audience')">
+              <button type="button" class="dropdown-trigger" [class.open]="audienceOpen" (click)="$event.stopPropagation(); toggleDropdown('audience')">
                 <span>{{ selectedFilters.audience || 'All Audiences' }}</span>
                 <span class="dropdown-arrow">&#9662;</span>
               </button>
@@ -82,7 +82,7 @@ type ActivityFilters = {
             </div>
 
             <div class="custom-dropdown">
-              <button type="button" class="dropdown-trigger" [class.open]="typeOpen" (click)="toggleDropdown('type')">
+              <button type="button" class="dropdown-trigger" [class.open]="typeOpen" (click)="$event.stopPropagation(); toggleDropdown('type')">
                 <span>{{ selectedFilters.type || 'All Activity Types' }}</span>
                 <span class="dropdown-arrow">&#9662;</span>
               </button>
@@ -95,7 +95,7 @@ type ActivityFilters = {
             </div>
 
             <div class="custom-dropdown">
-              <button type="button" class="dropdown-trigger" [class.open]="yearOpen" (click)="toggleDropdown('year')">
+              <button type="button" class="dropdown-trigger" [class.open]="yearOpen" (click)="$event.stopPropagation(); toggleDropdown('year')">
                 <span>{{ selectedFilters.year || 'All Years' }}</span>
                 <span class="dropdown-arrow">&#9662;</span>
               </button>
@@ -331,10 +331,13 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   private updateFilterOptions(activities: Activity[]): void {
-    this.wpOptions = Array.from(new Set(activities.map((a) => a.wp_tag).filter(Boolean))).sort();
-    this.audienceOptions = Array.from(new Set(activities.map((a) => a.audience).filter(Boolean))).sort();
-    this.typeOptions = Array.from(new Set(activities.map((a) => a.activity_type).filter(Boolean))).sort();
-    this.yearOptions = Array.from(new Set(activities.map((a) => a.date?.substring(0, 4)).filter(Boolean))).sort((a, b) => Number(b) - Number(a));
+    this.wpOptions = this.getAvailableValues(activities.map((activity) => activity.wp_tag));
+    this.audienceOptions = this.getAvailableValues(activities.map((activity) => activity.audience));
+    this.typeOptions = this.getAvailableValues(activities.map((activity) => activity.activity_type));
+    this.yearOptions = Array.from(new Set(activities
+      .map((activity) => this.getActivityYear(activity.date))
+      .filter((year): year is string => !!year)))
+      .sort((first, second) => Number(second) - Number(first));
   }
 
   protected toggleDropdown(key: 'wp' | 'audience' | 'type' | 'year'): void {
@@ -411,7 +414,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
   protected formatTypeLabel(value: string): string {
     return value
-      .replace('_', ' ')
+      .replace(/[_-]+/g, ' ')
       .replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
@@ -450,19 +453,19 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     let filtered = [...this.allActivities()];
 
     if (this.selectedFilters.wp) {
-      filtered = filtered.filter((activity) => activity.wp_tag === this.selectedFilters.wp);
+      filtered = filtered.filter((activity) => this.matchesFilter(activity.wp_tag, this.selectedFilters.wp));
     }
 
     if (this.selectedFilters.audience) {
-      filtered = filtered.filter((activity) => activity.audience === this.selectedFilters.audience);
+      filtered = filtered.filter((activity) => this.matchesFilter(activity.audience, this.selectedFilters.audience));
     }
 
     if (this.selectedFilters.type) {
-      filtered = filtered.filter((activity) => activity.activity_type === this.selectedFilters.type);
+      filtered = filtered.filter((activity) => this.matchesFilter(activity.activity_type, this.selectedFilters.type));
     }
 
     if (this.selectedFilters.year) {
-      filtered = filtered.filter((activity) => activity.date?.startsWith(this.selectedFilters.year));
+      filtered = filtered.filter((activity) => this.getActivityYear(activity.date) === this.selectedFilters.year);
     }
 
     filtered.sort((a, b) => {
@@ -471,5 +474,25 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       return bd - ad;
     });
     this.filteredActivities.set(filtered);
+  }
+
+  private getAvailableValues(values: Array<string | undefined>): string[] {
+    return Array.from(new Set(values
+      .map((value) => value?.trim())
+      .filter((value): value is string => !!value)))
+      .sort((first, second) => first.localeCompare(second));
+  }
+
+  private matchesFilter(value: string | undefined, selectedValue: string): boolean {
+    return this.normalizeFilterValue(value) === this.normalizeFilterValue(selectedValue);
+  }
+
+  private normalizeFilterValue(value: string | undefined): string {
+    return (value || '').trim().toLowerCase().replace(/[_-]+/g, ' ');
+  }
+
+  private getActivityYear(dateValue?: string): string | null {
+    const match = dateValue?.trim().match(/^(\d{4})/);
+    return match ? match[1] : null;
   }
 }

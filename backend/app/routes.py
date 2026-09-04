@@ -3,6 +3,7 @@ from werkzeug.security import check_password_hash
 from .services.json_service import JSONService
 from importlib import import_module
 import os
+import re
 import cloudinary
 import cloudinary.uploader
 from dotenv import load_dotenv
@@ -44,6 +45,21 @@ def _get_cloudinary_service():
 api_bp = Blueprint('api', __name__)
 json_service = JSONService()
 cloudinary_service = _get_cloudinary_service()
+
+
+def _slugify(value):
+    slug = re.sub(r'[^a-z0-9]+', '-', (value or '').lower()).strip('-')
+    return slug or 'activity'
+
+
+def _activity_slug(title, activities, current_id=None):
+    base_slug = _slugify(title)
+    slug = base_slug
+    suffix = 2
+    while any(item.get('slug') == slug and item.get('id') != current_id for item in activities):
+        slug = f'{base_slug}-{suffix}'
+        suffix += 1
+    return slug
 
 # ============================================================
 # Admin Login
@@ -190,14 +206,19 @@ def get_activity_by_slug(slug):
 
 @api_bp.route('/activities', methods=['POST'])
 def create_activity():
-    data = request.get_json()
+    data = request.get_json() or {}
     if not data.get('title'):
         return jsonify({'error': 'Title is required'}), 400
+    activities = json_service.get_all('activities.json')
+    data['slug'] = _activity_slug(data.get('slug') or data.get('title'), activities)
     return jsonify(json_service.create('activities.json', data)), 201
 
 @api_bp.route('/activities/<int:id>', methods=['PUT'])
 def update_activity(id):
-    result = json_service.update('activities.json', id, request.get_json())
+    data = request.get_json() or {}
+    activities = json_service.get_all('activities.json')
+    data['slug'] = _activity_slug(data.get('slug') or data.get('title'), activities, current_id=id)
+    result = json_service.update('activities.json', id, data)
     return jsonify(result) if result else (jsonify({'error': 'Not found'}), 404)
 
 @api_bp.route('/activities/<int:id>', methods=['DELETE'])

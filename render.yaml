@@ -5,7 +5,7 @@
     region: frankfurt
     plan: free
     buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && gunicorn run:app --bind 0.0.0.0:
+    startCommand: cd backend && gunicorn run:app --bind 0.0.0.0:$PORT
     healthCheckPath: /api/activities
     envVars:
       - key: PYTHON_VERSION

@@ -3,7 +3,8 @@ from flask_cors import CORS
 import os
 
 def create_app():
-    app = Flask(__name__, static_folder='static')
+    static_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static'))
+    app = Flask(__name__, static_folder=static_folder)
     CORS(app)
 
     @app.route('/', defaults={'path': ''})

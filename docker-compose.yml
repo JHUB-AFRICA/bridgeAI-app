@@ -1,4 +1,4 @@
-﻿version: '3.8'
+version: '3.8'
 
 services:
   backend:
@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: node:20-alpine
+    image: node:22-alpine
     container_name: bridge-ai-frontend
     working_dir: /app
     ports:

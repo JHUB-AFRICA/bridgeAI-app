@@ -14,4 +14,4 @@ COPY backend/ ./backend/
 COPY --from=frontend-build /app/dist/bridge-ai-angular/browser ./static
 WORKDIR /app/backend
 EXPOSE 5000
-CMD ["gunicorn", "run:app", "--config", "gunicorn.conf.py"]
+CMD ["sh", "-c", "exec gunicorn run:app --bind 0.0.0.0:${PORT:-5000} --config gunicorn.conf.py"]

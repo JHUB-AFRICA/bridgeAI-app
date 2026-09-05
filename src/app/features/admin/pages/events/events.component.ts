@@ -12,6 +12,7 @@ import { ImageUploadComponent } from '../../../shared/components/image-upload/im
 import { NotificationService } from '../../../core/services/notification.service';
 import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
 import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
 @Component({
@@ -161,14 +162,33 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
               <div class="form-group">
                 <label>Featured Image</label>
                 <app-image-upload
+                  #featuredUpload
                   [folder]="'events'"
                   [initialImage]="formData.featured_image || null"
                   (imageUploaded)="formData.featured_image = $event"
                   (imageRemoved)="formData.featured_image = ''"
                 ></app-image-upload>
               </div>
+              <div class="form-group">
+                <label>Additional Event Images</label>
+                <app-image-upload
+                  #galleryUpload
+                  [folder]="'events'"
+                  [multiple]="true"
+                ></app-image-upload>
+                <div *ngIf="formData.gallery_images?.length" class="event-image-list">
+                  <div *ngFor="let image of formData.gallery_images; let i = index" class="event-image-item">
+                    <img [src]="image.image_path" [alt]="image.caption || formData.title || 'Event image'" />
+                    <button type="button" class="event-image-remove" (click)="removeGalleryImage(i)" aria-label="Remove event image" title="Remove image">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
               <div class="form-actions">
-                <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>
                 <button type="submit" class="btn-primary" [disabled]="eventForm.invalid">
                   {{ editingEvent ? 'Update' : 'Create' }}
                 </button>
@@ -398,6 +418,43 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       margin-bottom: 4px;
     }
 
+    .event-image-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .event-image-item {
+      aspect-ratio: 1;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #f3f4f6;
+    }
+
+    .event-image-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .event-image-remove {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(127, 29, 29, 0.9);
+      color: #fff;
+      cursor: pointer;
+    }
+
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -451,7 +508,8 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
   `]
 })
 export class AdminEventsComponent implements OnInit {
-  @ViewChild(ImageUploadComponent) imageUpload?: ImageUploadComponent;
+  @ViewChild('featuredUpload') featuredUpload?: ImageUploadComponent;
+  @ViewChild('galleryUpload') galleryUpload?: ImageUploadComponent;
   protected events = signal<Event[]>([]);
   protected showModal = false;
   protected editingEvent: Event | null = null;
@@ -497,7 +555,8 @@ export class AdminEventsComponent implements OnInit {
       registration_link: '',
       status: 'upcoming',
       post_event_report: '',
-      featured_image: ''
+      featured_image: '',
+      gallery_images: []
     };
     this.showModal = true;
   }
@@ -514,12 +573,21 @@ export class AdminEventsComponent implements OnInit {
   }
 
   saveEvent(): void {
-    const data = { ...this.formData };
+    const data = { ...this.formData, gallery_images: [...(this.formData.gallery_images || [])] };
     const isEditing = !!this.editingEvent;
     this.notificationService.showInfo(isEditing ? 'Updating event...' : 'Creating event...');
 
-    this.imageUpload!.uploadPending().pipe(switchMap(upload => {
+    this.featuredUpload!.uploadPending().pipe(switchMap(upload => {
       if (upload) data.featured_image = upload.secure_url;
+      return this.galleryUpload!.uploadPendingAll();
+    }), switchMap(galleryUploads => {
+      data.gallery_images = [
+        ...data.gallery_images,
+        ...galleryUploads.map((upload, index) => ({
+          image_path: upload.secure_url,
+          display_order: data.gallery_images.length + index
+        }))
+      ];
       return isEditing
         ? this.eventService.updateEventJson(this.editingEvent!.id!, data)
         : this.eventService.createEventJson(data);
@@ -535,11 +603,29 @@ export class AdminEventsComponent implements OnInit {
       });
   }
 
+  removeGalleryImage(index: number): void {
+    const image = (this.formData.gallery_images || [])[index];
+    this.formData.gallery_images = (this.formData.gallery_images || []).filter((_: unknown, imageIndex: number) => imageIndex !== index);
+    const publicId = image?.image_path ? this.cloudinaryService.extractPublicId(image.image_path) : null;
+    if (!publicId) return;
+
+    this.notificationService.showInfo('Deleting event image...');
+    this.cloudinaryService.deleteFile(publicId).pipe(
+      switchMap(() => this.editingEvent
+        ? this.eventService.updateEventJson(this.editingEvent.id!, { ...this.formData, gallery_images: this.formData.gallery_images })
+        : of(null))
+    ).subscribe({
+      next: () => this.notificationService.showSuccess('Event image deleted successfully'),
+      error: () => this.notificationService.showError('Image was removed from the form but could not be deleted from Cloudinary')
+    });
+  }
+
   deleteEvent(id: number | undefined): void {
     if (!id) return;
     if (confirm('Are you sure you want to delete this event?')) {
       const event = this.events().find(item => item.id === id);
-      this.cloudinaryService.deleteUrls([event?.featured_image]).pipe(
+      const galleryUrls = (event?.gallery_images || []).map(image => image.image_path);
+      this.cloudinaryService.deleteUrls([event?.featured_image, ...galleryUrls]).pipe(
         switchMap(() => this.eventService.deleteEvent(id))
       ).subscribe({
         next: () => {

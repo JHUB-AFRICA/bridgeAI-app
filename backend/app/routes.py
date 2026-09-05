@@ -61,6 +61,16 @@ def _activity_slug(title, activities, current_id=None):
         suffix += 1
     return slug
 
+
+def _event_slug(title, events, current_id=None):
+    base_slug = _slugify(title)
+    slug = base_slug
+    suffix = 2
+    while any(item.get('slug') == slug and item.get('id') != current_id for item in events):
+        slug = f'{base_slug}-{suffix}'
+        suffix += 1
+    return slug
+
 # ============================================================
 # Admin Login
 # ============================================================
@@ -236,6 +246,33 @@ def get_events():
 def get_event(id):
     event = json_service.get_by_id('events.json', id)
     return jsonify(event) if event else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/events/<string:slug>', methods=['GET'])
+def get_event_by_slug(slug):
+    events = json_service.get_all('events.json')
+    event = next((item for item in events if item.get('slug') == slug), None)
+    return jsonify(event) if event else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/events', methods=['POST'])
+def create_event():
+    data = request.get_json() or {}
+    if not data.get('title'):
+        return jsonify({'error': 'Title is required'}), 400
+    events = json_service.get_all('events.json')
+    data['slug'] = _event_slug(data.get('slug') or data.get('title'), events)
+    return jsonify(json_service.create('events.json', data)), 201
+
+@api_bp.route('/events/<int:id>', methods=['PUT'])
+def update_event(id):
+    data = request.get_json() or {}
+    events = json_service.get_all('events.json')
+    data['slug'] = _event_slug(data.get('slug') or data.get('title'), events, current_id=id)
+    result = json_service.update('events.json', id, data)
+    return jsonify(result) if result else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/events/<int:id>', methods=['DELETE'])
+def delete_event(id):
+    return jsonify({'success': True}) if json_service.delete('events.json', id) else (jsonify({'error': 'Not found'}), 404)
 
 # ============================================================
 # Resources

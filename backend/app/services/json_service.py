@@ -16,13 +16,22 @@ class JSONService:
         file_path = self._get_file_path(filename)
         if os.path.exists(file_path):
             with open(file_path, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                content = f.read().strip()
+                if not content:
+                    return []
+                try:
+                    return json.loads(content)
+                except json.JSONDecodeError as error:
+                    raise ValueError(f'Invalid JSON in {filename}: {error}') from error
         return []
 
     def _write_json(self, filename, data):
         file_path = self._get_file_path(filename)
-        with open(file_path, 'w', encoding='utf-8') as f:
+        temporary_path = f'{file_path}.tmp'
+        with open(temporary_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
+            f.write('\n')
+        os.replace(temporary_path, file_path)
 
     def get_all(self, filename):
         return self._read_json(filename)

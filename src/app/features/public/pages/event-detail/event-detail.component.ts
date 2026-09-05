@@ -2,7 +2,7 @@
 // BRIDGE-AI Kenya - Event Detail Component
 // ============================================================
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { EventService } from '../../../../services/event.service';
@@ -36,6 +36,39 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
         <div class="container detail-shell">
           <div class="event-details-grid">
             <div class="event-main">
+              @if (getEventImages(currentEvent).length > 0) {
+                <section class="event-image-carousel" aria-label="Event images">
+                  <div class="carousel-stage">
+                    @for (image of getEventImages(currentEvent); track image.path; let index = $index) {
+                      <div class="carousel-slide" [class.active]="index === activeImageIndex()" [attr.aria-hidden]="index !== activeImageIndex()">
+                        <app-cloudinary-image
+                          [publicId]="image.path"
+                          [alt]="image.alt"
+                          [width]="1200"
+                          [height]="520"
+                          crop="fill"
+                          quality="auto"
+                        ></app-cloudinary-image>
+                        @if (image.caption) {
+                          <p class="carousel-caption">{{ image.caption }}</p>
+                        }
+                      </div>
+                    }
+                    @if (getEventImages(currentEvent).length > 1) {
+                      <button type="button" class="carousel-control previous" (click)="showPreviousImage(getEventImages(currentEvent).length)" aria-label="Show previous event image">&#8592;</button>
+                      <button type="button" class="carousel-control next" (click)="showNextImage(getEventImages(currentEvent).length)" aria-label="Show next event image">&#8594;</button>
+                    }
+                  </div>
+                  @if (getEventImages(currentEvent).length > 1) {
+                    <div class="carousel-dots" aria-label="Choose event image">
+                      @for (image of getEventImages(currentEvent); track image.path; let index = $index) {
+                        <button type="button" class="carousel-dot" [class.active]="index === activeImageIndex()" (click)="showImage(index)" [attr.aria-label]="'Show event image ' + (index + 1)" [attr.aria-current]="index === activeImageIndex() ? 'true' : null"></button>
+                      }
+                    </div>
+                  }
+                </section>
+              }
+
               <div class="content-card" *ngIf="currentEvent.description">
                 <h2 class="section-heading">About This Event</h2>
                 <div [innerHTML]="currentEvent.description | safeHtml"></div>
@@ -71,12 +104,6 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
                 </div>
               </div>
 
-              <div *ngIf="currentEvent.gallery_images && currentEvent.gallery_images.length > 0" class="sidebar-card">
-                <h3 class="sidebar-title">Gallery</h3>
-                <div class="gallery-grid">
-                  <app-cloudinary-image *ngFor="let image of currentEvent.gallery_images" [publicId]="image.image_path" [alt]="image.caption || currentEvent.title" [width]="100" [height]="80" crop="fill" quality="auto"></app-cloudinary-image>
-                </div>
-              </div>
             </aside>
           </div>
 
@@ -166,8 +193,18 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
     .btn-register {
       display: block; width: 100%; text-align: center; background: #26432b; color: #fff; border-radius: 12px; padding: 12px 18px; font-weight: 700; text-decoration: none;
     }
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-    .gallery-grid app-cloudinary-image { display: block; width: 100%; height: 82px; border-radius: 10px; overflow: hidden; }
+    .event-image-carousel { margin-bottom: 24px; }
+    .carousel-stage { position: relative; min-height: 360px; overflow: hidden; border-radius: 20px; background: #f3f4f6; }
+    .carousel-slide { position: absolute; inset: 0; visibility: hidden; opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+    .carousel-slide.active { position: relative; visibility: visible; opacity: 1; pointer-events: auto; }
+    .carousel-slide app-cloudinary-image { display: block; width: 100%; height: 360px; }
+    .carousel-caption { position: absolute; right: 0; bottom: 0; left: 0; margin: 0; padding: 14px 18px; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.72)); font-size: .85rem; }
+    .carousel-control { position: absolute; top: 50%; z-index: 2; width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.5); border-radius: 50%; background: rgba(22,40,26,.72); color: #fff; cursor: pointer; transform: translateY(-50%); font-size: 1.3rem; }
+    .carousel-control.previous { left: 16px; }
+    .carousel-control.next { right: 16px; }
+    .carousel-dots { display: flex; justify-content: center; gap: 8px; padding-top: 12px; }
+    .carousel-dot { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: #c8c0ab; cursor: pointer; }
+    .carousel-dot.active { background: #26432b; transform: scale(1.25); }
     .eu-section { margin-top: 32px; }
     .loading-state {
       display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 320px; color: #6e7767;
@@ -183,14 +220,16 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
       .container { padding: 0 18px; }
       .detail-hero { min-height: 340px; }
       .hero-inner { padding-top: 50px; padding-bottom: 50px; }
-      .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .carousel-stage, .carousel-slide app-cloudinary-image { min-height: 260px; height: 260px; }
       .content-card, .sidebar-card { padding: 20px 18px; }
     }
   `]
 })
-export class EventDetailComponent implements OnInit {
+export class EventDetailComponent implements OnInit, OnDestroy {
   protected event = signal<Event | null>(null);
+  protected activeImageIndex = signal(0);
   protected readonly fallbackHeroImage = 'https://images.unsplash.com/photo-1516321165247-4aa89a48be28?auto=format&fit=crop&w=1600&q=80';
+  private imageRotationTimer?: ReturnType<typeof setInterval>;
 
   constructor(
     private route: ActivatedRoute,
@@ -205,9 +244,46 @@ export class EventDetailComponent implements OnInit {
   }
 
   private loadEvent(slug: string): void {
-    this.eventService.getEventBySlug(slug).subscribe({
-      next: (event) => this.event.set(event),
+    const request = /^\d+$/.test(slug)
+      ? this.eventService.getEvent(Number(slug))
+      : this.eventService.getEventBySlug(slug);
+    request.subscribe({
+      next: (event) => {
+        this.activeImageIndex.set(0);
+        this.event.set(event);
+        this.startImageRotation(event);
+      },
       error: () => this.event.set(null)
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.imageRotationTimer) clearInterval(this.imageRotationTimer);
+  }
+
+  protected getEventImages(event: Event): Array<{ path: string; alt: string; caption?: string }> {
+    const galleryImages = [...(event.gallery_images || [])]
+      .sort((first, second) => (first.display_order ?? 0) - (second.display_order ?? 0))
+      .map(image => ({ path: image.image_path, alt: image.caption || event.title, caption: image.caption }));
+    return event.featured_image ? [{ path: event.featured_image, alt: event.title }, ...galleryImages] : galleryImages;
+  }
+
+  protected showImage(index: number): void {
+    this.activeImageIndex.set(index);
+  }
+
+  protected showPreviousImage(imageCount: number): void {
+    this.activeImageIndex.update(index => (index - 1 + imageCount) % imageCount);
+  }
+
+  protected showNextImage(imageCount: number): void {
+    this.activeImageIndex.update(index => (index + 1) % imageCount);
+  }
+
+  private startImageRotation(event: Event): void {
+    if (this.imageRotationTimer) clearInterval(this.imageRotationTimer);
+    const imageCount = this.getEventImages(event).length;
+    if (imageCount < 2) return;
+    this.imageRotationTimer = setInterval(() => this.showNextImage(imageCount), 5000);
   }
 }

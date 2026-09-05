@@ -258,7 +258,7 @@ export class CloudinaryService {
   deleteFile(publicId: string, resourceType: 'image' | 'raw' | 'video' = 'image'): Observable<any> {
     return this.http.delete(`${environment.apiUrl}/upload/delete`, { body: { public_id: publicId, resource_type: resourceType } }).pipe(
       map((response: any) => {
-        if (response?.success === false) {
+        if (response?.success === false && response?.result !== 'not found') {
           throw new Error('Cloudinary did not delete the file');
         }
         return response;

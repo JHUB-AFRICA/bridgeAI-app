@@ -7,14 +7,13 @@ import { CommonModule } from '@angular/common';
 import { CloudinaryService, CloudinaryUploadResult } from '../../../core/services/cloudinary.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { MEDIA } from '../../../core/constants/app.constants';
-import { FileSizePipe } from '../../pipes/file-size.pipe';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-image-upload',
   standalone: true,
-  imports: [CommonModule, FileSizePipe],
+  imports: [CommonModule],
   template: `
     <div class="image-upload-wrapper">
       <div
@@ -56,6 +55,19 @@ import { catchError, map, tap } from 'rxjs/operators';
           <div class="preview-overlay">
             <span>Click to change</span>
           </div>
+          <button
+            type="button"
+            class="preview-remove-btn single-image-remove"
+            (click)="$event.stopPropagation(); removeFile()"
+            [disabled]="isUploading"
+            aria-label="Delete featured image"
+            title="Delete image"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            </svg>
+          </button>
         </div>
 
         <input
@@ -67,23 +79,6 @@ import { catchError, map, tap } from 'rxjs/operators';
           class="hidden-input"
           [disabled]="isUploading"
         />
-      </div>
-
-      <div *ngIf="selectedFile" class="file-info">
-        <div class="file-details">
-          <span class="file-name">{{ selectedFile.name }}</span>
-          <span class="file-size">{{ selectedFile.size | fileSize }}</span>
-        </div>
-        <button
-          (click)="removeFile()"
-          class="remove-btn"
-          [disabled]="isUploading"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
       </div>
 
       <div *ngIf="isUploading" class="upload-progress">
@@ -229,6 +224,15 @@ import { catchError, map, tap } from 'rxjs/operators';
       background: rgba(127, 29, 29, 0.9);
       color: #ffffff;
       cursor: pointer;
+    }
+
+    .single-image-remove {
+      z-index: 2;
+    }
+
+    .preview-remove-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .add-more-btn {
@@ -539,7 +543,9 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
   }
 
   removeFile(): void {
-    this.deleteStoredImage();
+    this.deleteStoredImage$().subscribe({
+      error: () => undefined
+    });
     if (this.previewUrl) {
       URL.revokeObjectURL(this.previewUrl);
     }
@@ -573,12 +579,12 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
       folder: this.folder || undefined,
       tags: ['bridge-ai', 'image']
     }))).pipe(
+      switchMap((responses) => this.deleteStoredImage$(false).pipe(map(() => responses))),
       tap((responses) => {
         this.isUploading = false;
         this.uploadProgress = 100;
         this.uploadResult = responses[0]?.secure_url || null;
 
-        this.deleteStoredImage(false);
         this.initialImage = responses[0]?.secure_url || null;
         this.selectedFile = null;
         this.pendingFiles = [];
@@ -637,25 +643,34 @@ export class ImageUploadComponent implements OnDestroy, OnChanges {
     return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
-  private deleteStoredImage(showProgress = true): void {
+  private deleteStoredImage$(showProgress = true): Observable<void> {
     if (!this.initialImage || !this.initialImage.startsWith('http')) {
-      return;
+      return of(void 0);
     }
 
     const publicId = this.cloudinaryService.extractPublicId(this.initialImage);
-    if (publicId) {
-      if (showProgress) {
-        this.notificationService.showInfo('Deleting image...');
-      }
-      this.cloudinaryService.deleteFile(publicId).subscribe({
-        next: () => {
-          if (showProgress) {
-            this.notificationService.showSuccess('Image deleted successfully');
-          }
-        },
-        error: () => this.notificationService.showError('The image was removed from the form, but could not be deleted from Cloudinary')
-      });
+    if (!publicId) {
+      return of(void 0);
     }
+
+    if (showProgress) {
+      this.notificationService.showInfo('Deleting image...');
+    }
+
+    return this.cloudinaryService.deleteFile(publicId).pipe(
+      tap(() => {
+        if (showProgress) {
+          this.notificationService.showSuccess('Image deleted successfully');
+        }
+      }),
+      map(() => void 0),
+      catchError(() => {
+        if (showProgress) {
+          this.notificationService.showError('The image was removed from the form, but could not be deleted from Cloudinary');
+        }
+        return throwError(() => new Error('Failed to delete image from Cloudinary'));
+      })
+    );
   }
 
   ngOnDestroy(): void {

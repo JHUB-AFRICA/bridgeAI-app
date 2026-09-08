@@ -38,7 +38,7 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
               <div class="resource-description" [innerHTML]="resource()?.description | safeHtml"></div>
 
               <div *ngIf="isPdf(resource()!)" class="resource-preview">
-                <iframe [src]="resourceUrl(resource()!) | safeHtml:'resourceUrl'" [title]="resource()?.title || 'PDF preview'"></iframe>
+                <iframe [src]="viewUrl(resource()!) | safeHtml:'resourceUrl'" [title]="resource()?.title || 'PDF preview'"></iframe>
               </div>
 
               <div *ngIf="resource()?.file_path" class="resource-download">
@@ -86,6 +86,10 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
                 <div *ngIf="resource()?.download_count !== undefined" class="sidebar-item">
                   <span class="item-label">Downloads</span>
                   <span class="item-value">{{ resource()?.download_count }}</span>
+                </div>
+                <div *ngIf="resource()?.file_name || resource()?.file_extension" class="sidebar-item">
+                  <span class="item-label">File format</span>
+                  <span class="item-value">{{ resource()?.file_extension?.toUpperCase() || fileExtension(resource()!) }}</span>
                 </div>
               </div>
             </div>
@@ -322,6 +326,8 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
 })
 export class ResourceDetailComponent implements OnInit {
   protected resource = signal<Resource | null>(null);
+  protected fileUrl = signal<string | null>(null);
+  protected downloadFileUrl = signal<string | null>(null);
 
   constructor(
     private route: ActivatedRoute,
@@ -362,6 +368,14 @@ export class ResourceDetailComponent implements OnInit {
     this.resourceService.getResourceBySlug(slug).subscribe({
       next: (resource) => {
         this.resource.set(resource);
+        if (resource.id && resource.file_path) {
+          this.resourceService.getResourceFileUrl(resource.id).subscribe({
+            next: response => this.fileUrl.set(response.url)
+          });
+          this.resourceService.getResourceFileUrl(resource.id, true).subscribe({
+            next: response => this.downloadFileUrl.set(response.url)
+          });
+        }
         if (resource.id) {
           this.resourceService.incrementDownloadCount(resource.id).subscribe();
         }
@@ -394,18 +408,20 @@ export class ResourceDetailComponent implements OnInit {
     return resource.file_path.startsWith('http') ? resource.file_path : `/static/${resource.file_path}`;
   }
 
+  viewUrl(resource: Resource): string {
+    return this.fileUrl() || this.resourceUrl(resource);
+  }
+
+  downloadUrl(resource: Resource): string {
+    return this.downloadFileUrl() || this.resourceUrl(resource);
+  }
+
   isPdf(resource: Resource): boolean {
     return Boolean(resource.file_path?.toLowerCase().split('?')[0].endsWith('.pdf'));
   }
 
-  downloadUrl(resource: Resource): string {
-    const url = this.resourceUrl(resource);
-    if (!url.startsWith('http') || !this.isPdf(resource)) return url;
-    return url.replace('/upload/', `/upload/fl_attachment:${this.downloadName(resource)}/`);
-  }
-
-  private downloadName(resource: Resource): string {
-    const name = resource.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    return `${name || 'resource'}.pdf`;
+  fileExtension(resource: Resource): string {
+    const fileName = resource.file_name || resource.file_path || '';
+    return fileName.split('?')[0].split('.').pop() || 'FILE';
   }
 }

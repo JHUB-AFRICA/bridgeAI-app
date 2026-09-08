@@ -45,6 +45,12 @@ export interface Resource {
   /** Path to the file in Cloudinary (raw upload) */
   file_path?: string;
 
+  /** Original uploaded filename and detected format */
+  file_name?: string;
+  file_extension?: string;
+  file_size?: number;
+  file_resource_type?: 'raw' | 'video' | 'image';
+
   /** External URL for the resource (if hosted elsewhere) */
   external_url?: string;
 

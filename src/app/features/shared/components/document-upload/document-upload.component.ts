@@ -328,7 +328,7 @@ export class DocumentUploadComponent implements OnDestroy {
   @Output() documentUploaded = new EventEmitter<string>();
   @Output() uploadComplete = new EventEmitter<{ url: string; publicId: string }>();
 
-  @Input() acceptedTypes: string = '.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.txt,.csv,.json,.xml,.mp4,.webm,.mov';
+  @Input() acceptedTypes: string = '.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.ods,.odp,.zip,.rar,.7z,.tar,.gz,.txt,.csv,.json,.xml,.mp4,.webm,.mov';
   @Input() maxFileSize: number = MEDIA.MAX_FILE_SIZE;
   @Input() folder = '';
 
@@ -347,8 +347,13 @@ export class DocumentUploadComponent implements OnDestroy {
     'pptx': { extension: 'pptx', label: 'PowerPoint', icon: '📊', color: '#f59e0b' },
     'xls': { extension: 'xls', label: 'Excel', icon: '📈', color: '#22c55e' },
     'xlsx': { extension: 'xlsx', label: 'Excel', icon: '📈', color: '#22c55e' },
+    'ods': { extension: 'ods', label: 'OpenDocument Spreadsheet', icon: '📈', color: '#22c55e' },
+    'odp': { extension: 'odp', label: 'OpenDocument Presentation', icon: '📊', color: '#f59e0b' },
     'zip': { extension: 'zip', label: 'Archive', icon: '📦', color: '#8b5cf6' },
     'rar': { extension: 'rar', label: 'Archive', icon: '📦', color: '#8b5cf6' },
+    '7z': { extension: '7z', label: 'Archive', icon: '📦', color: '#8b5cf6' },
+    'tar': { extension: 'tar', label: 'Archive', icon: '📦', color: '#8b5cf6' },
+    'gz': { extension: 'gz', label: 'Archive', icon: '📦', color: '#8b5cf6' },
     'txt': { extension: 'txt', label: 'Text', icon: '📃', color: '#6b7280' },
     'csv': { extension: 'csv', label: 'CSV', icon: '📊', color: '#06b6d4' },
     'json': { extension: 'json', label: 'JSON', icon: '📋', color: '#f59e0b' },

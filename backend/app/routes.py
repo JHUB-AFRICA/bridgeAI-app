@@ -1,11 +1,12 @@
 ﻿from flask import Blueprint, request, jsonify
 from werkzeug.security import check_password_hash
 from .services.json_service import JSONService
-from importlib import import_module
 import os
 import re
+from werkzeug.utils import secure_filename
 import cloudinary
 import cloudinary.uploader
+import cloudinary.utils
 from dotenv import load_dotenv
 
 
@@ -35,10 +36,15 @@ def _get_cloudinary_service():
 
         def upload_resource(self, file, folder='resources'):
             try:
+                original_filename = secure_filename(file.filename or 'resource')
+                base_name, extension = os.path.splitext(original_filename)
                 result = cloudinary.uploader.upload(
                     file,
                     folder=f'bridge-ai/{folder}',
-                    resource_type='raw'
+                    resource_type='raw',
+                    use_filename=True,
+                    unique_filename=True,
+                    filename_override=original_filename
                 )
                 return {
                     'success': True,
@@ -46,7 +52,10 @@ def _get_cloudinary_service():
                     'public_id': result.get('public_id'),
                     'format': result.get('format'),
                     'resource_type': result.get('resource_type', 'raw'),
-                    'bytes': result.get('bytes')
+                    'bytes': result.get('bytes'),
+                    'original_filename': original_filename,
+                    'file_name': original_filename,
+                    'file_extension': extension.lstrip('.').lower()
                 }
             except Exception as error:
                 return {'success': False, 'error': str(error)}
@@ -63,6 +72,27 @@ def _get_cloudinary_service():
 api_bp = Blueprint('api', __name__)
 json_service = JSONService()
 cloudinary_service = _get_cloudinary_service()
+
+
+def _resource_public_id(resource):
+    file_path = resource.get('file_path', '')
+    if not file_path.startswith('http'):
+        return None
+
+    path = file_path.split('?', 1)[0].split('#', 1)[0]
+    marker = '/raw/upload/'
+    if marker not in path:
+        return None
+
+    public_id = path.split(marker, 1)[1]
+    segments = public_id.split('/')
+    if segments and re.fullmatch(r'v\d+', segments[0]):
+        segments = segments[1:]
+    public_id = '/'.join(segments)
+    extension = resource.get('file_extension') or os.path.splitext(public_id)[1].lstrip('.')
+    if extension and public_id.lower().endswith(f'.{extension.lower()}'):
+        public_id = public_id[:-(len(extension) + 1)]
+    return public_id
 
 
 def _slugify(value):
@@ -379,6 +409,28 @@ def increment_resource_download(id):
         return jsonify({'error': 'Not found'}), 404
     resource['download_count'] = resource.get('download_count', 0) + 1
     return jsonify(json_service.update('resources.json', id, resource))
+
+@api_bp.route('/resources/<int:id>/file', methods=['GET'])
+def get_resource_file(id):
+    resource = json_service.get_by_id('resources.json', id)
+    if not resource or not resource.get('file_path'):
+        return jsonify({'error': 'Resource file not found'}), 404
+
+    public_id = _resource_public_id(resource)
+    if not public_id:
+        return jsonify({'url': resource['file_path']}), 200
+
+    extension = resource.get('file_extension') or 'bin'
+    download = request.args.get('download') == 'true'
+    filename = resource.get('file_name') or f"{resource.get('title', 'resource')}.{extension}"
+    signed_url = cloudinary.utils.private_download_url(
+        public_id,
+        format=extension,
+        resource_type='raw',
+        type='upload',
+        attachment=filename if download else False
+    )
+    return jsonify({'url': signed_url, 'filename': filename, 'download': download})
 
 # ============================================================
 # Partners

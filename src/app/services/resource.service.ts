@@ -53,4 +53,8 @@ export class ResourceService {
   incrementDownloadCount(id: number): Observable<Resource> {
     return this.api.post<Resource>(`/resources/${id}/download`, {});
   }
+
+  getResourceFileUrl(id: number, download = false): Observable<{ url: string; filename?: string }> {
+    return this.api.get<{ url: string; filename?: string }>(`/resources/${id}/file`, { download: download ? 'true' : 'false' });
+  }
 }

@@ -513,7 +513,13 @@ export class AdminResourcesComponent implements OnInit {
     this.notificationService.showInfo(isEditing ? 'Updating resource...' : 'Creating resource...');
 
     this.documentUpload!.uploadPending().pipe(switchMap(upload => {
-      if (upload) data.file_path = upload.secure_url;
+      if (upload) {
+        data.file_path = upload.secure_url;
+        data.file_name = upload.original_filename || upload.file_name;
+        data.file_extension = upload.file_extension || upload.format;
+        data.file_size = upload.bytes;
+        data.file_resource_type = upload.resource_type || 'raw';
+      }
       const save$ = isEditing
         ? this.resourceService.updateResourceJson(this.editingResource!.id!, data)
         : this.resourceService.createResourceJson(data);

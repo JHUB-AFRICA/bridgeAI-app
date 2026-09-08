@@ -30,6 +30,8 @@ export interface CloudinaryUploadResult {
   display_name: string;
   original_filename: string;
   api_key: string;
+  file_name?: string;
+  file_extension?: string;
 }
 
 export interface CloudinaryUploadOptions {
@@ -64,6 +66,9 @@ export class CloudinaryService {
         format: string;
         resource_type: string;
         bytes: number;
+        original_filename: string;
+        file_name: string;
+        file_extension: string;
       }>(`${environment.apiUrl}/upload/resource`, formData).pipe(
         map(response => ({
           ...response,

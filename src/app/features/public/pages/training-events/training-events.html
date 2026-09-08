@@ -21,8 +21,8 @@
 					</div>
 				</div>
 				<div class="hero-right">
-					<div class="hero-image-wrapper">
-						<img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Training event at JKUAT Smart Farm Zone">
+								<div class="hero-image-wrapper">
+									<img [src]="activeHeroImage()" alt="Training event at JKUAT Smart Farm Zone">
 						<div class="hero-image-overlay"></div>
 					</div>
 				</div>
@@ -77,7 +77,7 @@
 						@for (event of monthGroup.events; track event.id ?? event.slug) {
 							<article class="event-card">
 								<div class="card-image"><img [src]="imageFor(event)" [alt]="event.title" title="Training event" loading="lazy"><span class="status-overlay" [class]="'status-overlay ' + event.status">{{ event.status | titlecase }}</span><div class="date-badge"><span class="day">{{ eventDay(event) }}</span><span class="month">{{ eventMonth(event) }}</span></div></div>
-								<div class="card-body"><div class="event-top"><span class="status-dot" [class]="'status-dot ' + event.status"></span><span class="status-text">{{ event.status | titlecase }}</span></div><a class="event-title" [routerLink]="['/training-events', event.slug]">{{ event.title }}</a><div class="event-meta">@if (event.location) {<span class="meta-item"><span class="meta-label">Location</span>{{ event.location }}</span>} @if (event.audience) {<span class="meta-item"><span class="meta-label">Audience</span>{{ event.audience | titlecase }}</span>} @if (event.speakers) {<span class="meta-item"><span class="meta-label">Speakers</span>{{ event.speakers }}</span>}</div>@if (event.agenda || event.description) {<div class="event-desc">{{ event.agenda || event.description }}</div>}<div class="event-footer"><div class="event-actions"><a class="btn-detail" [routerLink]="['/training-events', event.slug]">View Details <span class="arrow">→</span></a>@if ((event.status === 'upcoming' || event.status === 'ongoing') && event.registration_link) {<a class="btn-register" [href]="event.registration_link" target="_blank" rel="noopener">Register <span class="reg-arrow">→</span></a>}</div>@if (event.capacity) {<span class="event-capacity">Capacity {{ event.capacity }}</span>}</div></div>
+								<div class="card-body"><div class="event-top"><span class="status-dot" [class]="'status-dot ' + event.status"></span><span class="status-text">{{ event.status | titlecase }}</span></div><a class="event-title" [routerLink]="['/training-events', event.slug]">{{ event.title }}</a>@if (event.description) {<p class="event-description">{{ event.description }}</p>}<div class="event-meta">@if (event.location) {<span class="meta-item"><span class="meta-label">Location</span><span>{{ event.location }}</span></span>} @if (event.audience) {<span class="meta-item"><span class="meta-label">Audience</span><span>{{ event.audience | titlecase }}</span></span>} @if (event.speakers) {<span class="meta-item"><span class="meta-label">Speakers</span><span>{{ event.speakers }}</span></span>}</div>@if (event.agenda) {<div class="agenda-preview"><span class="agenda-label">Agenda</span><p>{{ event.agenda }}</p></div>}<div class="event-footer"><div class="event-actions"><a class="btn-detail" [routerLink]="['/training-events', event.slug]">View Details <span class="arrow">→</span></a>@if ((event.status === 'upcoming' || event.status === 'ongoing') && event.registration_link) {<a class="btn-register" [href]="event.registration_link" target="_blank" rel="noopener">Register <span class="reg-arrow">→</span></a>}</div>@if (event.capacity) {<span class="event-capacity">Capacity {{ event.capacity }}</span>}</div></div>
 							</article>
 						}
 					}

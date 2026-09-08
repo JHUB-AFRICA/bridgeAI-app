@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { EventService } from '../../../../services/event.service';
 import { Event } from '../../../core/models/event.model';
@@ -10,7 +10,7 @@ import { Event } from '../../../core/models/event.model';
   styleUrl: './training-events.css',
   templateUrl: './training-events.html',
 })
-export class TrainingEvents implements OnInit {
+export class TrainingEvents implements OnInit, OnDestroy {
   private readonly eventService = inject(EventService);
 
   protected readonly monthNames = [
@@ -23,6 +23,26 @@ export class TrainingEvents implements OnInit {
   protected readonly audience = signal('');
   protected readonly year = signal('');
   protected readonly month = signal('');
+  protected readonly heroImageIndex = signal(0);
+
+  private heroRotation?: ReturnType<typeof setInterval>;
+
+  protected readonly heroImages = computed(() => {
+    const images = this.allEvents().flatMap(event => [
+      event.featured_image,
+      ...(event.gallery_images ?? []).map(image => image.image_path)
+    ]);
+
+    return Array.from(new Set(images.filter((image): image is string => typeof image === 'string'
+      && image.includes('res.cloudinary.com')
+      && image.includes('/bridge-ai/events/'))));
+  });
+
+  protected readonly activeHeroImage = computed(() =>
+    this.heroImages()[this.heroImageIndex()] ?? this.imageFallback
+  );
+
+  protected readonly imageFallback = 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1000&q=85';
 
   protected readonly audiences = computed(() => Array.from(new Set(
     this.allEvents()
@@ -84,12 +104,25 @@ export class TrainingEvents implements OnInit {
       next: events => {
         this.allEvents.set(events ?? []);
         this.isLoading.set(false);
+        this.startHeroRotation();
       },
       error: () => {
         this.allEvents.set([]);
         this.isLoading.set(false);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.heroRotation) clearInterval(this.heroRotation);
+  }
+
+  private startHeroRotation(): void {
+    if (this.heroImages().length < 2) return;
+
+    this.heroRotation = setInterval(() => {
+      this.heroImageIndex.update(index => (index + 1) % this.heroImages().length);
+    }, 5000);
   }
 
   protected setFilter(filter: 'status' | 'audience' | 'year' | 'month', event: globalThis.Event): void {

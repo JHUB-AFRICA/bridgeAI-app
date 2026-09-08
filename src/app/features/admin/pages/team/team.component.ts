@@ -121,8 +121,8 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
                 <textarea [(ngModel)]="formData.bio" name="bio" class="form-control" rows="3"></textarea>
               </div>
               <div class="form-group">
-                <label>Email</label>
-                <input type="email" [(ngModel)]="formData.email" name="email" class="form-control" />
+                <label>Profile Link</label>
+                <input type="url" [(ngModel)]="formData.link" name="link" class="form-control" placeholder="https://example.com/profile" />
               </div>
               <div class="form-row">
                 <div class="form-group">
@@ -132,8 +132,8 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
                 <div class="form-group">
                   <label>Is Visible</label>
                   <select [(ngModel)]="formData.is_visible" name="is_visible" class="form-control">
-                    <option [value]="true">Yes</option>
-                    <option [value]="false">No</option>
+                    <option [ngValue]="true">Yes</option>
+                    <option [ngValue]="false">No</option>
                   </select>
                 </div>
               </div>
@@ -502,7 +502,7 @@ export class AdminTeamComponent implements OnInit {
       role: '',
       affiliation: '',
       bio: '',
-      email: '',
+      link: '',
       display_order: 0,
       is_visible: true,
       consent_status: 'pending'

@@ -105,12 +105,13 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
                   <label>Resource Type *</label>
                   <select [(ngModel)]="formData.resource_type" name="resource_type" required class="form-control">
                     <option value="">Select Type</option>
-                    <option value="public-deliverable">Public Deliverable</option>
-                    <option value="training-guide">Training Guide</option>
-                    <option value="slide-deck">Slide Deck</option>
-                    <option value="video">Video</option>
-                    <option value="policy-brief">Policy Brief</option>
+                    <option value="deliverable">Deliverable</option>
+                    <option value="training_kit">Training Kit</option>
                     <option value="presentation">Presentation</option>
+                    <option value="video">Video</option>
+                    <option value="policy_brief">Policy Brief</option>
+                    <option value="publication">Publication</option>
+                    <option value="open_source">Open Source</option>
                     <option value="report">Report</option>
                     <option value="dataset">Dataset</option>
                   </select>
@@ -149,14 +150,15 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
                 <div class="form-group">
                   <label>Is Public</label>
                   <select [(ngModel)]="formData.is_public" name="is_public" class="form-control">
-                    <option [value]="true">Yes</option>
-                    <option [value]="false">No</option>
+                    <option [ngValue]="true">Yes</option>
+                    <option [ngValue]="false">No</option>
                   </select>
                 </div>
               </div>
               <div class="form-group">
                 <label>Upload Document</label>
                 <app-document-upload [folder]="'resources'"></app-document-upload>
+                <button *ngIf="formData.file_path" type="button" class="remove-file-btn" (click)="removeStoredFile()">Remove stored resource</button>
               </div>
               <div class="form-group">
                 <label>External URL (if hosted elsewhere)</label>
@@ -507,13 +509,20 @@ export class AdminResourcesComponent implements OnInit {
   saveResource(): void {
     const data = { ...this.formData };
     const isEditing = !!this.editingResource;
+    const previousFilePath = this.editingResource?.file_path;
     this.notificationService.showInfo(isEditing ? 'Updating resource...' : 'Creating resource...');
 
     this.documentUpload!.uploadPending().pipe(switchMap(upload => {
       if (upload) data.file_path = upload.secure_url;
-      return isEditing
+      const save$ = isEditing
         ? this.resourceService.updateResourceJson(this.editingResource!.id!, data)
         : this.resourceService.createResourceJson(data);
+      return save$.pipe(switchMap(saved => {
+        const replacedFile = !!previousFilePath && previousFilePath !== data.file_path;
+        return replacedFile
+          ? this.cloudinaryService.deleteUrls([previousFilePath]).pipe(switchMap(() => [saved]))
+          : [saved];
+      }));
     })).subscribe({
         next: () => {
           this.notificationService.showSuccess(isEditing ? 'Resource updated successfully' : 'Resource created successfully');
@@ -524,6 +533,10 @@ export class AdminResourcesComponent implements OnInit {
           this.notificationService.showError(isEditing ? 'Failed to update resource' : 'Failed to create resource');
         }
       });
+  }
+
+  removeStoredFile(): void {
+    this.formData.file_path = '';
   }
 
   deleteResource(id: number | undefined): void {
@@ -554,5 +567,10 @@ export class AdminResourcesComponent implements OnInit {
       'WP6': '#06b6d4'
     };
     return colors[wpTag] || '#6b7280';
+  }
+
+  resourceUrl(resource: Resource): string {
+    if (!resource.file_path) return resource.external_url || '';
+    return resource.file_path.startsWith('http') ? resource.file_path : `/static/${resource.file_path}`;
   }
 }

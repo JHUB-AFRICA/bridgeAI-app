@@ -49,12 +49,34 @@ export class CloudinaryService {
   private cloudName = environment.cloudinary.cloudName;
   private uploadPreset = environment.cloudinary.uploadPreset;
   private folder = environment.cloudinary.folder;
-  private uploadUrl = `https://api.cloudinary.com/v1_1/${this.cloudName}/upload`;
 
   constructor(private http: HttpClient) {}
 
   uploadFile(file: File, options?: CloudinaryUploadOptions): Observable<CloudinaryUploadResult> {
     const module = this.getUploadModule(options?.folder);
+    if (options?.resource_type === 'raw' && module === 'resources') {
+      const formData = new FormData();
+      formData.append('file', file);
+      return this.http.post<{
+        success: boolean;
+        url: string;
+        public_id: string;
+        format: string;
+        resource_type: string;
+        bytes: number;
+      }>(`${environment.apiUrl}/upload/resource`, formData).pipe(
+        map(response => ({
+          ...response,
+          secure_url: response.url,
+          public_id: response.public_id
+        } as unknown as CloudinaryUploadResult)),
+        catchError((error) => {
+          console.error('Resource upload error:', error);
+          return throwError(() => new Error('Failed to upload resource to Cloudinary'));
+        })
+      );
+    }
+
     if (options?.resource_type === 'image' && module) {
       const formData = new FormData();
       formData.append('file', file);
@@ -104,7 +126,10 @@ export class CloudinaryService {
       }
     }
 
-    return this.http.post<CloudinaryUploadResult>(this.uploadUrl, formData).pipe(
+    const resourceType = options?.resource_type || 'image';
+    const uploadUrl = `https://api.cloudinary.com/v1_1/${this.cloudName}/${resourceType}/upload`;
+
+    return this.http.post<CloudinaryUploadResult>(uploadUrl, formData).pipe(
       catchError((error) => {
         console.error('Cloudinary upload error:', error);
         return throwError(() => new Error('Failed to upload file to Cloudinary'));
@@ -126,9 +151,10 @@ export class CloudinaryService {
     });
   }
 
-  uploadVideo(file: File): Observable<CloudinaryUploadResult> {
+  uploadVideo(file: File, folder?: string): Observable<CloudinaryUploadResult> {
     return this.uploadFile(file, {
       resource_type: 'video',
+      folder,
       tags: ['bridge-ai', 'video']
     });
   }

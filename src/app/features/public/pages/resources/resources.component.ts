@@ -16,6 +16,7 @@ import { Resource } from '../../../core/models/resource.model';
 export class ResourcesComponent implements OnInit {
   protected readonly types = [
     { value: 'deliverable', label: 'Deliverables', limit: 3 },
+    { value: 'report', label: 'Reports', limit: 4 },
     { value: 'policy_brief', label: 'Policy Briefs', limit: 4 },
     { value: 'video', label: 'Videos', limit: 3 },
     { value: 'presentation', label: 'Presentations', limit: 2 },
@@ -110,6 +111,7 @@ export class ResourcesComponent implements OnInit {
   }
 
   protected resourceUrl(resource: Resource): string {
-    return resource.file_path ? `/static/${resource.file_path}` : resource.external_url || '';
+    if (!resource.file_path) return resource.external_url || '';
+    return resource.file_path.startsWith('http') ? resource.file_path : `/static/${resource.file_path}`;
   }
 }

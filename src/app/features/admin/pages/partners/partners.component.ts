@@ -100,29 +100,13 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
           </div>
           <div class="modal-body">
             <form (ngSubmit)="savePartner()" #partnerForm="ngForm">
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Short Name *</label>
-                  <input type="text" [(ngModel)]="formData.short_name" name="short_name" required class="form-control" />
-                </div>
-                <div class="form-group">
-                  <label>Full Name *</label>
-                  <input type="text" [(ngModel)]="formData.name" name="name" required class="form-control" />
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Country *</label>
-                  <input type="text" [(ngModel)]="formData.country" name="country" required class="form-control" />
-                </div>
-                <div class="form-group">
-                  <label>Role</label>
-                  <input type="text" [(ngModel)]="formData.role" name="role" class="form-control" />
-                </div>
+              <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" [(ngModel)]="formData.name" name="name" required class="form-control" />
               </div>
               <div class="form-group">
-                <label>Description</label>
-                <textarea [(ngModel)]="formData.description" name="description" class="form-control" rows="2"></textarea>
+                <label>Role</label>
+                <input type="text" [(ngModel)]="formData.role" name="role" class="form-control" />
               </div>
               <div class="form-group">
                 <label>Website</label>
@@ -132,15 +116,15 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
                 <div class="form-group">
                   <label>Is Consortium Partner</label>
                   <select [(ngModel)]="formData.is_consortium" name="is_consortium" class="form-control">
-                    <option [value]="true">Yes</option>
-                    <option [value]="false">No</option>
+                    <option [ngValue]="true">Yes</option>
+                    <option [ngValue]="false">No</option>
                   </select>
                 </div>
                 <div class="form-group">
                   <label>Is Published</label>
                   <select [(ngModel)]="formData.is_published" name="is_published" class="form-control">
-                    <option [value]="true">Yes</option>
-                    <option [value]="false">No</option>
+                    <option [ngValue]="true">Yes</option>
+                    <option [ngValue]="false">No</option>
                   </select>
                 </div>
               </div>
@@ -152,14 +136,6 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
                   (imageUploaded)="formData.logo = $event"
                   (imageRemoved)="formData.logo = ''"
                 ></app-image-upload>
-              </div>
-              <div class="form-group">
-                <label>Tags (comma separated)</label>
-                <input type="text" [(ngModel)]="formData.tags_string" name="tags_string" class="form-control" placeholder="research, agritech, ..." />
-              </div>
-              <div class="form-group">
-                <label>Ecosystem Impact</label>
-                <textarea [(ngModel)]="formData.ecosystem_impact" name="ecosystem_impact" class="form-control" rows="2"></textarea>
               </div>
               <div class="form-actions">
                 <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>
@@ -518,23 +494,18 @@ export class AdminPartnersComponent implements OnInit {
       name: '',
       country: '',
       role: '',
-      description: '',
       website: '',
       is_consortium: true,
       is_published: true,
       display_order: 0,
-      tags_string: '',
-      ecosystem_impact: ''
+      logo: ''
     };
     this.showModal = true;
   }
 
   openEditModal(partner: Partner): void {
     this.editingPartner = partner;
-    this.formData = { 
-      ...partner, 
-      tags_string: partner.tags ? partner.tags.join(', ') : '' 
-    };
+    this.formData = { ...partner };
     this.showModal = true;
   }
 
@@ -545,11 +516,8 @@ export class AdminPartnersComponent implements OnInit {
 
   savePartner(): void {
     const data = { ...this.formData };
-    if (data.tags_string) {
-      data.tags = data.tags_string.split(',').map((t: string) => t.trim()).filter(Boolean);
-    } else {
-      data.tags = [];
-    }
+    data.short_name = data.name;
+    data.country = data.country || '';
     delete data.tags_string;
     const isEditing = !!this.editingPartner;
     this.notificationService.showInfo(isEditing ? 'Updating partner...' : 'Creating partner...');

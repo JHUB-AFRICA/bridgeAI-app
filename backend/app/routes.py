@@ -33,6 +33,24 @@ def _get_cloudinary_service():
             except Exception as error:
                 return {'success': False, 'error': str(error)}
 
+        def upload_resource(self, file, folder='resources'):
+            try:
+                result = cloudinary.uploader.upload(
+                    file,
+                    folder=f'bridge-ai/{folder}',
+                    resource_type='raw'
+                )
+                return {
+                    'success': True,
+                    'url': result.get('secure_url'),
+                    'public_id': result.get('public_id'),
+                    'format': result.get('format'),
+                    'resource_type': result.get('resource_type', 'raw'),
+                    'bytes': result.get('bytes')
+                }
+            except Exception as error:
+                return {'success': False, 'error': str(error)}
+
         def delete_image(self, public_id, resource_type='image'):
             try:
                 result = cloudinary.uploader.destroy(public_id, resource_type=resource_type)
@@ -67,6 +85,26 @@ def _event_slug(title, events, current_id=None):
     slug = base_slug
     suffix = 2
     while any(item.get('slug') == slug and item.get('id') != current_id for item in events):
+        slug = f'{base_slug}-{suffix}'
+        suffix += 1
+    return slug
+
+
+def _gallery_slug(title, albums, current_id=None):
+    base_slug = _slugify(title)
+    slug = base_slug
+    suffix = 2
+    while any(item.get('slug') == slug and item.get('id') != current_id for item in albums):
+        slug = f'{base_slug}-{suffix}'
+        suffix += 1
+    return slug
+
+
+def _resource_slug(title, resources, current_id=None):
+    base_slug = _slugify(title)
+    slug = base_slug
+    suffix = 2
+    while any(item.get('slug') == slug and item.get('id') != current_id for item in resources):
         slug = f'{base_slug}-{suffix}'
         suffix += 1
     return slug
@@ -136,6 +174,20 @@ def upload_file(module):
             'success': False,
             'error': result['error']
         }), 500
+
+@api_bp.route('/upload/resource', methods=['POST'])
+def upload_resource_file():
+    if cloudinary_service is None:
+        return jsonify({'error': 'Cloudinary service is unavailable'}), 503
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file provided'}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+
+    result = cloudinary_service.upload_resource(file)
+    return jsonify(result), 200 if result['success'] else 500
 
 @api_bp.route('/upload/multiple/<string:module>', methods=['POST'])
 def upload_multiple_files(module):
@@ -279,21 +331,131 @@ def delete_event(id):
 # ============================================================
 @api_bp.route('/resources', methods=['GET'])
 def get_resources():
-    return jsonify(json_service.get_all('resources.json'))
+    resources = json_service.get_all('resources.json')
+    if request.args.get('is_public') == 'true':
+        resources = [resource for resource in resources if str(resource.get('is_public')).lower() == 'true']
+    if request.args.get('type'):
+        resources = [resource for resource in resources if resource.get('resource_type') == request.args['type']]
+    return jsonify(sorted(resources, key=lambda resource: resource.get('display_order', resource.get('id', 0))))
+
+@api_bp.route('/resources/<int:id>', methods=['GET'])
+def get_resource(id):
+    resource = json_service.get_by_id('resources.json', id)
+    return jsonify(resource) if resource else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/resources/<string:slug>', methods=['GET'])
+def get_resource_by_slug(slug):
+    resources = json_service.get_all('resources.json')
+    resource = next((item for item in resources if item.get('slug') == slug), None)
+    return jsonify(resource) if resource else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/resources', methods=['POST'])
+def create_resource():
+    data = request.get_json() or {}
+    if not data.get('title') or not data.get('resource_type') or not data.get('wp_tag'):
+        return jsonify({'error': 'Title, resource type, and work package are required'}), 400
+    resources = json_service.get_all('resources.json')
+    data['slug'] = _resource_slug(data.get('slug') or data['title'], resources)
+    return jsonify(json_service.create('resources.json', data)), 201
+
+@api_bp.route('/resources/<int:id>', methods=['PUT'])
+def update_resource(id):
+    data = request.get_json() or {}
+    if not data.get('title') or not data.get('resource_type') or not data.get('wp_tag'):
+        return jsonify({'error': 'Title, resource type, and work package are required'}), 400
+    resources = json_service.get_all('resources.json')
+    data['slug'] = _resource_slug(data.get('slug') or data['title'], resources, current_id=id)
+    result = json_service.update('resources.json', id, data)
+    return jsonify(result) if result else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/resources/<int:id>', methods=['DELETE'])
+def delete_resource(id):
+    return jsonify({'success': True}) if json_service.delete('resources.json', id) else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/resources/<int:id>/download', methods=['POST'])
+def increment_resource_download(id):
+    resource = json_service.get_by_id('resources.json', id)
+    if not resource:
+        return jsonify({'error': 'Not found'}), 404
+    resource['download_count'] = resource.get('download_count', 0) + 1
+    return jsonify(json_service.update('resources.json', id, resource))
 
 # ============================================================
 # Partners
 # ============================================================
 @api_bp.route('/partners', methods=['GET'])
 def get_partners():
-    return jsonify(json_service.get_all('partners.json'))
+    partners = json_service.get_all('partners.json')
+    if request.args.get('is_published') == 'true':
+        partners = [partner for partner in partners if str(partner.get('is_published')).lower() == 'true']
+    if request.args.get('is_consortium') in ('true', 'false'):
+        expected = request.args['is_consortium'] == 'true'
+        partners = [partner for partner in partners if str(partner.get('is_consortium')).lower() == str(expected).lower()]
+    return jsonify(sorted(partners, key=lambda partner: partner.get('display_order', 0)))
+
+@api_bp.route('/partners/<int:id>', methods=['GET'])
+def get_partner(id):
+    partner = json_service.get_by_id('partners.json', id)
+    return jsonify(partner) if partner else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/partners', methods=['POST'])
+def create_partner():
+    data = request.get_json() or {}
+    if not data.get('name'):
+        return jsonify({'error': 'Full name is required'}), 400
+    data.setdefault('short_name', data['name'])
+    data.setdefault('country', '')
+    return jsonify(json_service.create('partners.json', data)), 201
+
+@api_bp.route('/partners/<int:id>', methods=['PUT'])
+def update_partner(id):
+    data = request.get_json() or {}
+    if not data.get('name'):
+        return jsonify({'error': 'Full name is required'}), 400
+    data.setdefault('short_name', data['name'])
+    data.setdefault('country', '')
+    result = json_service.update('partners.json', id, data)
+    return jsonify(result) if result else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/partners/<int:id>', methods=['DELETE'])
+def delete_partner(id):
+    return jsonify({'success': True}) if json_service.delete('partners.json', id) else (jsonify({'error': 'Not found'}), 404)
 
 # ============================================================
 # Team
 # ============================================================
 @api_bp.route('/team', methods=['GET'])
 def get_team():
-    return jsonify(json_service.get_all('team.json'))
+    members = json_service.get_all('team.json')
+    if request.args.get('is_visible') == 'true':
+        members = [member for member in members if str(member.get('is_visible')).lower() == 'true']
+    if request.args.get('consent_status'):
+        members = [member for member in members if member.get('consent_status') == request.args['consent_status']]
+    return jsonify(sorted(members, key=lambda member: member.get('display_order', 0)))
+
+@api_bp.route('/team/<int:id>', methods=['GET'])
+def get_team_member(id):
+    member = json_service.get_by_id('team.json', id)
+    return jsonify(member) if member else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/team', methods=['POST'])
+def create_team_member():
+    data = request.get_json() or {}
+    if not data.get('name') or not data.get('role'):
+        return jsonify({'error': 'Name and role are required'}), 400
+    return jsonify(json_service.create('team.json', data)), 201
+
+@api_bp.route('/team/<int:id>', methods=['PUT'])
+def update_team_member(id):
+    data = request.get_json() or {}
+    if not data.get('name') or not data.get('role'):
+        return jsonify({'error': 'Name and role are required'}), 400
+    result = json_service.update('team.json', id, data)
+    return jsonify(result) if result else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/team/<int:id>', methods=['DELETE'])
+def delete_team_member(id):
+    return jsonify({'success': True}) if json_service.delete('team.json', id) else (jsonify({'error': 'Not found'}), 404)
 
 # ============================================================
 # Gallery
@@ -301,6 +463,40 @@ def get_team():
 @api_bp.route('/gallery', methods=['GET'])
 def get_gallery():
     return jsonify(json_service.get_all('gallery.json'))
+
+@api_bp.route('/gallery/<int:id>', methods=['GET'])
+def get_gallery_album(id):
+    album = json_service.get_by_id('gallery.json', id)
+    return jsonify(album) if album else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/gallery/<string:slug>', methods=['GET'])
+def get_gallery_album_by_slug(slug):
+    albums = json_service.get_all('gallery.json')
+    album = next((item for item in albums if item.get('slug') == slug), None)
+    return jsonify(album) if album else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/gallery', methods=['POST'])
+def create_gallery_album():
+    data = request.get_json() or {}
+    if not data.get('title'):
+        return jsonify({'error': 'Title is required'}), 400
+    albums = json_service.get_all('gallery.json')
+    data['slug'] = _gallery_slug(data.get('slug') or data.get('title'), albums)
+    return jsonify(json_service.create('gallery.json', data)), 201
+
+@api_bp.route('/gallery/<int:id>', methods=['PUT'])
+def update_gallery_album(id):
+    data = request.get_json() or {}
+    if not data.get('title'):
+        return jsonify({'error': 'Title is required'}), 400
+    albums = json_service.get_all('gallery.json')
+    data['slug'] = _gallery_slug(data.get('slug') or data.get('title'), albums, current_id=id)
+    result = json_service.update('gallery.json', id, data)
+    return jsonify(result) if result else (jsonify({'error': 'Not found'}), 404)
+
+@api_bp.route('/gallery/<int:id>', methods=['DELETE'])
+def delete_gallery_album(id):
+    return jsonify({'success': True}) if json_service.delete('gallery.json', id) else (jsonify({'error': 'Not found'}), 404)
 
 # ============================================================
 # FAQs

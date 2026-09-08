@@ -21,8 +21,8 @@ export interface TeamMember {
   /** Biography (HTML content) */
   bio?: string;
 
-  /** Email address (only shown if consented) */
-  email?: string;
+  /** Public profile or professional website link */
+  link?: string;
 
   /** Photo URL (stored in Cloudinary) */
   photo?: string;

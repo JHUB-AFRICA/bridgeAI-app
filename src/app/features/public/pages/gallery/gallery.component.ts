@@ -7,12 +7,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { GalleryService } from '../../../../services/gallery.service';
 import { GalleryAlbum } from '../../../core/models/gallery.model';
+import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-image/cloudinary-image.component';
 import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [CommonModule, RouterModule, EuFundingBannerComponent],
+  imports: [CommonModule, RouterModule, CloudinaryImageComponent, EuFundingBannerComponent],
   template: `
     <div class="gallery-page">
       <section class="gallery-hero">
@@ -32,7 +33,14 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
         <div class="gallery-grid" *ngIf="albums().length; else noAlbums">
           <article class="gallery-card" *ngFor="let album of albums()" [routerLink]="['/gallery', album.slug]">
             <div class="media">
-              <img [src]="album.images?.[0]?.image_path || fallbackImage" [alt]="album.title" loading="lazy" />
+              <app-cloudinary-image
+                [publicId]="album.images?.[0]?.image_path || fallbackImage"
+                [alt]="album.images?.[0]?.alt_text || album.images?.[0]?.caption || album.title"
+                [width]="900"
+                [height]="600"
+                crop="fill"
+                quality="auto"
+              ></app-cloudinary-image>
             </div>
             <div class="content">
               <span class="tag">{{ album.tags?.[0] || 'Project' }}</span>
@@ -104,7 +112,7 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
     }
     .gallery-card:hover { transform: translateY(-2px); box-shadow: 0 20px 42px rgba(0,0,0,0.08); }
     .media { height: 220px; overflow: hidden; background: #dfe5dd; }
-    .media img { width: 100%; height: 100%; object-fit: cover; }
+    .media app-cloudinary-image { display: block; width: 100%; height: 100%; }
     .content { padding: 18px 18px 20px; }
     .tag {
       display: inline-block; border-radius: 999px; padding: 4px 10px; background: rgba(38,67,43,0.08); color: #26432b; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;

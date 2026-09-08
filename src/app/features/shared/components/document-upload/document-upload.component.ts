@@ -328,7 +328,7 @@ export class DocumentUploadComponent implements OnDestroy {
   @Output() documentUploaded = new EventEmitter<string>();
   @Output() uploadComplete = new EventEmitter<{ url: string; publicId: string }>();
 
-  @Input() acceptedTypes: string = '.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.txt,.csv,.json,.xml';
+  @Input() acceptedTypes: string = '.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.txt,.csv,.json,.xml,.mp4,.webm,.mov';
   @Input() maxFileSize: number = MEDIA.MAX_FILE_SIZE;
   @Input() folder = '';
 
@@ -352,7 +352,10 @@ export class DocumentUploadComponent implements OnDestroy {
     'txt': { extension: 'txt', label: 'Text', icon: '📃', color: '#6b7280' },
     'csv': { extension: 'csv', label: 'CSV', icon: '📊', color: '#06b6d4' },
     'json': { extension: 'json', label: 'JSON', icon: '📋', color: '#f59e0b' },
-    'xml': { extension: 'xml', label: 'XML', icon: '📋', color: '#f59e0b' }
+    'xml': { extension: 'xml', label: 'XML', icon: '📋', color: '#f59e0b' },
+    'mp4': { extension: 'mp4', label: 'Video', icon: '🎬', color: '#8b5cf6' },
+    'webm': { extension: 'webm', label: 'Video', icon: '🎬', color: '#8b5cf6' },
+    'mov': { extension: 'mov', label: 'Video', icon: '🎬', color: '#8b5cf6' }
   };
 
   constructor(
@@ -435,7 +438,11 @@ export class DocumentUploadComponent implements OnDestroy {
 
     this.simulateProgress();
 
-    return this.cloudinaryService.uploadDocument(file, this.folder || undefined).pipe(
+    const upload$ = file.type.startsWith('video/')
+      ? this.cloudinaryService.uploadVideo(file, this.folder || undefined)
+      : this.cloudinaryService.uploadDocument(file, this.folder || undefined);
+
+    return upload$.pipe(
       tap((response) => {
         this.isUploading = false;
         this.uploadProgress = 100;

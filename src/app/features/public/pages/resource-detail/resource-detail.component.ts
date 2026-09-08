@@ -8,7 +8,6 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ResourceService } from '../../../../services/resource.service';
 import { Resource } from '../../../core/models/resource.model';
 import { SafeHtmlPipe } from '../../../shared/pipes/safe-html.pipe';
-import { FileSizePipe } from '../../../shared/pipes/file-size.pipe';
 import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 
 @Component({
@@ -18,7 +17,6 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
     CommonModule,
     RouterModule,
     SafeHtmlPipe,
-    FileSizePipe,
     EuFundingBannerComponent
   ],
   template: `
@@ -39,14 +37,18 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
             <div class="content-card">
               <div class="resource-description" [innerHTML]="resource()?.description | safeHtml"></div>
 
+              <div *ngIf="isPdf(resource()!)" class="resource-preview">
+                <iframe [src]="resourceUrl(resource()!) | safeHtml:'resourceUrl'" [title]="resource()?.title || 'PDF preview'"></iframe>
+              </div>
+
               <div *ngIf="resource()?.file_path" class="resource-download">
-                <a [href]="resource()?.file_path" target="_blank" rel="noopener" class="btn-download">
+                <a [href]="downloadUrl(resource()!)" target="_blank" rel="noopener" class="btn-download">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                     <polyline points="7 10 12 15 17 10" />
                     <line x1="12" y1="15" x2="12" y2="3" />
                   </svg>
-                  Download Resource
+                  {{ isPdf(resource()!) ? 'Download PDF' : 'Download Resource' }}
                 </a>
               </div>
 
@@ -106,7 +108,7 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
   styles: [`
     .resource-detail-page {
       padding: 48px 0 64px 0;
-      background: #f8fafc;
+      background: linear-gradient(180deg, #eef6f2 0%, #f8fafc 42%, #ffffff 100%);
     }
 
     .container {
@@ -117,6 +119,10 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
 
     .resource-header {
       margin-bottom: 24px;
+      padding: 32px;
+      border-radius: 18px;
+      background: #123c35;
+      box-shadow: 0 18px 45px rgba(18, 60, 53, 0.16);
     }
 
     .resource-badge {
@@ -146,7 +152,7 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
     .resource-title {
       font-size: 32px;
       font-weight: 700;
-      color: #1f2937;
+      color: #ffffff;
       margin: 0;
     }
 
@@ -167,6 +173,26 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
       font-size: 16px;
       color: #4b5563;
       line-height: 1.7;
+    }
+
+    .resource-preview {
+      margin-top: 24px;
+      border: 1px solid #dce8e2;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #eef3f0;
+    }
+
+    .resource-preview iframe {
+      display: block;
+      width: 100%;
+      height: 680px;
+      border: 0;
+    }
+
+    .resource-header .type-badge {
+      background: rgba(255, 255, 255, 0.14);
+      color: #f5d77e;
     }
 
     .resource-description ::ng-deep p {
@@ -361,5 +387,25 @@ export class ResourceDetailComponent implements OnInit {
       'WP6': '#06b6d4'
     };
     return colors[normalizedTag] || '#6b7280';
+  }
+
+  resourceUrl(resource: Resource): string {
+    if (!resource.file_path) return resource.external_url || '';
+    return resource.file_path.startsWith('http') ? resource.file_path : `/static/${resource.file_path}`;
+  }
+
+  isPdf(resource: Resource): boolean {
+    return Boolean(resource.file_path?.toLowerCase().split('?')[0].endsWith('.pdf'));
+  }
+
+  downloadUrl(resource: Resource): string {
+    const url = this.resourceUrl(resource);
+    if (!url.startsWith('http') || !this.isPdf(resource)) return url;
+    return url.replace('/upload/', `/upload/fl_attachment:${this.downloadName(resource)}/`);
+  }
+
+  private downloadName(resource: Resource): string {
+    const name = resource.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    return `${name || 'resource'}.pdf`;
   }
 }

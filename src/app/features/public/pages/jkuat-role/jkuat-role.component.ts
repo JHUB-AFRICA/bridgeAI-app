@@ -7,12 +7,13 @@ import { AfterViewInit, Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TeamService } from '../../../../services/team.service';
 import { TeamMember } from '../../../core/models/team.model';
+import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-image/cloudinary-image.component';
 import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
 
 @Component({
   selector: 'app-jkuat-role',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, CloudinaryImageComponent],
   template: `
     <main class="jkuat-role-page">
       <section class="hero" id="heroSection">
@@ -219,16 +220,26 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
           <div class="team-grid" *ngIf="teamMembers().length; else emptyTeam">
             <div class="team-card reveal" *ngFor="let member of teamMembers()">
               <div class="team-photo">
-                <img *ngIf="member.photo" [src]="member.photo" [alt]="member.name" />
+                <app-cloudinary-image
+                  *ngIf="member.photo; else memberPlaceholder"
+                  [publicId]="member.photo"
+                  [alt]="member.name"
+                  [width]="900"
+                  [height]="650"
+                  crop="fill"
+                  quality="auto"
+                ></app-cloudinary-image>
+                <ng-template #memberPlaceholder>
                 <span *ngIf="!member.photo" class="placeholder">{{ member.name?.charAt(0)?.toUpperCase() || 'A' }}</span>
+                </ng-template>
               </div>
               <span class="team-status">Active</span>
               <h4>{{ member.name }}</h4>
               <div class="team-role">{{ member.role }}</div>
               <div *ngIf="member.affiliation" class="team-affiliation">{{ member.affiliation }}</div>
               <div *ngIf="member.bio" class="team-bio">{{ member.bio }}</div>
-              <a *ngIf="member.email" [href]="'mailto:' + member.email" class="team-email">
-                <i class="fas fa-envelope" style="margin-right: 6px;"></i>Contact
+              <a *ngIf="member.link" [href]="member.link" target="_blank" rel="noopener noreferrer" class="team-email">
+                <i class="fas fa-link" style="margin-right: 6px;"></i>View Profile
               </a>
             </div>
           </div>
@@ -674,7 +685,7 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
     .team-card {
       flex: 1 1 calc(33.333% - 20px);
       min-width: 240px;
-      max-width: 360px;
+      max-width: 390px;
       background: #fffdf7;
       border: 1px solid #e1d8c0;
       border-radius: 16px;
@@ -688,9 +699,9 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
       border-color: #7c4fa3;
     }
     .team-photo {
-      width: 106px;
-      height: 106px;
-      border-radius: 50%;
+      width: 100%;
+      height: 250px;
+      border-radius: 12px;
       background: #efe6ce;
       margin: 0 auto 16px;
       overflow: hidden;
@@ -703,6 +714,11 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+    .team-photo app-cloudinary-image {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
     .placeholder {
       font-size: 2.4rem;

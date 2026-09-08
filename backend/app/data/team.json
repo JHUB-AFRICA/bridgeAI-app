@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "affiliation": "JKUAT / JHUB Africa",
+    "bio": "Senior Lecturer and researcher specializing in Artificial Intelligence, Machine Learning and Software Engineering. Founder of JHUB Africa and a digital ecosystem builder focused on technology innovation, entrepreneurship, research and digital transformation in Africa.",
+    "consent_status": "approved",
+    "display_order": 1,
+    "id": 1,
+    "is_visible": true,
+    "link": "https://www.linkedin.com/in/dr-lawrence-nderu/",
+    "name": "Dr. Lawrence Nderu",
+    "photo": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1788882472/bridge-ai/team/ysbnxtyqypbqjbdahedj.jpg",
+    "role": "Senior Lecturer & AI/ML Researcher | Founder – JHUB Africa"
+  }
+]

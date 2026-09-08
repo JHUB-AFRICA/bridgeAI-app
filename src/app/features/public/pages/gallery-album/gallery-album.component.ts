@@ -34,7 +34,7 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
             <div *ngFor="let image of images()" class="album-image">
               <app-cloudinary-image
                 [publicId]="image.image_path"
-                [alt]="image.caption || currentAlbum.title"
+                [alt]="image.alt_text || image.caption || currentAlbum.title"
                 [width]="400"
                 [height]="300"
                 crop="fill"

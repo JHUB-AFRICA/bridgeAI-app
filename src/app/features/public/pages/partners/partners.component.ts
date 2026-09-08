@@ -7,11 +7,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PartnerService } from '../../../../services/partner.service';
 import { Partner } from '../../../core/models/partner.model';
+import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-image/cloudinary-image.component';
 
 @Component({
   selector: 'app-partners',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CloudinaryImageComponent],
   template: `
     <div class="partners-page">
       <main>
@@ -92,7 +93,16 @@ import { Partner } from '../../../core/models/partner.model';
               <div *ngFor="let partner of consortiumPartners(); let i = index" class="hexagon-card {{ colorClass(i) }}">
                 <div class="hex-content">
                   <div class="hex-logo-wrap">
-                    <img *ngIf="partner.logo; else initialsFallback" [src]="partner.logo" [alt]="partner.short_name" class="hex-logo" loading="lazy" />
+                    <app-cloudinary-image
+                      *ngIf="partner.logo; else initialsFallback"
+                      [publicId]="partner.logo"
+                      [alt]="partner.short_name || partner.name"
+                      [width]="900"
+                      [height]="540"
+                      crop="fill"
+                      quality="auto"
+                      class="partner-cloudinary-image"
+                    ></app-cloudinary-image>
                     <ng-template #initialsFallback>
                       <span class="hex-logo-fallback">{{ getInitials(partner.short_name || partner.name) }}</span>
                     </ng-template>
@@ -132,7 +142,15 @@ import { Partner } from '../../../core/models/partner.model';
               <div class="local-partners" id="localPartners">
                 <div *ngFor="let partner of localPartners(); let i = index" class="local-card" [class.reverse]="i % 2 === 1">
                   <div class="local-card-image">
-                    <img *ngIf="partner.logo; else localFallback" [src]="partner.logo" [alt]="partner.short_name" loading="lazy" />
+                    <app-cloudinary-image
+                      *ngIf="partner.logo; else localFallback"
+                      [publicId]="partner.logo"
+                      [alt]="partner.short_name || partner.name"
+                      [width]="1200"
+                      [height]="800"
+                      crop="fill"
+                      quality="auto"
+                    ></app-cloudinary-image>
                     <ng-template #localFallback>
                       <div class="local-card-fallback">{{ getInitials(partner.short_name || partner.name) }}</div>
                     </ng-template>
@@ -485,14 +503,13 @@ import { Partner } from '../../../core/models/partner.model';
       flex-direction: column;
       align-items: center;
       text-align: center;
-      padding: 36px 24px 32px;
+      padding: 0 0 28px;
       background: var(--bg-white);
       border: 1.9px solid rgb(76, 127, 0);
       border-radius: var(--radius-lg);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: default;
-      min-height: 450px;
+      min-height: 470px;
       max-width: 380px;
     }
 
@@ -502,7 +519,7 @@ import { Partner } from '../../../core/models/partner.model';
       inset: 0;
       background: linear-gradient(135deg, rgba(44, 107, 69, 0.03), rgba(200, 155, 60, 0.03));
       border-radius: var(--radius-lg);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      border-radius: var(--radius-lg);
       pointer-events: none;
       z-index: 0;
     }
@@ -513,7 +530,7 @@ import { Partner } from '../../../core/models/partner.model';
       inset: -1px;
       background: linear-gradient(135deg, transparent 40%, rgba(200, 155, 60, 0.08) 100%);
       border-radius: var(--radius-lg);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      border-radius: var(--radius-lg);
       pointer-events: none;
       z-index: 0;
     }
@@ -537,31 +554,29 @@ import { Partner } from '../../../core/models/partner.model';
       height: 100%;
       width: 100%;
       justify-content: flex-start;
-      padding-top: 8px;
+      padding: 22px 24px 0;
     }
 
     .hexagon-card .hex-logo-wrap {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
+      width: 100%;
+      height: 210px;
+      border-radius: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 14px;
+      margin-bottom: 0;
       background: var(--bg-light);
-      border: 2px solid var(--border-light);
+      border: 0;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       flex-shrink: 0;
       border-color: var(--gold);
       background: var(--gold-pale);
     }
 
-    .hexagon-card .hex-logo {
-      max-width: 60px;
-      max-height: 60px;
-      width: auto;
-      height: auto;
-      object-fit: contain;
+    .hexagon-card .hex-logo-wrap app-cloudinary-image {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
     .hexagon-card .hex-logo-fallback {
@@ -704,7 +719,7 @@ import { Partner } from '../../../core/models/partner.model';
 
     .local-section .ecosystem-impact .impact-text {
       font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.68);
+      color: #f1f7f2;
       flex: 1;
       position: relative;
       z-index: 1;
@@ -720,6 +735,7 @@ import { Partner } from '../../../core/models/partner.model';
       letter-spacing: 0.12em;
       color: var(--gold-light);
       margin-bottom: 6px;
+      line-height: 1.2;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
@@ -732,7 +748,8 @@ import { Partner } from '../../../core/models/partner.model';
     .local-card {
       display: flex;
       flex-wrap: wrap;
-      min-height: 50vh;
+      flex-direction: column;
+      min-height: 0;
       background: var(--bg-white);
       border: 1px solid var(--border-light);
       border-radius: var(--radius-xl);
@@ -743,11 +760,11 @@ import { Partner } from '../../../core/models/partner.model';
     }
 
     .local-card.reverse .local-card-image {
-      order: 2;
+      order: 1;
     }
 
     .local-card.reverse .local-card-content {
-      order: 1;
+      order: 2;
     }
 
     .local-card:hover {
@@ -757,11 +774,11 @@ import { Partner } from '../../../core/models/partner.model';
     }
 
     .local-card-image {
-      flex: 1 1 50%;
+      flex: 1 1 54%;
       position: relative;
       overflow: hidden;
       background: var(--bg-light);
-      min-height: 300px;
+      min-height: 420px;
     }
 
     .local-card-image img {
@@ -770,6 +787,12 @@ import { Partner } from '../../../core/models/partner.model';
       object-fit: cover;
       display: block;
       transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .local-card-image app-cloudinary-image {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
     .local-card:hover .local-card-image img {
@@ -810,12 +833,18 @@ import { Partner } from '../../../core/models/partner.model';
     }
 
     .local-card-content {
-      flex: 1 1 40%;
+      flex: 1 1 46%;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 48px 52px 48px 44px;
+      padding: 44px;
       background: var(--bg-white);
+      transform: translateY(8px);
+      transition: transform 0.4s ease;
+    }
+
+    .local-card:hover .local-card-content {
+      transform: translateY(0);
     }
 
     .local-card-content .partner-badge {
@@ -965,7 +994,7 @@ import { Partner } from '../../../core/models/partner.model';
 
     .partners-cta p {
       font-size: 0.98rem;
-      color: rgba(255, 255, 255, 0.55);
+      color: #eef5ef;
       line-height: 1.8;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
@@ -1027,7 +1056,7 @@ import { Partner } from '../../../core/models/partner.model';
       .hexagon-card {
         flex: 0 0 260px;
         min-width: 220px;
-        padding: 30px 20px 28px;
+        padding: 0 0 28px;
         min-height: 380px;
       }
 
@@ -1146,19 +1175,14 @@ import { Partner } from '../../../core/models/partner.model';
       .hexagon-card {
         flex: 0 0 220px;
         min-width: 190px;
-        padding: 24px 16px 22px;
+        padding: 0 0 22px;
         min-height: 340px;
         max-width: none;
       }
 
       .hexagon-card .hex-logo-wrap {
-        width: 70px;
-        height: 70px;
-      }
-
-      .hexagon-card .hex-logo {
-        max-width: 42px;
-        max-height: 42px;
+        width: 100%;
+        height: 150px;
       }
 
       .hexagon-card .hex-name {

@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../features/core/services/api.service';
 import { API_ENDPOINTS } from '../features/core/constants/api.constants';
-import { ContactSubmission, TrainingInterestSubmission, MediaRequestSubmission } from '../features/core/models/submission.model';
+import { ContactSubmission, MediaRequestSubmission, SMESubmission, TrainingInterestSubmission } from '../features/core/models/submission.model';
 
 @Injectable({
   providedIn: 'root'
@@ -52,5 +52,9 @@ export class SubmissionService {
 
   submitMediaRequest(data: MediaRequestSubmission): Observable<MediaRequestSubmission> {
     return this.api.post<MediaRequestSubmission>(API_ENDPOINTS.SUBMISSIONS.CREATE, data);
+  }
+
+  submitSmeInterest(data: SMESubmission): Observable<SMESubmission> {
+    return this.api.post<SMESubmission>(API_ENDPOINTS.SUBMISSIONS.CREATE, data);
   }
 }

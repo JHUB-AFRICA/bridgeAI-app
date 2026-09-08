@@ -7,11 +7,10 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FaqService } from '../../../../services/faq.service';
 import { FAQ } from '../../../core/models/faq.model';
-import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 
 @Component({
   selector: 'app-smart-mushrooms',
-  imports: [CommonModule, RouterLink, EuFundingBannerComponent],
+  imports: [CommonModule, RouterLink],
   templateUrl: './smart-mushrooms.component.html',
   styleUrl: './smart-mushrooms.component.css'
   /* template: `
@@ -110,9 +109,6 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
           </div>
         </div>
 
-        <div class="eu-section">
-          <app-eu-funding-banner></app-eu-funding-banner>
-        </div>
       </div>
     </div>
   `,

@@ -10,7 +10,6 @@ import { ReplicationLessonService } from '../../../../services/replication-lesso
 import { ReplicationResource } from '../../../core/models/replication-resource.model';
 import { ReplicationTemplate } from '../../../core/models/replication-template.model';
 import { ReplicationLesson } from '../../../core/models/replication-lesson.model';
-import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 
 type ToolkitItem = {
   type: 'resource' | 'template' | 'lesson';
@@ -24,7 +23,7 @@ type ToolkitItem = {
 
 @Component({
   selector: 'app-replication-toolkit',
-  imports: [CommonModule, EuFundingBannerComponent],
+  imports: [CommonModule],
   templateUrl: './replication-toolkit.component.html',
   styleUrl: './replication-toolkit.component.css'
   /* template: `
@@ -98,9 +97,6 @@ type ToolkitItem = {
           </section>
         </div>
 
-        <div class="eu-section">
-          <app-eu-funding-banner></app-eu-funding-banner>
-        </div>
       </div>
     </div>
   `,

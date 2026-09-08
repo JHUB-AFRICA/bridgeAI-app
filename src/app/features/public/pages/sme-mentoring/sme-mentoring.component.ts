@@ -13,11 +13,10 @@ import { Challenge } from '../../../core/models/challenge.model';
 import { Hackathon } from '../../../core/models/hackathon.model';
 import { SuccessStory } from '../../../core/models/success-story.model';
 import { NotificationService } from '../../../core/services/notification.service';
-import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 
 @Component({
   selector: 'app-sme-mentoring',
-  imports: [CommonModule, FormsModule, EuFundingBannerComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './sme-mentoring.component.html',
   styleUrl: './sme-mentoring.component.css'
   /* template: `
@@ -172,9 +171,6 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
           </form>
         </section>
 
-        <div class="eu-section">
-          <app-eu-funding-banner></app-eu-funding-banner>
-        </div>
       </div>
     </div>
   `,

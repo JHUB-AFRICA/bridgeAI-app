@@ -8,7 +8,6 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { GalleryService } from '../../../../services/gallery.service';
 import { GalleryAlbum } from '../../../core/models/gallery.model';
 import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-image/cloudinary-image.component';
-import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 
 @Component({
   selector: 'app-gallery-album',
@@ -16,8 +15,7 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
   imports: [
     CommonModule,
     RouterModule,
-    CloudinaryImageComponent,
-    EuFundingBannerComponent
+    CloudinaryImageComponent
   ],
   template: `
     <div class="gallery-album-page">
@@ -60,9 +58,6 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
           </div>
         </ng-template>
 
-        <div class="eu-section">
-          <app-eu-funding-banner></app-eu-funding-banner>
-        </div>
       </div>
     </div>
   `,

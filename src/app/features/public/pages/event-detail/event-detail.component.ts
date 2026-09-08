@@ -9,15 +9,22 @@ import { EventService } from '../../../../services/event.service';
 import { Event } from '../../../core/models/event.model';
 import { SafeHtmlPipe } from '../../../shared/pipes/safe-html.pipe';
 import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-image/cloudinary-image.component';
-import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 
 @Component({
   selector: 'app-event-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, SafeHtmlPipe, CloudinaryImageComponent, EuFundingBannerComponent],
+  imports: [CommonModule, RouterModule, SafeHtmlPipe, CloudinaryImageComponent],
   template: `
     <div class="event-detail-page">
       @if (event(); as currentEvent) {
+        <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+          <div class="container breadcrumb-inner">
+            <a routerLink="/">Home</a><span aria-hidden="true">/</span>
+            <a routerLink="/training-events">Training Events</a><span aria-hidden="true">/</span>
+            <span class="breadcrumb-current" aria-current="page">{{ currentEvent.title }}</span>
+          </div>
+        </nav>
+
         <section class="detail-hero" [style.background-image]="'linear-gradient(rgba(22,40,26,.58), rgba(22,40,26,.58)), url(' + (currentEvent.featured_image || fallbackHeroImage) + ')'">
           <div class="hero-inner container">
             <div class="event-meta">
@@ -74,14 +81,32 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
                 <div [innerHTML]="currentEvent.description | safeHtml"></div>
               </div>
 
-              <div class="content-card" *ngIf="currentEvent.agenda">
+              <div class="content-card agenda-card" id="agenda" *ngIf="currentEvent.agenda">
+                <div class="section-kicker">Programme</div>
                 <h2 class="section-heading">Agenda</h2>
-                <div [innerHTML]="currentEvent.agenda | safeHtml"></div>
+                @if (isRichText(currentEvent.agenda)) {
+                  <div class="agenda-rich" [innerHTML]="currentEvent.agenda | safeHtml"></div>
+                } @else {
+                  <ol class="agenda-list">
+                    @for (item of agendaItems(currentEvent.agenda); track $index) {
+                      <li><span class="agenda-time">{{ agendaTime(item) }}</span><span class="agenda-entry">{{ agendaLabel(item) }}</span></li>
+                    }
+                  </ol>
+                }
               </div>
 
-              <div class="content-card" *ngIf="currentEvent.speakers">
+              <div class="content-card speakers-card" id="speakers" *ngIf="currentEvent.speakers">
+                <div class="section-kicker">People you’ll hear from</div>
                 <h2 class="section-heading">Speakers</h2>
-                <div [innerHTML]="currentEvent.speakers | safeHtml"></div>
+                @if (isRichText(currentEvent.speakers)) {
+                  <div [innerHTML]="currentEvent.speakers | safeHtml"></div>
+                } @else {
+                  <div class="speaker-grid">
+                    @for (speaker of speakerItems(currentEvent.speakers); track speaker) {
+                      <div class="speaker-item"><span class="speaker-mark" aria-hidden="true">✦</span><span>{{ speaker }}</span></div>
+                    }
+                  </div>
+                }
               </div>
 
               <div class="content-card" *ngIf="currentEvent.post_event_report">
@@ -107,9 +132,6 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
             </aside>
           </div>
 
-          <div class="eu-section">
-            <app-eu-funding-banner></app-eu-funding-banner>
-          </div>
         </div>
       } @else {
         <div class="loading-state">
@@ -124,6 +146,18 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
     * { box-sizing: border-box; }
     img { max-width: 100%; display: block; }
     .container { max-width: 1180px; margin: 0 auto; padding: 0 22px; }
+    .breadcrumb-bar {
+      position: sticky;
+      top: var(--site-header-offset, 92px);
+      z-index: 20;
+      border-bottom: 1px solid rgba(224, 216, 194, .9);
+      background: rgba(255, 253, 247, .94);
+      backdrop-filter: blur(14px);
+    }
+    .breadcrumb-inner { display: flex; align-items: center; gap: 10px; min-height: 48px; overflow: hidden; color: #8a9189; font-size: .78rem; }
+    .breadcrumb-inner a { color: #26432b; font-weight: 700; text-decoration: none; }
+    .breadcrumb-inner a:hover { color: #b4862d; }
+    .breadcrumb-current { overflow: hidden; color: #657166; text-overflow: ellipsis; white-space: nowrap; }
     .detail-hero {
       min-height: 420px;
       display: flex;
@@ -180,6 +214,17 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
       color: #3d4d47; font-size: 1rem; line-height: 1.8; }
     .content-card ::ng-deep p { margin: 0 0 16px; }
     .content-card ::ng-deep ul, .content-card ::ng-deep ol { padding-left: 22px; margin: 0 0 18px; }
+    .section-kicker { margin-bottom: 8px; color: #b4862d; font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .agenda-card { background: linear-gradient(135deg, #fffdf7 0%, #f8f5eb 100%); }
+    .agenda-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; counter-reset: agenda; }
+    .agenda-list li { position: relative; display: grid; grid-template-columns: 92px 1fr; gap: 16px; align-items: start; padding: 14px 0 14px 34px; border-bottom: 1px solid #e9e1d0; counter-increment: agenda; }
+    .agenda-list li::before { content: counter(agenda, decimal-leading-zero); position: absolute; top: 16px; left: 0; color: #b4862d; font-size: .72rem; font-weight: 800; }
+    .agenda-time { grid-column: 1; grid-row: 1; color: #657166; font-size: .75rem; font-weight: 700; white-space: nowrap; }
+    .agenda-entry { grid-column: 2; color: #26372d; font-size: .96rem; font-weight: 650; line-height: 1.5; }
+    .agenda-rich { color: #3d4d47; }
+    .speaker-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .speaker-item { display: flex; align-items: flex-start; gap: 12px; min-height: 72px; padding: 16px; border: 1px solid #e5ddcc; border-radius: 12px; background: rgba(255,255,255,.62); color: #304136; font-size: .92rem; font-weight: 650; line-height: 1.5; }
+    .speaker-mark { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex: 0 0 24px; border-radius: 50%; color: #fff; background: #26432b; font-size: .72rem; }
     .event-sidebar { display: flex; flex-direction: column; gap: 24px; }
     .sidebar-title { margin: 0 0 18px; font-size: 1.2rem; color: #17241b; }
     .sidebar-item {
@@ -205,7 +250,6 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
     .carousel-dots { display: flex; justify-content: center; gap: 8px; padding-top: 12px; }
     .carousel-dot { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: #c8c0ab; cursor: pointer; }
     .carousel-dot.active { background: #26432b; transform: scale(1.25); }
-    .eu-section { margin-top: 32px; }
     .loading-state {
       display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 320px; color: #6e7767;
     }
@@ -218,10 +262,16 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
     }
     @media (max-width: 640px) {
       .container { padding: 0 18px; }
+      :host { --site-header-offset: 78px; }
+      .breadcrumb-inner { min-height: 44px; gap: 7px; font-size: .7rem; }
       .detail-hero { min-height: 340px; }
       .hero-inner { padding-top: 50px; padding-bottom: 50px; }
       .carousel-stage, .carousel-slide app-cloudinary-image { min-height: 260px; height: 260px; }
       .content-card, .sidebar-card { padding: 20px 18px; }
+      .speaker-grid { grid-template-columns: 1fr; }
+      .agenda-list li { grid-template-columns: 76px 1fr; gap: 10px; }
+      .agenda-time { font-size: .68rem; }
+      .agenda-entry { font-size: .86rem; }
     }
   `]
 })
@@ -266,6 +316,26 @@ export class EventDetailComponent implements OnInit, OnDestroy {
       .sort((first, second) => (first.display_order ?? 0) - (second.display_order ?? 0))
       .map(image => ({ path: image.image_path, alt: image.caption || event.title, caption: image.caption }));
     return event.featured_image ? [{ path: event.featured_image, alt: event.title }, ...galleryImages] : galleryImages;
+  }
+
+  protected isRichText(value: string): boolean {
+    return /<[^>]+>/.test(value);
+  }
+
+  protected speakerItems(value: string): string[] {
+    return value.split(/[;\n]+/).map(item => item.trim()).filter(Boolean);
+  }
+
+  protected agendaItems(value: string): string[] {
+    return value.split(/\r?\n/).map(item => item.trim()).filter(Boolean);
+  }
+
+  protected agendaTime(value: string): string {
+    return value.match(/^\s*(\d{1,2}:\d{2}(?:\s*[–-]\s*\d{1,2}:\d{2})?)/)?.[1] ?? '';
+  }
+
+  protected agendaLabel(value: string): string {
+    return value.replace(/^\s*\d{1,2}:\d{2}(?:\s*[–-]\s*\d{1,2}:\d{2})?\s*/, '').trim() || value;
   }
 
   protected showImage(index: number): void {

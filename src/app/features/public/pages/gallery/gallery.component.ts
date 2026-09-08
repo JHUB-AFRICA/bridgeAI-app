@@ -8,12 +8,11 @@ import { RouterModule } from '@angular/router';
 import { GalleryService } from '../../../../services/gallery.service';
 import { GalleryAlbum } from '../../../core/models/gallery.model';
 import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-image/cloudinary-image.component';
-import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [CommonModule, RouterModule, CloudinaryImageComponent, EuFundingBannerComponent],
+  imports: [CommonModule, RouterModule, CloudinaryImageComponent],
   template: `
     <div class="gallery-page">
       <section class="gallery-hero">
@@ -54,9 +53,6 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
           <div class="empty-state">No gallery albums available at this time.</div>
         </ng-template>
 
-        <div class="eu-section">
-          <app-eu-funding-banner></app-eu-funding-banner>
-        </div>
       </div>
     </div>
   `,
@@ -122,7 +118,6 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
     .empty-state {
       text-align: center; padding: 64px 20px; background: #fffdf7; border: 1px dashed #decfa9; border-radius: 18px; color: #5b7165;
     }
-    .eu-section { margin-top: 32px; }
     @media (max-width: 900px) { .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 640px) {
       .container { padding: 0 18px; }

@@ -8,7 +8,6 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ResourceService } from '../../../../services/resource.service';
 import { Resource } from '../../../core/models/resource.model';
 import { SafeHtmlPipe } from '../../../shared/pipes/safe-html.pipe';
-import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 
 @Component({
   selector: 'app-resource-detail',
@@ -16,8 +15,7 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
   imports: [
     CommonModule,
     RouterModule,
-    SafeHtmlPipe,
-    EuFundingBannerComponent
+    SafeHtmlPipe
   ],
   template: `
     <div class="resource-detail-page">
@@ -95,9 +93,6 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
             </div>
           </div>
 
-          <div class="eu-section">
-            <app-eu-funding-banner></app-eu-funding-banner>
-          </div>
         </div>
 
         <ng-template #loading>

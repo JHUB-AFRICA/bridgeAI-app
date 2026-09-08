@@ -6,15 +6,36 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Observable, map } from 'rxjs';
 import { SubmissionService } from '../../../../services/submission.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
+import { ContactSubmission, MediaRequestSubmission, SMESubmission, Submission, TrainingInterestSubmission } from '../../../core/models/submission.model';
+
+type MessageType = 'contact' | 'training' | 'media' | 'sme';
+
+interface ContactFormData {
+  form_type: MessageType;
+  name: string;
+  email: string;
+  organisation: string;
+  audience: string;
+  phone: string;
+  county: string;
+  training_interest: string;
+  outlet: string;
+  request_type: string;
+  deadline: string;
+  industry: string;
+  interest: string;
+  message: string;
+  consent: boolean;
+}
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, EuFundingBannerComponent],
+  imports: [CommonModule, FormsModule, RouterLink],
   template: `
     <div class="contact-page">
       <section class="contact-hero">
@@ -32,6 +53,16 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
             <h2 class="form-title">Send a Message</h2>
             <form (ngSubmit)="onSubmit()" #contactForm="ngForm" class="contact-form">
               <div class="form-group">
+                <label for="form_type">What can we help you with? *</label>
+                <select id="form_type" name="form_type" [(ngModel)]="formData.form_type" class="form-control" required>
+                  <option value="contact">General enquiry</option>
+                  <option value="training">Training interest</option>
+                  <option value="media">Media request</option>
+                  <option value="sme">SME partnership</option>
+                </select>
+              </div>
+
+              <div class="form-group">
                 <label for="name">Full Name *</label>
                 <input type="text" id="name" name="name" [(ngModel)]="formData.name" required class="form-control" placeholder="Your full name" />
               </div>
@@ -41,11 +72,14 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
                 <input type="email" id="email" name="email" [(ngModel)]="formData.email" required class="form-control" placeholder="your@email.com" />
               </div>
 
+              @if (formData.form_type === 'contact' || formData.form_type === 'sme') {
               <div class="form-group">
                 <label for="organisation">Organisation</label>
-                <input type="text" id="organisation" name="organisation" [(ngModel)]="formData.organisation" class="form-control" placeholder="Your organisation name" />
+                <input type="text" id="organisation" name="organisation" [(ngModel)]="formData.organisation" [required]="formData.form_type === 'sme'" class="form-control" placeholder="Your organisation name" />
               </div>
+              }
 
+              @if (formData.form_type !== 'media' && formData.form_type !== 'sme') {
               <div class="form-group">
                 <label for="audience">I am a...</label>
                 <select id="audience" name="audience" [(ngModel)]="formData.audience" class="form-control">
@@ -59,10 +93,28 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
                   <option value="partner">Partner</option>
                 </select>
               </div>
+              }
+
+              @if (formData.form_type === 'training') {
+                <div class="form-group"><label for="phone">Phone</label><input type="tel" id="phone" name="phone" [(ngModel)]="formData.phone" class="form-control" placeholder="Your phone number" /></div>
+                <div class="form-group"><label for="county">County or location</label><input type="text" id="county" name="county" [(ngModel)]="formData.county" class="form-control" placeholder="e.g. Kiambu" /></div>
+                <div class="form-group full-width"><label for="training_interest">Training interest *</label><input type="text" id="training_interest" name="training_interest" [(ngModel)]="formData.training_interest" required class="form-control" placeholder="Which training, workshop or topic interests you?" /></div>
+              }
+
+              @if (formData.form_type === 'media') {
+                <div class="form-group"><label for="outlet">Media outlet *</label><input type="text" id="outlet" name="outlet" [(ngModel)]="formData.outlet" required class="form-control" placeholder="Publication, station or platform" /></div>
+                <div class="form-group"><label for="request_type">Request type *</label><select id="request_type" name="request_type" [(ngModel)]="formData.request_type" required class="form-control"><option value="interview">Interview</option><option value="footage">Footage or images</option><option value="statement">Statement</option></select></div>
+                <div class="form-group"><label for="deadline">Deadline</label><input type="date" id="deadline" name="deadline" [(ngModel)]="formData.deadline" class="form-control" /></div>
+              }
+
+              @if (formData.form_type === 'sme') {
+                <div class="form-group"><label for="industry">Industry sector *</label><input type="text" id="industry" name="industry" [(ngModel)]="formData.industry" required class="form-control" placeholder="e.g. Agriculture technology" /></div>
+                <div class="form-group full-width"><label for="interest">Partnership interest *</label><input type="text" id="interest" name="interest" [(ngModel)]="formData.interest" required class="form-control" placeholder="How would you like to engage with BRIDGE-AI?" /></div>
+              }
 
               <div class="form-group full-width">
-                <label for="message">Message *</label>
-                <textarea id="message" name="message" [(ngModel)]="formData.message" required class="form-control" rows="5" placeholder="Your message..."></textarea>
+                <label for="message">{{ formData.form_type === 'training' ? 'Additional message' : 'Message *' }}</label>
+                <textarea id="message" name="message" [(ngModel)]="formData.message" [required]="formData.form_type !== 'training'" class="form-control" rows="5" placeholder="Tell us how we can help..."></textarea>
               </div>
 
               <div class="form-group full-width consent-group">
@@ -107,9 +159,6 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
           </div>
         </div>
 
-        <div class="eu-section">
-          <app-eu-funding-banner></app-eu-funding-banner>
-        </div>
       </div>
     </div>
   `,
@@ -268,7 +317,6 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
       font-weight: 600;
     }
     .quick-links a:hover { text-decoration: underline; }
-    .eu-section { margin-top: 32px; }
     @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; } }
     @media (max-width: 640px) {
       .container { padding: 0 18px; }
@@ -286,11 +334,20 @@ export class ContactComponent implements OnInit {
   protected pilotSite = LOCAL_CONTEXT.PILOT_SITE;
   protected isSubmitting = false;
 
-  protected formData = {
+  protected formData: ContactFormData = {
+    form_type: 'contact',
     name: '',
     email: '',
     organisation: '',
     audience: 'general',
+    phone: '',
+    county: '',
+    training_interest: '',
+    outlet: '',
+    request_type: 'interview',
+    deadline: '',
+    industry: '',
+    interest: '',
     message: '',
     consent: false
   };
@@ -303,10 +360,14 @@ export class ContactComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
-      const audience = params.get('type');
+      const type = params.get('type');
       const validAudiences = ['general', 'farmer', 'student', 'developer', 'sme', 'researcher', 'media', 'partner'];
-      if (audience && validAudiences.includes(audience)) {
-        this.formData.audience = audience;
+      const validMessageTypes: MessageType[] = ['contact', 'training', 'media', 'sme'];
+      if (type && validMessageTypes.includes(type as MessageType)) {
+        this.formData.form_type = type as MessageType;
+      }
+      if (type && validAudiences.includes(type)) {
+        this.formData.audience = type;
       }
     });
   }
@@ -318,23 +379,17 @@ export class ContactComponent implements OnInit {
 
     this.isSubmitting = true;
 
-    this.submissionService.submitContactForm({
-      name: this.formData.name,
-      email: this.formData.email,
-      organisation: this.formData.organisation,
-      audience: this.formData.audience,
-      message: this.formData.message,
-      is_read: false,
-      form_type: 'contact'
-    }).subscribe({
+    this.submitForm().subscribe({
       next: () => {
         this.isSubmitting = false;
         this.notificationService.showSuccess('Your message has been sent successfully!');
         this.formData = {
+          form_type: 'contact',
           name: '',
           email: '',
           organisation: '',
           audience: 'general',
+          phone: '', county: '', training_interest: '', outlet: '', request_type: 'interview', deadline: '', industry: '', interest: '',
           message: '',
           consent: false
         };
@@ -344,5 +399,19 @@ export class ContactComponent implements OnInit {
         this.notificationService.showError('There was an error sending your message. Please try again.');
       }
     });
+  }
+
+  private submitForm(): Observable<Submission> {
+    const base = { name: this.formData.name, email: this.formData.email, is_read: false as const };
+    switch (this.formData.form_type) {
+      case 'training':
+        return this.submissionService.submitTrainingInterest({ ...base, phone: this.formData.phone, county: this.formData.county, audience: this.formData.audience, training_interest: this.formData.training_interest, message: this.formData.message, form_type: 'training' } satisfies TrainingInterestSubmission).pipe(map(value => value as Submission));
+      case 'media':
+        return this.submissionService.submitMediaRequest({ ...base, outlet: this.formData.outlet, request_type: this.formData.request_type, deadline: this.formData.deadline, audience: 'media', message: this.formData.message, form_type: 'media' } satisfies MediaRequestSubmission).pipe(map(value => value as Submission));
+      case 'sme':
+        return this.submissionService.submitSmeInterest({ ...base, organisation: this.formData.organisation, industry: this.formData.industry, interest: this.formData.interest, message: this.formData.message, form_type: 'sme' } satisfies SMESubmission).pipe(map(value => value as Submission));
+      default:
+        return this.submissionService.submitContactForm({ ...base, organisation: this.formData.organisation, audience: this.formData.audience, message: this.formData.message, form_type: 'contact' } satisfies ContactSubmission).pipe(map(value => value as Submission));
+    }
   }
 }

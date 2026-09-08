@@ -89,9 +89,6 @@ def _resource_public_id(resource):
     if segments and re.fullmatch(r'v\d+', segments[0]):
         segments = segments[1:]
     public_id = '/'.join(segments)
-    extension = resource.get('file_extension') or os.path.splitext(public_id)[1].lstrip('.')
-    if extension and public_id.lower().endswith(f'.{extension.lower()}'):
-        public_id = public_id[:-(len(extension) + 1)]
     return public_id
 
 

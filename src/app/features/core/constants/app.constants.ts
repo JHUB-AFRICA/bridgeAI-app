@@ -1,5 +1,5 @@
 // ============================================================
-// BRIDGE-AI Kenya - Application Constants
+// BRIDGE-AI - Application Constants
 // ============================================================
 
 /**
@@ -10,7 +10,7 @@ export const APP = {
   /**
    * The full, human-readable name of the project.
    */
-  NAME: 'BRIDGE-AI Kenya',
+  NAME: 'BRIDGE-AI',
 
   /**
    * The official project acronym.
@@ -31,7 +31,7 @@ export const APP = {
   /**
    * Short, one-line description used for SEO and social media.
    */
-  DESCRIPTION: 'Generative AI, IoT sensing, and digital skills for climate-smart mushroom farming and rural innovation in Kenya.'
+  DESCRIPTION: 'Generative AI, IoT sensing, and digital skills for climate-smart agriculture across Nigeria, Kenya, and Tunisia.'
 };
 
 // ============================================================
@@ -166,8 +166,6 @@ export const ROUTES = {
     TRAINING_WP5: 'training-wp5',
     TRAINING_EVENTS: 'training-events',
     EVENT_DETAIL: 'training-events/:slug',
-    TRAINING_MATERIALS: 'training-materials',
-    MATERIAL_DETAIL: 'training-materials/:slug',
     SME_MENTORING: 'sme-mentoring',
     COMMUNITY_PRACTICE: 'community-practice',
     REPLICATION_TOOLKIT: 'replication-toolkit',
@@ -193,7 +191,6 @@ export const ROUTES = {
     TEAM: 'team',
     GALLERY: 'gallery',
     FAQS: 'faqs',
-    TRAINING_MATERIALS: 'training-materials',
     SME: 'sme',
     COMMUNITY: 'community',
     REPLICATION: 'replication',
@@ -289,10 +286,6 @@ export const FEATURES = {
    */
   GALLERY_ENABLED: true,
 
-  /**
-   * Enable/disable the training materials module.
-   */
-  TRAINING_ENABLED: true
 };
 
 // ============================================================

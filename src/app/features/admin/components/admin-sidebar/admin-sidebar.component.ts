@@ -275,7 +275,6 @@ export class AdminSidebarComponent {
     { path: 'team', label: 'Team', icon: this.getTeamIcon(), active: false },
     { path: 'gallery', label: 'Gallery', icon: this.getGalleryIcon(), active: false },
     { path: 'faqs', label: 'FAQs', icon: this.getFaqIcon(), active: false },
-    { path: 'training-materials', label: 'Training Materials', icon: this.getTrainingIcon(), active: false },
     { path: 'sme', label: 'SME', icon: this.getSmeIcon(), active: false },
     { path: 'community', label: 'Community', icon: this.getCommunityIcon(), active: false },
     { path: 'replication', label: 'Replication', icon: this.getReplicationIcon(), active: false },

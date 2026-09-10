@@ -1,5 +1,5 @@
 // ============================================================
-// BRIDGE-AI Kenya - Public Routes
+// BRIDGE-AI - Public Routes
 // ============================================================
 
 import { Routes } from '@angular/router';
@@ -22,6 +22,14 @@ export const PublicRoutes: Routes = [
     loadComponent: () => import('./pages/smart-mushrooms/smart-mushrooms.component').then(m => m.SmartMushroomsComponent)
   },
   {
+    path: 'pilot-nigeria',
+    loadComponent: () => import('./pages/about/about.component').then(m => m.PilotNigeriaComponent)
+  },
+  {
+    path: 'pilot-tunisia',
+    loadComponent: () => import('./pages/about/about.component').then(m => m.PilotTunisiaComponent)
+  },
+  {
     path: 'activities',
     loadComponent: () => import('./pages/activities/activities.component').then(m => m.ActivitiesComponent)
   },
@@ -40,14 +48,6 @@ export const PublicRoutes: Routes = [
   {
     path: 'training-events/:slug',
     loadComponent: () => import('./pages/event-detail/event-detail.component').then(m => m.EventDetailComponent)
-  },
-  {
-    path: 'training-materials',
-    loadComponent: () => import('./pages/training-materials/training-materials').then(m => m.TrainingMaterialsComponent)
-  },
-  {
-    path: 'training-materials/:slug',
-    loadComponent: () => import('./pages/material-detail/material-detail.component').then(m => m.MaterialDetailComponent)
   },
   {
     path: 'sme-mentoring',

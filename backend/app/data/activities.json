@@ -22,5 +22,29 @@
     "summary": "A practical session focused on identifying contamination risks and improving hygiene practices throughout the mushroom production process.",
     "title": "Mushroom Farm Hygiene and Contamination Prevention Activity",
     "wp_tag": "WP3"
+  },
+  {
+    "title": "Smart Mushroom Farm Pilot",
+    "slug": "smart-mushroom-farm-pilot",
+    "date": "2026-09-10",
+    "wp_tag": "WP5",
+    "activity_type": "Field Demo",
+    "audience": "Farmers, researchers, students, agricultural extension officers, technology innovators, and project partners",
+    "location": "JKUAT Smart Farm Zone, Juja, Kenya",
+    "summary": "Pilot implementation of an AI-enabled smart mushroom farming system integrating environmental sensors, automated controls, and data-driven monitoring to improve mushroom production and farm management.",
+    "body": "The Bridge-AI Kenya project is piloting an intelligent mushroom farming solution designed to support more efficient and data-driven agricultural production. The system combines sensors for monitoring temperature, humidity, carbon dioxide, light, and moisture with automated environmental controls and digital data collection.",
+    "evidence_status": "published",
+    "featured_image": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789067675/bridge-ai/activities/ejphqlxfrhxfvbubyohn.jpg",
+    "gallery_images": [
+      {
+        "image_path": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789067683/bridge-ai/activities/a3dsgxemhhkzzjxzryry.jpg",
+        "display_order": 0
+      },
+      {
+        "image_path": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789067758/bridge-ai/activities/d1ga2e88vkimg5pyhhtl.jpg",
+        "display_order": 1
+      }
+    ],
+    "id": 2
   }
 ]

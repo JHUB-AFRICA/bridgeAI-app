@@ -1,5 +1,5 @@
 // ============================================================
-// BRIDGE-AI Kenya - Gallery Component
+// BRIDGE-AI - Gallery Component
 // ============================================================
 
 import { Component, OnInit, signal } from '@angular/core';
@@ -19,7 +19,7 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
         <div class="hero-inner container">
           <span class="hero-badge">Gallery</span>
           <h1>Visual stories from BRIDGE-AI</h1>
-          <p>See the field work, training moments, and community collaboration that are shaping the project across Kenya.</p>
+          <p>See the field work, training moments, and community collaboration shaping BRIDGE-AI across Nigeria, Kenya, and Tunisia.</p>
         </div>
       </section>
 

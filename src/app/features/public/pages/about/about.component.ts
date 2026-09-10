@@ -1,5 +1,5 @@
 // ============================================================
-// BRIDGE-AI Kenya - About Component
+// BRIDGE-AI - About Component
 // ============================================================
 
 import { Component, OnInit } from '@angular/core';
@@ -35,12 +35,6 @@ import { RouterModule } from '@angular/router';
               A Horizon Europe Research and Innovation Action improving African rural societies
               by integrating GenAI-based solutions into agricultural optimisation and digital skills acquisition.
             </p>
-            <div class="hero-buttons">
-              <a href="#overview" class="btn-primary">
-                <i class="fas fa-arrow-right btn-icon"></i>
-                Explore the Project
-              </a>
-            </div>
           </div>
         </div>
       </section>
@@ -48,10 +42,9 @@ import { RouterModule } from '@angular/router';
       <nav class="section-nav" aria-label="Page sections">
         <div class="section-nav-inner">
           <a href="#overview" data-section="overview" class="active">Overview</a>
-          <a href="#objectives" data-section="objectives">Objectives</a>
-          <a href="#countries" data-section="countries">Countries</a>
+          <a href="#impact" data-section="impact">Impact &amp; Objectives</a>
+          <a href="#countries" data-section="countries">Pilot Regions</a>
           <a href="#technology" data-section="technology">Technology</a>
-          <a href="#timeline" data-section="timeline">Timeline</a>
         </div>
       </nav>
 
@@ -84,107 +77,24 @@ import { RouterModule } from '@angular/router';
         </div>
       </section>
 
-      <section class="section section-alt" id="benefits">
+      <section class="section section-alt" id="impact">
         <div class="container">
           <div class="section-header reveal">
-            <h2>Our <span class="highlight">Impact</span></h2>
-            <p>BRIDGE-AI is transforming agriculture across Africa through six key pillars</p>
+            <h2>Impact &amp; <span class="highlight">Objectives</span></h2>
+            <p>Practical AI, stronger skills, and solutions that can move beyond the pilot regions.</p>
           </div>
-          <div class="benefits-grid">
-            <div class="benefit-card reveal">
-              <div class="benefit-icon"><i class="fas fa-handshake"></i></div>
-              <div class="benefit-content">
-                <h4>Europe-Africa Partnership</h4>
-                <p>A strong collaboration between European and African partners to deliver real impact for farmers across the continent.</p>
-              </div>
+          <div class="impact-layout">
+            <div class="impact-image reveal">
+              <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1200&q=85" alt="BRIDGE-AI partners collaborating around agricultural innovation" loading="lazy" />
+              <span class="impact-image-caption">Research, technology and local knowledge in one shared practice.</span>
             </div>
-            <div class="benefit-card reveal">
-              <div class="benefit-icon"><i class="fas fa-lightbulb"></i></div>
-              <div class="benefit-content">
-                <h4>Better Decision Making</h4>
-                <p>Digital tools that transform complex environmental data into practical recommendations for everyday farming activities.</p>
-              </div>
-            </div>
-            <div class="benefit-card reveal">
-              <div class="benefit-icon"><i class="fas fa-cloud-sun"></i></div>
-              <div class="benefit-content">
-                <h4>Climate-Smart Agriculture</h4>
-                <p>Helping farmers respond to drought, changing weather patterns and water scarcity with sustainable and resilient practices.</p>
-              </div>
-            </div>
-            <div class="benefit-card reveal">
-              <div class="benefit-icon"><i class="fas fa-brain"></i></div>
-              <div class="benefit-content">
-                <h4>Accessible AI</h4>
-                <p>Using Generative Artificial Intelligence to make advanced technologies easier to understand and use in rural communities.</p>
-              </div>
-            </div>
-            <div class="benefit-card reveal">
-              <div class="benefit-icon"><i class="fas fa-users"></i></div>
-              <div class="benefit-content">
-                <h4>Working Together</h4>
-                <p>Farmers, researchers, cooperatives, SMEs and public authorities co-design solutions through Living Labs in three countries.</p>
-              </div>
-            </div>
-            <div class="benefit-card reveal">
-              <div class="benefit-icon"><i class="fas fa-graduation-cap"></i></div>
-              <div class="benefit-content">
-                <h4>Building Skills for the Future</h4>
-                <p>Training, workshops and educational resources to strengthen digital skills and support adoption of innovative technologies.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-dark" id="objectives">
-        <div class="container">
-          <div class="section-header reveal">
-            <h2>Our <span style="color:#C89BE8;">Objectives</span></h2>
-            <p style="color:rgba(247,242,230,0.7);">BRIDGE-AI works toward six primary objectives across research, capacity building, and replication</p>
-          </div>
-          <div class="objectives-grid">
-            <div class="objective-card reveal">
-              <div class="obj-number">01</div>
-              <div class="obj-content">
-                <h4>Technology Demonstration</h4>
-                <p>Deploy and validate GenAI-enhanced solutions across three African countries with documented performance data.</p>
-              </div>
-            </div>
-            <div class="objective-card reveal">
-              <div class="obj-number">02</div>
-              <div class="obj-content">
-                <h4>Farmer Empowerment</h4>
-                <p>Equip farmers with smart farming capabilities through accessible digital tools and practical recommendations.</p>
-              </div>
-            </div>
-            <div class="objective-card reveal">
-              <div class="obj-number">03</div>
-              <div class="obj-content">
-                <h4>Youth &amp; Women Inclusion</h4>
-                <p>Actively engage youth and women through targeted training, mentoring, and leadership pathways in agritech.</p>
-              </div>
-            </div>
-            <div class="objective-card reveal">
-              <div class="obj-number">04</div>
-              <div class="obj-content">
-                <h4>Knowledge Transfer</h4>
-                <p>Deliver modular training, bootcamps, SME mentoring, and replication resources across East and West Africa.</p>
-              </div>
-            </div>
-            <div class="objective-card reveal">
-              <div class="obj-number">05</div>
-              <div class="obj-content">
-                <h4>Research &amp; Evidence</h4>
-                <p>Document pilot outcomes, lessons learned, and best practices for reporting to Horizon Europe and the public.</p>
-              </div>
-            </div>
-            <div class="objective-card reveal">
-              <div class="obj-number">06</div>
-              <div class="obj-content">
-                <h4>Scalability &amp; Replication</h4>
-                <p>Develop replication playbooks and toolkits for adoption across Africa beyond the pilot regions.</p>
-              </div>
+            <div class="impact-list">
+              <article class="impact-item reveal"><span>01</span><div><h4>Useful decisions</h4><p>Turn field, weather, satellite and sensor data into clear guidance for farmers.</p></div></article>
+              <article class="impact-item reveal"><span>02</span><div><h4>Climate resilience</h4><p>Support better planning around changing weather, water, soil and crop conditions.</p></div></article>
+              <article class="impact-item reveal"><span>03</span><div><h4>Inclusive skills</h4><p>Build practical digital skills with farmers, youth, women, SMEs and local organisations.</p></div></article>
+              <article class="impact-item reveal"><span>04</span><div><h4>Evidence from pilots</h4><p>Test solutions in Nigeria, Kenya and Tunisia, then document what works.</p></div></article>
+              <article class="impact-item reveal"><span>05</span><div><h4>Open collaboration</h4><p>Connect researchers, partners and communities through shared tools and Living Labs.</p></div></article>
+              <article class="impact-item reveal"><span>06</span><div><h4>Scale beyond pilots</h4><p>Package learning into training, resources and playbooks for wider adoption.</p></div></article>
             </div>
           </div>
         </div>
@@ -193,11 +103,12 @@ import { RouterModule } from '@angular/router';
       <section class="section" id="countries">
         <div class="container">
           <div class="section-header reveal">
-            <h2>Countries &amp; <span class="highlight">Use Cases</span></h2>
-            <p>BRIDGE-AI works in three African countries with four agricultural use cases</p>
+            <h2>Our <span class="highlight">Pilot Regions</span></h2>
+            <p>Three regions, four use cases, one shared BRIDGE-AI approach.</p>
           </div>
           <div class="countries-grid">
-            <div class="country-card reveal">
+            <a class="country-card-link reveal" [routerLink]="['/pilot-nigeria']">
+            <div class="country-card">
               <div class="card-image">
                 <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1200&q=80" alt="Maize farming in Nigeria" loading="lazy" />
               </div>
@@ -209,8 +120,10 @@ import { RouterModule } from '@angular/router';
                 <span class="tech-tag">Digital Shadows</span>
               </div>
             </div>
+            </a>
 
-            <div class="country-card reveal">
+            <a class="country-card-link reveal" [routerLink]="['/smart-mushrooms']">
+            <div class="country-card">
               <div class="card-image">
                 <img src="https://images.unsplash.com/photo-1464226184884-fa52ac9fcf8b?auto=format&fit=crop&w=1200&q=80" alt="Mushroom cultivation in Kenya" loading="lazy" />
               </div>
@@ -222,8 +135,10 @@ import { RouterModule } from '@angular/router';
                 <span class="tech-tag">IoT + GenAI</span>
               </div>
             </div>
+            </a>
 
-            <div class="country-card reveal">
+            <a class="country-card-link reveal" [routerLink]="['/pilot-tunisia']">
+            <div class="country-card">
               <div class="card-image">
                 <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80" alt="Pasture in Tunisia" loading="lazy" />
               </div>
@@ -235,8 +150,10 @@ import { RouterModule } from '@angular/router';
                 <span class="tech-tag">Earth Observation</span>
               </div>
             </div>
+            </a>
 
-            <div class="country-card reveal">
+            <a class="country-card-link reveal" [routerLink]="['/pilot-tunisia']">
+            <div class="country-card">
               <div class="card-image">
                 <img src="https://images.unsplash.com/photo-1461354464878-ad92f492a5a0?auto=format&fit=crop&w=1200&q=80" alt="Pomegranate in Tunisia" loading="lazy" />
               </div>
@@ -248,6 +165,7 @@ import { RouterModule } from '@angular/router';
                 <span class="tech-tag">Earth Observation</span>
               </div>
             </div>
+            </a>
           </div>
         </div>
       </section>
@@ -274,13 +192,6 @@ import { RouterModule } from '@angular/router';
               </div>
             </div>
             <div class="tech-card reveal">
-              <div class="tech-icon"><i class="fas fa-cubes"></i></div>
-              <div class="tech-content">
-                <h4>Digital Shadows</h4>
-                <p>Virtual replicas of physical systems for "what-if" scenario testing, yield forecasting, and training simulation — without risking real crops.</p>
-              </div>
-            </div>
-            <div class="tech-card reveal">
               <div class="tech-icon"><i class="fas fa-satellite"></i></div>
               <div class="tech-content">
                 <h4>Earth Observation (EO)</h4>
@@ -288,65 +199,11 @@ import { RouterModule } from '@angular/router';
               </div>
             </div>
             <div class="tech-card reveal">
-              <div class="tech-icon"><i class="fas fa-code-branch"></i></div>
+              <div class="tech-icon"><i class="fas fa-comments"></i></div>
               <div class="tech-content">
-                <h4>Semantic Interoperability (FIWARE/NGSI-LD)</h4>
-                <p>Using open standards for seamless data exchange between systems and platforms, ensuring different technologies work together smoothly.</p>
+                <h4>Accessible advice</h4>
+                <p>Clear recommendations delivered through practical dashboards, alerts and local-language support.</p>
               </div>
-            </div>
-            <div class="tech-card reveal">
-              <div class="tech-icon"><i class="fas fa-message"></i></div>
-              <div class="tech-content">
-                <h4>Low-Bandwidth Advisory</h4>
-                <p>Voice alerts and SMS-based advisory in local languages (Swahili, French, Arabic) for farmers with limited connectivity. Simple, accessible, and practical.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="timeline">
-        <div class="container">
-          <div class="section-header reveal">
-            <h2>Project <span class="highlight">Timeline</span></h2>
-            <p>BRIDGE-AI follows a structured six-phase approach from research to impact</p>
-          </div>
-          <div class="timeline-grid">
-            <div class="timeline-card reveal">
-              <span class="tl-number">Phase 01</span>
-              <span class="tl-period">Listening &amp; Learning</span>
-              <h4>Understanding Local Needs</h4>
-              <p>The project starts by working directly with farmers, cooperatives and local communities in Nigeria, Kenya and Tunisia to better understand their needs, challenges and priorities.</p>
-            </div>
-            <div class="timeline-card reveal">
-              <span class="tl-number">Phase 02</span>
-              <span class="tl-period">Turning Data into Tools</span>
-              <h4>Developing Digital Solutions</h4>
-              <p>Combining satellite imagery, weather information, field sensors and artificial intelligence to create digital tools that help farmers make informed decisions.</p>
-            </div>
-            <div class="timeline-card reveal">
-              <span class="tl-number">Phase 03</span>
-              <span class="tl-period">Testing on Real Farms</span>
-              <h4>Real-World Validation</h4>
-              <p>The tools are tested in real agricultural environments through four pilot cases focused on maize, mushrooms, pastures and pomegranates across three countries.</p>
-            </div>
-            <div class="timeline-card reveal">
-              <span class="tl-number">Phase 04</span>
-              <span class="tl-period">Working Hand in Hand</span>
-              <h4>Living Labs</h4>
-              <p>Farmers and local stakeholders are actively involved through Living Labs, allowing users to test tools, share feedback and shape solutions that respond to local needs.</p>
-            </div>
-            <div class="timeline-card reveal">
-              <span class="tl-number">Phase 05</span>
-              <span class="tl-period">Sharing Knowledge</span>
-              <h4>Training &amp; Capacity Building</h4>
-              <p>Providing training, workshops and learning opportunities to help farmers, entrepreneurs and local organisations understand and use new digital technologies.</p>
-            </div>
-            <div class="timeline-card reveal">
-              <span class="tl-number">Phase 06</span>
-              <span class="tl-period">Expanding Impact</span>
-              <h4>Scalability &amp; Replication</h4>
-              <p>Sharing knowledge and solutions so they can be adopted in other regions and agricultural contexts, contributing to a more sustainable and resilient future for agriculture across Africa.</p>
             </div>
           </div>
         </div>
@@ -851,6 +708,40 @@ import { RouterModule } from '@angular/router';
       align-items: flex-start;
     }
 
+    .impact-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, .9fr) 1.1fr;
+      gap: 56px;
+      align-items: stretch;
+    }
+
+    .impact-image {
+      position: relative;
+      min-height: 640px;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      background: var(--moss-deep);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .impact-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 45%, rgba(22, 40, 26, .82));
+    }
+
+    .impact-image img { width: 100%; height: 100%; min-height: 640px; object-fit: cover; transition: transform .8s var(--transition); }
+    .impact-image:hover img { transform: scale(1.04); }
+    .impact-image-caption { position: absolute; z-index: 1; right: 28px; bottom: 28px; left: 28px; color: var(--paper); font: 500 .82rem/1.6 'IBM Plex Mono', monospace; }
+
+    .impact-list { display: grid; align-content: center; gap: 0; }
+    .impact-item { display: grid; grid-template-columns: 48px 1fr; gap: 18px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+    .impact-item:first-child { border-top: 1px solid var(--line); }
+    .impact-item > span { color: var(--growlight-deep); font: 600 .72rem 'IBM Plex Mono', monospace; padding-top: 4px; }
+    .impact-item h4 { margin: 0 0 4px; color: var(--ink); font-size: 1.12rem; }
+    .impact-item p { margin: 0; color: var(--mist); font-size: .9rem; line-height: 1.65; }
+
     .benefit-card:hover {
       transform: translateY(-6px);
       box-shadow: var(--shadow-lg);
@@ -942,15 +833,21 @@ import { RouterModule } from '@angular/router';
 
     .countries-grid {
       display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-      justify-content: center;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .country-card-link {
+      display: block;
+      width: 100%;
+      color: inherit;
+      text-decoration: none;
     }
 
     .country-card {
-      flex: 1 1 calc(50% - 12px);
-      min-width: 280px;
-      max-width: 580px;
+      display: grid;
+      grid-template-columns: minmax(280px, 38%) 1fr;
+      width: 100%;
       border-radius: var(--radius-md);
       overflow: hidden;
       box-shadow: var(--shadow-md);
@@ -959,13 +856,18 @@ import { RouterModule } from '@angular/router';
       border: 1px solid var(--growlight);
     }
 
-    .country-card:hover {
+    .country-card-link:hover .country-card {
       box-shadow: var(--shadow-lg);
       border-color: var(--growlight);
+      transform: translateY(-3px);
     }
 
+    .country-card-link { position: relative; }
+    .country-card-link::after { content: '\\2197'; position: absolute; right: 24px; bottom: 22px; z-index: 2; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: var(--paper); background: var(--growlight-deep); font-size: 1rem; transition: transform .3s ease, background .3s ease; }
+    .country-card-link:hover::after { transform: translate(3px, -3px); background: var(--moss); }
+
     .country-card .card-image {
-      height: 400px;
+      min-height: 300px;
       overflow: hidden;
       background: var(--moss-deep);
     }
@@ -1031,16 +933,13 @@ import { RouterModule } from '@angular/router';
     }
 
     .tech-grid {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 24px;
-      justify-content: center;
     }
 
     .tech-card {
-      flex: 1 1 calc(50% - 12px);
-      min-width: 280px;
-      max-width: 580px;
+      min-width: 0;
       background: var(--paper-card);
       border-radius: var(--radius-md);
       padding: 30px 28px;
@@ -1245,13 +1144,16 @@ import { RouterModule } from '@angular/router';
       .section-header h2 { font-size: 2.2rem; }
       .benefit-card { flex: 1 1 100%; max-width: 100%; }
       .objective-card { flex: 1 1 100%; max-width: 100%; }
-      .country-card { flex: 1 1 100%; max-width: 100%; }
-      .tech-card { flex: 1 1 100%; max-width: 100%; }
+      .country-card { grid-template-columns: minmax(220px, 34%) 1fr; }
+      .tech-grid { grid-template-columns: 1fr; }
       .timeline-card { flex: 1 1 100%; max-width: 100%; }
       .overview-text { flex: 1 1 100%; }
       .overview-image { flex: 1 1 100%; min-height: 240px; }
       .methodology-image { flex: 1 1 100%; min-height: 200px; }
       .methodology-content { flex: 1 1 100%; }
+      .impact-layout { grid-template-columns: 1fr; gap: 32px; }
+      .impact-image { min-height: 360px; }
+      .impact-image img { min-height: 360px; }
     }
 
     @media (max-width: 768px) {
@@ -1288,6 +1190,7 @@ import { RouterModule } from '@angular/router';
       .tech-card,
       .timeline-card { text-align: center; align-items: center; }
       .country-card .card-body { text-align: center; }
+      .impact-item { grid-template-columns: 38px 1fr; gap: 12px; text-align: left; }
       .methodology-content .method-item {
         display: flex;
         align-items: center;
@@ -1310,6 +1213,9 @@ import { RouterModule } from '@angular/router';
         font-weight: 400;
         text-align: left;
       }
+
+      .country-card { grid-template-columns: 1fr; }
+      .country-card .card-image { min-height: 230px; }
     }
 
     @media (max-width: 480px) {
@@ -1431,3 +1337,40 @@ export class AboutComponent implements OnInit {
     });
   }
 }
+
+const pilotPageStyles = [`
+  :host { display: block; --paper: #f7f2e6; --ink: #17241b; --moss: #26432b; --purple: #7c4fa3; --mist: #6e7767; --line: #e1d8c0; color: var(--ink); font-family: Inter, sans-serif; }
+  * { box-sizing: border-box; }
+  .pilot-page { min-height: 100vh; background: var(--paper); }
+  .pilot-hero { min-height: 560px; display: flex; align-items: flex-end; position: relative; color: #fff; background-size: cover; background-position: center; }
+  .pilot-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10, 23, 15, .88), rgba(10, 23, 15, .2)); }
+  .nigeria { background-image: url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1800&q=85'); }
+  .tunisia { background-image: url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=85'); }
+  .hero-content { position: relative; z-index: 1; width: min(1280px, calc(100% - 48px)); margin: 0 auto; padding: 70px 0; max-width: 820px; }
+  .breadcrumb { display: block; color: rgba(255, 255, 255, .75); font-size: .75rem; margin-bottom: 46px; text-decoration: none; }
+  .eyebrow { display: block; color: #d8e86b; font: 600 .68rem 'IBM Plex Mono', monospace; letter-spacing: .14em; text-transform: uppercase; }
+  h1 { font: 600 clamp(3rem, 7vw, 6rem)/1 Fraunces, serif; margin: 12px 0 18px; } h1 em { color: #d8e86b; font-weight: 400; }
+  .pilot-hero p { max-width: 560px; color: rgba(255, 255, 255, .84); font-size: 1.08rem; line-height: 1.7; }
+  .button { display: inline-flex; gap: 10px; align-items: center; margin-top: 24px; padding: 13px 22px; border-radius: 40px; color: #fff; background: var(--moss); text-decoration: none; font-weight: 700; }
+  .button:hover { background: var(--purple); }
+  .content-section { padding: 96px 0; } .content-container { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+  .intro { max-width: 680px; margin-bottom: 44px; } .intro h2 { font: 600 2.7rem/1.1 Fraunces, serif; margin: 10px 0 14px; } .intro p, .feature-grid p { color: var(--mist); line-height: 1.75; }
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; } .feature-grid article { overflow: hidden; background: #fffdf7; border: 1px solid var(--line); } .feature-grid img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; } .feature-grid h3, .feature-grid p { margin-left: 20px; margin-right: 20px; } .feature-grid h3 { margin-top: 20px; margin-bottom: 6px; } .feature-grid p { margin-bottom: 22px; }
+  @media (max-width: 700px) { .hero-content, .content-container { width: min(100% - 32px, 600px); } .pilot-hero { min-height: 540px; } .feature-grid { grid-template-columns: 1fr; } .content-section { padding: 62px 0; } .intro h2 { font-size: 2.2rem; } }
+`];
+
+@Component({
+  selector: 'app-pilot-nigeria',
+  imports: [RouterModule],
+  template: `<main class="pilot-page"><section class="pilot-hero nigeria"><div class="hero-content"><a routerLink="/about" class="breadcrumb">BRIDGE-AI / Pilot Regions</a><span class="eyebrow">Nigeria pilot</span><h1>Maize <em>Production</em></h1><p>Practical climate and crop intelligence for maize farmers, cooperatives and local agribusinesses.</p><a routerLink="/about" fragment="countries" class="button">Back to pilot regions <span aria-hidden="true">&#8594;</span></a></div></section><section class="content-section"><div class="content-container"><div class="intro"><span class="eyebrow">The focus</span><h2>Better decisions in changing conditions</h2><p>BRIDGE-AI combines weather, satellite and field information to help maize producers plan, respond to climate pressure and improve crop management.</p></div><div class="feature-grid"><article><img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Maize field in Nigeria" loading="lazy"><h3>Seasonal planning</h3><p>Use timely information to support planting and harvest decisions.</p></article><article><img src="https://images.unsplash.com/photo-1464226184884-fa52ac9fcf8b?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Farmer reviewing a crop" loading="lazy"><h3>Digital support</h3><p>Translate complex signals into clear, usable recommendations.</p></article><article><img src="https://images.unsplash.com/photo-1523742810366-5a8d2a8c5f1a?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Agricultural landscape" loading="lazy"><h3>Local validation</h3><p>Test tools with local partners and agricultural communities.</p></article></div></div></section></main>`,
+  styles: pilotPageStyles
+})
+export class PilotNigeriaComponent {}
+
+@Component({
+  selector: 'app-pilot-tunisia',
+  imports: [RouterModule],
+  template: `<main class="pilot-page"><section class="pilot-hero tunisia"><div class="hero-content"><a routerLink="/about" class="breadcrumb">BRIDGE-AI / Pilot Regions</a><span class="eyebrow">Tunisia pilot</span><h1>Pasture &amp; <em>Pomegranate</em></h1><p>Decision support for pasture communities and pomegranate growers managing water, weather and crop conditions.</p><a routerLink="/about" fragment="countries" class="button">Back to pilot regions <span aria-hidden="true">&#8594;</span></a></div></section><section class="content-section"><div class="content-container"><div class="intro"><span class="eyebrow">The focus</span><h2>Local insight for water-smart agriculture</h2><p>BRIDGE-AI brings environmental information and digital tools closer to farming decisions in Tunisia, supporting pasture management, irrigation and crop planning.</p></div><div class="feature-grid"><article><img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Pasture landscape in Tunisia" loading="lazy"><h3>Pasture intelligence</h3><p>Understand pasture growth and changing environmental conditions.</p></article><article><img src="https://images.unsplash.com/photo-1461354464878-ad92f492a5a0?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Pomegranate orchard in Tunisia" loading="lazy"><h3>Crop planning</h3><p>Support irrigation, crop care and harvest planning with data.</p></article><article><img src="https://images.unsplash.com/photo-1523742810366-5a8d2a8c5f1a?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Agricultural landscape and field work" loading="lazy"><h3>Shared learning</h3><p>Validate tools with farmers, researchers and local partners.</p></article></div></div></section></main>`,
+  styles: pilotPageStyles
+})
+export class PilotTunisiaComponent {}

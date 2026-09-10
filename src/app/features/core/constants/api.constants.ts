@@ -81,19 +81,6 @@ export const API_ENDPOINTS = {
     DELETE: (id: number | string): string => `/faqs/${id}`
   },
 
-  // ============================================================
-  // Training & WP5 Resources
-  // ============================================================
-
-  TRAINING_MATERIALS: {
-    GET_ALL: '/training-materials',
-    GET_BY_ID: (id: number | string): string => `/training-materials/${id}`,
-    GET_BY_SLUG: (slug: string): string => `/training-materials/${slug}`,
-    CREATE: '/training-materials',
-    UPDATE: (id: number | string): string => `/training-materials/${id}`,
-    DELETE: (id: number | string): string => `/training-materials/${id}`
-  },
-
   CHALLENGES: {
     GET_ALL: '/challenges',
     GET_BY_ID: (id: number | string): string => `/challenges/${id}`,

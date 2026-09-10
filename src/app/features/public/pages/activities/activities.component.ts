@@ -1,5 +1,5 @@
 // ============================================================
-// BRIDGE-AI Kenya - Activities Component
+// BRIDGE-AI - Activities Component
 // ============================================================
 
 import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
@@ -33,7 +33,7 @@ type ActivityFilters = {
             <h1><span class="highlight">Activities</span> &amp; Field Updates</h1>
             <p class="hero-sub">Documenting the journey of BRIDGE-AI across Africa</p>
             <p class="hero-description">
-              From pilot implementation to capacity building, stakeholder engagement, and real-world impact across agriculture in Africa. Explore the latest activities and training events from JKUAT and JHUB Africa.
+              From pilot implementation to capacity building, stakeholder engagement, and real-world impact across agriculture in Africa. Explore the latest consortium activities, field updates, and learning moments from BRIDGE-AI.
             </p>
             <div class="hero-buttons">
               <a href="#activities" class="btn-primary">
@@ -123,13 +123,13 @@ type ActivityFilters = {
         <div class="container">
           <div class="section-header reveal">
             <h2>Latest <span class="highlight">Activities</span></h2>
-            <p>News, events, and field updates from BRIDGE-AI implementation at JKUAT</p>
+            <p>News, events, and field updates from the BRIDGE-AI consortium.</p>
           </div>
 
           <div class="activities-grid">
             @if (filteredActivities().length > 0) {
-              @for (activity of filteredActivities(); track trackByActivity($index, activity)) {
-                <article class="activity-card reveal">
+              @for (activity of filteredActivities(); track trackByActivity($index, activity); let first = $first) {
+                <article class="activity-card reveal" [class.featured-card]="first">
                   <div class="card-image">
                     <img [src]="getActivityImage(activity)" [alt]="activity.title" loading="lazy" />
                     @if (activity.wp_tag) {
@@ -139,6 +139,9 @@ type ActivityFilters = {
 
                   <div class="card-body">
                     <div class="card-meta">
+                      @if (first) {
+                        <span class="featured-label">Featured update</span>
+                      }
                       <span class="meta-date">{{ getDateText(activity.date) }}</span>
                       @if (activity.wp_tag) {
                         <span class="meta-tag wp">{{ activity.wp_tag }}</span>
@@ -234,15 +237,23 @@ type ActivityFilters = {
     .section-header h2 { font-size: 2.8rem; font-weight: 800; color: #17241b; line-height: 1.08; letter-spacing: -0.02em; margin: 0; }
     .section-header .highlight { color: #26432b; }
     .section-header p { margin-top: 14px; font-size: 1.05rem; color: #6e7767; }
-    .activities-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
-    .activity-card { flex: 1 1 calc(33.333% - 20px); min-width: 280px; max-width: 380px; background: #fffdf7; border: 1px solid #e1d8c0; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: transform 0.35s ease, box-shadow 0.35s ease; }
-    .activity-card:hover { transform: translateY(-6px); box-shadow: 0 24px 64px rgba(0,0,0,0.12); }
-    .card-image { position: relative; height: 200px; overflow: hidden; background: #16281a; }
+    .activities-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; }
+    .activity-card { min-width: 0; display: flex; flex-direction: column; background: #fffdf7; border: 1px solid #e1d8c0; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease; }
+    .activity-card:hover { transform: translateY(-6px); border-color: #7c4fa3; box-shadow: 0 24px 64px rgba(0,0,0,0.12); }
+    .activity-card.featured-card { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(320px, 1.12fr) 1fr; min-height: 0; background: #16281a; border-color: #16281a; }
+    .activity-card.featured-card .card-image { height: auto; min-height: 0; }
+    .activity-card.featured-card .card-body { min-height: 0; padding: 28px 32px 0; background: #16281a; }
+    .activity-card.featured-card .card-body h3 a { color: #fff; font-size: 1.6rem; }
+    .activity-card.featured-card .card-summary { color: rgba(247,242,230,.72); font-size: .96rem; }
+    .activity-card.featured-card .card-footer { border-top-color: rgba(247,242,230,.14); }
+    .activity-card.featured-card .meta-date, .activity-card.featured-card .card-location { color: rgba(247,242,230,.58); }
+    .card-image { position: relative; height: 220px; overflow: hidden; background: #16281a; }
     .card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
     .activity-card:hover .card-image img { transform: scale(1.05); }
     .image-tag { position: absolute; top: 12px; right: 12px; background: rgba(22, 40, 26, 0.8); color: #f7f2e6; padding: 3px 14px; border-radius: 50px; font-size: 0.58rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
     .card-body { padding: 22px 24px 0; display: flex; flex-direction: column; min-height: 220px; }
     .card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .featured-label { color: #d8e86b; font: 600 .62rem 'IBM Plex Mono', monospace; letter-spacing: .1em; text-transform: uppercase; margin-right: 4px; }
     .meta-date { font-size: 0.65rem; color: #6e7767; font-weight: 500; }
     .meta-tag { display: inline-block; border-radius: 50px; padding: 2px 10px; font-size: 0.52rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
     .meta-tag.wp { background: rgba(124, 79, 163, 0.09); color: #5b3878; }
@@ -259,8 +270,8 @@ type ActivityFilters = {
     .empty-state .empty-icon { display: block; margin-bottom: 16px; font-size: 2.6rem; color: #26432b; opacity: 0.3; }
     .empty-state h3 { margin: 0 0 6px; font-size: 1.3rem; color: #17241b; }
     .empty-state p { max-width: 400px; margin: 0 auto; color: #6e7767; }
-    @media (max-width: 1024px) { .hero-grid { gap: 32px; padding: 40px 20px; } .hero-left h1 { font-size: 2.8rem; } .section-header h2 { font-size: 2.2rem; } .activity-card { flex: 1 1 calc(50% - 15px); max-width: none; } .hero-right { flex: 1 1 100%; } }
-    @media (max-width: 768px) { .hero { min-height: auto; } .hero-grid { flex-direction: column; text-align: center; padding: 40px 16px; } .hero-left, .hero-right { flex: 1 1 100%; } .hero-left { text-align: center; } .hero-left h1 { font-size: 2.2rem; } .hero-sub { font-size: 1rem; } .hero-description { font-size: 0.92rem; max-width: 100%; } .hero-buttons { justify-content: center; flex-direction: column; width: 100%; } .hero-buttons .btn-primary, .hero-buttons .btn-secondary { width: 100%; } .filter-container { padding: 0 16px; flex-direction: column; } .filter-group { justify-content: center; } .activity-card { flex: 1 1 100%; max-width: 400px; } .activities-grid { gap: 20px; } .activity-type-card { flex: 1 1 100%; min-width: unset; } .section-header h2 { font-size: 1.8rem; } .section-header p { font-size: 0.95rem; } }
+    @media (max-width: 1024px) { .hero-grid { gap: 32px; padding: 40px 20px; } .hero-left h1 { font-size: 2.8rem; } .section-header h2 { font-size: 2.2rem; } .activity-card.featured-card { grid-template-columns: 1fr 1fr; } .hero-right { flex: 1 1 100%; } }
+    @media (max-width: 768px) { .hero { min-height: auto; } .hero-grid { flex-direction: column; text-align: center; padding: 40px 16px; } .hero-left, .hero-right { flex: 1 1 100%; } .hero-left { text-align: center; } .hero-left h1 { font-size: 2.2rem; } .hero-sub { font-size: 1rem; } .hero-description { font-size: 0.92rem; max-width: 100%; } .hero-buttons { justify-content: center; flex-direction: column; width: 100%; } .hero-buttons .btn-primary, .hero-buttons .btn-secondary { width: 100%; } .filter-container { padding: 0 16px; flex-direction: column; } .filter-group { justify-content: center; } .activities-grid { grid-template-columns: 1fr; gap: 20px; } .activity-card.featured-card { grid-column: auto; display: flex; } .activity-card.featured-card .card-image { min-height: 240px; height: 240px; } .activity-card.featured-card .card-body { padding: 24px 22px 0; } .activity-card.featured-card .card-body h3 a { font-size: 1.3rem; } .activity-type-card { flex: 1 1 100%; min-width: unset; } .section-header h2 { font-size: 1.8rem; } .section-header p { font-size: 0.95rem; } }
     @media (max-width: 480px) { .container { padding: 0 16px; } .hero-left h1 { font-size: 1.8rem; } .section-header h2 { font-size: 1.5rem; } .card-body { padding: 16px 18px 0; } .card-footer { flex-direction: column; align-items: flex-start; } }
   `]
 })

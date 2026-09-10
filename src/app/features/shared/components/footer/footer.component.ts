@@ -46,7 +46,6 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
             <h4 class="footer-col-title">Project</h4>
             <ul class="footer-col-links">
               <li><a [routerLink]="['/about']">About BRIDGE-AI</a></li>
-              <li><a [routerLink]="['/jkuat-role']">JKUAT Role</a></li>
               <li><a [routerLink]="['/partners']">Partners</a></li>
               <li><a [routerLink]="['/privacy-ethics']">Privacy and Ethics</a></li>
             </ul>
@@ -66,7 +65,7 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
             <h4 class="footer-col-title">Resources</h4>
             <ul class="footer-col-links">
               <li><a [routerLink]="['/resources']" [queryParams]="{ type: 'deliverable' }">Deliverables</a></li>
-              <li><a [routerLink]="['/training-materials']">Training Materials</a></li>
+              <li><a [routerLink]="['/resources']">Training Materials</a></li>
               <li><a [routerLink]="['/resources']" [queryParams]="{ type: 'policy_brief' }">Policy Briefs</a></li>
               <li><a [routerLink]="['/resources']" [queryParams]="{ type: 'publication' }">Publications</a></li>
             </ul>

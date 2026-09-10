@@ -1,5 +1,5 @@
 // ============================================================
-// BRIDGE-AI Kenya - Resources Component
+// BRIDGE-AI - Resources Component
 // ============================================================
 
 import { Component, OnInit, inject, signal } from '@angular/core';

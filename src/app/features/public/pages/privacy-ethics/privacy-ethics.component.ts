@@ -195,9 +195,6 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
       color: #4b5563;
     }
 
-      margin-top: 32px;
-    }
-
     @media (max-width: 768px) {
       .page-title {
         font-size: 26px;

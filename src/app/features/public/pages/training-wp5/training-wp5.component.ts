@@ -1,5 +1,5 @@
 // ============================================================
-// BRIDGE-AI Kenya - Training WP5 Component
+// BRIDGE-AI - Training WP5 Component
 // ============================================================
 
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
@@ -14,6 +14,7 @@ import { RouterModule } from '@angular/router';
     <main class="training-wp5-page">
       <section class="hero-section">
         <div class="hero-bg"></div>
+        <div class="hero-bg hero-bg-alt"></div>
         <div class="hero-overlay"></div>
         <div class="hero-grid-pattern"></div>
         <div class="hero-glow"></div>
@@ -21,49 +22,31 @@ import { RouterModule } from '@angular/router';
         <div class="hero-accent-line"></div>
 
         <div class="hero-container">
+          <nav class="hero-breadcrumb" aria-label="Breadcrumb">
+            <a [routerLink]="['/']">Home</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Training &amp; WP5</span>
+          </nav>
+
           <div class="hero-grid">
             <div class="hero-content">
               <h1 class="hero-title">
                 Capacity Building<br>
                 <span class="gold">and Replication</span>
               </h1>
-              <p class="hero-subtitle">JKUAT's Leadership in African Digital Agriculture</p>
+              <p class="hero-subtitle">BRIDGE-AI Consortium Capacity Building Across Africa</p>
               <p class="hero-desc">
-                JKUAT leads Work Package 5, focusing on training, SME mentoring,
-                community building and replication of GenAI solutions for African agriculture.
+                The BRIDGE-AI consortium brings together partners across Nigeria, Kenya and Tunisia
+                to grow skills, mentor SMEs, connect communities and replicate GenAI solutions for agriculture.
               </p>
               <div class="hero-actions">
                 <a [routerLink]="['/training-events']" class="btn-primary">
                   Explore Events
                   <span class="btn-arrow">→</span>
                 </a>
-                <a [routerLink]="['/training-materials']" class="btn-outline">
+                <a [routerLink]="['/resources']" class="btn-outline">
                   View Materials
                 </a>
-              </div>
-            </div>
-
-            <div class="hero-stats">
-              <div class="stats-card">
-                <div class="stats-item">
-                  <span class="stats-label">Participants</span>
-                  <span class="stats-value">150+</span>
-                </div>
-                <div class="stats-divider"></div>
-                <div class="stats-item">
-                  <span class="stats-label">Mentored SMEs</span>
-                  <span class="stats-value">45+</span>
-                </div>
-                <div class="stats-divider"></div>
-                <div class="stats-item">
-                  <span class="stats-label">Events</span>
-                  <span class="stats-value">12+</span>
-                </div>
-                <div class="stats-divider"></div>
-                <div class="stats-item">
-                  <span class="stats-label">Countries</span>
-                  <span class="stats-value">8+</span>
-                </div>
               </div>
             </div>
           </div>
@@ -77,13 +60,13 @@ import { RouterModule } from '@angular/router';
 
       <nav class="section-nav" aria-label="Page sections">
         <div class="section-nav-inner">
-          <a href="#overview" data-section="overview" class="active">Overview</a>
-          <a href="#events" data-section="events">Events</a>
-          <a href="#materials" data-section="materials">Materials</a>
-          <a href="#mentoring" data-section="mentoring">Mentoring</a>
-          <a href="#community" data-section="community">Community</a>
-          <a href="#replication" data-section="replication">Replication</a>
-          <a href="#register" data-section="register">Register</a>
+          <a href="#overview" data-section="overview" class="active" (click)="scrollToSection($event, 'overview')">Overview</a>
+          <a href="#events" data-section="events" (click)="scrollToSection($event, 'events')">Events</a>
+          <a href="#materials" data-section="materials" (click)="scrollToSection($event, 'materials')">Materials</a>
+          <a href="#mentoring" data-section="mentoring" (click)="scrollToSection($event, 'mentoring')">Mentoring</a>
+          <a href="#community" data-section="community" (click)="scrollToSection($event, 'community')">Community</a>
+          <a href="#replication" data-section="replication" (click)="scrollToSection($event, 'replication')">Replication</a>
+          <a href="#register" data-section="register" (click)="scrollToSection($event, 'register')">Register</a>
         </div>
       </nav>
 
@@ -92,15 +75,15 @@ import { RouterModule } from '@angular/router';
           <div class="intro-grid">
             <div class="intro-text">
               <span class="intro-label">About WP5</span>
-              <h2>Building Capacity for <span class="gold">African Agriculture</span></h2>
+              <h2>Building Capacity Across <span class="gold">Three Countries</span></h2>
               <p>
-                JKUAT leads the effort to build African digital agriculture capacity
-                across East Africa. Through training, mentoring and replication,
-                we empower SMEs, developers and farmers with GenAI solutions.
+                Work Package 5 is a consortium-wide effort to build digital agriculture capacity
+                across Nigeria, Kenya and Tunisia. Through training, mentoring and replication,
+                BRIDGE-AI empowers SMEs, developers, farmers and community partners with GenAI solutions.
               </p>
               <p style="margin-bottom:0;">
-                Our programs reach across Kenya, Tunisia and Nigeria,
-                creating a lasting impact on agricultural innovation.
+                Each country contributes its own agricultural expertise and local context,
+                from the Smart Mushroom pilot in Kenya to BRIDGE-AI use cases in Nigeria and Tunisia.
               </p>
             </div>
             <div class="intro-stats">
@@ -117,8 +100,8 @@ import { RouterModule } from '@angular/router';
                 <span class="stat-label">Events Hosted</span>
               </div>
               <div class="intro-stat">
-                <span class="stat-number">8+</span>
-                <span class="stat-label">Countries Reached</span>
+                <span class="stat-number">3</span>
+                <span class="stat-label">Countries Connected</span>
               </div>
             </div>
           </div>
@@ -137,7 +120,7 @@ import { RouterModule } from '@angular/router';
               <h3>Training <span class="gold">Events</span></h3>
               <p class="feature-desc">
                 Hands-on bootcamps, workshops and field demonstrations for farmers,
-                youth and women across East Africa. Participants learn practical
+                youth and women across Nigeria, Kenya and Tunisia. Participants learn practical
                 skills in agritech, AI and digital farming.
               </p>
               <div class="feature-stats">
@@ -150,7 +133,7 @@ import { RouterModule } from '@angular/router';
                   <span class="stat-label">Participants Trained</span>
                 </div>
                 <div class="feature-stat">
-                  <span class="stat-number">8+</span>
+                  <span class="stat-number">3</span>
                   <span class="stat-label">Countries Reached</span>
                 </div>
               </div>
@@ -192,7 +175,7 @@ import { RouterModule } from '@angular/router';
                   <span class="stat-label">Downloadable Guides</span>
                 </div>
               </div>
-              <a [routerLink]="['/training-materials']" class="feature-cta">
+              <a [routerLink]="['/resources']" class="feature-cta">
                 Explore Materials
                 <span class="cta-arrow">→</span>
               </a>
@@ -360,8 +343,8 @@ import { RouterModule } from '@angular/router';
               <span class="register-label">Get Involved</span>
               <h2>Ready to Get <span class="gold">Involved</span>?</h2>
               <p>
-                Join your training programs and help shape the future of
-                African agriculture through GenAI and digital innovation.
+                Join BRIDGE-AI training programs and help shape the future of
+                agriculture across Nigeria, Kenya and Tunisia through GenAI and digital innovation.
                 Be part of the change.
               </p>
               <div class="register-actions">
@@ -381,7 +364,7 @@ import { RouterModule } from '@angular/router';
                   <div class="icon">✦</div>
                   <span>Join the movement</span>
                   <br>
-                  <span style="font-size:0.7rem;opacity:0.5;">Shape African agriculture</span>
+                  <span style="font-size:0.7rem;opacity:0.5;">Shape the consortium's impact</span>
                 </div>
               </div>
             </div>
@@ -460,10 +443,26 @@ import { RouterModule } from '@angular/router';
       position: absolute;
       inset: 0;
       z-index: 0;
-      background-image: url('https://media.licdn.com/dms/image/v2/D4E22AQFeYSn7BgjW7Q/feedshare-shrink_1280/B4EZ8YMXqlKQAM-/0/1782817324557?e=1787788800&v=beta&t=TFdYxfoeh3GQ3xBfwTM-8_Shp0vqzExYrarKCTRf2Ig');
+      transform: translate3d(0, var(--hero-parallax, 0px), 0) scale(1.08);
+      transform-origin: center top;
+      transition: transform 0.08s linear;
+      background-image: url('https://res.cloudinary.com/rn4dhrdb/image/upload/v1788870191/bridge-ai/activities/ojgvahkngrsvywvbueik.jpg');
       background-size: cover;
       background-position: center 25%;
       filter: brightness(0.8) contrast(1.05);
+    }
+
+    .hero-bg-alt {
+      z-index: 0;
+      background-image: url('https://res.cloudinary.com/rn4dhrdb/image/upload/v1788554710/bridge-ai/events/watr7abqimosseh3unfk.jpg');
+      opacity: 0;
+      animation: heroImageLoop 14s ease-in-out infinite;
+    }
+
+    @keyframes heroImageLoop {
+      0%, 42% { opacity: 0; }
+      50%, 92% { opacity: 1; }
+      100% { opacity: 0; }
     }
 
     .hero-overlay {
@@ -525,10 +524,30 @@ import { RouterModule } from '@angular/router';
       margin: 0 auto;
     }
 
+    .hero-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 34px;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 0.74rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .hero-breadcrumb a {
+      color: #ffffff;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .hero-breadcrumb a:hover {
+      color: var(--gold-light);
+    }
+
     .hero-grid {
       display: grid;
-      grid-template-columns: 1fr 280px;
-      gap: 40px;
+      grid-template-columns: minmax(0, 760px);
       align-items: center;
       min-height: 55vh;
     }
@@ -637,51 +656,6 @@ import { RouterModule } from '@angular/router';
       border-color: rgba(255, 255, 255, 0.20);
       color: #ffffff;
       transform: translateY(-3px);
-    }
-
-    .hero-stats {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-    }
-
-    .stats-card {
-      background: rgba(255, 255, 255, 0.04);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: var(--radius-md);
-      padding: 24px 28px;
-      min-width: 200px;
-      width: 100%;
-      max-width: 260px;
-    }
-
-    .stats-item {
-      padding: 6px 0;
-    }
-
-    .stats-label {
-      display: block;
-      font-size: 0.6rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: rgba(255, 255, 255, 0.30);
-      margin-bottom: 1px;
-    }
-
-    .stats-value {
-      display: block;
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: #ffffff;
-    }
-
-    .stats-divider {
-      height: 1px;
-      background: rgba(255, 255, 255, 0.04);
-      margin: 6px 0;
     }
 
     .hero-scroll {
@@ -1178,17 +1152,7 @@ import { RouterModule } from '@angular/router';
 
     @media (max-width: 1024px) {
       .hero-grid {
-        grid-template-columns: 1fr 220px;
-        gap: 30px;
-      }
-
-      .stats-card {
-        padding: 20px 24px;
-        min-width: 160px;
-      }
-
-      .stats-value {
-        font-size: 0.85rem;
+        grid-template-columns: minmax(0, 680px);
       }
 
       .hero-title {
@@ -1241,40 +1205,7 @@ import { RouterModule } from '@angular/router';
 
       .hero-grid {
         grid-template-columns: 1fr;
-        gap: 24px;
         min-height: auto;
-      }
-
-      .hero-stats {
-        justify-content: flex-start;
-        width: 100%;
-      }
-
-      .stats-card {
-        max-width: 100%;
-        padding: 16px 20px;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.04);
-      }
-
-      .stats-divider {
-        display: none;
-      }
-
-      .stats-item {
-        padding: 4px 0;
-        text-align: center;
-      }
-
-      .stats-label {
-        font-size: 0.5rem;
-      }
-
-      .stats-value {
-        font-size: 0.78rem;
       }
 
       .hero-diagonal-line {
@@ -1413,20 +1344,6 @@ import { RouterModule } from '@angular/router';
         font-size: 0.85rem;
       }
 
-      .stats-card {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
-        padding: 12px 16px;
-      }
-
-      .stats-item {
-        text-align: left;
-      }
-
-      .stats-value {
-        font-size: 0.7rem;
-      }
-
       .intro-text h2 {
         font-size: 1.5rem;
       }
@@ -1493,16 +1410,55 @@ import { RouterModule } from '@angular/router';
       background: var(--gold-pale);
       color: var(--text-dark);
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-bg {
+        transition: none;
+        transform: none;
+      }
+
+      .hero-bg-alt {
+        animation: none;
+        opacity: 0;
+      }
+    }
   `]
 })
 export class TrainingWp5Component implements AfterViewInit, OnDestroy {
   private observer: IntersectionObserver | null = null;
   private navObserver: IntersectionObserver | null = null;
+  private readonly handleResize = (): void => this.syncStickyOffset();
+  private readonly handleScroll = (): void => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const hero = document.querySelector('.hero-section') as HTMLElement | null;
+    if (!hero) return;
+
+    const offset = Math.min(Math.max(window.scrollY * 0.18, 0), hero.offsetHeight * 0.18);
+    hero.style.setProperty('--hero-parallax', `${offset}px`);
+  };
+
+  scrollToSection(event: MouseEvent, sectionId: string): void {
+    event.preventDefault();
+
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+
+    const header = document.querySelector('.site-header') as HTMLElement | null;
+    const sectionNav = document.querySelector('.section-nav') as HTMLElement | null;
+    const offset = (header?.offsetHeight ?? 80) + (sectionNav?.offsetHeight ?? 52) + 12;
+    const top = section.getBoundingClientRect().top + window.scrollY - offset;
+
+    window.history.replaceState(null, '', `#${sectionId}`);
+    window.scrollTo({ top, behavior: 'smooth' });
+    this.setActiveSection(sectionId);
+  }
 
   ngAfterViewInit(): void {
     this.syncStickyOffset();
-    window.addEventListener('resize', this.syncStickyOffset.bind(this));
-    window.addEventListener('load', this.syncStickyOffset.bind(this));
+    window.addEventListener('resize', this.handleResize);
+    window.addEventListener('load', this.handleResize);
+    window.addEventListener('scroll', this.handleScroll, { passive: true });
 
     const sections = document.querySelectorAll('.feature-section, .intro-section, .register-section');
     const navLinks = document.querySelectorAll('.section-nav a');
@@ -1536,15 +1492,12 @@ export class TrainingWp5Component implements AfterViewInit, OnDestroy {
 
       if (observedSections.length) {
         this.navObserver = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            const link = document.querySelector(`.section-nav a[data-section="${entry.target.id}"]`);
-            if (!link) return;
-            if (entry.isIntersecting) {
-              navLinks.forEach((l) => l.classList.remove('active'));
-              link.classList.add('active');
-            }
-          });
-        }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+          const visibleSections = entries
+            .filter(entry => entry.isIntersecting)
+            .sort((first, second) => first.boundingClientRect.top - second.boundingClientRect.top);
+          const activeSection = visibleSections[0]?.target.id;
+          if (activeSection) this.setActiveSection(activeSection);
+        }, { rootMargin: '-25% 0px -60% 0px', threshold: 0 });
 
         observedSections.forEach((section) => this.navObserver?.observe(section));
       }
@@ -1562,10 +1515,17 @@ export class TrainingWp5Component implements AfterViewInit, OnDestroy {
     document.documentElement.style.setProperty('--site-header-offset', `${height}px`);
   }
 
+  private setActiveSection(sectionId: string): void {
+    document.querySelectorAll('.section-nav a').forEach(link => {
+      link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
+    });
+  }
+
   ngOnDestroy(): void {
     this.observer?.disconnect();
     this.navObserver?.disconnect();
-    window.removeEventListener('resize', this.syncStickyOffset.bind(this));
-    window.removeEventListener('load', this.syncStickyOffset.bind(this));
+    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('load', this.handleResize);
+    window.removeEventListener('scroll', this.handleScroll);
   }
 }

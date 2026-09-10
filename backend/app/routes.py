@@ -600,13 +600,6 @@ def clear_submissions():
     return jsonify({'success': True})
 
 # ============================================================
-# Training Materials
-# ============================================================
-@api_bp.route('/training-materials', methods=['GET'])
-def get_training_materials():
-    return jsonify(json_service.get_all('training-materials.json'))
-
-# ============================================================
 # Challenges
 # ============================================================
 @api_bp.route('/challenges', methods=['GET'])

@@ -366,14 +366,12 @@ interface NavItem {
   `]
 })
 export class HeaderComponent {
-  protected appName = APP.ACRONYM + ' Kenya';
+  protected appName = APP.ACRONYM;
   protected mobileOpen = false;
 
   protected navItems: NavItem[] = [
     { path: '/', label: 'Home' },
     { path: '/about', label: 'About' },
-    { path: '/jkuat-role', label: 'JKUAT Role' },
-    { path: '/smart-mushrooms', label: 'Smart Mushrooms' },
     { path: '/activities', label: 'Activities' },
     { path: '/training-wp5', label: 'Training & WP5' },
     { path: '/resources', label: 'Resources' },

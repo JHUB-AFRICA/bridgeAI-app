@@ -1,5 +1,5 @@
 // ============================================================
-// BRIDGE-AI Kenya - Smart Mushrooms Component
+// BRIDGE-AI - Smart Mushrooms Component
 // ============================================================
 
 import { Component, OnInit, signal } from '@angular/core';

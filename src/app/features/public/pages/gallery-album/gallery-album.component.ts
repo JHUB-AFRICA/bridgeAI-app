@@ -1,5 +1,5 @@
 // ============================================================
-// BRIDGE-AI Kenya - Gallery Album Component
+// BRIDGE-AI - Gallery Album Component
 // ============================================================
 
 import { Component, OnInit, signal } from '@angular/core';

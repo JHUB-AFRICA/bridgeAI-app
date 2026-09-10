@@ -1,15 +1,15 @@
 // ============================================================
-// BRIDGE-AI Kenya - Home Component
+// BRIDGE-AI - Home Component
 // ============================================================
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ActivityService } from '../../../../services/activity.service';
 import { EventService } from '../../../../services/event.service';
 import { Activity } from '../../../core/models/activity.model';
 import { Event } from '../../../core/models/event.model';
-import { APP, FUNDING } from '../../../core/constants/app.constants';
+import { APP } from '../../../core/constants/app.constants';
 
 @Component({
   selector: 'app-home',
@@ -22,15 +22,11 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
     <div class="home-page">
       <section class="hero" id="heroSection">
         <div class="hero-image-wrapper" id="heroImageWrapper">
-          <div class="hero-slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1585951237318-9ea5e175b891?w=1600&q=80');"></div>
+          <div class="hero-slide-bg active" [style.backgroundImage]="'url(' + activeHeroImage() + ')'" aria-hidden="true"></div>
         </div>
 
         <div class="hero-content-wrapper">
           <div class="hero-content">
-            <div class="hero-badge">
-              <span class="badge-text">{{ grantNumber }}</span>
-            </div>
-
             <h1>
               BRIDGE-AI
             </h1>
@@ -51,9 +47,9 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
             </p>
 
             <div class="hero-buttons">
-              <a [routerLink]="['/smart-mushrooms']" class="btn-primary">
-                <i class="fas fa-seedling btn-icon"></i>
-                Smart-Mushrooms Pilot
+              <a [routerLink]="['/about']" fragment="countries" class="btn-primary">
+                <i class="fas fa-map-location-dot btn-icon"></i>
+                Explore Pilot Regions
               </a>
               <a [routerLink]="['/training-wp5']" class="btn-secondary">
                 <i class="fas fa-graduation-cap btn-icon"></i>
@@ -68,9 +64,8 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
         <div class="section-nav-inner">
           <a href="#pilot-regions" data-section="pilot-regions" class="active">Pilot Regions</a>
           <a href="#challenge" data-section="challenge">Challenge</a>
-          <a href="#jkuat-role" data-section="jkuat-role">JKUAT Role</a>
-          <a href="#progress" data-section="progress">Progress</a>
           <a href="#latest" data-section="latest">Activities</a>
+          <a href="#impact" data-section="impact">Impact</a>
           <a href="#connect" data-section="connect">Connect</a>
         </div>
       </nav>
@@ -79,54 +74,22 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
         <div class="container">
           <div class="section-header">
             <h2>Pilot <span class="highlight">Regions</span></h2>
-            <p>BRIDGE-AI validates its solutions in real agriculture systems across Africa</p>
+            <p>One view of the agricultural contexts where BRIDGE-AI is being tested and shaped.</p>
           </div>
-
-          <div class="pilot-grid">
-            <div class="pilot-card">
-              <div class="pilot-image">
-                <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=900&q=80" alt="Maize farming in Nigeria" loading="lazy">
-              </div>
-              <div class="pilot-body">
-                <span class="pilot-title">Maize</span>
-                <span class="pilot-country"><i class="fas fa-map-pin"></i> Nigeria</span>
-                <p>Maize production, with tools for seasonal planning and climate adaptation.</p>
-              </div>
+          <a class="pilot-feature" [routerLink]="[activePilot().route]">
+            <div class="pilot-feature-image" [style.backgroundImage]="'url(' + activePilot().image + ')'" aria-hidden="true"></div>
+            <div class="pilot-feature-content">
+              <span class="pilot-kicker">{{ activePilot().country }} · {{ activePilot().index }} / {{ pilotRegions.length }}</span>
+              <h3>{{ activePilot().title }}</h3>
+              <p>{{ activePilot().description }}</p>
+              <span class="pilot-feature-link">Explore region <i class="fas fa-arrow-right"></i></span>
             </div>
-
-            <div class="pilot-card">
-              <div class="pilot-image">
-                <img src="https://images.unsplash.com/photo-1464226184884-fa52ac9fcf8b?w=900&q=80" alt="Mushroom cultivation in Kenya" loading="lazy">
-              </div>
-              <div class="pilot-body">
-                <span class="pilot-title">Mushroom</span>
-                <span class="pilot-country"><i class="fas fa-map-pin"></i> Kenya</span>
-                <p>Mushroom cultivation in microclimates with environmental monitoring and yield prediction.</p>
-              </div>
+            <div class="pilot-dots" aria-label="Pilot region slides">
+              @for (region of pilotRegions; track region.country; let index = $index) {
+                <span [class.active]="index === pilotIndex()"></span>
+              }
             </div>
-
-            <div class="pilot-card">
-              <div class="pilot-image">
-                <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=900&q=80" alt="Pasture in Tunisia" loading="lazy">
-              </div>
-              <div class="pilot-body">
-                <span class="pilot-title">Pasture</span>
-                <span class="pilot-country"><i class="fas fa-map-pin"></i> Tunisia</span>
-                <p>Environmental information and digital tools to help farmers better understand pasture growth.</p>
-              </div>
-            </div>
-
-            <div class="pilot-card">
-              <div class="pilot-image">
-                <img src="https://images.unsplash.com/photo-1461354464878-ad92f492a5a0?w=900&q=80" alt="Pomegranate in Tunisia" loading="lazy">
-              </div>
-              <div class="pilot-body">
-                <span class="pilot-title">Pomegranate</span>
-                <span class="pilot-country"><i class="fas fa-map-pin"></i> Tunisia</span>
-                <p>Data-driven recommendations on irrigation, biomass and crop care to increase productivity.</p>
-              </div>
-            </div>
-          </div>
+          </a>
         </div>
       </section>
 
@@ -160,123 +123,6 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
 
             <div class="challenge-image">
               <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=1200&q=80" alt="African agriculture" loading="lazy">
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="jkuat-section" id="jkuat-role">
-        <div class="container">
-          <div class="section-header">
-            <h2>What JKUAT <span class="highlight purple">is doing</span></h2>
-            <p>Leading the Smart Mushroom pilot and WP5 capacity building in Kenya.</p>
-          </div>
-
-          <div class="jkuat-grid">
-            <div class="jkuat-card">
-              <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1464226184884-fa52ac9fcf8b?w=800&q=80" alt="Smart Mushroom Pilot" loading="lazy">
-              </div>
-              <div class="card-body">
-                <span class="card-badge">Pilot</span>
-                <h3>Smart Mushroom Pilot</h3>
-                <p>GenAI-assisted monitoring, anomaly detection, digital shadows and IoT sensing for mushroom grow rooms at JKUAT Smart Farm Zone.</p>
-                <a [routerLink]="['/smart-mushrooms']" class="card-link">Learn More <i class="fas fa-arrow-right"></i></a>
-              </div>
-            </div>
-
-            <div class="jkuat-card">
-              <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80" alt="Kenya Living Lab" loading="lazy">
-              </div>
-              <div class="card-body">
-                <span class="card-badge">Lab</span>
-                <h3>Kenya Living Lab</h3>
-                <p>Co-design and feedback activities with farmers, researchers, youth, women and SMEs to ensure solutions meet local needs.</p>
-                <a [routerLink]="['/jkuat-role']" class="card-link">Explore JKUAT Role <i class="fas fa-arrow-right"></i></a>
-              </div>
-            </div>
-
-            <div class="jkuat-card">
-              <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80" alt="Training and Bootcamps" loading="lazy">
-              </div>
-              <div class="card-body">
-                <span class="card-badge">Training</span>
-                <h3>Training &amp; Bootcamps</h3>
-                <p>Hands-on training programs, bootcamps and workshops build digital skills and enable replication across East Africa.</p>
-                <a [routerLink]="['/training-wp5']" class="card-link">View Events <i class="fas fa-arrow-right"></i></a>
-              </div>
-            </div>
-
-            <div class="jkuat-card">
-              <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800&q=80" alt="SME Mentoring" loading="lazy">
-              </div>
-              <div class="card-body">
-                <span class="card-badge">Mentor</span>
-                <h3>SME Mentoring</h3>
-                <p>Supporting agricultural SMEs to adopt, adapt and scale smart farming solutions through mentoring and technical assistance.</p>
-                <a [routerLink]="['/partners']" class="card-link">Learn More <i class="fas fa-arrow-right"></i></a>
-              </div>
-            </div>
-
-            <div class="jkuat-card">
-              <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80" alt="Replication Toolkit" loading="lazy">
-              </div>
-              <div class="card-body">
-                <span class="card-badge">Scale</span>
-                <h3>Replication Toolkit</h3>
-                <p>Playbooks, training materials and open repositories enable replication of the Smart Mushroom model across East Africa.</p>
-                <a [routerLink]="['/resources']" class="card-link">View Toolkit <i class="fas fa-arrow-right"></i></a>
-              </div>
-            </div>
-
-            <div class="jkuat-card">
-              <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="WP5 Leadership" loading="lazy">
-              </div>
-              <div class="card-body">
-                <span class="card-badge">WP5</span>
-                <h3>WP5 Leadership</h3>
-                <p>Leading Work Package 5: Capacity Building and Replication, building African expertise in GenAI solutions for agriculture.</p>
-                <a [routerLink]="['/training-wp5']" class="card-link">Explore WP5 <i class="fas fa-arrow-right"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="counters-section" id="progress">
-        <div class="container">
-          <div class="section-header counters-header">
-            <h2>Making a <span class="highlight purple">Difference</span></h2>
-          </div>
-          <div class="counters-grid">
-            <div class="counter-item">
-              <span class="counter-number" data-count="12">0<span class="counter-suffix">+</span></span>
-              <span class="counter-label">Activities</span>
-            </div>
-            <div class="counter-item">
-              <span class="counter-number" data-count="150">0<span class="counter-suffix">+</span></span>
-              <span class="counter-label">Participants Trained</span>
-            </div>
-            <div class="counter-item">
-              <span class="counter-number" data-count="45">0<span class="counter-suffix">%</span></span>
-              <span class="counter-label">Women / Youth Reached</span>
-            </div>
-            <div class="counter-item">
-              <span class="counter-number" data-count="8">0<span class="counter-suffix">+</span></span>
-              <span class="counter-label">Events</span>
-            </div>
-            <div class="counter-item">
-              <span class="counter-number" data-count="15">0<span class="counter-suffix">+</span></span>
-              <span class="counter-label">Resources</span>
-            </div>
-            <div class="counter-item">
-              <span class="counter-number" data-count="10">0<span class="counter-suffix">+</span></span>
-              <span class="counter-label">SMEs Mentored</span>
             </div>
           </div>
         </div>
@@ -317,7 +163,7 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
                   <div class="activity-copy">
                     <div class="activity-meta"><span class="date">Coming Soon</span></div>
                     <h4>Activities Loading</h4>
-                    <p>Check back soon for updates from BRIDGE-AI Kenya activities.</p>
+                    <p>Check back soon for updates from BRIDGE-AI consortium activities.</p>
                   </div>
                 </div>
               </ng-template>
@@ -347,13 +193,39 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
               <ng-template #eventFallback>
                 <div class="event-item">
                   <div class="event-date"><span class="day">TBA</span><span class="month">TBA</span></div>
-                  <div class="event-info"><h5>Bootcamp Coming Soon</h5><p>East Africa / Kenya Bootcamp</p></div>
+                  <div class="event-info"><h5>Bootcamp Coming Soon</h5><p>Nigeria · Kenya · Tunisia</p></div>
                   <span class="event-status soon">Coming Soon</span>
                 </div>
               </ng-template>
 
               <a [routerLink]="['/training-wp5']" class="view-all-link">View all training <i class="fas fa-arrow-right"></i></a>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="impact-section" id="impact">
+        <div class="container">
+          <div class="section-header">
+            <h2>BRIDGE-AI <span class="highlight">in practice</span></h2>
+            <p>Shared research, local knowledge and practical tools moving from evidence to action.</p>
+          </div>
+          <div class="impact-grid">
+            <article>
+              <span class="impact-index">01 · SCOPE</span>
+              <strong>Three pilot regions</strong>
+              <span>Local contexts shape the way BRIDGE-AI tools are tested and adapted.</span>
+            </article>
+            <article>
+              <span class="impact-index">02 · EVIDENCE</span>
+              <strong>Four agricultural use cases</strong>
+              <span>Maize, mushrooms, pasture and pomegranate keep the work grounded in practice.</span>
+            </article>
+            <article>
+              <span class="impact-index">03 · CAPABILITY</span>
+              <strong>Six technology building blocks</strong>
+              <span>AI, sensors, earth observation and accessible advice work as one system.</span>
+            </article>
           </div>
         </div>
       </section>
@@ -422,6 +294,8 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
       background-position: center;
       opacity: 0.7;
       filter: saturate(0.9);
+      transform: translate3d(0, var(--hero-parallax, 0px), 0) scale(1.08);
+      transition: background-image 1.2s ease, transform 0.08s linear;
     }
 
     .hero::after {
@@ -650,11 +524,59 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
     }
 
     .pilot-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-      justify-content: center;
+      display: block;
     }
+
+    .pilot-feature {
+      min-height: 70vh;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      color: #fff;
+      text-decoration: none;
+      background: #16281a;
+      border-radius: 24px;
+      isolation: isolate;
+    }
+
+    .pilot-feature-image {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background-position: center;
+      background-size: cover;
+      filter: saturate(.9);
+      transition: background-image 1.2s ease, transform 8s ease;
+    }
+
+    .pilot-feature:hover .pilot-feature-image { transform: scale(1.04); }
+
+    .pilot-feature::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(90deg, rgba(9, 21, 14, .88), rgba(9, 21, 14, .12) 75%), linear-gradient(0deg, rgba(9, 21, 14, .8), transparent 55%);
+    }
+
+    .pilot-feature-content { max-width: 650px; padding: clamp(28px, 6vw, 72px); }
+    .pilot-kicker { color: #d8e86b; font: 600 .7rem 'IBM Plex Mono', monospace; letter-spacing: .14em; text-transform: uppercase; }
+    .pilot-feature h3 { margin: 12px 0; color: #fff; font-size: clamp(2.2rem, 5vw, 4.8rem); line-height: 1.04; }
+    .pilot-feature p { max-width: 520px; color: rgba(255, 255, 255, .82); font-size: 1.05rem; line-height: 1.75; }
+    .pilot-feature-link { display: inline-flex; gap: 10px; align-items: center; margin-top: 18px; color: #fff; font-weight: 700; }
+    .pilot-dots { position: absolute; right: 32px; bottom: 32px; display: flex; gap: 8px; }
+    .pilot-dots span { width: 28px; height: 3px; background: rgba(255, 255, 255, .4); transition: background .3s ease, width .3s ease; }
+    .pilot-dots span.active { width: 48px; background: #d8e86b; }
+
+    .impact-section { padding: 80px 0; background: #16281a; }
+    .impact-section .section-header h2 { color: #fff; }
+    .impact-section .section-header p { color: rgba(247, 242, 230, .7); }
+    .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(247, 242, 230, .16); }
+    .impact-grid article { min-height: 190px; padding: 30px; text-align: left; background: #16281a; }
+    .impact-index { display: block; margin-bottom: 22px; color: #d8e86b; font: 600 .64rem 'IBM Plex Mono', monospace; letter-spacing: .12em; }
+    .impact-grid strong { display: block; color: #fff; font-size: 1.45rem; line-height: 1.2; }
+    .impact-grid article > span:last-child { display: block; max-width: 270px; margin-top: 10px; color: rgba(247, 242, 230, .66); font-size: .82rem; line-height: 1.6; }
 
     .pilot-card {
       flex: 1 1 220px;
@@ -1348,6 +1270,28 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
         font-size: 0.95rem;
       }
 
+      .pilot-feature {
+        min-height: 72vh;
+        border-radius: 16px;
+      }
+
+      .pilot-feature-content {
+        padding: 28px 22px 64px;
+      }
+
+      .pilot-feature h3 {
+        font-size: 2.4rem;
+      }
+
+      .pilot-dots {
+        right: 22px;
+        bottom: 24px;
+      }
+
+      .impact-grid {
+        grid-template-columns: 1fr;
+      }
+
       .challenge-section,
       .pilot-section,
       .jkuat-section,
@@ -1455,6 +1399,10 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
         font-size: 1.5rem;
       }
 
+      .pilot-feature h3 {
+        font-size: 2rem;
+      }
+
       .cta-section h2 {
         font-size: 1.5rem;
       }
@@ -1484,14 +1432,42 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
       }
+      .hero-slide-bg, .pilot-feature-image { transform: none; transition: none; }
     }
   `]
 })
-export class HomeComponent implements OnInit {
-  protected heroTitle = APP.ACRONYM + ' Kenya at JKUAT';
+export class HomeComponent implements OnInit, OnDestroy {
+  protected readonly heroImages = [
+    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788870191/bridge-ai/activities/ojgvahkngrsvywvbueik.jpg',
+    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788542499/bridge-ai/activities/f9ydujvtsxxtqufk6mvs.jpg',
+    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788542494/bridge-ai/activities/tmnpjeopjyizh1oxpy5n.jpg',
+    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788554710/bridge-ai/events/watr7abqimosseh3unfk.jpg',
+    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788554793/bridge-ai/events/mplzmvk4knhlhyavccpc.jpg',
+    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1789050014/bridge-ai/events/ltlmpcxoiop7zbq0zyv8.jpg',
+    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880126/bridge-ai/gallery/dndsmgnt3swhqvelu6hl.jpg',
+    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880116/bridge-ai/gallery/vjrk04xljqehh98rnqey.jpg',
+    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880133/bridge-ai/gallery/bbemfuucdg79lwp3cbtv.jpg',
+    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880189/bridge-ai/gallery/x2pkxnhs75azkvsgr2a7.jpg'
+  ];
+  protected readonly pilotRegions = [
+    { country: 'Nigeria', index: '01', title: 'Maize production', description: 'Climate and crop intelligence for seasonal planning, adaptation and stronger maize production.', image: 'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880126/bridge-ai/gallery/dndsmgnt3swhqvelu6hl.jpg', route: '/pilot-nigeria' },
+    { country: 'Kenya', index: '02', title: 'Smart mushroom cultivation', description: 'Sensors, GenAI and digital shadows for more informed growing decisions in the Kenya pilot.', image: 'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788870191/bridge-ai/activities/ojgvahkngrsvywvbueik.jpg', route: '/smart-mushrooms' },
+    { country: 'Tunisia', index: '03', title: 'Pasture management', description: 'Environmental information and digital tools for understanding pasture growth and conditions.', image: 'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880133/bridge-ai/gallery/bbemfuucdg79lwp3cbtv.jpg', route: '/pilot-tunisia' },
+    { country: 'Tunisia', index: '04', title: 'Pomegranate cultivation', description: 'Data-informed irrigation, crop care and harvest planning for pomegranate growers.', image: 'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880189/bridge-ai/gallery/x2pkxnhs75azkvsgr2a7.jpg', route: '/pilot-tunisia' }
+  ];
+  protected readonly heroIndex = signal(0);
+  protected readonly pilotIndex = signal(0);
+  protected readonly activeHeroImage = () => this.heroImages[this.heroIndex()];
+  protected readonly activePilot = () => this.pilotRegions[this.pilotIndex()];
+  private rotation?: ReturnType<typeof setInterval>;
+  private readonly handleResize = (): void => this.syncStickyOffset();
+  private readonly handleScroll = (): void => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const hero = document.querySelector('.hero') as HTMLElement | null;
+    if (hero) hero.style.setProperty('--hero-parallax', `${Math.min(window.scrollY * 0.16, 120)}px`);
+  };
+  protected heroTitle = APP.ACRONYM;
   protected heroDescription = APP.DESCRIPTION;
-  protected grantNumber = FUNDING.GRANT_AGREEMENT;
-
   protected latestActivities = signal<Activity[]>([]);
   protected upcomingEvents = signal<Event[]>([]);
   protected activitiesCount: number = 0;
@@ -1507,10 +1483,21 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
     this.syncStickyOffset();
-    window.addEventListener('resize', this.syncStickyOffset.bind(this));
-    window.addEventListener('scroll', this.syncStickyOffset.bind(this), { passive: true });
-    window.addEventListener('load', this.syncStickyOffset.bind(this));
+    this.rotation = setInterval(() => {
+      this.heroIndex.update(index => (index + 1) % this.heroImages.length);
+      this.pilotIndex.update(index => (index + 1) % this.pilotRegions.length);
+    }, 6000);
+    window.addEventListener('resize', this.handleResize);
+    window.addEventListener('scroll', this.handleScroll, { passive: true });
+    window.addEventListener('load', this.handleResize);
     this.bindSectionNavigation();
+  }
+
+  ngOnDestroy(): void {
+    if (this.rotation) clearInterval(this.rotation);
+    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('load', this.handleResize);
   }
 
   private syncStickyOffset(): void {

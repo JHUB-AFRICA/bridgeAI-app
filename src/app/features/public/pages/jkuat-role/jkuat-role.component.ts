@@ -1,5 +1,5 @@
 // ============================================================
-// BRIDGE-AI Kenya - JKUAT Role Component
+// BRIDGE-AI - JKUAT Role Component
 // ============================================================
 
 import { CommonModule } from '@angular/common';

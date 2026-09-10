@@ -17,7 +17,6 @@ export const AdminRoutes: Routes = [
       { path: 'team', loadComponent: () => import('./pages/team/team.component').then(m => m.AdminTeamComponent) },
       { path: 'gallery', loadComponent: () => import('./pages/gallery/gallery.component').then(m => m.AdminGalleryComponent) },
       { path: 'faqs', loadComponent: () => import('./pages/faqs/faqs.component').then(m => m.AdminFaqsComponent) },
-      { path: 'training-materials', loadComponent: () => import('./pages/training-materials/training-materials.component').then(m => m.AdminTrainingMaterialsComponent) },
       { path: 'sme', loadComponent: () => import('./pages/sme/sme.component').then(m => m.AdminSmeComponent) },
       { path: 'community', loadComponent: () => import('./pages/community/community.component').then(m => m.AdminCommunityComponent) },
       { path: 'replication', loadComponent: () => import('./pages/replication/replication.component').then(m => m.AdminReplicationComponent) },

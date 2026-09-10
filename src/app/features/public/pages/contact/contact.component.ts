@@ -2,11 +2,11 @@
 // BRIDGE-AI Kenya - Contact Component
 // ============================================================
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Observable, map } from 'rxjs';
+import { Observable, finalize, map } from 'rxjs';
 import { SubmissionService } from '../../../../services/submission.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
@@ -125,8 +125,8 @@ interface ContactFormData {
               </div>
 
               <div class="form-actions">
-                <button type="submit" class="btn-submit" [disabled]="isSubmitting">
-                  {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+                <button type="submit" class="btn-submit" [disabled]="isSubmitting()">
+                  {{ isSubmitting() ? 'Sending...' : 'Send Message' }}
                 </button>
               </div>
             </form>
@@ -332,7 +332,7 @@ interface ContactFormData {
 })
 export class ContactComponent implements OnInit {
   protected pilotSite = LOCAL_CONTEXT.PILOT_SITE;
-  protected isSubmitting = false;
+  protected isSubmitting = signal(false);
 
   protected formData: ContactFormData = {
     form_type: 'contact',
@@ -373,15 +373,16 @@ export class ContactComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.isSubmitting || !this.formData.consent) {
+    if (this.isSubmitting() || !this.formData.consent) {
       return;
     }
 
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
 
-    this.submitForm().subscribe({
+    this.submitForm().pipe(
+      finalize(() => this.isSubmitting.set(false))
+    ).subscribe({
       next: () => {
-        this.isSubmitting = false;
         this.notificationService.showSuccess('Your message has been sent successfully!');
         this.formData = {
           form_type: 'contact',
@@ -395,7 +396,6 @@ export class ContactComponent implements OnInit {
         };
       },
       error: () => {
-        this.isSubmitting = false;
         this.notificationService.showError('There was an error sending your message. Please try again.');
       }
     });

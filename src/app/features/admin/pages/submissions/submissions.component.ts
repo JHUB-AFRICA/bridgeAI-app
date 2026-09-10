@@ -6,6 +6,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { finalize } from 'rxjs';
 import { SubmissionService } from '../../../../services/submission.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { AdminDetailsModalService } from '../../components/admin-layout/admin-layout.component';
@@ -18,7 +19,9 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
     <div class="admin-submissions-page">
       <div class="page-header">
         <h1 class="page-title">Form Submissions</h1>
-        <button class="btn-danger" (click)="clearAll()">Clear All</button>
+        <button class="btn-danger" (click)="clearAll()" [disabled]="isClearing() || allSubmissions.length === 0">
+          {{ isClearing() ? 'Clearing...' : 'Clear All' }}
+        </button>
       </div>
 
       <div class="tabs">
@@ -26,7 +29,7 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
           *ngFor="let tab of tabs" 
           class="tab-btn"
           [class.active]="activeTab === tab.id"
-          (click)="activeTab = tab.id"
+          (click)="selectTab(tab.id)"
         >
           {{ tab.label }}
           <span class="tab-count" *ngIf="getTabCount(tab.id) > 0">{{ getTabCount(tab.id) }}</span>
@@ -38,12 +41,8 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
           <thead>
             <tr>
               <th>Name</th>
-              <th *ngIf="activeTab === 'contact'">Email</th>
-              <th *ngIf="activeTab === 'contact'">Organisation</th>
-              <th *ngIf="activeTab === 'training'">Email</th>
-              <th *ngIf="activeTab === 'training'">Training Interest</th>
-              <th *ngIf="activeTab === 'media'">Outlet</th>
-              <th *ngIf="activeTab === 'media'">Request Type</th>
+              <th>Email</th>
+              <th>Details</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -51,21 +50,19 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
           <tbody>
             <tr *ngFor="let item of filteredSubmissions()">
               <td>{{ item.name }}</td>
-              <td *ngIf="activeTab === 'contact'">{{ item.email }}</td>
-              <td *ngIf="activeTab === 'contact'">{{ item.organisation || 'N/A' }}</td>
-              <td *ngIf="activeTab === 'training'">{{ item.email }}</td>
-              <td *ngIf="activeTab === 'training'">{{ item.training_interest }}</td>
-              <td *ngIf="activeTab === 'media'">{{ item.outlet }}</td>
-              <td *ngIf="activeTab === 'media'">{{ item.request_type }}</td>
+              <td><a [href]="'mailto:' + item.email">{{ item.email }}</a></td>
+              <td>{{ getSubmissionDetails(item) }}</td>
               <td>
-                <span class="status-badge" [class.read]="item.is_read">
-                  {{ item.is_read ? 'Read' : 'New' }}
-                </span>
+                <div class="status-list">
+                  <span class="status-badge" [class.read]="item.is_read">{{ item.is_read ? 'Read' : 'New' }}</span>
+                  <span class="status-badge responded" *ngIf="item.is_responded">Responded</span>
+                </div>
               </td>
               <td class="actions-cell">
-                <button class="btn-icon view" (click)="viewSubmission(item)">👁️</button>
-                <button class="btn-icon read" (click)="markSubmissionRead(item)" title="Mark as read"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
-                <button class="btn-icon delete" (click)="deleteSubmission(item.id)">🗑️</button>
+                <button class="btn-icon view" (click)="viewSubmission(item)" title="View submission" aria-label="View submission"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+                <button class="btn-icon read" (click)="markSubmissionRead(item)" [disabled]="item.is_read" title="Mark as read" aria-label="Mark as read"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
+                <button class="btn-icon respond" (click)="markSubmissionResponded(item)" [disabled]="item.is_responded" title="Mark as responded" aria-label="Mark as responded"><i class="fa-solid fa-reply" aria-hidden="true"></i></button>
+                <button class="btn-icon delete" (click)="deleteSubmission(item.id)" [disabled]="deletingId() === item.id" title="Delete submission" aria-label="Delete submission"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
               </td>
             </tr>
             <tr *ngIf="filteredSubmissions().length === 0">
@@ -110,6 +107,8 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
     .btn-danger:hover {
       background: #dc2626;
     }
+
+    .btn-danger:disabled { cursor: not-allowed; opacity: .6; }
 
     .tabs {
       display: flex;
@@ -207,6 +206,11 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
       color: #1d4ed8;
     }
 
+    .status-list { display: flex; flex-wrap: wrap; gap: 4px; }
+    .status-badge.responded { background: #dcfce7; color: #166534; }
+    .data-table td a { color: #2563eb; text-decoration: none; }
+    .data-table td a:hover { text-decoration: underline; }
+
     .actions-cell {
       display: flex;
       gap: 4px;
@@ -242,6 +246,10 @@ import { AdminDetailsModalService } from '../../components/admin-layout/admin-la
     .btn-icon.delete:hover {
       background: #fee2e2;
     }
+
+    .btn-icon.respond { background: #eff6ff; color: #2563eb; }
+    .btn-icon.respond:hover { background: #dbeafe; }
+    .btn-icon:disabled { cursor: not-allowed; opacity: .45; }
 
     .empty-state {
       text-align: center;
@@ -287,6 +295,9 @@ export class AdminSubmissionsComponent implements OnInit {
   protected activeTab = 'contact';
   protected allSubmissions: any[] = [];
   protected filteredSubmissions = signal<any[]>([]);
+  protected isLoading = signal(false);
+  protected isClearing = signal(false);
+  protected deletingId = signal<number | null>(null);
 
   constructor(
     private submissionService: SubmissionService,
@@ -299,7 +310,8 @@ export class AdminSubmissionsComponent implements OnInit {
   }
 
   private loadSubmissions(): void {
-    this.submissionService.getSubmissions().subscribe({
+    this.isLoading.set(true);
+    this.submissionService.getSubmissions().pipe(finalize(() => this.isLoading.set(false))).subscribe({
       next: (data) => {
         this.allSubmissions = data;
         this.applyFilter();
@@ -317,6 +329,11 @@ export class AdminSubmissionsComponent implements OnInit {
     return filtered.filter(s => !s.is_read).length;
   }
 
+  selectTab(tabId: string): void {
+    this.activeTab = tabId;
+    this.applyFilter();
+  }
+
   private applyFilter(): void {
     const filtered = this.allSubmissions.filter(s => s.form_type === this.activeTab);
     const sorted = filtered.sort((a, b) => {
@@ -325,6 +342,19 @@ export class AdminSubmissionsComponent implements OnInit {
       return new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime();
     });
     this.filteredSubmissions.set(sorted);
+  }
+
+  getSubmissionDetails(item: any): string {
+    switch (item.form_type) {
+      case 'training':
+        return `${item.training_interest || 'Training enquiry'}${item.county ? ` · ${item.county}` : ''}`;
+      case 'media':
+        return `${item.outlet || 'Media enquiry'}${item.request_type ? ` · ${item.request_type}` : ''}`;
+      case 'sme':
+        return `${item.organisation || 'SME enquiry'}${item.industry ? ` · ${item.industry}` : ''}`;
+      default:
+        return item.organisation || item.audience || 'General enquiry';
+    }
   }
 
   viewSubmission(item: any): void {
@@ -343,10 +373,22 @@ export class AdminSubmissionsComponent implements OnInit {
     }
   }
 
+  markSubmissionResponded(item: any): void {
+    if (item.is_responded) return;
+    this.submissionService.markAsResponded(item.id).subscribe({
+      next: () => {
+        item.is_responded = true;
+        this.notificationService.showSuccess('Submission marked as responded');
+      },
+      error: () => this.notificationService.showError('Failed to update submission status')
+    });
+  }
+
   deleteSubmission(id: number | undefined): void {
     if (!id) return;
     if (confirm('Delete this submission?')) {
-      this.submissionService.deleteSubmission(id).subscribe({
+      this.deletingId.set(id);
+      this.submissionService.deleteSubmission(id).pipe(finalize(() => this.deletingId.set(null))).subscribe({
         next: () => {
           this.notificationService.showSuccess('Submission deleted');
           this.loadSubmissions();
@@ -358,7 +400,8 @@ export class AdminSubmissionsComponent implements OnInit {
 
   clearAll(): void {
     if (confirm('Delete ALL submissions?')) {
-      this.submissionService.clearAllSubmissions().subscribe({
+      this.isClearing.set(true);
+      this.submissionService.clearAllSubmissions().pipe(finalize(() => this.isClearing.set(false))).subscribe({
         next: () => {
           this.notificationService.showSuccess('All submissions cleared');
           this.loadSubmissions();

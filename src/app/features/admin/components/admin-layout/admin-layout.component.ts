@@ -255,9 +255,7 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
 
   constructor() {
     this.notificationService.notifications$.subscribe(notification => {
-      this.notifications.update(current => notification.type === 'info'
-        ? [...current, notification]
-        : [...current.filter(item => item.type !== 'info'), notification]);
+      this.notifications.set([notification]);
       if ((notification.duration ?? 0) > 0) {
         window.setTimeout(() => this.dismissNotification(notification.id), notification.duration);
       }

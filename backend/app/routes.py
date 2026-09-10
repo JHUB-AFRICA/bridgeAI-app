@@ -3,6 +3,7 @@ from werkzeug.security import check_password_hash
 from .services.json_service import JSONService
 import os
 import re
+from datetime import datetime, timezone
 from werkzeug.utils import secure_filename
 import cloudinary
 import cloudinary.uploader
@@ -557,9 +558,46 @@ def get_faqs():
 # ============================================================
 # Submissions
 # ============================================================
-@api_bp.route('/submissions', methods=['GET'])
+@api_bp.route('/submissions', methods=['GET', 'POST'])
 def get_submissions():
+    if request.method == 'POST':
+        data = request.get_json(silent=True) or {}
+        if not data.get('name') or not data.get('email') or not data.get('form_type'):
+            return jsonify({'error': 'Name, email, and form_type are required'}), 400
+
+        data.setdefault('is_read', False)
+        data.setdefault('is_responded', False)
+        data['ip_address'] = request.remote_addr
+        data['user_agent'] = request.headers.get('User-Agent', '')
+        data['submitted_at'] = datetime.now(timezone.utc).isoformat()
+        return jsonify(json_service.create('submissions.json', data)), 201
+
     return jsonify(json_service.get_all('submissions.json'))
+
+@api_bp.route('/submissions/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
+def manage_submission(id):
+    if request.method == 'GET':
+        submission = json_service.get_by_id('submissions.json', id)
+        return jsonify(submission) if submission else (jsonify({'error': 'Not found'}), 404)
+
+    if request.method == 'DELETE':
+        return jsonify({'success': True}) if json_service.delete('submissions.json', id) else (jsonify({'error': 'Not found'}), 404)
+
+    data = request.get_json(silent=True) or {}
+    allowed_fields = {'is_read', 'is_responded'}
+    if any(field not in allowed_fields for field in data):
+        return jsonify({'error': 'Only read and response status can be updated'}), 400
+
+    submission = json_service.get_by_id('submissions.json', id)
+    if not submission:
+        return jsonify({'error': 'Not found'}), 404
+    submission.update(data)
+    return jsonify(json_service.update('submissions.json', id, submission))
+
+@api_bp.route('/submissions/clear', methods=['DELETE'])
+def clear_submissions():
+    json_service.clear('submissions.json')
+    return jsonify({'success': True})
 
 # ============================================================
 # Training Materials

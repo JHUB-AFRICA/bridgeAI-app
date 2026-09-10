@@ -45,9 +45,6 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
             </div>
 
             <div class="eu-funding-block">
-              <div class="eu-emblem">
-                <img src="/images/logos/eu_emblem.svg" alt="Funded by the European Union" loading="lazy" />
-              </div>
               <div class="eu-text">
                 <p class="eu-statement">
                   <strong>This project has received funding</strong> from the European Union's Horizon Europe research and innovation programme under grant agreement No. 101299050.

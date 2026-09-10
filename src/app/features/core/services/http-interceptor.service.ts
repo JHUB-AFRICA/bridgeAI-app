@@ -9,10 +9,9 @@ import {
   HttpHandler,
   HttpEvent,
   HttpErrorResponse,
-  HttpResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { NotificationService } from './notification.service';
 import { HTTP_HEADERS, HTTP_STATUS } from '../constants/api.constants';
@@ -50,15 +49,6 @@ export class HttpInterceptorService implements HttpInterceptor {
     }
 
     return next.handle(modifiedRequest).pipe(
-      tap((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          if (event.status === HTTP_STATUS.CREATED) {
-            this.notificationService.showSuccess('Resource created successfully');
-          } else if (event.status === HTTP_STATUS.NO_CONTENT) {
-            this.notificationService.showSuccess('Resource deleted successfully');
-          }
-        }
-      }),
       catchError((error: HttpErrorResponse) => {
         let errorMessage = 'An unexpected error occurred. Please try again.';
 

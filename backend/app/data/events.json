@@ -10,6 +10,10 @@
       {
         "display_order": 0,
         "image_path": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1788554793/bridge-ai/events/mplzmvk4knhlhyavccpc.jpg"
+      },
+      {
+        "image_path": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789050014/bridge-ai/events/ltlmpcxoiop7zbq0zyv8.jpg",
+        "display_order": 1
       }
     ],
     "id": 1,

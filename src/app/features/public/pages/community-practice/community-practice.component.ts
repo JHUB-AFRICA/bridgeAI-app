@@ -11,12 +11,11 @@ import { CommunitySubmissionService } from '../../../../services/community-submi
 import { CommunityEvent } from '../../../core/models/community-event.model';
 import { Repository } from '../../../core/models/repository.model';
 import { NotificationService } from '../../../core/services/notification.service';
-import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 
 @Component({
   selector: 'app-community-practice',
   standalone: true,
-  imports: [CommonModule, FormsModule, EuFundingBannerComponent],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="community-practice-page">
       <section class="hero-section">
@@ -165,9 +164,6 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
           </form>
         </section>
 
-        <div class="eu-section">
-          <app-eu-funding-banner></app-eu-funding-banner>
-        </div>
       </div>
     </div>
 
@@ -421,7 +417,6 @@ import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-
         text-align: center;
         color: #5f6f67;
       }
-      .eu-section { margin-top: 30px; }
       .modal-overlay {
         position: fixed;
         inset: 0;

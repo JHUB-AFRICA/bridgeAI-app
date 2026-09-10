@@ -4,13 +4,12 @@
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EuFundingBannerComponent } from '../../../shared/components/eu-funding-banner/eu-funding-banner.component';
 import { APP, FUNDING } from '../../../core/constants/app.constants';
 
 @Component({
   selector: 'app-privacy-ethics',
   standalone: true,
-  imports: [CommonModule, EuFundingBannerComponent],
+  imports: [CommonModule],
   template: `
     <div class="privacy-ethics-page">
       <div class="container">
@@ -105,9 +104,6 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
           </div>
         </div>
 
-        <div class="eu-section">
-          <app-eu-funding-banner></app-eu-funding-banner>
-        </div>
       </div>
     </div>
   `,
@@ -199,7 +195,6 @@ import { APP, FUNDING } from '../../../core/constants/app.constants';
       color: #4b5563;
     }
 
-    .eu-section {
       margin-top: 32px;
     }
 

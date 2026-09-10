@@ -69,3 +69,6 @@ class JSONService:
                 self._write_json(filename, items)
                 return True
         return False
+
+    def clear(self, filename):
+        self._write_json(filename, [])

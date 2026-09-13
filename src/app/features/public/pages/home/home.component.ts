@@ -122,7 +122,7 @@ import { APP } from '../../../core/constants/app.constants';
             </div>
 
             <div class="challenge-image">
-              <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=1200&q=80" alt="African agriculture" loading="lazy">
+              <img src="/images/webimages/Challenge.png" alt="Challenges facing climate-resilient agriculture in Africa" loading="lazy">
             </div>
           </div>
         </div>
@@ -238,10 +238,6 @@ import { APP } from '../../../core/constants/app.constants';
             <a [routerLink]="['/contact']" class="btn-primary btn-primary-two">
               <i class="fas fa-envelope btn-icon"></i>
               Contact Us
-            </a>
-            <a [routerLink]="['/training-wp5']" class="btn-light">
-              <i class="fas fa-bell btn-icon"></i>
-              Subscribe Now
             </a>
           </div>
         </div>
@@ -1450,10 +1446,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880189/bridge-ai/gallery/x2pkxnhs75azkvsgr2a7.jpg'
   ];
   protected readonly pilotRegions = [
-    { country: 'Nigeria', index: '01', title: 'Maize production', description: 'Climate and crop intelligence for seasonal planning, adaptation and stronger maize production.', image: 'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880126/bridge-ai/gallery/dndsmgnt3swhqvelu6hl.jpg', route: '/pilot-nigeria' },
-    { country: 'Kenya', index: '02', title: 'Smart mushroom cultivation', description: 'Sensors, GenAI and digital shadows for more informed growing decisions in the Kenya pilot.', image: 'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788870191/bridge-ai/activities/ojgvahkngrsvywvbueik.jpg', route: '/smart-mushrooms' },
-    { country: 'Tunisia', index: '03', title: 'Pasture management', description: 'Environmental information and digital tools for understanding pasture growth and conditions.', image: 'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880133/bridge-ai/gallery/bbemfuucdg79lwp3cbtv.jpg', route: '/pilot-tunisia' },
-    { country: 'Tunisia', index: '04', title: 'Pomegranate cultivation', description: 'Data-informed irrigation, crop care and harvest planning for pomegranate growers.', image: 'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880189/bridge-ai/gallery/x2pkxnhs75azkvsgr2a7.jpg', route: '/pilot-tunisia' }
+    { country: 'Nigeria', index: '01', title: 'Maize production', description: 'Supporting climate-smart maize farming with better decisions for planting, harvesting and crop management.', image: '/images/webimages/maize.png', route: '/pilot-nigeria' },
+    { country: 'Kenya', index: '02', title: 'Smart mushroom cultivation', description: 'Helping farmers monitor growing conditions while supporting youth and women in digital agriculture.', image: '/images/webimages/mushroom.png', route: '/smart-mushrooms' },
+    { country: 'Tunisia', index: '03', title: 'Pasture management', description: 'Using environmental information and digital tools to support informed grazing and climate adaptation.', image: '/images/webimages/Pasture.png', route: '/pilot-tunisia' },
+    { country: 'Tunisia', index: '04', title: 'Pomegranate cultivation', description: 'Improving irrigation, crop care and harvest planning with tailored, resource-efficient recommendations.', image: '/images/webimages/Pomegranate.png', route: '/pilot-tunisia' }
   ];
   protected readonly heroIndex = signal(0);
   protected readonly pilotIndex = signal(0);

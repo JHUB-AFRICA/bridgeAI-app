@@ -22,36 +22,25 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
           <div class="hero-container">
             <h1>Partners <span class="highlight">and Consortium</span></h1>
             <p class="hero-subtitle">
-              A multi-stakeholder alliance bridging <strong>European expertise</strong> with <strong>Kenyan innovation</strong> to transform agritech through AI-driven sustainability.
+              A multi-stakeholder network connecting research, innovation, and local action to transform agritech through AI-driven sustainability.
             </p>
 
             <div class="hero-stats-row" id="heroStatsRow">
               <div class="stat-item">
                 <span class="stat-number"><span class="stat-accent">{{ totalPartners() }}</span></span>
-                <span class="stat-label">Total Partners</span>
+                <span class="stat-label">Network Partners</span>
               </div>
               <div class="stat-item">
                 <span class="stat-number">{{ consortiumPartners().length }}</span>
-                <span class="stat-label">Consortium Members</span>
+                <span class="stat-label">Core Collaborators</span>
               </div>
               <div class="stat-item">
                 <span class="stat-number">{{ localPartners().length }}</span>
-                <span class="stat-label">Local Partners</span>
+                <span class="stat-label">Kenyan Partners</span>
               </div>
               <div class="stat-item">
                 <span class="stat-number">{{ countryCount() }}</span>
-                <span class="stat-label">Countries Represented</span>
-              </div>
-            </div>
-
-            <div class="eu-funding-block">
-              <div class="eu-text">
-                <p class="eu-statement">
-                  <strong>This project has received funding</strong> from the European Union's Horizon Europe research and innovation programme under grant agreement No. 101299050.
-                </p>
-                <p class="eu-disclaimer">
-                  Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or the European Health and Digital Executive Agency. Neither the European Union nor the granting authority can be held responsible for them.
-                </p>
+                <span class="stat-label">Countries Reached</span>
               </div>
             </div>
           </div>
@@ -60,10 +49,10 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
         <section class="model-section">
           <div class="model-container">
             <div class="model-tile tile-global">
-              <span class="model-index">Global Tier</span>
-              <h3>Official Consortium</h3>
+              <span class="model-index">Core Network</span>
+              <h3>Research Collaborators</h3>
               <p>
-                The European and international institutions that hold formal roles in the BRIDGE-AI grant agreement, setting research direction, coordinating funding, and contributing specialist technical expertise across the project's work packages.
+                Research institutions and specialist organisations that shape the BRIDGE-AI mission, contribute technical expertise, and move shared ideas from research into practical solutions.
               </p>
             </div>
             <div class="model-tile tile-local">
@@ -79,10 +68,10 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
         <section class="partners-section" id="partnersSection">
           <div class="partners-container">
             <div class="section-header">
-              <span class="section-label">Official Consortium</span>
-              <h2>Global Partners</h2>
+              <span class="section-label">Core Network</span>
+              <h2>Research Collaborators</h2>
               <p class="section-desc">
-                Core European and International implementing organizations driving the BRIDGE-AI mission.
+                Organisations and people contributing knowledge, technology, and practical momentum to the BRIDGE-AI mission.
               </p>
             </div>
 

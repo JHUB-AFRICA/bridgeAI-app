@@ -5,7 +5,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constants';
+import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
 
 @Component({
   selector: 'app-footer',
@@ -15,30 +15,9 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
     <footer class="footer-ultimate" role="contentinfo">
       <div class="footer-container">
         <div class="footer-logos-row" aria-label="Project partners">
-          <div class="footer-logo-item">
-            <img src="/images/logos/jhub_logo.svg" alt="JHUB Africa" class="footer-logo" loading="lazy" />
-          </div>
-
           <div class="footer-logo-item footer-logo-item-bridge">
             <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI" class="footer-logo footer-logo-bridge" loading="lazy" />
           </div>
-
-          <div class="footer-logo-item footer-logo-item-eu">
-            <img src="/images/logos/eu_emblem.svg" alt="European Union" class="footer-logo footer-logo-eu" loading="lazy" />
-          </div>
-        </div>
-
-        <div class="footer-funding">
-          <p class="footer-funding-statement">
-            This project has received funding from the European Union's Horizon Europe
-            research and innovation programme under grant agreement {{ grantNumber }}.
-          </p>
-          <p class="footer-funding-disclaimer">
-            Funded by the European Union. Views and opinions expressed are however those
-            of the author(s) only and do not necessarily reflect those of the European
-            Union or the European Health and Digital Executive Agency. Neither the
-            European Union nor the granting authority can be held responsible for them.
-          </p>
         </div>
 
         <div class="footer-middle">
@@ -58,6 +37,8 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
               <li><a [routerLink]="['/training-wp5']">Training and WP5</a></li>
               <li><a [routerLink]="['/activities']">News and Updates</a></li>
               <li><a [routerLink]="['/gallery']">Gallery</a></li>
+              <li><a [routerLink]="['/pilot-nigeria']">Nigeria Pilot</a></li>
+              <li><a [routerLink]="['/pilot-tunisia']">Tunisia Pilot</a></li>
             </ul>
           </div>
 
@@ -109,15 +90,11 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
 
         <div class="footer-bottom">
           <p class="footer-copyright">
-            &copy; <span id="footerYear">{{ currentYear }}</span> BRIDGE-AI Kenya
+            &copy; <span id="footerYear">{{ currentYear }}</span> BRIDGE-AI
             <span class="footer-sep">·</span>
-            JKUAT - Jomo Kenyatta University of Agriculture and Technology
+            Built by JHUB Africa
           </p>
           <div class="footer-bottom-right">
-            <span class="footer-badge">Horizon Europe</span>
-            <span class="footer-sep">·</span>
-            <p class="footer-credit">Built by JHUB Africa</p>
-            <span class="footer-sep">·</span>
             <a href="#top" class="footer-back-top" (click)="scrollToTop($event)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="18 15 12 9 6 15"/>
@@ -194,10 +171,6 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
       min-width: 180px;
     }
 
-    .footer-logo-item-eu {
-      min-width: 150px;
-    }
-
     .footer-logo {
       display: block;
       height: 58px;
@@ -216,46 +189,20 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
       height: 68px;
     }
 
-    .footer-logo-eu {
-      height: 52px;
-    }
-
-    .footer-funding {
-      padding: 20px 0 28px;
-      border-bottom: 1px solid var(--footer-border);
-      text-align: center;
-    }
-
-    .footer-funding-statement {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--footer-text-strong);
-      margin: 0 0 6px 0;
-      line-height: 1.6;
-    }
-
-    .footer-funding-disclaimer {
-      font-size: 0.72rem;
-      font-weight: 400;
-      color: var(--footer-text-muted);
-      margin: 0;
-      line-height: 1.7;
-      opacity: 0.8;
-    }
-
     .footer-middle {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 32px;
       padding: 32px 0 28px;
       border-bottom: 1px solid var(--footer-border);
-      text-align: left;
+      text-align: center;
     }
 
     .footer-col {
       display: flex;
       flex-direction: column;
       gap: 2px;
+      align-items: center;
     }
 
     .footer-col-title {
@@ -284,6 +231,7 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
       margin: 0;
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 2px;
     }
 
@@ -315,7 +263,7 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
     .footer-col-links a:hover {
       color: var(--footer-primary);
       opacity: 1;
-      transform: translateX(4px);
+      transform: translateY(-1px);
     }
 
     .footer-col-links a:hover::before {
@@ -450,9 +398,6 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
         min-width: 100px;
       }
 
-      .footer-logo-item-eu {
-        min-width: 110px;
-      }
     }
 
     @media (max-width: 768px) {
@@ -478,14 +423,6 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
 
       .footer-logo-eu {
         height: 34px;
-      }
-
-      .footer-funding-statement {
-        font-size: 0.78rem;
-      }
-
-      .footer-funding-disclaimer {
-        font-size: 0.66rem;
       }
 
       .footer-middle {
@@ -597,9 +534,7 @@ import { APP, FUNDING, SOCIAL_LINKS } from '../../../core/constants/app.constant
   `]
 })
 export class FooterComponent {
-  protected appName = APP.ACRONYM + ' Kenya';
-  protected appDescription = APP.DESCRIPTION;
-  protected grantNumber = FUNDING.GRANT_AGREEMENT;
+  protected appName = APP.ACRONYM;
   protected currentYear = new Date().getFullYear();
   protected socialLinks = SOCIAL_LINKS;
 

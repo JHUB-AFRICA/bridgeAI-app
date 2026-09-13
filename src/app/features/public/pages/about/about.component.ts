@@ -71,7 +71,7 @@ import { RouterModule } from '@angular/router';
               </p>
             </div>
             <div class="overview-image reveal">
-              <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1200&q=80" alt="African agriculture and farming" loading="lazy" />
+              <img src="/images/webimages/afica.svg" alt="Map of Africa representing BRIDGE-AI pilot regions" loading="lazy" />
             </div>
           </div>
         </div>
@@ -110,13 +110,13 @@ import { RouterModule } from '@angular/router';
             <a class="country-card-link reveal" [routerLink]="['/pilot-nigeria']">
             <div class="country-card">
               <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1200&q=80" alt="Maize farming in Nigeria" loading="lazy" />
+                <img src="/images/webimages/maize.png" alt="Maize farming in Nigeria" loading="lazy" />
               </div>
               <div class="card-body">
                 <span class="card-badge">Use Case 1</span>
                 <h4>Maize Production</h4>
                 <span class="country-name"><i class="fas fa-map-pin" style="margin-right:6px;"></i>Nigeria</span>
-                <p>Maize is a key crop for food security and livelihoods in Nigeria. BRIDGE-AI helps farmers better anticipate climate conditions and make informed decisions about planting, harvesting and crop management.</p>
+                <p>Maize is a key crop for food security and livelihoods in Nigeria. Through this pilot, BRIDGE-AI helps farmers better anticipate climate conditions and make informed decisions about planting, harvesting and crop management. The goal is to improve resilience, reduce risks and support more sustainable production.</p>
                 <span class="tech-tag">Digital Shadows</span>
               </div>
             </div>
@@ -125,13 +125,13 @@ import { RouterModule } from '@angular/router';
             <a class="country-card-link reveal" [routerLink]="['/smart-mushrooms']">
             <div class="country-card">
               <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1464226184884-fa52ac9fcf8b?auto=format&fit=crop&w=1200&q=80" alt="Mushroom cultivation in Kenya" loading="lazy" />
+                <img src="/images/webimages/mushroom.png" alt="Mushroom cultivation in Kenya" loading="lazy" />
               </div>
               <div class="card-body">
                 <span class="card-badge">Use Case 2</span>
                 <h4>Smart Mushroom Cultivation</h4>
                 <span class="country-name"><i class="fas fa-map-pin" style="margin-right:6px;"></i>Kenya</span>
-                <p>Mushroom cultivation requires carefully controlled growing conditions. BRIDGE-AI develops tools that help farmers monitor their production environment and optimise growing conditions. The pilot also promotes the involvement of young people and women in digital agriculture.</p>
+                <p>Mushroom cultivation requires carefully controlled growing conditions. In Kenya, BRIDGE-AI develops tools that help farmers monitor their production environment and optimise growing conditions. The pilot also promotes the involvement of young people and women in digital agriculture and innovation.</p>
                 <span class="tech-tag">IoT + GenAI</span>
               </div>
             </div>
@@ -140,13 +140,13 @@ import { RouterModule } from '@angular/router';
             <a class="country-card-link reveal" [routerLink]="['/pilot-tunisia']">
             <div class="country-card">
               <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80" alt="Pasture in Tunisia" loading="lazy" />
+                <img src="/images/webimages/Pasture.png" alt="Pasture in Tunisia" loading="lazy" />
               </div>
               <div class="card-body">
                 <span class="card-badge">Use Case 3</span>
                 <h4>Pasture Management</h4>
                 <span class="country-name"><i class="fas fa-map-pin" style="margin-right:6px;"></i>Tunisia</span>
-                <p>Pasturelands are essential for many farming communities. This pilot combines environmental information and digital tools to help farmers better understand pasture growth and make informed grazing decisions.</p>
+                <p>Pasturelands are essential for many farming communities in Tunisia. This pilot combines environmental information and digital tools to help farmers better understand pasture growth and make more informed grazing decisions, supporting sustainable land management and climate adaptation.</p>
                 <span class="tech-tag">Earth Observation</span>
               </div>
             </div>
@@ -155,13 +155,13 @@ import { RouterModule } from '@angular/router';
             <a class="country-card-link reveal" [routerLink]="['/pilot-tunisia']">
             <div class="country-card">
               <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1461354464878-ad92f492a5a0?auto=format&fit=crop&w=1200&q=80" alt="Pomegranate in Tunisia" loading="lazy" />
+                <img src="/images/webimages/Pomegranate.png" alt="Pomegranate production in Tunisia" loading="lazy" />
               </div>
               <div class="card-body">
                 <span class="card-badge">Use Case 4</span>
                 <h4>Pomegranate Cultivation</h4>
                 <span class="country-name"><i class="fas fa-map-pin" style="margin-right:6px;"></i>Tunisia</span>
-                <p>Pomegranate growers face increasing challenges related to water availability and changing climate conditions. BRIDGE-AI provides tailored recommendations to improve irrigation, crop management and harvest planning.</p>
+                <p>Pomegranate growers face increasing challenges related to water availability and changing climate conditions. BRIDGE-AI supports farmers by providing tailored recommendations to improve irrigation, crop management and harvest planning, helping increase productivity and resource efficiency.</p>
                 <span class="tech-tag">Earth Observation</span>
               </div>
             </div>
@@ -683,7 +683,7 @@ import { RouterModule } from '@angular/router';
     .overview-image img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
     }
 
     .benefits-grid {
@@ -1344,8 +1344,8 @@ const pilotPageStyles = [`
   .pilot-page { min-height: 100vh; background: var(--paper); }
   .pilot-hero { min-height: 560px; display: flex; align-items: flex-end; position: relative; color: #fff; background-size: cover; background-position: center; }
   .pilot-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10, 23, 15, .88), rgba(10, 23, 15, .2)); }
-  .nigeria { background-image: url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1800&q=85'); }
-  .tunisia { background-image: url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=85'); }
+  .nigeria { background-image: url('/images/webimages/maize.png'); }
+  .tunisia { background-image: url('/images/webimages/Pasture.png'); }
   .hero-content { position: relative; z-index: 1; width: min(1280px, calc(100% - 48px)); margin: 0 auto; padding: 70px 0; max-width: 820px; }
   .breadcrumb { display: block; color: rgba(255, 255, 255, .75); font-size: .75rem; margin-bottom: 46px; text-decoration: none; }
   .eyebrow { display: block; color: #d8e86b; font: 600 .68rem 'IBM Plex Mono', monospace; letter-spacing: .14em; text-transform: uppercase; }
@@ -1362,7 +1362,7 @@ const pilotPageStyles = [`
 @Component({
   selector: 'app-pilot-nigeria',
   imports: [RouterModule],
-  template: `<main class="pilot-page"><section class="pilot-hero nigeria"><div class="hero-content"><a routerLink="/about" class="breadcrumb">BRIDGE-AI / Pilot Regions</a><span class="eyebrow">Nigeria pilot</span><h1>Maize <em>Production</em></h1><p>Practical climate and crop intelligence for maize farmers, cooperatives and local agribusinesses.</p><a routerLink="/about" fragment="countries" class="button">Back to pilot regions <span aria-hidden="true">&#8594;</span></a></div></section><section class="content-section"><div class="content-container"><div class="intro"><span class="eyebrow">The focus</span><h2>Better decisions in changing conditions</h2><p>BRIDGE-AI combines weather, satellite and field information to help maize producers plan, respond to climate pressure and improve crop management.</p></div><div class="feature-grid"><article><img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Maize field in Nigeria" loading="lazy"><h3>Seasonal planning</h3><p>Use timely information to support planting and harvest decisions.</p></article><article><img src="https://images.unsplash.com/photo-1464226184884-fa52ac9fcf8b?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Farmer reviewing a crop" loading="lazy"><h3>Digital support</h3><p>Translate complex signals into clear, usable recommendations.</p></article><article><img src="https://images.unsplash.com/photo-1523742810366-5a8d2a8c5f1a?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Agricultural landscape" loading="lazy"><h3>Local validation</h3><p>Test tools with local partners and agricultural communities.</p></article></div></div></section></main>`,
+  template: `<main class="pilot-page"><section class="pilot-hero nigeria"><div class="hero-content"><a routerLink="/about" class="breadcrumb">BRIDGE-AI / Pilot Regions</a><span class="eyebrow">Nigeria pilot</span><h1>Maize <em>Production</em></h1><p>Supporting climate-smart maize farming with practical intelligence for farmers, cooperatives and local agribusinesses.</p><a routerLink="/about" fragment="countries" class="button">Back to pilot regions <span aria-hidden="true">&#8594;</span></a></div></section><section class="content-section"><div class="content-container"><div class="intro"><span class="eyebrow">The focus</span><h2>Supporting climate-smart maize farming</h2><p>Maize is a key crop for food security and livelihoods in Nigeria. Through this pilot, BRIDGE-AI helps farmers better anticipate climate conditions and make informed decisions about planting, harvesting and crop management. The goal is to improve resilience, reduce risks and support more sustainable production.</p></div><div class="feature-grid"><article><img src="/images/webimages/maize.png" alt="Maize field in Nigeria" loading="lazy"><h3>Seasonal planning</h3><p>Use timely climate and crop information to support planting and harvest decisions.</p></article><article><img src="/images/webimages/maize.png" alt="Climate-smart maize farming" loading="lazy"><h3>Digital support</h3><p>Translate weather, satellite and field signals into clear, usable recommendations.</p></article><article><img src="/images/webimages/maize.png" alt="Sustainable maize production" loading="lazy"><h3>Local validation</h3><p>Test tools with farmers, cooperatives and agricultural communities.</p></article></div></div></section></main>`,
   styles: pilotPageStyles
 })
 export class PilotNigeriaComponent {}
@@ -1370,7 +1370,7 @@ export class PilotNigeriaComponent {}
 @Component({
   selector: 'app-pilot-tunisia',
   imports: [RouterModule],
-  template: `<main class="pilot-page"><section class="pilot-hero tunisia"><div class="hero-content"><a routerLink="/about" class="breadcrumb">BRIDGE-AI / Pilot Regions</a><span class="eyebrow">Tunisia pilot</span><h1>Pasture &amp; <em>Pomegranate</em></h1><p>Decision support for pasture communities and pomegranate growers managing water, weather and crop conditions.</p><a routerLink="/about" fragment="countries" class="button">Back to pilot regions <span aria-hidden="true">&#8594;</span></a></div></section><section class="content-section"><div class="content-container"><div class="intro"><span class="eyebrow">The focus</span><h2>Local insight for water-smart agriculture</h2><p>BRIDGE-AI brings environmental information and digital tools closer to farming decisions in Tunisia, supporting pasture management, irrigation and crop planning.</p></div><div class="feature-grid"><article><img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Pasture landscape in Tunisia" loading="lazy"><h3>Pasture intelligence</h3><p>Understand pasture growth and changing environmental conditions.</p></article><article><img src="https://images.unsplash.com/photo-1461354464878-ad92f492a5a0?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Pomegranate orchard in Tunisia" loading="lazy"><h3>Crop planning</h3><p>Support irrigation, crop care and harvest planning with data.</p></article><article><img src="https://images.unsplash.com/photo-1523742810366-5a8d2a8c5f1a?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Agricultural landscape and field work" loading="lazy"><h3>Shared learning</h3><p>Validate tools with farmers, researchers and local partners.</p></article></div></div></section></main>`,
+  template: `<main class="pilot-page"><section class="pilot-hero tunisia"><div class="hero-content"><a routerLink="/about" class="breadcrumb">BRIDGE-AI / Pilot Regions</a><span class="eyebrow">Tunisia pilot</span><h1>Pasture &amp; <em>Pomegranate</em></h1><p>Supporting pasture communities and pomegranate growers with practical tools for water-smart, climate-adapted agriculture.</p><a routerLink="/about" fragment="countries" class="button">Back to pilot regions <span aria-hidden="true">&#8594;</span></a></div></section><section class="content-section"><div class="content-container"><div class="intro"><span class="eyebrow">The focus</span><h2>Local insight for water-smart agriculture</h2><p>Pasturelands are essential for many farming communities in Tunisia, while pomegranate growers face increasing challenges related to water availability and changing climate conditions. BRIDGE-AI combines environmental information and digital tools to support sustainable land management, irrigation, crop care and harvest planning.</p></div><div class="feature-grid"><article><img src="/images/webimages/Pasture.png" alt="Pasture landscape in Tunisia" loading="lazy"><h3>Pasture intelligence</h3><p>Understand pasture growth and make more informed grazing decisions while supporting climate adaptation.</p></article><article><img src="/images/webimages/Pomegranate.png" alt="Pomegranate orchard in Tunisia" loading="lazy"><h3>Pomegranate planning</h3><p>Improve irrigation, crop management and harvest planning with tailored recommendations.</p></article><article><img src="/images/webimages/Pasture.png" alt="Sustainable agriculture in Tunisia" loading="lazy"><h3>Shared learning</h3><p>Validate tools with farmers, researchers and local partners for more sustainable production.</p></article></div></div></section></main>`,
   styles: pilotPageStyles
 })
 export class PilotTunisiaComponent {}

@@ -24,9 +24,7 @@ interface NavItem {
           <div class="logo-group">
             <a [routerLink]="['/']" class="logo" aria-label="BRIDGE-AI home">
               <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="logo-img bridge-logo" />
-              
             </a>
-            <img src="/images/logos/eu_emblem.svg" alt="European Union emblem" class="logo-img eu-logo" />
           </div>
         </div>
 
@@ -128,14 +126,6 @@ interface NavItem {
       height: 56px;
       max-width: 240px;
       object-fit: contain;
-    }
-
-    .eu-logo {
-      height: 46px;
-      max-width: 130px;
-      object-fit: contain;
-      opacity: 1;
-      filter: drop-shadow(0 1px 0 rgba(15, 23, 42, 0.04));
     }
 
     .brand-center {
@@ -282,14 +272,6 @@ interface NavItem {
 
       .header-container {
         position: relative;
-      }
-
-      .eu-logo {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        height: 68px;
-        max-width: 120px;
       }
 
       .main-nav {

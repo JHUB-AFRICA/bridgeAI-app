@@ -6,7 +6,7 @@ import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { APP } from '../../../core/constants/app.constants';
+import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
 
 interface NavItem {
   path: string;
@@ -61,6 +61,15 @@ interface NavItem {
                 </a>
               </li>
             }
+            <li class="nav-item contact-nav">
+              <a [routerLink]="['/contact']" routerLinkActive="active" (click)="closeMobileMenu()">Contact</a>
+            </li>
+            <li class="nav-item linkedin-nav">
+              <a [href]="socialLinks.LINKEDIN" target="_blank" rel="noopener noreferrer" aria-label="BRIDGE-AI on LinkedIn" title="BRIDGE-AI on LinkedIn" (click)="closeMobileMenu()">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M5.2 3.5A2.4 2.4 0 1 1 .4 3.5a2.4 2.4 0 0 1 4.8 0ZM.7 8h4.5v13H.7V8Zm7.3 0h4.3v1.8h.1c.6-1.1 2.1-2.3 4.3-2.3 4.6 0 5.5 3 5.5 6.9V21h-4.5v-5.9c0-1.4 0-3.3-2-3.3s-2.3 1.5-2.3 3.2V21H8V8Z"/></svg>
+                <span class="linkedin-label">LinkedIn</span>
+              </a>
+            </li>
           </ul>
         </nav>
       </div>
@@ -154,8 +163,9 @@ interface NavItem {
     .nav-list {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
       flex-wrap: wrap;
+      width: 100%;
       gap: 6px;
       list-style: none;
       margin: 0;
@@ -213,6 +223,27 @@ interface NavItem {
     .home-nav {
       display: none;
     }
+
+    .contact-nav {
+      margin-left: 10px;
+    }
+
+    .linkedin-nav a {
+      width: 38px;
+      padding: 8px;
+      color: #fff;
+      background: #0a66c2;
+      border-radius: 8px;
+    }
+
+    .linkedin-nav a:hover {
+      color: #fff;
+      background: #084d91;
+    }
+
+    .linkedin-nav a::after { display: none; }
+    .linkedin-nav svg { width: 18px; height: 18px; }
+    .linkedin-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
     .admin-link-btn {
       color: #0b4d3b !important;
@@ -298,6 +329,11 @@ interface NavItem {
         gap: 4px;
       }
 
+      .contact-nav { margin-left: 0; }
+
+      .linkedin-nav a { width: 100%; justify-content: flex-start; }
+      .linkedin-label { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
+
       .nav-item a {
         width: 100%;
         justify-content: flex-start;
@@ -358,9 +394,10 @@ export class HeaderComponent {
     { path: '/training-wp5', label: 'Training & WP5' },
     { path: '/resources', label: 'Resources' },
     { path: '/partners', label: 'Partners' },
-    { path: '/gallery', label: 'Gallery' },
-    { path: '/contact', label: 'Contact' }
+    { path: '/gallery', label: 'Gallery' }
   ];
+
+  protected socialLinks = SOCIAL_LINKS;
 
   constructor(private authService: AuthService) {}
 

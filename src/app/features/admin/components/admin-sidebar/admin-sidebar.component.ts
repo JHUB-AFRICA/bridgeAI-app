@@ -271,7 +271,6 @@ export class AdminSidebarComponent {
     { path: 'activities', label: 'Activities', icon: this.getActivityIcon(), active: false },
     { path: 'events', label: 'Events', icon: this.getEventIcon(), active: false },
     { path: 'resources', label: 'Resources', icon: this.getResourceIcon(), active: false },
-    { path: 'partners', label: 'Partners', icon: this.getPartnerIcon(), active: false },
     { path: 'team', label: 'Team', icon: this.getTeamIcon(), active: false },
     { path: 'gallery', label: 'Gallery', icon: this.getGalleryIcon(), active: false },
     { path: 'faqs', label: 'FAQs', icon: this.getFaqIcon(), active: false },
@@ -300,10 +299,6 @@ export class AdminSidebarComponent {
 
   getResourceIcon(): string {
     return 'fa-solid fa-folder-open';
-  }
-
-  getPartnerIcon(): string {
-    return 'fa-solid fa-handshake';
   }
 
   getTeamIcon(): string {

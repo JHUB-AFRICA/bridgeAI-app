@@ -2,7 +2,7 @@
 // BRIDGE-AI - Contact Component
 // ============================================================
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -54,12 +54,18 @@ interface ContactFormData {
             <form (ngSubmit)="onSubmit()" #contactForm="ngForm" class="contact-form">
               <div class="form-group">
                 <label for="form_type">What can we help you with? *</label>
-                <select id="form_type" name="form_type" [(ngModel)]="formData.form_type" class="form-control" required>
-                  <option value="contact">General enquiry</option>
-                  <option value="training">Training interest</option>
-                  <option value="media">Media request</option>
-                  <option value="sme">SME partnership</option>
-                </select>
+                <div class="select-field" [class.is-open]="openDropdown === 'form_type'">
+                  <button id="form_type" type="button" class="form-control select-trigger" [attr.aria-expanded]="openDropdown === 'form_type'" aria-haspopup="listbox" (click)="toggleDropdown('form_type', $event)">
+                    <span>{{ formTypeLabel() }}</span><span class="select-chevron" aria-hidden="true">⌄</span>
+                  </button>
+                  @if (openDropdown === 'form_type') {
+                    <div class="select-menu" role="listbox" aria-label="What can we help you with?">
+                      @for (option of formTypeOptions; track option.value) {
+                        <button type="button" role="option" class="select-option" [class.selected]="formData.form_type === option.value" [attr.aria-selected]="formData.form_type === option.value" (click)="chooseFormType(option.value, $event)">{{ option.label }}</button>
+                      }
+                    </div>
+                  }
+                </div>
               </div>
 
               <div class="form-group">
@@ -82,16 +88,18 @@ interface ContactFormData {
               @if (formData.form_type !== 'media' && formData.form_type !== 'sme') {
               <div class="form-group">
                 <label for="audience">I am a...</label>
-                <select id="audience" name="audience" [(ngModel)]="formData.audience" class="form-control">
-                  <option value="general">General Visitor</option>
-                  <option value="farmer">Farmer</option>
-                  <option value="student">Student</option>
-                  <option value="developer">Developer</option>
-                  <option value="sme">SME</option>
-                  <option value="researcher">Researcher</option>
-                  <option value="media">Media</option>
-                  <option value="partner">Partner</option>
-                </select>
+                <div class="select-field" [class.is-open]="openDropdown === 'audience'">
+                  <button id="audience" type="button" class="form-control select-trigger" [attr.aria-expanded]="openDropdown === 'audience'" aria-haspopup="listbox" (click)="toggleDropdown('audience', $event)">
+                    <span>{{ audienceLabel() }}</span><span class="select-chevron" aria-hidden="true">⌄</span>
+                  </button>
+                  @if (openDropdown === 'audience') {
+                    <div class="select-menu" role="listbox" aria-label="I am a">
+                      @for (option of audienceOptions; track option.value) {
+                        <button type="button" role="option" class="select-option" [class.selected]="formData.audience === option.value" [attr.aria-selected]="formData.audience === option.value" (click)="chooseAudience(option.value, $event)">{{ option.label }}</button>
+                      }
+                    </div>
+                  }
+                </div>
               </div>
               }
 
@@ -103,7 +111,18 @@ interface ContactFormData {
 
               @if (formData.form_type === 'media') {
                 <div class="form-group"><label for="outlet">Media outlet *</label><input type="text" id="outlet" name="outlet" [(ngModel)]="formData.outlet" required class="form-control" placeholder="Publication, station or platform" /></div>
-                <div class="form-group"><label for="request_type">Request type *</label><select id="request_type" name="request_type" [(ngModel)]="formData.request_type" required class="form-control"><option value="interview">Interview</option><option value="footage">Footage or images</option><option value="statement">Statement</option></select></div>
+                <div class="form-group"><label for="request_type">Request type *</label>
+                  <div class="select-field" [class.is-open]="openDropdown === 'request_type'">
+                    <button id="request_type" type="button" class="form-control select-trigger" [attr.aria-expanded]="openDropdown === 'request_type'" aria-haspopup="listbox" (click)="toggleDropdown('request_type', $event)"><span>{{ requestTypeLabel() }}</span><span class="select-chevron" aria-hidden="true">⌄</span></button>
+                    @if (openDropdown === 'request_type') {
+                      <div class="select-menu" role="listbox" aria-label="Request type">
+                        @for (option of requestTypeOptions; track option.value) {
+                          <button type="button" role="option" class="select-option" [class.selected]="formData.request_type === option.value" [attr.aria-selected]="formData.request_type === option.value" (click)="chooseRequestType(option.value, $event)">{{ option.label }}</button>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
                 <div class="form-group"><label for="deadline">Deadline</label><input type="date" id="deadline" name="deadline" [(ngModel)]="formData.deadline" class="form-control" /></div>
               }
 
@@ -137,11 +156,15 @@ interface ContactFormData {
               <h3 class="info-title">Get in Touch</h3>
               <div class="info-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
-                <span>bridge-ai@jkuat.ac.ke</span>
+                <a href="mailto:info@bridge-project.ai">info@bridge-project.ai</a>
               </div>
               <div class="info-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-                <span>Consortium coordination · {{ pilotSite }}</span>
+                <span>Coordinated by Eurecat Technology Center</span>
+              </div>
+              <div class="info-item">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path d="M5.2 3.5A2.4 2.4 0 1 1 .4 3.5a2.4 2.4 0 0 1 4.8 0ZM.7 8h4.5v13H.7V8Zm7.3 0h4.3v1.8h.1c.6-1.1 2.1-2.3 4.3-2.3 4.6 0 5.5 3 5.5 6.9V21h-4.5v-5.9c0-1.4 0-3.3-2-3.3s-2.3 1.5-2.3 3.2V21H8V8Z" /></svg>
+                <a href="https://www.linkedin.com/company/bridge-ai-agriculture/" target="_blank" rel="noopener noreferrer">Bridge AI on LinkedIn</a>
               </div>
             </div>
 
@@ -153,6 +176,8 @@ interface ContactFormData {
                 <li><a [routerLink]="['/training-wp5']">Training &amp; WP5</a></li>
                 <li><a [routerLink]="['/resources']">Resources</a></li>
                 <li><a [routerLink]="['/partners']">Partners</a></li>
+                <li><a [routerLink]="['/pilot-nigeria']">Nigeria Pilot</a></li>
+                <li><a [routerLink]="['/pilot-tunisia']">Tunisia Pilot</a></li>
                 <li><a [routerLink]="['/privacy-ethics']">Privacy &amp; Ethics</a></li>
               </ul>
             </div>
@@ -165,6 +190,8 @@ interface ContactFormData {
   styles: [`
     :host {
       display: block;
+      max-width: 100%;
+      overflow-x: clip;
       color: #1f2a37;
       background: #f7f2e6;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -225,8 +252,11 @@ interface ContactFormData {
       grid-template-columns: 2fr 1fr;
       gap: 30px;
       align-items: start;
+      min-width: 0;
     }
     .contact-form-wrapper, .info-card {
+      min-width: 0;
+      max-width: 100%;
       background: #fffdf7;
       border: 1px solid #e3dac2;
       border-radius: 18px;
@@ -239,7 +269,7 @@ interface ContactFormData {
       color: #17241b;
       letter-spacing: -0.02em;
     }
-    .contact-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .contact-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; min-width: 0; }
     .form-group { display: flex; flex-direction: column; } 
     .form-group.full-width { grid-column: 1 / -1; }
     .form-group label {
@@ -250,6 +280,9 @@ interface ContactFormData {
       margin-bottom: 8px;
     }
     .form-control {
+      display: block;
+      min-width: 0;
+      max-width: 100%;
       width: 100%;
       padding: 12px 14px;
       border-radius: 10px;
@@ -257,6 +290,8 @@ interface ContactFormData {
       background: #f9f5ee;
       color: #17241b;
       font: inherit;
+      overflow: hidden;
+      text-overflow: ellipsis;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     .form-control:focus {
@@ -264,6 +299,14 @@ interface ContactFormData {
       border-color: #26432b;
       box-shadow: 0 0 0 4px rgba(38, 67, 43, 0.08);
     }
+    .select-field { position: relative; min-width: 0; }
+    .select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; text-align: left; }
+    .select-trigger span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .select-chevron { color: #26432b; font-size: 1.2rem; line-height: .7; transform: translateY(-2px); transition: transform .2s ease; }
+    .select-field.is-open .select-chevron { transform: rotate(180deg) translateY(2px); }
+    .select-menu { position: absolute; z-index: 20; top: calc(100% + 6px); left: 0; right: 0; max-width: 100%; max-height: 240px; overflow-y: auto; padding: 6px; border: 1px solid #cbd8ca; border-radius: 12px; background: #fffdf7; box-shadow: 0 14px 30px rgba(23, 36, 27, .16); }
+    .select-option { display: block; width: 100%; padding: 10px 12px; border: 0; border-radius: 8px; background: transparent; color: #17241b; font: inherit; font-size: .92rem; text-align: left; cursor: pointer; }
+    .select-option:hover, .select-option:focus-visible, .select-option.selected { background: #e4f0e4; color: #26432b; outline: none; }
     .consent-group { margin-top: 6px; }
     .consent-label {
       display: flex;
@@ -300,10 +343,18 @@ interface ContactFormData {
       gap: 12px;
       color: #465c50;
       padding: 10px 0;
+      min-width: 0;
+      overflow-wrap: anywhere;
     }
     .info-item svg {
       color: #26432b;
       flex-shrink: 0;
+    }
+
+    .info-item a {
+      min-width: 0;
+      color: #26432b;
+      overflow-wrap: anywhere;
     }
     .quick-links {
       list-style: none;
@@ -319,9 +370,11 @@ interface ContactFormData {
     .quick-links a:hover { text-decoration: underline; }
     @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; } }
     @media (max-width: 640px) {
-      .container { padding: 0 18px; }
+      .container { width: 100%; max-width: 100%; padding: 0 18px; }
       .contact-form { grid-template-columns: 1fr; }
       .contact-form-wrapper { padding: 20px 18px; }
+      .form-group, .form-control, select.form-control, textarea.form-control { min-width: 0; max-width: 100%; }
+      .select-menu { max-height: 200px; }
       .form-title { font-size: 1.6rem; }
       .hero-content { padding-top: 44px; padding-bottom: 44px; }
       .hero-content h1 { font-size: 2.2rem; }
@@ -333,6 +386,28 @@ interface ContactFormData {
 export class ContactComponent implements OnInit {
   protected pilotSite = LOCAL_CONTEXT.PILOT_SITE;
   protected isSubmitting = signal(false);
+  protected openDropdown: 'form_type' | 'audience' | 'request_type' | null = null;
+  protected readonly formTypeOptions = [
+    { value: 'contact' as const, label: 'General enquiry' },
+    { value: 'training' as const, label: 'Training interest' },
+    { value: 'media' as const, label: 'Media request' },
+    { value: 'sme' as const, label: 'SME partnership' }
+  ];
+  protected readonly audienceOptions = [
+    { value: 'general', label: 'General Visitor' },
+    { value: 'farmer', label: 'Farmer' },
+    { value: 'student', label: 'Student' },
+    { value: 'developer', label: 'Developer' },
+    { value: 'sme', label: 'SME' },
+    { value: 'researcher', label: 'Researcher' },
+    { value: 'media', label: 'Media' },
+    { value: 'partner', label: 'Partner' }
+  ];
+  protected readonly requestTypeOptions = [
+    { value: 'interview', label: 'Interview' },
+    { value: 'footage', label: 'Footage or images' },
+    { value: 'statement', label: 'Statement' }
+  ];
 
   protected formData: ContactFormData = {
     form_type: 'contact',
@@ -370,6 +445,46 @@ export class ContactComponent implements OnInit {
         this.formData.audience = type;
       }
     });
+  }
+
+  @HostListener('document:click')
+  closeDropdown(): void {
+    this.openDropdown = null;
+  }
+
+  protected toggleDropdown(dropdown: 'form_type' | 'audience' | 'request_type', event: Event): void {
+    event.stopPropagation();
+    this.openDropdown = this.openDropdown === dropdown ? null : dropdown;
+  }
+
+  protected chooseFormType(value: MessageType, event: Event): void {
+    event.stopPropagation();
+    this.formData.form_type = value;
+    this.openDropdown = null;
+  }
+
+  protected chooseAudience(value: string, event: Event): void {
+    event.stopPropagation();
+    this.formData.audience = value;
+    this.openDropdown = null;
+  }
+
+  protected chooseRequestType(value: string, event: Event): void {
+    event.stopPropagation();
+    this.formData.request_type = value;
+    this.openDropdown = null;
+  }
+
+  protected formTypeLabel(): string {
+    return this.formTypeOptions.find(option => option.value === this.formData.form_type)?.label ?? 'Choose an enquiry type';
+  }
+
+  protected audienceLabel(): string {
+    return this.audienceOptions.find(option => option.value === this.formData.audience)?.label ?? 'Choose an audience';
+  }
+
+  protected requestTypeLabel(): string {
+    return this.requestTypeOptions.find(option => option.value === this.formData.request_type)?.label ?? 'Choose a request type';
   }
 
   onSubmit(): void {

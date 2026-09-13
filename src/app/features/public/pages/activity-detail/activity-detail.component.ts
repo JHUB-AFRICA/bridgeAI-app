@@ -39,10 +39,11 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
         </section>
 
         <div class="container detail-shell">
-          <article class="detail-card">
-            @if (act.summary) {
-              <p class="activity-summary">{{ act.summary }}</p>
-            }
+          <div class="detail-layout">
+            <article class="detail-card">
+              @if (act.summary) {
+                <p class="activity-summary">{{ act.summary }}</p>
+              }
 
             @if (getActivityImages(act).length > 0) {
               <section class="activity-image-carousel" aria-label="Activity images">
@@ -83,9 +84,39 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
               </section>
             }
 
-            <div class="activity-body" [innerHTML]="act.body | safeHtml"></div>
+              <div class="activity-body" [innerHTML]="act.body | safeHtml"></div>
 
-          </article>
+              <section class="share-section" aria-labelledby="share-title">
+                <h2 id="share-title">Share this activity</h2>
+                <div class="share-actions">
+                  <a [href]="shareUrl('facebook')" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook"><span aria-hidden="true">f</span> Facebook</a>
+                  <a [href]="shareUrl('linkedin')" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn"><span aria-hidden="true">in</span> LinkedIn</a>
+                  <a [href]="shareUrl('whatsapp')" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp"><span aria-hidden="true">&#9742;</span> WhatsApp</a>
+                </div>
+              </section>
+
+              @if (previousActivity(); as previous) {
+                <nav class="previous-navigation" aria-label="Previous activity">
+                  <span>Previous</span>
+                  <a [routerLink]="['/activities', previous.slug || previous.id]">{{ previous.title }}</a>
+                </nav>
+              }
+
+            </article>
+
+            <aside class="recent-posts" aria-labelledby="recent-posts-title">
+              <h2 id="recent-posts-title">Recent posts</h2>
+              @for (post of recentActivities(); track post.slug || post.id) {
+                <a class="recent-post" [routerLink]="['/activities', post.slug || post.id]">
+                  <img [src]="getRecentImage(post)" [alt]="post.title" title="Recent activity" loading="lazy" />
+                  <span>
+                    <strong>{{ post.title }}</strong>
+                    <small>{{ post.activity_type | titlecase }} · {{ getDateText(post.date) }}</small>
+                  </span>
+                </a>
+              }
+            </aside>
+          </div>
         </div>
       } @else if (notFound()) {
         <div class="loading-state">
@@ -119,7 +150,8 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
     .detail-hero h1 { margin: 0; max-width: 760px; font-size: clamp(2.2rem, 4vw, 4rem); line-height: 1.08; letter-spacing: -0.02em; font-weight: 900; }
     .activity-location { margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; font-size: 0.92rem; color: rgba(255,255,255,0.86); }
     .detail-shell { margin-top: -30px; padding-bottom: 64px; position: relative; z-index: 2; }
-    .detail-card { background: #fffdf7; border: 1px solid #e1d8c0; border-radius: 24px; box-shadow: 0 24px 64px rgba(0,0,0,0.08); overflow: hidden; padding: 28px; }
+    .detail-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 28px; align-items: start; }
+    .detail-card { min-width: 0; background: #fffdf7; border: 1px solid #e1d8c0; border-radius: 24px; box-shadow: 0 24px 64px rgba(0,0,0,0.08); overflow: hidden; padding: 28px; }
     .activity-summary { margin: 0 0 28px; padding: 18px 20px; border-left: 4px solid #c89b3c; background: #f5efe1; color: #48564a; font-size: 1.12rem; line-height: 1.75; }
     .activity-image-carousel { margin-bottom: 28px; }
     .carousel-stage { position: relative; min-height: 500px; overflow: hidden; border-radius: 16px; background: #f3f4f6; }
@@ -141,15 +173,35 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
     .activity-body ::ng-deep p, .activity-body ::ng-deep ul, .activity-body ::ng-deep ol { margin: 0 0 18px; }
     .activity-body ::ng-deep ul, .activity-body ::ng-deep ol { padding-left: 22px; }
     .activity-body ::ng-deep img { max-width: 100%; border-radius: 12px; margin: 12px 0; }
+    .recent-posts { min-width: 0; padding: 8px 0; }
+    .recent-posts h2 { margin: 0 0 22px; color: #30383d; font-size: 1rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+    .recent-post { display: grid; grid-template-columns: 66px minmax(0, 1fr); gap: 12px; align-items: start; margin-bottom: 22px; color: #30383d; text-decoration: none; }
+    .recent-post img { width: 66px; height: 66px; border-radius: 2px; object-fit: cover; background: #e6eadf; }
+    .recent-post strong { display: block; font-size: .88rem; line-height: 1.35; }
+    .recent-post small { display: block; margin-top: 5px; color: #8a8f92; font-size: .72rem; line-height: 1.35; }
+    .recent-post:hover strong { color: #6f7623; }
+    .share-section { margin-top: 48px; padding-top: 30px; border-top: 1px solid #e1d8c0; }
+    .share-section h2 { margin: 0 0 16px; color: #17241b; font-size: .95rem; font-weight: 600; }
+    .share-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .share-actions a { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 0; padding: 10px 12px; border: 1px solid #818528; color: #818528; font-size: .78rem; text-decoration: none; }
+    .share-actions a:hover { background: #818528; color: #fff; }
+    .share-actions span { font-weight: 800; }
+    .previous-navigation { display: grid; gap: 5px; margin-top: 34px; padding-top: 22px; border-top: 1px solid #e1d8c0; }
+    .previous-navigation span { color: #8a8f92; font-size: .75rem; }
+    .previous-navigation a { overflow: hidden; color: #17241b; font-size: .9rem; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; }
+    .previous-navigation a:hover { color: #6f7623; }
     .loading-state { min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #6e7767; }
     .spinner { width: 40px; height: 40px; border: 4px solid #efe6ce; border-top-color: #26432b; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @media (max-width: 768px) { .detail-card { padding: 18px; } .carousel-stage, .carousel-slide app-cloudinary-image { min-height: 260px; height: 260px; } }
-    @media (max-width: 480px) { .detail-hero-inner { padding: 40px 16px; } .detail-shell { margin-top: -18px; } .carousel-control { width: 36px; height: 36px; } }
+    @media (max-width: 900px) { .detail-layout { grid-template-columns: minmax(0, 1fr) 250px; gap: 20px; } }
+    @media (max-width: 768px) { .detail-layout { grid-template-columns: 1fr; } .recent-posts { order: -1; padding: 0 4px; } .recent-posts h2 { margin-bottom: 14px; } .recent-post { display: grid; grid-template-columns: 58px minmax(0, 1fr); margin-bottom: 14px; } .recent-post img { width: 58px; height: 58px; } .detail-card { padding: 18px; } .carousel-stage, .carousel-slide app-cloudinary-image { min-height: 260px; height: 260px; } }
+    @media (max-width: 480px) { .detail-hero-inner { padding: 40px 16px; } .detail-shell { margin-top: -18px; } .carousel-control { width: 36px; height: 36px; } .share-actions { grid-template-columns: 1fr; } }
   `]
 })
 export class ActivityDetailComponent implements OnInit, OnDestroy {
   protected activity = signal<Activity | null>(null);
+  protected recentActivities = signal<Activity[]>([]);
+  protected previousActivity = signal<Activity | null>(null);
   protected notFound = signal(false);
   protected activeImageIndex = signal(0);
   private imageRotationTimer?: ReturnType<typeof setInterval>;
@@ -164,6 +216,7 @@ export class ActivityDetailComponent implements OnInit, OnDestroy {
     if (slug) {
       this.loadActivity(slug);
     }
+    this.loadRecentActivities();
   }
 
   private loadActivity(slug: string): void {
@@ -179,6 +232,25 @@ export class ActivityDetailComponent implements OnInit, OnDestroy {
       error: () => {
         this.activity.set(null);
         this.notFound.set(true);
+      }
+    });
+  }
+
+  private loadRecentActivities(): void {
+    this.activityService.getActivities().subscribe({
+      next: (activities) => {
+        const published = activities
+          .filter(activity => activity.evidence_status === 'published')
+          .sort((first, second) => new Date(second.date).getTime() - new Date(first.date).getTime());
+        const currentSlug = this.route.snapshot.paramMap.get('slug');
+        const currentIndex = published.findIndex(activity => activity.slug === currentSlug || activity.id?.toString() === currentSlug);
+        const currentPosition = currentIndex >= 0 ? currentIndex : 0;
+        this.recentActivities.set(published.filter((_, index) => index !== currentPosition).slice(0, 2));
+        this.previousActivity.set(currentIndex >= 0 ? published[currentIndex + 1] ?? null : published[1] ?? null);
+      },
+      error: () => {
+        this.recentActivities.set([]);
+        this.previousActivity.set(null);
       }
     });
   }
@@ -232,6 +304,27 @@ export class ActivityDetailComponent implements OnInit, OnDestroy {
 
   protected getHeroImage(activity: Activity): string {
     return activity.featured_image || 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1600&q=80';
+  }
+
+  protected getRecentImage(activity: Activity): string {
+    return activity.featured_image || '/images/webimages/mushroom.png';
+  }
+
+  protected getDateText(dateValue?: string): string {
+    if (!dateValue) {
+      return 'Recent';
+    }
+
+    const parsed = new Date(dateValue);
+    return Number.isNaN(parsed.getTime()) ? 'Recent' : parsed.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  protected shareUrl(platform: 'facebook' | 'linkedin' | 'whatsapp'): string {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(this.activity()?.title || 'BRIDGE-AI activity');
+    if (platform === 'facebook') return `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    if (platform === 'linkedin') return `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+    return `https://wa.me/?text=${title}%20${url}`;
   }
 
   protected getWpColor(wpTag: string): string {

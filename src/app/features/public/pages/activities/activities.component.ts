@@ -21,33 +21,17 @@ type ActivityFilters = {
   imports: [CommonModule, RouterModule],
   template: `
     <div class="activities-page">
-      <section class="hero" id="heroSection">
-        <div class="hero-image-wrapper" aria-hidden="true">
-          @for (image of heroImages(); track image; let index = $index) {
-            <div class="hero-slide-bg" [class.active]="index === heroIndex()" [style.background-image]="'url(' + image + ')'" ></div>
-          }
-        </div>
+      <section class="activities-banner" aria-labelledby="activities-title">
+        <h1 id="activities-title">News &amp; Articles</h1>
+      </section>
 
-        <div class="hero-grid">
-          <div class="hero-left">
-            <h1><span class="highlight">Activities</span> &amp; Field Updates</h1>
-            <p class="hero-sub">Documenting the journey of BRIDGE-AI across Africa</p>
-            <p class="hero-description">
-              From pilot implementation to capacity building, stakeholder engagement, and real-world impact across agriculture in Africa. Explore the latest consortium activities, field updates, and learning moments from BRIDGE-AI.
-            </p>
-            <div class="hero-buttons">
-              <a href="#activities" class="btn-primary">
-                <i class="fas fa-arrow-right btn-icon"></i>
-                Explore Activities
-              </a>
-              <a [routerLink]="['/gallery']" class="btn-secondary">
-                <i class="fas fa-images btn-icon"></i>
-                View Gallery
-              </a>
-            </div>
-          </div>
-
+      <section class="activities-intro">
+        <div>
+          <h2>Follow <span>Bridge-AI</span> Journey</h2>
+          <p>Stay informed about the latest developments, activities, and achievements of the Bridge-AI project.</p>
+          <p>From project meetings and workshops to pilot activities and major milestones, this section brings together all project news and upcoming events.</p>
         </div>
+        <img src="/images/webimages/tunisapome.png" alt="Agricultural field work supporting BRIDGE-AI activities" title="BRIDGE-AI field activities" />
       </section>
 
       <section class="filter-section" id="filters">
@@ -198,7 +182,14 @@ type ActivityFilters = {
     a { text-decoration: none; }
 
     .container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
-    .hero { position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 85vh; background: #16281a; }
+    .activities-banner { min-height: 108px; display: grid; place-items: center; padding: 24px; background: #818528; }
+    .activities-banner h1 { margin: 0; color: #fff; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; }
+    .activities-intro { max-width: 1180px; margin: 0 auto; padding: 60px 38px 54px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 460px); align-items: center; gap: clamp(40px, 8vw, 100px); background: #fff; }
+    .activities-intro h2 { margin: 0 0 22px; color: #343b40; font-size: clamp(1.45rem, 2.6vw, 2rem); font-weight: 500; line-height: 1.2; }
+    .activities-intro h2 span { color: #818528; }
+    .activities-intro p { max-width: 590px; margin: 0 0 14px; color: #687278; font-size: .9rem; line-height: 1.7; }
+    .activities-intro img { display: block; width: 100%; aspect-ratio: 1.55; object-fit: cover; border-radius: 24px; }
+    .hero { display: none; }
     .hero-image-wrapper { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
     .hero-slide-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; filter: none; transition: opacity 1.2s ease; }
     .hero-slide-bg.active { opacity: 1; animation: hero-zoom 8s ease-in-out both; }
@@ -217,10 +208,10 @@ type ActivityFilters = {
     .btn-primary:hover { background: #16281a; transform: translateY(-3px); }
     .btn-secondary { background: transparent; color: #fff; padding: 14px 32px; border: 1.5px solid rgba(255,255,255,0.3); text-decoration: none; }
     .btn-secondary:hover { background: rgba(255,255,255,0.08); transform: translateY(-3px); }
-    .filter-section { position: sticky; top: var(--site-header-offset, 80px); z-index: 40; background: rgba(255, 253, 247, 0.94); backdrop-filter: blur(12px); border-bottom: 1px solid #e1d8c0; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    .filter-section { position: sticky; top: var(--site-header-offset, 80px); z-index: 40; background: #818528; border-bottom: 1px solid #73771f; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
     .filter-container { max-width: 1280px; margin: 0 auto; padding: 16px 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; }
     .filter-group { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
-    .filter-label { font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: #6e7767; font-weight: 600; }
+    .filter-label { font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; font-weight: 600; }
     .custom-dropdown { position: relative; min-width: 130px; }
     .dropdown-trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; padding: 7px 14px; background: #fffdf7; border: 1px solid #e1d8c0; border-radius: 50px; font-size: 0.75rem; font-weight: 500; color: #2d3d35; cursor: pointer; }
     .dropdown-arrow { font-size: 0.55rem; color: #6e7767; }
@@ -232,26 +223,26 @@ type ActivityFilters = {
     .filter-active-count { display: inline-block; font-size: 0.62rem; font-weight: 600; color: #5b3878; background: rgba(124, 79, 163, 0.09); padding: 3px 12px; border-radius: 50px; }
     .filter-clear { padding: 6px 16px; background: #efe6ce; border: 1px solid #e1d8c0; color: #2d3d35; cursor: pointer; }
     .filter-clear:hover { background: #26432b; color: #f7f2e6; }
-    .activities-section { padding: 44px 0 64px; background: #f7f2e6; }
+    .activities-section { padding: 44px 0 64px; background: #8a8f4b; }
     .section-header { max-width: 720px; margin: 0 auto 48px; text-align: center; }
-    .section-header h2 { font-size: 2.8rem; font-weight: 800; color: #17241b; line-height: 1.08; letter-spacing: -0.02em; margin: 0; }
+    .section-header h2 { font-size: 2.8rem; font-weight: 800; color: #fff; line-height: 1.08; letter-spacing: -0.02em; margin: 0; }
     .section-header .highlight { color: #26432b; }
-    .section-header p { margin-top: 14px; font-size: 1.05rem; color: #6e7767; }
-    .activities-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; }
+    .section-header p { margin-top: 14px; font-size: 1.05rem; color: rgba(255,255,255,.78); }
+    .activities-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: start; max-width: 760px; margin: 0 auto; }
     .activity-card { min-width: 0; display: flex; flex-direction: column; background: #fffdf7; border: 1px solid #e1d8c0; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease; }
     .activity-card:hover { transform: translateY(-6px); border-color: #7c4fa3; box-shadow: 0 24px 64px rgba(0,0,0,0.12); }
-    .activity-card.featured-card { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(320px, 1.12fr) 1fr; min-height: 0; background: #16281a; border-color: #16281a; }
+    .activity-card.featured-card { grid-column: auto; display: flex; min-height: 0; background: #fff; border-color: #e1e5e1; }
     .activity-card.featured-card .card-image { height: auto; min-height: 0; }
-    .activity-card.featured-card .card-body { min-height: 0; padding: 28px 32px 0; background: #16281a; }
-    .activity-card.featured-card .card-body h3 a { color: #fff; font-size: 1.6rem; }
-    .activity-card.featured-card .card-summary { color: rgba(247,242,230,.72); font-size: .96rem; }
-    .activity-card.featured-card .card-footer { border-top-color: rgba(247,242,230,.14); }
-    .activity-card.featured-card .meta-date, .activity-card.featured-card .card-location { color: rgba(247,242,230,.58); }
-    .card-image { position: relative; height: 220px; overflow: hidden; background: #16281a; }
+    .activity-card.featured-card .card-body { min-height: 0; padding: 18px 16px 0; background: #fff; }
+    .activity-card.featured-card .card-body h3 a { color: #17241b; font-size: 1.1rem; }
+    .activity-card.featured-card .card-summary { color: #6e7767; font-size: .78rem; }
+    .activity-card.featured-card .card-footer { border-top-color: #e1d8c0; }
+    .activity-card.featured-card .meta-date, .activity-card.featured-card .card-location { color: #6e7767; }
+    .card-image { position: relative; height: 150px; overflow: hidden; background: #16281a; }
     .card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
     .activity-card:hover .card-image img { transform: scale(1.05); }
     .image-tag { position: absolute; top: 12px; right: 12px; background: rgba(22, 40, 26, 0.8); color: #f7f2e6; padding: 3px 14px; border-radius: 50px; font-size: 0.58rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-    .card-body { padding: 22px 24px 0; display: flex; flex-direction: column; min-height: 220px; }
+    .card-body { padding: 16px 16px 0; display: flex; flex-direction: column; min-height: 190px; }
     .card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 10px; }
     .featured-label { color: #d8e86b; font: 600 .62rem 'IBM Plex Mono', monospace; letter-spacing: .1em; text-transform: uppercase; margin-right: 4px; }
     .meta-date { font-size: 0.65rem; color: #6e7767; font-weight: 500; }
@@ -266,12 +257,12 @@ type ActivityFilters = {
     .card-location { display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; color: #6e7767; }
     .card-link { font-size: 0.75rem; font-weight: 600; color: #26432b; gap: 6px; text-decoration: none; }
     .card-link:hover { gap: 12px; color: #16281a; }
-    .empty-state { width: 100%; text-align: center; padding: 70px 20px; background: #efe6ce; border-radius: 24px; border: 2px dashed #e1d8c0; }
+    .empty-state { width: 100%; grid-column: 1 / -1; text-align: center; padding: 70px 20px; background: #efe6ce; border-radius: 24px; border: 2px dashed #e1d8c0; }
     .empty-state .empty-icon { display: block; margin-bottom: 16px; font-size: 2.6rem; color: #26432b; opacity: 0.3; }
     .empty-state h3 { margin: 0 0 6px; font-size: 1.3rem; color: #17241b; }
     .empty-state p { max-width: 400px; margin: 0 auto; color: #6e7767; }
-    @media (max-width: 1024px) { .hero-grid { gap: 32px; padding: 40px 20px; } .hero-left h1 { font-size: 2.8rem; } .section-header h2 { font-size: 2.2rem; } .activity-card.featured-card { grid-template-columns: 1fr 1fr; } .hero-right { flex: 1 1 100%; } }
-    @media (max-width: 768px) { .hero { min-height: auto; } .hero-grid { flex-direction: column; text-align: center; padding: 40px 16px; } .hero-left, .hero-right { flex: 1 1 100%; } .hero-left { text-align: center; } .hero-left h1 { font-size: 2.2rem; } .hero-sub { font-size: 1rem; } .hero-description { font-size: 0.92rem; max-width: 100%; } .hero-buttons { justify-content: center; flex-direction: column; width: 100%; } .hero-buttons .btn-primary, .hero-buttons .btn-secondary { width: 100%; } .filter-container { padding: 0 16px; flex-direction: column; } .filter-group { justify-content: center; } .activities-grid { grid-template-columns: 1fr; gap: 20px; } .activity-card.featured-card { grid-column: auto; display: flex; } .activity-card.featured-card .card-image { min-height: 240px; height: 240px; } .activity-card.featured-card .card-body { padding: 24px 22px 0; } .activity-card.featured-card .card-body h3 a { font-size: 1.3rem; } .activity-type-card { flex: 1 1 100%; min-width: unset; } .section-header h2 { font-size: 1.8rem; } .section-header p { font-size: 0.95rem; } }
+    @media (max-width: 1024px) { .activities-intro { gap: 36px; } .section-header h2 { font-size: 2.2rem; } }
+    @media (max-width: 768px) { .activities-intro { grid-template-columns: 1fr; padding: 44px 20px; } .activities-intro img { max-width: 560px; } .filter-container { padding: 0 16px; flex-direction: column; } .filter-group { justify-content: center; } .activities-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 600px; } .section-header h2 { font-size: 1.8rem; } .section-header p { font-size: 0.95rem; } }
     @media (max-width: 480px) { .container { padding: 0 16px; } .hero-left h1 { font-size: 1.8rem; } .section-header h2 { font-size: 1.5rem; } .card-body { padding: 16px 18px 0; } .card-footer { flex-direction: column; align-items: flex-start; } }
   `]
 })

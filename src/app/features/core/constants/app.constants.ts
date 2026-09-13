@@ -129,12 +129,7 @@ export const SOCIAL_LINKS = {
   /**
    * LinkedIn page URL.
    */
-  LINKEDIN: 'https://linkedin.com/company/bridge-ai', // Placeholder
-
-  /**
-   * YouTube channel URL.
-   */
-  YOUTUBE: 'https://youtube.com/@bridge-ai', // Placeholder
+  LINKEDIN: 'https://www.linkedin.com/company/bridge-ai-agriculture/',
 
   /**
    * GitHub organization URL (for open-source repositories).

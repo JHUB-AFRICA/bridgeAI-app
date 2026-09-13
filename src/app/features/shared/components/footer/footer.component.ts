@@ -18,6 +18,7 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
           <div class="footer-logo-item footer-logo-item-bridge">
             <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI" class="footer-logo footer-logo-bridge" loading="lazy" />
           </div>
+          <p class="footer-description">BRIDGE-AI develops and employs innovative digital solutions based on Generative AI to support farmers in their daily decisions.</p>
         </div>
 
         <div class="footer-middle">
@@ -27,13 +28,15 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
               <li><a [routerLink]="['/about']">About BRIDGE-AI</a></li>
               <li><a [routerLink]="['/partners']">Partners</a></li>
               <li><a [routerLink]="['/privacy-ethics']">Privacy and Ethics</a></li>
+              <li><a [routerLink]="['/activities']">Activities</a></li>
+              <li><a [routerLink]="['/contact']">Contact</a></li>
             </ul>
           </div>
 
           <div class="footer-col">
             <h4 class="footer-col-title">Activities</h4>
             <ul class="footer-col-links">
-              <li><a [routerLink]="['/smart-mushrooms']">Smart Mushrooms</a></li>
+              <li><a [routerLink]="['/smart-mushrooms']">Smart Mushroom Pilot</a></li>
               <li><a [routerLink]="['/training-wp5']">Training and WP5</a></li>
               <li><a [routerLink]="['/activities']">News and Updates</a></li>
               <li><a [routerLink]="['/gallery']">Gallery</a></li>
@@ -66,35 +69,20 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
                   LinkedIn
                 </a>
               </li>
-              <li>
-                <a [href]="socialLinks.YOUTUBE" target="_blank" rel="noopener noreferrer">
-                  <svg class="footer-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
-                    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
-                  </svg>
-                  YouTube
-                </a>
-              </li>
-              <li>
-                <a href="https://twitter.com/bridge_ai" target="_blank" rel="noopener noreferrer">
-                  <svg class="footer-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 4l11.733 16h4.267l-11.733 -16z"/>
-                    <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/>
-                  </svg>
-                  X
-                </a>
-              </li>
             </ul>
           </div>
         </div>
 
         <div class="footer-bottom">
           <p class="footer-copyright">
-            &copy; <span id="footerYear">{{ currentYear }}</span> BRIDGE-AI
-            <span class="footer-sep">·</span>
-            Built by JHUB Africa
+            © 2026- BRIDGE-AI. All Rights Reserved.
           </p>
           <div class="footer-bottom-right">
+            <span class="footer-builders">
+              Built by <a href="https://jhubafrica.com" target="_blank" rel="noopener noreferrer">JHUB Africa</a>
+              <span class="footer-sep">·</span>
+              <a href="https://www.bradon.space" target="_blank" rel="noopener noreferrer">B.M.M</a>
+            </span>
             <a href="#top" class="footer-back-top" (click)="scrollToTop($event)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="18 15 12 9 6 15"/>
@@ -169,6 +157,15 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
 
     .footer-logo-item-bridge {
       min-width: 180px;
+    }
+
+    .footer-description {
+      max-width: 520px;
+      margin: 0;
+      color: var(--footer-text-muted);
+      font-size: .82rem;
+      line-height: 1.65;
+      text-align: center;
     }
 
     .footer-logo {
@@ -286,12 +283,12 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
 
     .footer-bottom {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       padding-top: 18px;
       flex-wrap: wrap;
       gap: 10px;
-      text-align: center;
+      text-align: left;
     }
 
     .footer-copyright {
@@ -307,7 +304,23 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-end;
+    }
+
+    .footer-builders {
+      color: var(--footer-text-muted);
+      font-size: .75rem;
+      opacity: .7;
+    }
+
+    .footer-builders a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .footer-builders a:hover {
+      color: var(--footer-primary);
+      opacity: 1;
     }
 
     .footer-badge {
@@ -419,6 +432,12 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
 
       .footer-logo-bridge {
         height: 40px;
+      }
+
+      .footer-description {
+        flex: 1 1 100%;
+        max-width: 560px;
+        text-align: center;
       }
 
       .footer-logo-eu {

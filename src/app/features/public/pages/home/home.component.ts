@@ -77,7 +77,7 @@ import { APP } from '../../../core/constants/app.constants';
             <p>One view of the agricultural contexts where BRIDGE-AI is being tested and shaped.</p>
           </div>
           <a class="pilot-feature" [routerLink]="[activePilot().route]">
-            <div class="pilot-feature-image" [style.backgroundImage]="'url(' + activePilot().image + ')'" aria-hidden="true"></div>
+            <img class="pilot-feature-image" [src]="activePilot().image" [alt]="activePilot().title + ' in ' + activePilot().country" fetchpriority="high" />
             <div class="pilot-feature-content">
               <span class="pilot-kicker">{{ activePilot().country }} · {{ activePilot().index }} / {{ pilotRegions.length }}</span>
               <h3>{{ activePilot().title }}</h3>
@@ -540,10 +540,13 @@ import { APP } from '../../../core/constants/app.constants';
       position: absolute;
       inset: 0;
       z-index: -2;
-      background-position: center;
-      background-size: cover;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
       filter: saturate(.9);
-      transition: background-image 1.2s ease, transform 8s ease;
+      transition: transform 8s ease;
     }
 
     .pilot-feature:hover .pilot-feature-image { transform: scale(1.04); }
@@ -1446,8 +1449,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880189/bridge-ai/gallery/x2pkxnhs75azkvsgr2a7.jpg'
   ];
   protected readonly pilotRegions = [
-    { country: 'Nigeria', index: '01', title: 'Maize production', description: 'Supporting climate-smart maize farming with better decisions for planting, harvesting and crop management.', image: '/images/webimages/maize.png', route: '/pilot-nigeria' },
-    { country: 'Kenya', index: '02', title: 'Smart mushroom cultivation', description: 'Helping farmers monitor growing conditions while supporting youth and women in digital agriculture.', image: '/images/webimages/mushroom.png', route: '/smart-mushrooms' },
+    { country: 'Kenya', index: '01', title: 'Smart mushroom cultivation', description: 'Helping farmers monitor growing conditions while supporting youth and women in digital agriculture.', image: '/images/webimages/mushroom.png', route: '/smart-mushrooms' },
+    { country: 'Nigeria', index: '02', title: 'Maize production', description: 'Supporting climate-smart maize farming with better decisions for planting, harvesting and crop management.', image: '/images/webimages/maize.png', route: '/pilot-nigeria' },
     { country: 'Tunisia', index: '03', title: 'Pasture management', description: 'Using environmental information and digital tools to support informed grazing and climate adaptation.', image: '/images/webimages/Pasture.png', route: '/pilot-tunisia' },
     { country: 'Tunisia', index: '04', title: 'Pomegranate cultivation', description: 'Improving irrigation, crop care and harvest planning with tailored, resource-efficient recommendations.', image: '/images/webimages/Pomegranate.png', route: '/pilot-tunisia' }
   ];
@@ -1478,6 +1481,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadData();
+    this.preloadImages();
     this.syncStickyOffset();
     this.rotation = setInterval(() => {
       this.heroIndex.update(index => (index + 1) % this.heroImages.length);
@@ -1505,6 +1509,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     document.documentElement.style.setProperty('--site-header-offset', `${headerHeight}px`);
     document.documentElement.style.setProperty('--section-nav-height', `${navHeight}px`);
     document.documentElement.style.setProperty('scroll-padding-top', `${headerHeight + navHeight + 20}px`);
+  }
+
+  private preloadImages(): void {
+    [...this.heroImages.slice(0, 3), ...this.pilotRegions.map(region => region.image)].forEach(source => {
+      const image = new Image();
+      image.decoding = 'async';
+      image.src = source;
+    });
   }
 
   private bindSectionNavigation(): void {

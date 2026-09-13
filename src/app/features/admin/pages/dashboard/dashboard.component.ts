@@ -8,7 +8,6 @@ import { RouterModule } from '@angular/router';
 import { ActivityService } from '../../../../services/activity.service';
 import { EventService } from '../../../../services/event.service';
 import { ResourceService } from '../../../../services/resource.service';
-import { PartnerService } from '../../../../services/partner.service';
 import { TeamService } from '../../../../services/team.service';
 import { GalleryService } from '../../../../services/gallery.service';
 import { FaqService } from '../../../../services/faq.service';
@@ -20,7 +19,6 @@ interface DashboardStats {
   events: number;
   upcomingEvents: number;
   resources: number;
-  partners: number;
   team: number;
   albums: number;
   galleryImages: number;
@@ -80,21 +78,6 @@ interface DashboardStats {
           <div class="stat-info">
             <span class="stat-value">{{ stats().resources }}</span>
             <span class="stat-label">Resources</span>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon orange">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value">{{ stats().partners }}</span>
-            <span class="stat-label">Partners</span>
           </div>
         </div>
 
@@ -300,7 +283,6 @@ export class DashboardComponent implements OnInit {
     events: 0,
     upcomingEvents: 0,
     resources: 0,
-    partners: 0,
     team: 0,
     albums: 0,
     galleryImages: 0,
@@ -313,7 +295,6 @@ export class DashboardComponent implements OnInit {
     private activityService: ActivityService,
     private eventService: EventService,
     private resourceService: ResourceService,
-    private partnerService: PartnerService,
     private teamService: TeamService,
     private galleryService: GalleryService,
     private faqService: FaqService,
@@ -348,12 +329,6 @@ export class DashboardComponent implements OnInit {
     this.resourceService.getResources().subscribe({
       next: (resources) => {
         this.stats.update(s => ({ ...s, resources: resources.length }));
-      }
-    });
-
-    this.partnerService.getPartners().subscribe({
-      next: (partners) => {
-        this.stats.update(s => ({ ...s, partners: partners.length }));
       }
     });
 

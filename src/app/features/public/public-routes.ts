@@ -71,7 +71,11 @@ export const PublicRoutes: Routes = [
   },
   {
     path: 'partners',
-    loadComponent: () => import('./pages/partners/partners.component').then(m => m.PartnersComponent)
+    loadComponent: () => import('./pages/partners/partners').then(m => m.Partners)
+  },
+  {
+    path: 'partners/:slug',
+    loadComponent: () => import('./pages/partners/partners').then(m => m.Partners)
   },
   {
     path: 'gallery',

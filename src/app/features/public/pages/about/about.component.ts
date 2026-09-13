@@ -19,7 +19,7 @@ import { RouterModule } from '@angular/router';
     <main>
       <section class="hero" id="heroSection">
         <div class="hero-image-wrapper" id="heroImageWrapper">
-          <div class="hero-slide-bg active" style="background-image: url('https://media.licdn.com/dms/image/v2/D4E22AQHYDwYQ88DUZg/feedshare-shrink_1280/B4EZ7bSmT4KIAQ-/0/1781795547106?e=1787788800&v=beta&t=_OU_S6KQNI4jYk9MzZfTDCFmqMAujSHFa3bys85wqc0');"></div>
+          <div class="hero-slide-bg active" style="background-image: url('/images/webimages/about.jpeg');"></div>
         </div>
 
         <div class="hero-content-wrapper">
@@ -155,7 +155,7 @@ import { RouterModule } from '@angular/router';
             <a class="country-card-link reveal" [routerLink]="['/pilot-tunisia']">
             <div class="country-card">
               <div class="card-image">
-                <img src="/images/webimages/Pomegranate.png" alt="Pomegranate production in Tunisia" loading="lazy" />
+                <img src="/images/webimages/tunisapome.png" alt="Pomegranate production in Tunisia" title="Tunisia pomegranate pilot" loading="lazy" />
               </div>
               <div class="card-body">
                 <span class="card-badge">Use Case 4</span>

@@ -11,6 +11,7 @@
 .page-content {
   display: block;
   width: 100%;
+  min-height: 100vh;
 }
 
 .app-notifications {

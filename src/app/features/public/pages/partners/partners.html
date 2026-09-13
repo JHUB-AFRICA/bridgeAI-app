@@ -1,0 +1,64 @@
+@if (detailPartner; as partner) {
+<main class="partner-detail-page">
+	<section class="partner-detail-shell" aria-labelledby="partner-title">
+		<aside class="partner-brand-column">
+			<img class="partner-logo" [src]="partner.logo" [alt]="partner.name + ' logo'" title="Partner logo" />
+			<a class="visit-button" [href]="partner.website" target="_blank" rel="noopener noreferrer">Visit site <span aria-hidden="true">↗</span></a>
+		</aside>
+		<article class="partner-copy">
+			<p class="detail-country">{{ partner.country }} · BRIDGE-AI consortium</p>
+			<h1 id="partner-title">About {{ partner.name }}</h1>
+			<p>{{ partner.description }}</p>
+			<h2>Role in BRIDGE-AI</h2>
+			<p>{{ partner.role }}</p>
+			<div class="social-links"><a [href]="partner.website" target="_blank" rel="noopener noreferrer" aria-label="Visit partner website">↗</a><a href="https://www.linkedin.com/company/bridge-ai-agriculture/" target="_blank" rel="noopener noreferrer" aria-label="BRIDGE-AI on LinkedIn">in</a></div>
+		</article>
+	</section>
+	<section class="related-projects" aria-labelledby="related-title">
+		<div class="related-heading"><h2 id="related-title">Related projects</h2><a routerLink="/partners">All partners</a></div>
+		<div class="related-tabs" role="tablist" aria-label="Related consortium partners">
+			@for (related of partners; track related.slug) {
+				@if (related.slug !== partner.slug) { <a role="tab" [routerLink]="['/partners', related.slug]">{{ related.name }}</a> }
+			}
+		</div>
+		<div class="related-card"><img [src]="partners[0].logo" [alt]="partners[0].name + ' logo'" title="Related partner logo" loading="lazy" /><div><p class="detail-country">{{ partners[0].country }}</p><h3>{{ partners[0].name }}</h3><p>{{ partners[0].description }}</p><a [routerLink]="['/partners', partners[0].slug]">View case <span aria-hidden="true">→</span></a></div></div>
+	</section>
+</main>
+} @else {
+<main class="consortium-page">
+	<section class="consortium-banner" aria-labelledby="consortium-title">
+		<h1 id="consortium-title">Consortium</h1>
+	</section>
+
+	<section class="consortium-intro" aria-labelledby="partnership-title">
+		<div class="intro-copy">
+			<h2 id="partnership-title">A strong <span>Europe-Africa</span> partnership</h2>
+			<p>The BRIDGE-AI consortium brings together a multidisciplinary team of <strong>partners from Europe and Africa</strong>, combining complementary expertise in artificial intelligence, agriculture, Earth observation, digital technologies and innovation ecosystems.</p>
+			<p>Coordinated by <a href="https://eurecat.org/home/en/" target="_blank" rel="noopener noreferrer"><strong>Eurecat</strong></a>, the consortium includes research centres, universities and technology providers from <strong>Spain, Kenya, Tunisia, Nigeria and Austria.</strong> Together, they cover the full value chain of the project, from data collection and AI development to real-world validation, capacity building and knowledge transfer.</p>
+			<p>This collaborative approach ensures that advanced European technologies are effectively combined with local knowledge and field experience, enabling the development of solutions that are both technically robust and relevant to real agricultural contexts in Africa.</p>
+		</div>
+
+		<div class="intro-image">
+			<img src="/images/webimages/consortium.jpeg" alt="BRIDGE-AI consortium partners together" title="BRIDGE-AI consortium partners" />
+		</div>
+	</section>
+
+	<section class="partner-section" aria-labelledby="partners-title">
+		<p class="eyebrow">BRIDGE-AI consortium</p>
+		<h2 id="partners-title">Our partners</h2>
+		<p class="hint">Hover over a logo to see its name. Select a logo to visit its website.</p>
+
+		<div class="partner-grid">
+			@for (partner of partners; track partner.name) {
+				<a class="partner-tile" [routerLink]="['/partners', partner.slug]" [attr.aria-label]="'View details for ' + partner.name">
+					<span class="logo-wrap">
+						<img [src]="partner.logo" [alt]="partner.name + ' logo'" title="Consortium partner logo" loading="lazy" />
+						<span class="partner-name">{{ partner.name }}</span>
+					</span>
+					<span class="country">{{ partner.country }}</span>
+				</a>
+			}
+		</div>
+	</section>
+</main>
+}

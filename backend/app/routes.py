@@ -14,10 +14,16 @@ from dotenv import load_dotenv
 
 def _get_cloudinary_service():
     load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env'))
+    cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME')
+    api_key = os.getenv('CLOUDINARY_API_KEY')
+    api_secret = os.getenv('CLOUDINARY_API_SECRET')
+    if not all((cloud_name, api_key, api_secret)):
+        return None
+
     cloudinary.config(
-        cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
-        api_key=os.getenv('CLOUDINARY_API_KEY'),
-        api_secret=os.getenv('CLOUDINARY_API_SECRET'),
+        cloud_name=cloud_name,
+        api_key=api_key,
+        api_secret=api_secret,
         secure=True,
     )
 
@@ -286,6 +292,9 @@ def get_activities():
 
 @api_bp.route('/activities/images', methods=['GET'])
 def get_activity_images():
+    if cloudinary_service is None:
+        return jsonify({'error': 'Cloudinary is not configured on the server'}), 503
+
     try:
         result = cloudinary.api.resources(
             resource_type='image',

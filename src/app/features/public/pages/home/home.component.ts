@@ -2,7 +2,7 @@
 // BRIDGE-AI - Home Component
 // ============================================================
 
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ActivityService } from '../../../../services/activity.service';
@@ -10,6 +10,7 @@ import { EventService } from '../../../../services/event.service';
 import { Activity } from '../../../core/models/activity.model';
 import { Event } from '../../../core/models/event.model';
 import { APP } from '../../../core/constants/app.constants';
+import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
 @Component({
   selector: 'app-home',
@@ -142,9 +143,9 @@ import { APP } from '../../../core/constants/app.constants';
               </div>
 
               <ng-container *ngIf="latestActivities().length; else activityFallback">
-                <div class="activity-item" *ngFor="let activity of latestActivities() | slice:0:3">
+                <a class="activity-item" *ngFor="let activity of latestActivities() | slice:0:3" [routerLink]="['/activities', activity.slug || activity.id]" [attr.aria-label]="'Open activity: ' + activity.title">
                   <div class="activity-img">
-                    <img [src]="activity.featured_image || 'https://images.unsplash.com/photo-1464226184884-fa52ac9fcf8b?w=800&q=80'" [alt]="activity.title" loading="lazy">
+                    <img [src]="activity.featured_image || heroFallbackImage()" [alt]="activity.title" loading="lazy">
                   </div>
                   <div class="activity-copy">
                     <div class="activity-meta">
@@ -152,9 +153,8 @@ import { APP } from '../../../core/constants/app.constants';
                       <span class="tag" *ngIf="activity.wp_tag">{{ activity.wp_tag }}</span>
                     </div>
                     <h4>{{ activity.title }}</h4>
-                    <p>{{ activity.summary || 'Latest BRIDGE-AI activity update.' }}</p>
                   </div>
-                </div>
+                </a>
               </ng-container>
 
               <ng-template #activityFallback>
@@ -163,7 +163,6 @@ import { APP } from '../../../core/constants/app.constants';
                   <div class="activity-copy">
                     <div class="activity-meta"><span class="date">Coming Soon</span></div>
                     <h4>Activities Loading</h4>
-                    <p>Check back soon for updates from BRIDGE-AI consortium activities.</p>
                   </div>
                 </div>
               </ng-template>
@@ -177,7 +176,7 @@ import { APP } from '../../../core/constants/app.constants';
               </div>
 
               <ng-container *ngIf="upcomingEvents().length; else eventFallback">
-                <div class="event-item" *ngFor="let event of upcomingEvents() | slice:0:3">
+                <a class="event-item" *ngFor="let event of upcomingEvents() | slice:0:3" [routerLink]="['/training-events', event.slug || event.id]" [attr.aria-label]="'Open training event: ' + event.title">
                   <div class="event-date">
                     <span class="day">{{ event.date ? event.date.slice(8,10) : 'TBA' }}</span>
                     <span class="month">{{ event.date ? event.date.slice(5,7) : 'TBA' }}</span>
@@ -187,7 +186,7 @@ import { APP } from '../../../core/constants/app.constants';
                     <p>{{ event.location || 'Location TBD' }}</p>
                   </div>
                   <span class="event-status">{{ event.status || 'Upcoming' }}</span>
-                </div>
+                </a>
               </ng-container>
 
               <ng-template #eventFallback>
@@ -288,10 +287,10 @@ import { APP } from '../../../core/constants/app.constants';
       inset: 0;
       background-size: cover;
       background-position: center;
-      opacity: 0.7;
+      opacity: 0.72;
       filter: saturate(0.9);
       transform: translate3d(0, var(--hero-parallax, 0px), 0) scale(1.08);
-      transition: background-image 1.2s ease, transform 0.08s linear;
+      transition: background-image 1.8s ease, opacity 1.8s ease, transform 0.08s linear;
     }
 
     .hero::after {
@@ -931,12 +930,15 @@ import { APP } from '../../../core/constants/app.constants';
     }
 
     .activity-item {
-      display: flex;
-      gap: 18px;
-      padding: 20px 0;
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 22px;
+      padding: 22px 0;
       border-bottom: 1px solid #e1d8c0;
       align-items: flex-start;
       transition: all 0.3s ease;
+      color: inherit;
+      text-decoration: none;
     }
 
     .activity-item:first-child {
@@ -952,9 +954,9 @@ import { APP } from '../../../core/constants/app.constants';
     }
 
     .activity-img {
-      width: 76px;
-      height: 76px;
-      border-radius: 8px;
+      width: 100%;
+      height: 132px;
+      border-radius: 14px;
       overflow: hidden;
       flex-shrink: 0;
       background: #efe6ce;
@@ -1006,18 +1008,14 @@ import { APP } from '../../../core/constants/app.constants';
     }
 
     .activity-copy h4 {
-      font-size: 1.02rem;
+      font-size: 1.14rem;
       font-weight: 700;
       color: #17241b;
-      margin-bottom: 3px;
+      margin: 0 0 5px;
+      line-height: 1.35;
     }
 
-    .activity-copy p {
-      color: #6e7767;
-      font-size: 0.85rem;
-      line-height: 1.6;
-      margin: 0;
-    }
+    .activity-copy p { display: none; }
 
     .event-item {
       display: flex;
@@ -1036,6 +1034,12 @@ import { APP } from '../../../core/constants/app.constants';
       border-color: #7c4fa3;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
       transform: translateX(4px);
+    }
+
+    .event-item:focus-visible,
+    .activity-item:focus-visible {
+      outline: 3px solid #c89b3c;
+      outline-offset: 4px;
     }
 
     .event-date {
@@ -1335,13 +1339,13 @@ import { APP } from '../../../core/constants/app.constants';
       }
 
       .activity-item {
-        flex-direction: column;
-        gap: 12px;
+        grid-template-columns: 1fr;
+        gap: 14px;
       }
 
       .activity-img {
         width: 100%;
-        height: 150px;
+        height: 180px;
       }
 
       .event-item {
@@ -1436,18 +1440,7 @@ import { APP } from '../../../core/constants/app.constants';
   `]
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  protected readonly heroImages = [
-    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788870191/bridge-ai/activities/ojgvahkngrsvywvbueik.jpg',
-    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788542499/bridge-ai/activities/f9ydujvtsxxtqufk6mvs.jpg',
-    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788542494/bridge-ai/activities/tmnpjeopjyizh1oxpy5n.jpg',
-    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788554710/bridge-ai/events/watr7abqimosseh3unfk.jpg',
-    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788554793/bridge-ai/events/mplzmvk4knhlhyavccpc.jpg',
-    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1789050014/bridge-ai/events/ltlmpcxoiop7zbq0zyv8.jpg',
-    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880126/bridge-ai/gallery/dndsmgnt3swhqvelu6hl.jpg',
-    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880116/bridge-ai/gallery/vjrk04xljqehh98rnqey.jpg',
-    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880133/bridge-ai/gallery/bbemfuucdg79lwp3cbtv.jpg',
-    'https://res.cloudinary.com/rn4dhrdb/image/upload/v1788880189/bridge-ai/gallery/x2pkxnhs75azkvsgr2a7.jpg'
-  ];
+  protected readonly heroImages = signal<string[]>([]);
   protected readonly pilotRegions = [
     { country: 'Kenya', index: '01', title: 'Smart mushroom cultivation', description: 'Helping farmers monitor growing conditions while supporting youth and women in digital agriculture.', image: '/images/webimages/mushroom.png', route: '/smart-mushrooms' },
     { country: 'Nigeria', index: '02', title: 'Maize production', description: 'Supporting climate-smart maize farming with better decisions for planting, harvesting and crop management.', image: '/images/webimages/maize.png', route: '/pilot-nigeria' },
@@ -1456,7 +1449,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   ];
   protected readonly heroIndex = signal(0);
   protected readonly pilotIndex = signal(0);
-  protected readonly activeHeroImage = () => this.heroImages[this.heroIndex()];
+  protected readonly activeHeroImage = computed(() => this.heroImages()[this.heroIndex()] || '');
+  protected readonly heroFallbackImage = computed(() => this.heroImages()[0] || '');
   protected readonly activePilot = () => this.pilotRegions[this.pilotIndex()];
   private rotation?: ReturnType<typeof setInterval>;
   private readonly handleResize = (): void => this.syncStickyOffset();
@@ -1476,17 +1470,21 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private activityService: ActivityService,
-    private eventService: EventService
+    private eventService: EventService,
+    private cloudinaryService: CloudinaryService
   ) {}
 
   ngOnInit(): void {
     this.loadData();
-    this.preloadImages();
+    this.loadHeroImages();
     this.syncStickyOffset();
     this.rotation = setInterval(() => {
-      this.heroIndex.update(index => (index + 1) % this.heroImages.length);
+      const imageCount = this.heroImages().length;
+      if (imageCount > 0) {
+        this.heroIndex.update(index => (index + 1) % imageCount);
+      }
       this.pilotIndex.update(index => (index + 1) % this.pilotRegions.length);
-    }, 6000);
+    }, 8000);
     window.addEventListener('resize', this.handleResize);
     window.addEventListener('scroll', this.handleScroll, { passive: true });
     window.addEventListener('load', this.handleResize);
@@ -1512,10 +1510,26 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private preloadImages(): void {
-    [...this.heroImages.slice(0, 3), ...this.pilotRegions.map(region => region.image)].forEach(source => {
+    [...this.heroImages().slice(0, 3), ...this.pilotRegions.map(region => region.image)].forEach(source => {
       const image = new Image();
       image.decoding = 'async';
       image.src = source;
+    });
+  }
+
+  private loadHeroImages(): void {
+    this.cloudinaryService.getActivityImages().subscribe({
+      next: (images) => {
+        const sources = images
+          .map(image => image.secure_url)
+          .filter(image => image.includes('/bridge-ai/activities/'));
+        this.heroImages.set(sources);
+        this.heroIndex.set(0);
+        this.preloadImages();
+      },
+      error: () => {
+        this.heroImages.set([]);
+      }
     });
   }
 

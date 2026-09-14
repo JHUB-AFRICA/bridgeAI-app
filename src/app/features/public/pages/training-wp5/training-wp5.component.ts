@@ -34,20 +34,11 @@ import { RouterModule } from '@angular/router';
                 Capacity Building<br>
                 <span class="gold">and Replication</span>
               </h1>
-              <p class="hero-subtitle">BRIDGE-AI Consortium Capacity Building Across Africa</p>
+              <p class="hero-subtitle">BRIDGE-AI consortium capacity building across Africa</p>
               <p class="hero-desc">
-                The BRIDGE-AI consortium brings together partners across Nigeria, Kenya and Tunisia
-                to grow skills, mentor SMEs, connect communities and replicate GenAI solutions for agriculture.
+                BRIDGE-AI strengthens skills, supports SMEs, connects communities and scales GenAI solutions
+                for agriculture across Nigeria, Kenya and Tunisia.
               </p>
-              <div class="hero-actions">
-                <a [routerLink]="['/training-events']" class="btn-primary">
-                  Explore Events
-                  <span class="btn-arrow">→</span>
-                </a>
-                <a [routerLink]="['/resources']" class="btn-outline">
-                  View Materials
-                </a>
-              </div>
             </div>
           </div>
         </div>
@@ -61,12 +52,9 @@ import { RouterModule } from '@angular/router';
       <nav class="section-nav" aria-label="Page sections">
         <div class="section-nav-inner">
           <a href="#overview" data-section="overview" class="active" (click)="scrollToSection($event, 'overview')">Overview</a>
-          <a href="#events" data-section="events" (click)="scrollToSection($event, 'events')">Events</a>
-          <a href="#materials" data-section="materials" (click)="scrollToSection($event, 'materials')">Materials</a>
-          <a href="#mentoring" data-section="mentoring" (click)="scrollToSection($event, 'mentoring')">Mentoring</a>
-          <a href="#community" data-section="community" (click)="scrollToSection($event, 'community')">Community</a>
-          <a href="#replication" data-section="replication" (click)="scrollToSection($event, 'replication')">Replication</a>
-          <a href="#register" data-section="register" (click)="scrollToSection($event, 'register')">Register</a>
+          <a href="#skills" data-section="skills" (click)="scrollToSection($event, 'skills')">BRIDGE-AI Learning</a>
+          <a href="#smes" data-section="smes" (click)="scrollToSection($event, 'smes')">Ecosystem</a>
+          <a href="#replication" data-section="replication" (click)="scrollToSection($event, 'replication')">Scale-Up</a>
         </div>
       </nav>
 
@@ -75,186 +63,99 @@ import { RouterModule } from '@angular/router';
           <div class="intro-grid">
             <div class="intro-text">
               <span class="intro-label">About WP5</span>
-              <h2>Building Capacity Across <span class="gold">Three Countries</span></h2>
+              <h2>Building practical capacity for <span class="gold">digital agriculture</span></h2>
               <p>
-                Work Package 5 is a consortium-wide effort to build digital agriculture capacity
-                across Nigeria, Kenya and Tunisia. Through training, mentoring and replication,
-                BRIDGE-AI empowers SMEs, developers, farmers and community partners with GenAI solutions.
+                Work Package 5 supports a coordinated effort to train communities, strengthen local expertise
+                and prepare African agricultural stakeholders to adopt AI-driven solutions with confidence.
               </p>
               <p style="margin-bottom:0;">
-                Each country contributes its own agricultural expertise and local context,
-                from the Smart Mushroom pilot in Kenya to BRIDGE-AI use cases in Nigeria and Tunisia.
+                Through BRIDGE-AI, partners across the consortium share knowledge, tools and experience to help
+                translate innovation into real impact on farms, value chains and businesses.
               </p>
             </div>
             <div class="intro-stats">
-              <div class="intro-stat">
-                <span class="stat-number">150+</span>
-                <span class="stat-label">Participants Trained</span>
-              </div>
-              <div class="intro-stat">
-                <span class="stat-number">45+</span>
-                <span class="stat-label">SMEs Mentored</span>
-              </div>
-              <div class="intro-stat">
-                <span class="stat-number">12+</span>
-                <span class="stat-label">Events Hosted</span>
-              </div>
-              <div class="intro-stat">
-                <span class="stat-number">3</span>
-                <span class="stat-label">Countries Connected</span>
-              </div>
+              <a [routerLink]="['/partners']" class="intro-stat">
+                <span class="stat-number">Across Africa</span>
+                <span class="stat-label">Countries</span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+              <a [routerLink]="['/training-events']" class="intro-stat">
+                <span class="stat-number">Training Events</span>
+                <span class="stat-label">Learning</span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+              <a [routerLink]="['/sme-mentoring']" class="intro-stat">
+                <span class="stat-number">SME Support</span>
+                <span class="stat-label">Mentoring</span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+              <a [routerLink]="['/about']" class="intro-stat">
+                <span class="stat-number">Shared Vision</span>
+                <span class="stat-label">Partnership</span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="feature-section" id="events">
+      <section class="feature-section" id="skills">
         <div class="page-container">
           <div class="feature-grid">
             <div class="feature-image">
-              <img src="https://images.unsplash.com/photo-1516321165247-4aa89a48be28?auto=format&fit=crop&w=1200&q=80" alt="Training event with participants" loading="lazy">
-              <div class="image-overlay-text">Hands-on training for farmers, youth and women</div>
+              <img src="/images/webimages/consortium.jpeg" alt="BRIDGE-AI consortium partners" loading="lazy">
+              <div class="image-overlay-text">Skills development across the consortium</div>
             </div>
             <div class="feature-content">
-              <span class="feature-label">Hands-on Learning</span>
-              <h3>Training <span class="gold">Events</span></h3>
+              <span class="feature-label">BRIDGE-AI Learning</span>
+              <h3>Capability building for <span class="gold">real impact</span></h3>
               <p class="feature-desc">
-                Hands-on bootcamps, workshops and field demonstrations for farmers,
-                youth and women across Nigeria, Kenya and Tunisia. Participants learn practical
-                skills in agritech, AI and digital farming.
+                BRIDGE-AI delivers hands-on learning for farmers, youth, researchers and local innovators, helping
+                them apply AI and digital tools to agriculture in practical, context-specific ways.
               </p>
               <div class="feature-stats">
-                <div class="feature-stat">
-                  <span class="stat-number">12+</span>
-                  <span class="stat-label">Events Hosted</span>
-                </div>
-                <div class="feature-stat">
-                  <span class="stat-number">150+</span>
-                  <span class="stat-label">Participants Trained</span>
-                </div>
-                <div class="feature-stat">
-                  <span class="stat-number">3</span>
-                  <span class="stat-label">Countries Reached</span>
-                </div>
+                <a [routerLink]="['/training-events']" class="feature-stat">
+                  <span class="stat-number">Training Events</span>
+                  <span class="stat-label">Hands-on learning</span>
+                  <span class="card-arrow" aria-hidden="true">→</span>
+                </a>
+                <a [routerLink]="['/partners']" class="feature-stat">
+                  <span class="stat-number">Country Reach</span>
+                  <span class="stat-label">Nigeria · Kenya · Tunisia</span>
+                  <span class="card-arrow" aria-hidden="true">→</span>
+                </a>
               </div>
-              <a [routerLink]="['/training-events']" class="feature-cta">
-                View All Events
-                <span class="cta-arrow">→</span>
-              </a>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="feature-section" id="materials">
+      <section class="feature-section" id="smes">
         <div class="page-container">
           <div class="feature-grid reverse">
             <div class="feature-image">
-              <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80" alt="Training materials and resources" loading="lazy">
-              <div class="image-overlay-text">Open access resources for self-paced learning</div>
+              <img src="/images/webimages/about.jpeg" alt="BRIDGE-AI agriculture stakeholders" loading="lazy">
+              <div class="image-overlay-text">Supporting SMEs and innovation ecosystems</div>
             </div>
             <div class="feature-content">
-              <span class="feature-label">Open Access Resources</span>
-              <h3>Training <span class="gold">Materials</span></h3>
+              <span class="feature-label">BRIDGE-AI Ecosystem</span>
+              <h3>Mentoring for <span class="gold">enterprise growth</span></h3>
               <p class="feature-desc">
-                Access training modules, video tutorials, guides and open-source
-                repositories for self-paced learning. All materials are designed
-                for African agricultural contexts.
+                We support agricultural SMEs and startups with mentoring, collaborative learning and growth pathways
+                that turn innovative ideas into scalable, locally relevant solutions.
               </p>
               <div class="feature-stats">
-                <div class="feature-stat">
-                  <span class="stat-number">20+</span>
-                  <span class="stat-label">Training Modules</span>
-                </div>
-                <div class="feature-stat">
-                  <span class="stat-number">15+</span>
-                  <span class="stat-label">Video Tutorials</span>
-                </div>
-                <div class="feature-stat">
-                  <span class="stat-number">10+</span>
-                  <span class="stat-label">Downloadable Guides</span>
-                </div>
+                <a [routerLink]="['/sme-mentoring']" class="feature-stat">
+                  <span class="stat-number">SME Support</span>
+                  <span class="stat-label">Growth and innovation</span>
+                  <span class="card-arrow" aria-hidden="true">→</span>
+                </a>
+                <a [routerLink]="['/community-practice']" class="feature-stat">
+                  <span class="stat-number">Community</span>
+                  <span class="stat-label">Collaboration and mentoring</span>
+                  <span class="card-arrow" aria-hidden="true">→</span>
+                </a>
               </div>
-              <a [routerLink]="['/resources']" class="feature-cta">
-                Explore Materials
-                <span class="cta-arrow">→</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="feature-section" id="mentoring">
-        <div class="page-container">
-          <div class="feature-grid">
-            <div class="feature-image">
-              <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80" alt="SME mentoring session" loading="lazy">
-              <div class="image-overlay-text">Empowering agricultural SMEs and startups</div>
-            </div>
-            <div class="feature-content">
-              <span class="feature-label">Empowering SMEs</span>
-              <h3>SME <span class="gold">Mentoring</span></h3>
-              <p class="feature-desc">
-                Mentorship, challenges and hackathons for agricultural SMEs and startups.
-                Our program helps businesses scale, innovate and adopt GenAI solutions
-                for sustainable growth.
-              </p>
-              <div class="feature-stats">
-                <div class="feature-stat">
-                  <span class="stat-number">45+</span>
-                  <span class="stat-label">SMEs Mentored</span>
-                </div>
-                <div class="feature-stat">
-                  <span class="stat-number">8+</span>
-                  <span class="stat-label">Hackathons Hosted</span>
-                </div>
-                <div class="feature-stat">
-                  <span class="stat-number">12+</span>
-                  <span class="stat-label">Success Stories</span>
-                </div>
-              </div>
-              <a [routerLink]="['/sme-mentoring']" class="feature-cta">
-                Learn More
-                <span class="cta-arrow">→</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="feature-section" id="community">
-        <div class="page-container">
-          <div class="feature-grid reverse">
-            <div class="feature-image">
-              <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80" alt="Community of practice collaboration" loading="lazy">
-              <div class="image-overlay-text">A network of agritech innovators</div>
-            </div>
-            <div class="feature-content">
-              <span class="feature-label">Collaborative Innovation</span>
-              <h3>Community of <span class="gold">Practice</span></h3>
-              <p class="feature-desc">
-                Join a network of developers, researchers and agritech innovators
-                sharing knowledge and building solutions together. Collaborate on
-                projects and advance digital agriculture.
-              </p>
-              <div class="feature-stats">
-                <div class="feature-stat">
-                  <span class="stat-number">50+</span>
-                  <span class="stat-label">Community Members</span>
-                </div>
-                <div class="feature-stat">
-                  <span class="stat-number">10+</span>
-                  <span class="stat-label">Repository Projects</span>
-                </div>
-                <div class="feature-stat">
-                  <span class="stat-number">5+</span>
-                  <span class="stat-label">Community Events</span>
-                </div>
-              </div>
-              <a [routerLink]="['/community-practice']" class="feature-cta">
-                Join Community
-                <span class="cta-arrow">→</span>
-              </a>
             </div>
           </div>
         </div>
@@ -264,73 +165,28 @@ import { RouterModule } from '@angular/router';
         <div class="page-container">
           <div class="feature-grid">
             <div class="feature-image">
-              <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80" alt="Replication toolkit documents" loading="lazy">
-              <div class="image-overlay-text">Scaling agritech solutions across contexts</div>
+              <img src="/images/webimages/maize.png" alt="Agricultural innovation replication" loading="lazy">
+              <div class="image-overlay-text">Scaling proven solutions across communities</div>
             </div>
             <div class="feature-content">
-              <span class="feature-label">Scaling Solutions</span>
-              <h3>Replication <span class="gold">Toolkit</span></h3>
+              <span class="feature-label">BRIDGE-AI Scale-Up</span>
+              <h3>Scaling proven models for <span class="gold">African agriculture</span></h3>
               <p class="feature-desc">
-                Templates, playbooks and lessons learned for scaling agritech
-                solutions across different contexts. Our toolkit enables replication
-                of successful interventions.
+                BRIDGE-AI captures lessons, tools and templates to help successful pilots and models move from one
+                context to another, accelerating adoption and long-term impact.
               </p>
               <div class="feature-stats">
-                <div class="feature-stat">
-                  <span class="stat-number">15+</span>
-                  <span class="stat-label">Replication Templates</span>
-                </div>
-                <div class="feature-stat">
-                  <span class="stat-number">10+</span>
-                  <span class="stat-label">Playbooks</span>
-                </div>
-                <div class="feature-stat">
-                  <span class="stat-number">8+</span>
-                  <span class="stat-label">Lessons Learned</span>
-                </div>
+                <a [routerLink]="['/resources']" class="feature-stat">
+                  <span class="stat-number">Resources</span>
+                  <span class="stat-label">Templates and guides</span>
+                  <span class="card-arrow" aria-hidden="true">→</span>
+                </a>
+                <a [routerLink]="['/replication-toolkit']" class="feature-stat">
+                  <span class="stat-number">Replication</span>
+                  <span class="stat-label">Playbooks and scale-up tools</span>
+                  <span class="card-arrow" aria-hidden="true">→</span>
+                </a>
               </div>
-              <a [routerLink]="['/replication-toolkit']" class="feature-cta">
-                View Toolkit
-                <span class="cta-arrow">→</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="feature-section" id="register">
-        <div class="page-container">
-          <div class="feature-grid reverse">
-            <div class="feature-image">
-              <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80" alt="Registration for training programs" loading="lazy">
-              <div class="image-overlay-text">Start your digital agriculture journey</div>
-            </div>
-            <div class="feature-content">
-              <span class="feature-label">Get Started</span>
-              <h3>Register for <span class="gold">Training</span></h3>
-              <p class="feature-desc">
-                Sign up for upcoming bootcamps, workshops and mentoring programs
-                to build your digital agriculture skills. Join our community of
-                innovators and changemakers.
-              </p>
-              <div class="feature-stats">
-                <div class="feature-stat">
-                  <span class="stat-number">Upcoming</span>
-                  <span class="stat-label">Bootcamps</span>
-                </div>
-                <div class="feature-stat">
-                  <span class="stat-number">Ongoing</span>
-                  <span class="stat-label">Workshops</span>
-                </div>
-                <div class="feature-stat">
-                  <span class="stat-number">Available</span>
-                  <span class="stat-label">Mentoring Program</span>
-                </div>
-              </div>
-              <a [routerLink]="['/contact']" class="feature-cta">
-                Sign Up Now
-                <span class="cta-arrow">→</span>
-              </a>
             </div>
           </div>
         </div>
@@ -340,31 +196,19 @@ import { RouterModule } from '@angular/router';
         <div class="page-container">
           <div class="register-grid">
             <div class="register-text">
-              <span class="register-label">Get Involved</span>
-              <h2>Ready to Get <span class="gold">Involved</span>?</h2>
+              <span class="register-label">BRIDGE-AI</span>
+              <h2>Capacity building with <span class="gold">lasting impact</span></h2>
               <p>
-                Join BRIDGE-AI training programs and help shape the future of
-                agriculture across Nigeria, Kenya and Tunisia through GenAI and digital innovation.
-                Be part of the change.
+                By building skills, supporting entrepreneurs and strengthening collaboration, BRIDGE-AI helps create
+                resilient digital agriculture ecosystems across Africa.
               </p>
-              <div class="register-actions">
-                <a [routerLink]="['/contact']" class="btn-gold">
-                  Contact Us
-                  <span class="btn-arrow">→</span>
-                </a>
-                <a [routerLink]="['/training-events']" class="btn-outline-light">
-                  View All Events
-                </a>
-              </div>
             </div>
             <div class="register-image">
-              <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80" alt="Get involved" loading="lazy">
+              <img src="/images/webimages/Pasture.png" alt="BRIDGE-AI agricultural collaboration" loading="lazy">
               <div class="overlay">
                 <div>
                   <div class="icon">✦</div>
-                  <span>Join the movement</span>
-                  <br>
-                  <span style="font-size:0.7rem;opacity:0.5;">Shape the consortium's impact</span>
+                  <span>Building Africa's AI-enabled agriculture future</span>
                 </div>
               </div>
             </div>
@@ -446,15 +290,15 @@ import { RouterModule } from '@angular/router';
       transform: translate3d(0, var(--hero-parallax, 0px), 0) scale(1.08);
       transform-origin: center top;
       transition: transform 0.08s linear;
-      background-image: url('https://res.cloudinary.com/rn4dhrdb/image/upload/v1788870191/bridge-ai/activities/ojgvahkngrsvywvbueik.jpg');
+      background-image: url('/images/webimages/consortium.jpeg');
       background-size: cover;
       background-position: center 25%;
-      filter: brightness(0.8) contrast(1.05);
+      filter: brightness(0.72) contrast(1.05);
     }
 
     .hero-bg-alt {
       z-index: 0;
-      background-image: url('https://res.cloudinary.com/rn4dhrdb/image/upload/v1788554710/bridge-ai/events/watr7abqimosseh3unfk.jpg');
+      background-image: url('/images/webimages/about.jpeg');
       opacity: 0;
       animation: heroImageLoop 14s ease-in-out infinite;
     }
@@ -789,18 +633,49 @@ import { RouterModule } from '@angular/router';
     }
 
     .intro-stat {
-      background: var(--bg-lighter);
-      padding: 16px 20px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-light);
-      text-align: center;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(245, 239, 225, 0.92));
+      padding: 18px 18px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(212, 168, 67, 0.16);
+      text-align: left;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 10px 22px rgba(14, 33, 44, 0.06);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+      overflow: hidden;
+    }
+
+    .intro-stat::before,
+    .feature-stat::before {
+      content: '';
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--gold), var(--gold-light));
+      opacity: 0.9;
+    }
+
+    .intro-stat:hover,
+    .feature-stat:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 36px rgba(14, 33, 44, 0.1);
+      border-color: rgba(212, 168, 67, 0.38);
+      background: linear-gradient(135deg, rgba(255,255,255,1), rgba(250, 244, 232, 1));
     }
 
     .intro-stat .stat-number {
-      font-size: 1.8rem;
+      font-size: 1.05rem;
       font-weight: 700;
-      color: var(--gold);
+      color: var(--primary-dark);
       display: block;
+      line-height: 1.3;
+      max-width: 90%;
     }
 
     .intro-stat .stat-label {
@@ -904,27 +779,61 @@ import { RouterModule } from '@angular/router';
     }
 
     .feature-stat {
-      background: var(--bg-white);
-      padding: 12px 20px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-light);
-      text-align: center;
-      min-width: 100px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(248,245,238,0.98));
+      padding: 18px 20px 16px 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(212, 168, 67, 0.16);
+      text-align: left;
+      min-width: 180px;
       flex: 1;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 12px 26px rgba(13, 31, 45, 0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+      overflow: hidden;
     }
 
     .feature-stat .stat-number {
-      font-size: 1.6rem;
+      font-size: 1rem;
       font-weight: 700;
-      color: var(--gold);
+      color: var(--primary-dark);
       display: block;
+      line-height: 1.4;
     }
 
     .feature-stat .stat-label {
       font-size: 0.72rem;
       color: var(--text-muted);
       font-weight: 450;
+      line-height: 1.5;
+    }
+
+    .card-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      margin-top: 4px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      color: var(--primary-dark);
+      font-size: 1.1rem;
+      font-weight: 700;
+      box-shadow: 0 8px 16px rgba(212, 168, 67, 0.18);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .intro-stat:hover .card-arrow,
+    .feature-stat:hover .card-arrow {
+      transform: translateX(5px);
+      box-shadow: 0 10px 18px rgba(212, 168, 67, 0.24);
     }
 
     .feature-cta {
@@ -1425,8 +1334,22 @@ import { RouterModule } from '@angular/router';
   `]
 })
 export class TrainingWp5Component implements AfterViewInit, OnDestroy {
+  readonly heroImages = [
+    '/images/webimages/consortium.jpeg',
+    '/images/webimages/about.jpeg',
+    '/images/webimages/maize.png',
+    '/images/webimages/Pasture.png',
+    '/images/webimages/tunisapome.png',
+    '/images/webimages/Pomegranate.png',
+    '/images/webimages/mushroom.png',
+    '/images/webimages/Challenge.png',
+    '/images/webimages/afica.svg'
+  ];
+
   private observer: IntersectionObserver | null = null;
   private navObserver: IntersectionObserver | null = null;
+  private heroIntervalId: number | null = null;
+  private currentHeroIndex = 0;
   private readonly handleResize = (): void => this.syncStickyOffset();
   private readonly handleScroll = (): void => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -1456,6 +1379,7 @@ export class TrainingWp5Component implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.syncStickyOffset();
+    this.startHeroLoop();
     window.addEventListener('resize', this.handleResize);
     window.addEventListener('load', this.handleResize);
     window.addEventListener('scroll', this.handleScroll, { passive: true });
@@ -1515,6 +1439,35 @@ export class TrainingWp5Component implements AfterViewInit, OnDestroy {
     document.documentElement.style.setProperty('--site-header-offset', `${height}px`);
   }
 
+  private startHeroLoop(): void {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    const primaryBg = document.querySelector('.hero-bg') as HTMLElement | null;
+    const secondaryBg = document.querySelector('.hero-bg-alt') as HTMLElement | null;
+    if (!primaryBg || !secondaryBg) {
+      return;
+    }
+
+    this.heroIntervalId = window.setInterval(() => {
+      const nextIndex = (this.currentHeroIndex + 1) % this.heroImages.length;
+      primaryBg.style.backgroundImage = `url('${this.heroImages[this.currentHeroIndex]}')`;
+      secondaryBg.style.backgroundImage = `url('${this.heroImages[nextIndex]}')`;
+      secondaryBg.style.opacity = '1';
+      secondaryBg.style.transition = 'opacity 1.4s ease-in-out';
+      primaryBg.style.transition = 'opacity 1.4s ease-in-out';
+      primaryBg.style.opacity = '0.75';
+
+      window.setTimeout(() => {
+        primaryBg.style.backgroundImage = `url('${this.heroImages[nextIndex]}')`;
+        primaryBg.style.opacity = '1';
+        secondaryBg.style.opacity = '0';
+        this.currentHeroIndex = nextIndex;
+      }, 1800);
+    }, 5200);
+  }
+
   private setActiveSection(sectionId: string): void {
     document.querySelectorAll('.section-nav a').forEach(link => {
       link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
@@ -1524,6 +1477,9 @@ export class TrainingWp5Component implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.observer?.disconnect();
     this.navObserver?.disconnect();
+    if (this.heroIntervalId !== null) {
+      window.clearInterval(this.heroIntervalId);
+    }
     window.removeEventListener('resize', this.handleResize);
     window.removeEventListener('load', this.handleResize);
     window.removeEventListener('scroll', this.handleScroll);

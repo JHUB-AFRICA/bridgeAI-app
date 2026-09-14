@@ -86,8 +86,8 @@ interface NavItem {
       left: 0;
       right: 0;
       z-index: 1000;
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(10px);
+      background: #ffffff;
+      backdrop-filter: none;
       border-bottom: 1px solid #e8edf2;
       box-shadow: 0 4px 18px rgba(8, 32, 45, 0.04);
     }
@@ -185,7 +185,8 @@ interface NavItem {
       letter-spacing: 0.02em;
       text-transform: none;
       border-radius: 999px;
-      transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+      background: transparent;
+      transition: color 0.2s ease, transform 0.2s ease;
       position: relative;
     }
 
@@ -205,7 +206,7 @@ interface NavItem {
 
     .nav-item a:hover {
       color: #0b4d3b;
-      background: rgba(11, 77, 59, 0.06);
+      background: transparent;
       transform: translateY(-1px);
     }
 
@@ -216,8 +217,8 @@ interface NavItem {
 
     .nav-item a.active {
       color: #0b4d3b;
-      background: rgba(11, 77, 59, 0.08);
-      box-shadow: inset 0 0 0 1px rgba(11, 77, 59, 0.08);
+      background: transparent;
+      box-shadow: none;
     }
 
     .home-nav {
@@ -311,7 +312,7 @@ interface NavItem {
         left: 0;
         right: 0;
         padding: 14px 18px 20px;
-        background: rgba(255, 255, 255, 0.98);
+        background: #ffffff;
         border: 1px solid #edf2f6;
         border-top: none;
         box-shadow: 0 20px 30px rgba(8, 32, 45, 0.08);
@@ -390,8 +391,8 @@ export class HeaderComponent {
   protected navItems: NavItem[] = [
     { path: '/', label: 'Home' },
     { path: '/about', label: 'About' },
-    { path: '/activities', label: 'Activities' },
-    { path: '/training-wp5', label: 'Training & WP5' },
+    { path: '/activities', label: 'News & Activities' },
+    { path: '/training-wp5', label: 'Training' },
     { path: '/resources', label: 'Resources' },
     { path: '/partners', label: 'Partners' },
     { path: '/gallery', label: 'Gallery' }

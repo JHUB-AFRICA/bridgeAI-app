@@ -84,8 +84,9 @@ import { RouterModule } from '@angular/router';
             <p>Practical AI, stronger skills, and solutions that can move beyond the pilot regions.</p>
           </div>
           <div class="impact-layout">
-            <div class="impact-image reveal">
-              <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1200&q=85" alt="BRIDGE-AI partners collaborating around agricultural innovation" loading="lazy" />
+            <div class="impact-image reveal impact-gallery">
+              <img src="/images/webimages/imp.jpeg" alt="BRIDGE-AI impact in agriculture" loading="lazy" />
+              <img src="/images/webimages/impp.jpeg" alt="BRIDGE-AI partners sharing practical agricultural innovation" loading="lazy" />
               <span class="impact-image-caption">Research, technology and local knowledge in one shared practice.</span>
             </div>
             <div class="impact-list">
@@ -100,7 +101,7 @@ import { RouterModule } from '@angular/router';
         </div>
       </section>
 
-      <section class="section" id="countries">
+      <section class="section section-white" id="countries">
         <div class="container">
           <div class="section-header reveal">
             <h2>Our <span class="highlight">Pilot Regions</span></h2>
@@ -170,7 +171,7 @@ import { RouterModule } from '@angular/router';
         </div>
       </section>
 
-      <section class="section section-alt" id="technology">
+      <section class="section section-white" id="technology">
         <div class="container">
           <div class="section-header reveal">
             <h2>How It <span class="highlight">Works</span></h2>
@@ -213,7 +214,7 @@ import { RouterModule } from '@angular/router';
         <div class="container">
           <div class="methodology-wrapper">
             <div class="methodology-image reveal">
-              <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1200&q=80" alt="Agricultural team working together" loading="lazy" />
+              <img src="/images/webimages/consortium.jpeg" alt="BRIDGE-AI consortium collaborating on agricultural innovation" loading="lazy" />
             </div>
             <div class="methodology-content reveal">
               <h2>Our <span class="highlight">Methodology</span></h2>
@@ -257,10 +258,6 @@ import { RouterModule } from '@angular/router';
             <a [routerLink]="['/contact']" class="btn-primary" style="background:var(--growlight); border-color:var(--growlight);">
               <i class="fas fa-envelope btn-icon"></i>
               Contact Us
-            </a>
-            <a [routerLink]="['/training-wp5']" class="btn-secondary" style="color:var(--ink); border-color:var(--line);">
-              <i class="fas fa-bell btn-icon"></i>
-              Subscribe Now
             </a>
           </div>
         </div>
@@ -420,6 +417,7 @@ import { RouterModule } from '@angular/router';
     }
 
     .section-alt { background: var(--paper-alt); }
+    .section-white { background: #fff; }
     .section-dark { background: var(--moss-deep); color: var(--paper); }
     .section-dark .section-header h2 { color: var(--paper); }
     .section-dark .section-header p { color: rgba(247, 242, 230, 0.7); }
@@ -722,6 +720,15 @@ import { RouterModule } from '@angular/router';
       border-radius: var(--radius-lg);
       background: var(--moss-deep);
       box-shadow: var(--shadow-lg);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 14px;
+    }
+
+    .impact-gallery {
+      position: relative;
+      background: linear-gradient(135deg, #f9f1dc, #eae0d2);
     }
 
     .impact-image::after {
@@ -729,10 +736,19 @@ import { RouterModule } from '@angular/router';
       position: absolute;
       inset: 0;
       background: linear-gradient(180deg, transparent 45%, rgba(22, 40, 26, .82));
+      pointer-events: none;
     }
 
-    .impact-image img { width: 100%; height: 100%; min-height: 640px; object-fit: cover; transition: transform .8s var(--transition); }
-    .impact-image:hover img { transform: scale(1.04); }
+    .impact-image img {
+      width: 100%;
+      height: 100%;
+      min-height: 300px;
+      object-fit: cover;
+      border-radius: 16px;
+      transition: transform .8s var(--transition);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    }
+    .impact-image:hover img { transform: scale(1.03); }
     .impact-image-caption { position: absolute; z-index: 1; right: 28px; bottom: 28px; left: 28px; color: var(--paper); font: 500 .82rem/1.6 'IBM Plex Mono', monospace; }
 
     .impact-list { display: grid; align-content: center; gap: 0; }
@@ -850,16 +866,16 @@ import { RouterModule } from '@angular/router';
       width: 100%;
       border-radius: var(--radius-md);
       overflow: hidden;
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 12px 28px rgba(22, 40, 26, 0.07);
       transition: all 0.4s var(--transition);
       background: var(--paper-card);
-      border: 1px solid var(--growlight);
+      border: 1px solid rgba(124, 79, 163, 0.06);
     }
 
     .country-card-link:hover .country-card {
-      box-shadow: var(--shadow-lg);
-      border-color: var(--growlight);
+      box-shadow: 0 18px 36px rgba(22, 40, 26, 0.12);
       transform: translateY(-3px);
+      border-color: rgba(124, 79, 163, 0.12);
     }
 
     .country-card-link { position: relative; }

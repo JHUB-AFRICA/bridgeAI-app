@@ -6,6 +6,7 @@ import re
 from datetime import datetime, timezone
 from werkzeug.utils import secure_filename
 import cloudinary
+import cloudinary.api
 import cloudinary.uploader
 import cloudinary.utils
 from dotenv import load_dotenv
@@ -282,6 +283,29 @@ def delete_file():
 @api_bp.route('/activities', methods=['GET'])
 def get_activities():
     return jsonify(json_service.get_all('activities.json'))
+
+@api_bp.route('/activities/images', methods=['GET'])
+def get_activity_images():
+    try:
+        result = cloudinary.api.resources(
+            resource_type='image',
+            type='upload',
+            prefix='bridge-ai/activities/',
+            max_results=100
+        )
+        images = [
+            {
+                'public_id': resource.get('public_id'),
+                'secure_url': resource.get('secure_url'),
+                'created_at': resource.get('created_at')
+            }
+            for resource in result.get('resources', [])
+            if resource.get('secure_url')
+        ]
+        images.sort(key=lambda image: image.get('created_at') or '', reverse=True)
+        return jsonify({'images': images})
+    except Exception as error:
+        return jsonify({'error': f'Unable to load activity images: {error}'}), 502
 
 @api_bp.route('/activities/<int:id>', methods=['GET'])
 def get_activity(id):

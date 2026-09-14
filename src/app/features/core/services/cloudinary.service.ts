@@ -44,6 +44,12 @@ export interface CloudinaryUploadOptions {
   format?: string;
 }
 
+export interface CloudinaryFolderImage {
+  public_id: string;
+  secure_url: string;
+  created_at?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -53,6 +59,16 @@ export class CloudinaryService {
   private folder = environment.cloudinary.folder;
 
   constructor(private http: HttpClient) {}
+
+  getActivityImages(): Observable<CloudinaryFolderImage[]> {
+    return this.http.get<{ images: CloudinaryFolderImage[] }>(`${environment.apiUrl}/activities/images`).pipe(
+      map(response => response.images || []),
+      catchError((error) => {
+        console.error('Cloudinary activity image listing error:', error);
+        return throwError(() => new Error('Failed to load activity images from Cloudinary'));
+      })
+    );
+  }
 
   uploadFile(file: File, options?: CloudinaryUploadOptions): Observable<CloudinaryUploadResult> {
     const module = this.getUploadModule(options?.folder);

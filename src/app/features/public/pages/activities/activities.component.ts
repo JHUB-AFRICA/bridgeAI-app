@@ -10,7 +10,6 @@ import { Activity } from '../../../core/models/activity.model';
 
 type ActivityFilters = {
   wp: string;
-  audience: string;
   type: string;
   year: string;
 };
@@ -53,19 +52,6 @@ type ActivityFilters = {
             </div>
 
             <div class="custom-dropdown">
-              <button type="button" class="dropdown-trigger" [class.open]="audienceOpen" (click)="$event.stopPropagation(); toggleDropdown('audience')">
-                <span>{{ selectedFilters.audience || 'All Audiences' }}</span>
-                <span class="dropdown-arrow">&#9662;</span>
-              </button>
-              <ul class="dropdown-menu" [class.open]="audienceOpen">
-                <li (click)="setFilter('audience', '')">All Audiences</li>
-                @for (audience of audienceOptions; track audience) {
-                  <li (click)="setFilter('audience', audience)" [class.active]="selectedFilters.audience === audience">{{ audience | titlecase }}</li>
-                }
-              </ul>
-            </div>
-
-            <div class="custom-dropdown">
               <button type="button" class="dropdown-trigger" [class.open]="typeOpen" (click)="$event.stopPropagation(); toggleDropdown('type')">
                 <span>{{ selectedFilters.type || 'All Activity Types' }}</span>
                 <span class="dropdown-arrow">&#9662;</span>
@@ -93,6 +79,13 @@ type ActivityFilters = {
           </div>
 
           <div class="filter-actions">
+            <label class="sort-control">
+              <span>Sort</span>
+              <select [value]="sortOrder" (change)="setSortOrder($any($event.target).value)">
+                <option value="latest">Latest</option>
+                <option value="oldest">Oldest</option>
+              </select>
+            </label>
             @if (hasActiveFilters()) {
               <span class="filter-active-count">Active Filters</span>
             }
@@ -111,7 +104,20 @@ type ActivityFilters = {
           </div>
 
           <div class="activities-grid">
-            @if (filteredActivities().length > 0) {
+            @if (isLoading()) {
+              @for (placeholder of skeletonCards; track placeholder) {
+                <article class="activity-card activity-skeleton" aria-hidden="true">
+                  <div class="skeleton-image shimmer"></div>
+                  <div class="skeleton-body">
+                    <div class="skeleton-meta shimmer"></div>
+                    <div class="skeleton-title shimmer"></div>
+                    <div class="skeleton-line shimmer"></div>
+                    <div class="skeleton-line short shimmer"></div>
+                    <div class="skeleton-footer shimmer"></div>
+                  </div>
+                </article>
+              }
+            } @else if (filteredActivities().length > 0) {
               @for (activity of filteredActivities(); track trackByActivity($index, activity); let first = $first) {
                 <article class="activity-card reveal" [class.featured-card]="first">
                   <div class="card-image">
@@ -220,17 +226,20 @@ type ActivityFilters = {
     .dropdown-menu li { padding: 6px 14px; font-size: 0.75rem; color: #2d3d35; cursor: pointer; list-style: none; }
     .dropdown-menu li:hover, .dropdown-menu li.active { background: rgba(124, 79, 163, 0.09); color: #5b3878; font-weight: 600; }
     .filter-actions { display: flex; align-items: center; gap: 8px; }
+    .sort-control { display: inline-flex; align-items: center; gap: 7px; padding: 6px 8px 6px 12px; border: 1px solid #e1d8c0; border-radius: 50px; background: #fffdf7; color: #6e7767; font-size: .62rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .sort-control select { border: 0; outline: 0; padding: 1px 18px 1px 2px; background: transparent; color: #26432b; font: 600 .72rem 'Inter', sans-serif; cursor: pointer; }
+    .sort-control:focus-within { border-color: #c89b3c; box-shadow: 0 0 0 2px rgba(200,155,60,.16); }
     .filter-active-count { display: inline-block; font-size: 0.62rem; font-weight: 600; color: #5b3878; background: rgba(124, 79, 163, 0.09); padding: 3px 12px; border-radius: 50px; }
     .filter-clear { padding: 6px 16px; background: #efe6ce; border: 1px solid #e1d8c0; color: #2d3d35; cursor: pointer; }
     .filter-clear:hover { background: #26432b; color: #f7f2e6; }
-    .activities-section { padding: 44px 0 64px; background: #8a8f4b; }
+    .activities-section { padding: 44px 0 64px; background: #fff; }
     .section-header { max-width: 720px; margin: 0 auto 48px; text-align: center; }
-    .section-header h2 { font-size: 2.8rem; font-weight: 800; color: #fff; line-height: 1.08; letter-spacing: -0.02em; margin: 0; }
-    .section-header .highlight { color: #26432b; }
-    .section-header p { margin-top: 14px; font-size: 1.05rem; color: rgba(255,255,255,.78); }
-    .activities-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: start; max-width: 760px; margin: 0 auto; }
-    .activity-card { min-width: 0; display: flex; flex-direction: column; background: #fffdf7; border: 1px solid #e1d8c0; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease; }
-    .activity-card:hover { transform: translateY(-6px); border-color: #7c4fa3; box-shadow: 0 24px 64px rgba(0,0,0,0.12); }
+    .section-header h2 { font-size: 2.8rem; font-weight: 800; color: #17241b; line-height: 1.08; letter-spacing: -0.02em; margin: 0; }
+    .section-header .highlight { color: #818528; }
+    .section-header p { margin-top: 14px; font-size: 1.05rem; color: #6e7767; }
+    .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 360px)); justify-content: center; gap: 24px; align-items: stretch; max-width: 1180px; margin: 0 auto; }
+    .activity-card { min-width: 0; display: flex; flex-direction: column; background: #fffdf7; border: 1px solid rgba(255,255,255,.55); border-radius: 22px; overflow: hidden; box-shadow: 0 12px 28px rgba(22,40,26,.1); transition: transform 0.35s ease, box-shadow 0.35s ease; }
+    .activity-card:hover { transform: translateY(-6px); box-shadow: 0 24px 50px rgba(22,40,26,.18); }
     .activity-card.featured-card { grid-column: auto; display: flex; min-height: 0; background: #fff; border-color: #e1e5e1; }
     .activity-card.featured-card .card-image { height: auto; min-height: 0; }
     .activity-card.featured-card .card-body { min-height: 0; padding: 18px 16px 0; background: #fff; }
@@ -238,7 +247,7 @@ type ActivityFilters = {
     .activity-card.featured-card .card-summary { color: #6e7767; font-size: .78rem; }
     .activity-card.featured-card .card-footer { border-top-color: #e1d8c0; }
     .activity-card.featured-card .meta-date, .activity-card.featured-card .card-location { color: #6e7767; }
-    .card-image { position: relative; height: 150px; overflow: hidden; background: #16281a; }
+    .card-image { position: relative; height: 210px; overflow: hidden; background: #16281a; }
     .card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
     .activity-card:hover .card-image img { transform: scale(1.05); }
     .image-tag { position: absolute; top: 12px; right: 12px; background: rgba(22, 40, 26, 0.8); color: #f7f2e6; padding: 3px 14px; border-radius: 50px; font-size: 0.58rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
@@ -257,25 +266,37 @@ type ActivityFilters = {
     .card-location { display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; color: #6e7767; }
     .card-link { font-size: 0.75rem; font-weight: 600; color: #26432b; gap: 6px; text-decoration: none; }
     .card-link:hover { gap: 12px; color: #16281a; }
+    .activity-skeleton { pointer-events: none; }
+    .shimmer { position: relative; overflow: hidden; background: #e6eadf; }
+    .shimmer::after { content: ''; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255,255,255,.62), transparent); animation: shimmer 1.35s infinite; }
+    @keyframes shimmer { to { transform: translateX(100%); } }
+    .skeleton-image { height: 176px; }
+    .skeleton-body { padding: 18px 18px 20px; }
+    .skeleton-meta { width: 42%; height: 10px; border-radius: 5px; margin-bottom: 18px; }
+    .skeleton-title { width: 86%; height: 17px; border-radius: 5px; margin-bottom: 16px; }
+    .skeleton-line { width: 100%; height: 10px; border-radius: 5px; margin-bottom: 10px; }
+    .skeleton-line.short { width: 72%; }
+    .skeleton-footer { width: 58%; height: 10px; border-radius: 5px; margin-top: 16px; }
     .empty-state { width: 100%; grid-column: 1 / -1; text-align: center; padding: 70px 20px; background: #efe6ce; border-radius: 24px; border: 2px dashed #e1d8c0; }
     .empty-state .empty-icon { display: block; margin-bottom: 16px; font-size: 2.6rem; color: #26432b; opacity: 0.3; }
     .empty-state h3 { margin: 0 0 6px; font-size: 1.3rem; color: #17241b; }
     .empty-state p { max-width: 400px; margin: 0 auto; color: #6e7767; }
     @media (max-width: 1024px) { .activities-intro { gap: 36px; } .section-header h2 { font-size: 2.2rem; } }
     @media (max-width: 768px) { .activities-intro { grid-template-columns: 1fr; padding: 44px 20px; } .activities-intro img { max-width: 560px; } .filter-container { padding: 0 16px; flex-direction: column; } .filter-group { justify-content: center; } .activities-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 600px; } .section-header h2 { font-size: 1.8rem; } .section-header p { font-size: 0.95rem; } }
-    @media (max-width: 480px) { .container { padding: 0 16px; } .hero-left h1 { font-size: 1.8rem; } .section-header h2 { font-size: 1.5rem; } .card-body { padding: 16px 18px 0; } .card-footer { flex-direction: column; align-items: flex-start; } }
+    @media (max-width: 480px) { .container { padding: 0 16px; } .hero-left h1 { font-size: 1.8rem; } .section-header h2 { font-size: 1.5rem; } .card-body { padding: 16px 18px 0; } .card-footer { flex-direction: column; align-items: flex-start; } .activities-grid { grid-template-columns: 1fr; } }
   `]
 })
 export class ActivitiesComponent implements OnInit, OnDestroy {
   protected allActivities = signal<Activity[]>([]);
   protected filteredActivities = signal<Activity[]>([]);
-  protected selectedFilters: ActivityFilters = { wp: '', audience: '', type: '', year: '' };
+  protected isLoading = signal(true);
+  protected readonly skeletonCards = [1, 2, 3, 4, 5, 6];
+  protected selectedFilters: ActivityFilters = { wp: '', type: '', year: '' };
+  protected sortOrder: 'latest' | 'oldest' = 'latest';
   protected wpOptions: string[] = [];
-  protected audienceOptions: string[] = [];
   protected typeOptions: string[] = [];
   protected yearOptions: string[] = [];
   protected wpOpen = false;
-  protected audienceOpen = false;
   protected typeOpen = false;
   protected yearOpen = false;
   protected heroIndex = signal(0);
@@ -312,7 +333,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
   private handleDocumentClick = (): void => {
     this.wpOpen = false;
-    this.audienceOpen = false;
     this.typeOpen = false;
     this.yearOpen = false;
   };
@@ -324,17 +344,18 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
         this.allActivities.set(published);
         this.updateFilterOptions(published);
         this.applyFilters();
+        this.isLoading.set(false);
       },
       error: () => {
         this.allActivities.set([]);
         this.filteredActivities.set([]);
+        this.isLoading.set(false);
       }
     });
   }
 
   private updateFilterOptions(activities: Activity[]): void {
     this.wpOptions = this.getAvailableValues(activities.map((activity) => activity.wp_tag));
-    this.audienceOptions = this.getAvailableValues(activities.map((activity) => activity.audience));
     this.typeOptions = this.getAvailableValues(activities.map((activity) => activity.activity_type));
     this.yearOptions = Array.from(new Set(activities
       .map((activity) => this.getActivityYear(activity.date))
@@ -342,23 +363,27 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       .sort((first, second) => Number(second) - Number(first));
   }
 
-  protected toggleDropdown(key: 'wp' | 'audience' | 'type' | 'year'): void {
+  protected toggleDropdown(key: 'wp' | 'type' | 'year'): void {
     this.wpOpen = key === 'wp' ? !this.wpOpen : false;
-    this.audienceOpen = key === 'audience' ? !this.audienceOpen : false;
     this.typeOpen = key === 'type' ? !this.typeOpen : false;
     this.yearOpen = key === 'year' ? !this.yearOpen : false;
   }
 
-  protected setFilter(key: 'wp' | 'audience' | 'type' | 'year', value: string): void {
+  protected setFilter(key: 'wp' | 'type' | 'year', value: string): void {
     this.selectedFilters[key] = value;
     this.applyFilters();
     this.closeDropdowns();
   }
 
   protected clearFilters(): void {
-    this.selectedFilters = { wp: '', audience: '', type: '', year: '' };
+    this.selectedFilters = { wp: '', type: '', year: '' };
     this.applyFilters();
     this.closeDropdowns();
+  }
+
+  protected setSortOrder(order: string): void {
+    this.sortOrder = order === 'oldest' ? 'oldest' : 'latest';
+    this.applyFilters();
   }
 
   protected getActivityImage(activity: Activity): string {
@@ -446,7 +471,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
   private closeDropdowns(): void {
     this.wpOpen = false;
-    this.audienceOpen = false;
     this.typeOpen = false;
     this.yearOpen = false;
   }
@@ -456,10 +480,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
     if (this.selectedFilters.wp) {
       filtered = filtered.filter((activity) => this.matchesFilter(activity.wp_tag, this.selectedFilters.wp));
-    }
-
-    if (this.selectedFilters.audience) {
-      filtered = filtered.filter((activity) => this.matchesFilter(activity.audience, this.selectedFilters.audience));
     }
 
     if (this.selectedFilters.type) {
@@ -473,7 +493,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     filtered.sort((a, b) => {
       const ad = a.date ? new Date(a.date).getTime() : 0;
       const bd = b.date ? new Date(b.date).getTime() : 0;
-      return bd - ad;
+      return this.sortOrder === 'latest' ? bd - ad : ad - bd;
     });
     this.filteredActivities.set(filtered);
   }

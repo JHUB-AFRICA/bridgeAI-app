@@ -1,1 +1,70 @@
-[]
+[
+  {
+    "title": "BRIDGE-AI Project Kickoff: Advancing Sustainable Agriculture Through Generative AI",
+    "slug": "bridge-ai-project-kickoff-advancing-sustainable-agriculture-through-generative-ai",
+    "date": "2026-06-14",
+    "wp_tag": "WP1",
+    "activity_type": "meeting",
+    "audience": "Project partners, researchers, farmers, agricultural stakeholders, technology innovators, policymakers, and local communities",
+    "location": "Kenya, Tunisia and Nigeria",
+    "summary": "The BRIDGE-AI project officially kicked off with the aim of leveraging Generative AI, satellite data, field sensors, and AI models to develop smarter, more sustainable, and climate-resilient agricultural solutions for rural communities in Kenya, Tunisia, and Nigeria.",
+    "body": "The BRIDGE-AI project has officially kicked off, bringing together an international consortium to explore how Generative AI and digital technologies can support smarter and more sustainable agriculture across rural areas of Kenya, Tunisia, and Nigeria.\n\nFunded by the European Health and Digital Executive Agency (HaDEA), the three-year project will integrate satellite data, field sensors, and AI models into mobile-accessible tools designed to support farmers with more efficient, sustainable, and climate-resilient agricultural practices.\n\nA key focus of BRIDGE-AI is to empower local communities through co-design and participatory approaches, ensuring that the technologies developed respond to the real needs and challenges faced by farmers and other agricultural stakeholders.\n\nThe project is coordinated by Eurecat - Technology Centre and brings together an international consortium of seven partners from five countries, including Universidad Politécnica de Madrid, Seamless Middleware Technologies, Jomo Kenyatta University of Agriculture and Technology (JKUAT), MooMe, University of Sousse, AgroInfoTech Labs, and AUSTRIACARD HOLDINGS.\n\nThe project kickoff marks the beginning of collaboration between the consortium partners as they work towards developing innovative AI-enabled solutions that can contribute to sustainable agriculture, improved decision-making, climate resilience, and the empowerment of rural communities across Africa.\n\nThis activity establishes the foundation for the project's subsequent technical development, pilot implementation, evaluation, capacity-building, and dissemination activities.",
+    "evidence_status": "published",
+    "featured_image": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789403219/bridge-ai/activities/xgv7avlkphtqbdnakewv.jpg",
+    "gallery_images": [
+      {
+        "image_path": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789403221/bridge-ai/activities/f5vmvcfsrrc0y5ypzeqg.jpg",
+        "display_order": 0
+      }
+    ],
+    "id": 1
+  },
+  {
+    "title": "First Steps of the BRIDGE-AI Mushroom Pilot in Kenya ",
+    "slug": "first-steps-of-the-bridge-ai-mushroom-pilot-in-kenya",
+    "date": "2026-09-09",
+    "wp_tag": "WP3",
+    "activity_type": "Field Demo",
+    "audience": "Farmers, students, researchers, agricultural practitioners, technology developers, project partners, and local communities",
+    "location": "Smart Mushroom Farm, Jomo Kenyatta University of Agriculture and Technology (JKUAT), Kenya",
+    "summary": "The BRIDGE-AI Smart Mushroom pilot is taking shape in Kenya, with students, researchers, and technical teams working at JKUAT's Smart Mushroom Farm on environmental monitoring, IoT sensors, digital dashboards, and data collection systems.",
+    "body": "The first steps of the BRIDGE-AI Smart Mushroom pilot are underway in Kenya at the Smart Mushroom Farm hosted by Jomo Kenyatta University of Agriculture and Technology (JKUAT).\n\nStudents, researchers, and technical teams are working together to establish key components of the pilot, including environmental monitoring systems, IoT sensors, digital dashboards, and data collection infrastructure. These building blocks will form part of an integrated ecosystem for more sustainable and data-driven mushroom farming.\n\nThe pilot will investigate how sensor data and local environmental conditions can be combined with Generative AI to provide practical recommendations for farmers. By using data collected from the mushroom growing environment, the project aims to support better decision-making and help farmers optimise growing conditions.\n\nThe BRIDGE-AI approach will also explore opportunities to improve resource efficiency and strengthen the resilience of agricultural production in the face of climate-related challenges.\n\nThe activity represents an important early milestone in the implementation of the Kenyan pilot and brings together technical expertise, research, student participation, and agricultural innovation.\n\nBRIDGE-AI acknowledges the contribution of Jomo Kenyatta University of Agriculture and Technology (JKUAT), JHUB Africa, and all students, researchers, technical teams, and partners involved in advancing the Smart Mushroom pilot in Kenya.",
+    "evidence_status": "published",
+    "featured_image": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789405760/bridge-ai/activities/gcsmwhuwiknbt51poxkc.jpg",
+    "gallery_images": [
+      {
+        "image_path": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789405766/bridge-ai/activities/kl17xeyuvxat9tnsoyzz.jpg",
+        "display_order": 0
+      },
+      {
+        "image_path": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789405763/bridge-ai/activities/e4lqukhxykjodhgsu9ji.jpg",
+        "display_order": 1
+      },
+      {
+        "image_path": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789405766/bridge-ai/activities/rj1lxkfelrb6azh7y8mb.jpg",
+        "display_order": 2
+      }
+    ],
+    "id": 2
+  },
+  {
+    "title": "BRIDGE-AI at FIWARE Global Summit 2026",
+    "slug": "bridge-ai-at-fiware-global-summit-2026",
+    "date": "2026-09-14",
+    "wp_tag": "WP6",
+    "activity_type": "Presentation",
+    "audience": "FIWARE community, researchers, technology developers, AI specialists, agrifood stakeholders, project partners, policymakers, and digital innovation experts",
+    "location": "Menton, France",
+    "summary": "BRIDGE-AI was featured at the FIWARE Global Summit 2026 in Menton, France, through a presentation on leveraging FIWARE for Agentic AI in African agrifood systems, highlighting the project's use of Generative AI, Agentic AI, IoT, Earth Observation, and environmental data.",
+    "body": "BRIDGE-AI was featured at the FIWARE Global Summit 2026 in Menton, France, through the presentation “BRIDGE-AI: Leveraging FIWARE for Agentic AI in African Agrifood”, delivered by Francisco Melendez from Seamware.\n\nThe FIWARE Global Summit brings together members of the global FIWARE community to exchange knowledge and explore developments in open standards, interoperability, and digital innovation.\n\nThe BRIDGE-AI presentation showcased how the project is exploring Generative AI, Agentic AI, and FIWARE technologies to support more resilient and climate-smart agriculture across Africa.\n\nThe presentation highlighted the integration of environmental data, IoT systems, Earth Observation, and local knowledge to develop innovative digital solutions for agricultural communities.\n\nThe session also presented the project's pilot activities in Nigeria, Kenya, and Tunisia, where BRIDGE-AI technologies will be tested in real agricultural environments and used to explore practical approaches to AI-powered agrifood systems.\n\nParticipation in the FIWARE Global Summit provided an opportunity to introduce BRIDGE-AI to the wider FIWARE community, exchange ideas with experts and stakeholders, and contribute to discussions surrounding the future of intelligent, interoperable, and climate-smart agricultural technologies.\n\nThe project acknowledges Francisco Melendez for representing BRIDGE-AI at the summit and Javier Conde Díaz for his contribution to the research and presentation.",
+    "evidence_status": "published",
+    "featured_image": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789407996/bridge-ai/activities/gpf1ez6wsz1nqrrtdlyg.jpg",
+    "gallery_images": [
+      {
+        "image_path": "https://res.cloudinary.com/rn4dhrdb/image/upload/v1789407998/bridge-ai/activities/aep7ibahutvo4pg4iekg.jpg",
+        "display_order": 0
+      }
+    ],
+    "id": 3
+  }
+]

@@ -11,7 +11,7 @@ export const PublicRoutes: Routes = [
   },
   {
     path: 'about',
-    loadComponent: () => import('./pages/about/about.component').then(m => m.AboutComponent)
+    loadComponent: () => import('./pages/smart-mushrooms/smart-mushrooms').then(m => m.SmartMushrooms)
   },
   {
     path: 'jkuat-role',
@@ -19,7 +19,7 @@ export const PublicRoutes: Routes = [
   },
   {
     path: 'smart-mushrooms',
-    loadComponent: () => import('./pages/smart-mushrooms/smart-mushrooms.component').then(m => m.SmartMushroomsComponent)
+    loadComponent: () => import('./pages/smart-mushrooms/smart-mushrooms').then(m => m.SmartMushrooms)
   },
   {
     path: 'pilot-nigeria',
@@ -36,10 +36,6 @@ export const PublicRoutes: Routes = [
   {
     path: 'activities/:slug',
     loadComponent: () => import('./pages/activity-detail/activity-detail.component').then(m => m.ActivityDetailComponent)
-  },
-  {
-    path: 'training-wp5',
-    loadComponent: () => import('./pages/training-wp5/training-wp5.component').then(m => m.TrainingWp5Component)
   },
   {
     path: 'training-events',

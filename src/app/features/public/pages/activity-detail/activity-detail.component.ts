@@ -27,9 +27,6 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
               @if (act.activity_type) {
                 <span class="activity-type">{{ act.activity_type | titlecase }}</span>
               }
-              @if (act.audience) {
-                <span class="activity-type">For {{ act.audience | titlecase }}</span>
-              }
               <span class="activity-date">{{ act.date | date:'dd MMMM yyyy' }}</span>
             </div>
             <h1>{{ act.title }}</h1>

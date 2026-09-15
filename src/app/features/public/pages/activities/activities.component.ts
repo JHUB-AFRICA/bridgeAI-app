@@ -1,12 +1,13 @@
 // ============================================================
-// BRIDGE-AI - Activities Component
+// Smart Mushroom Kenya Pilot - Activities Component
 // ============================================================
 
-import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ActivityService } from '../../../../services/activity.service';
 import { Activity } from '../../../core/models/activity.model';
+import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
 type ActivityFilters = {
   wp: string;
@@ -20,17 +21,17 @@ type ActivityFilters = {
   imports: [CommonModule, RouterModule],
   template: `
     <div class="activities-page">
-      <section class="activities-banner" aria-labelledby="activities-title">
-        <h1 id="activities-title">News &amp; Articles</h1>
+      <section class="activities-banner" [style.background-image]="'linear-gradient(rgba(18, 52, 43, .68), rgba(18, 52, 43, .68)), url(' + heroImages()[heroIndex()] + ')'" aria-labelledby="activities-title">
+        <h1 id="activities-title">Smart Mushroom journey</h1>
       </section>
 
       <section class="activities-intro">
         <div>
-          <h2>Follow <span>Bridge-AI</span> Journey</h2>
-          <p>Stay informed about the latest developments, activities, and achievements of the Bridge-AI project.</p>
-          <p>From project meetings and workshops to pilot activities and major milestones, this section brings together all project news and upcoming events.</p>
+          <h2>Follow the <span>Kenya Pilot</span> journey</h2>
+          <p>Follow the Smart Mushroom Kenya Pilot at JKUAT as the room, sensors, dashboard and farmer community take shape.</p>
+          <p>From practical demonstrations and training to build milestones and field conversations, this is the pilot journal.</p>
         </div>
-        <img src="/images/webimages/tunisapome.png" alt="Agricultural field work supporting BRIDGE-AI activities" title="BRIDGE-AI field activities" />
+        <img src="/images/smartmushrooms/q.jpeg" alt="Smart Mushroom Kenya Pilot growing room" title="Smart Mushroom Kenya Pilot" />
       </section>
 
       <section class="filter-section" id="filters">
@@ -100,7 +101,7 @@ type ActivityFilters = {
         <div class="container">
           <div class="section-header reveal">
             <h2>Latest <span class="highlight">Activities</span></h2>
-            <p>News, events, and field updates from the BRIDGE-AI consortium.</p>
+            <p>News, events and field updates from the Smart Mushroom Kenya Pilot.</p>
           </div>
 
           <div class="activities-grid">
@@ -135,9 +136,6 @@ type ActivityFilters = {
                       <span class="meta-date">{{ getDateText(activity.date) }}</span>
                       @if (activity.wp_tag) {
                         <span class="meta-tag wp">{{ activity.wp_tag }}</span>
-                      }
-                      @if (activity.audience) {
-                        <span class="meta-tag audience">{{ activity.audience | titlecase }}</span>
                       }
                       @if (activity.activity_type) {
                         <span class="meta-tag type">{{ formatTypeLabel(activity.activity_type) }}</span>
@@ -257,7 +255,6 @@ type ActivityFilters = {
     .meta-date { font-size: 0.65rem; color: #6e7767; font-weight: 500; }
     .meta-tag { display: inline-block; border-radius: 50px; padding: 2px 10px; font-size: 0.52rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
     .meta-tag.wp { background: rgba(124, 79, 163, 0.09); color: #5b3878; }
-    .meta-tag.audience { background: rgba(190, 90, 43, 0.1); color: #be5a2b; }
     .meta-tag.type { background: #efe6ce; color: #26432b; }
     .card-body h3 { margin: 0 0 8px; font-size: 1.1rem; font-weight: 700; line-height: 1.3; }
     .card-body h3 a { color: #17241b; }
@@ -300,18 +297,16 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   protected typeOpen = false;
   protected yearOpen = false;
   protected heroIndex = signal(0);
-  protected heroImages = computed(() => {
-    const images = this.allActivities().map(activity => activity.featured_image).filter((image): image is string => !!image);
-    return images.length > 0 ? images : [this.fallbackImage];
-  });
+  protected heroImages = signal<string[]>(['/images/smartmushrooms/q.jpeg']);
   private heroTimer?: number;
 
-  protected readonly fallbackImage = 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1200&q=80';
+  protected readonly fallbackImage = '/images/webimages/mushroom.png';
 
-  constructor(private activityService: ActivityService) {}
+  constructor(private activityService: ActivityService, private cloudinaryService: CloudinaryService) {}
 
   ngOnInit(): void {
     this.loadActivities();
+    this.loadHeroImages();
     this.syncStickyOffset();
     window.addEventListener('resize', this.syncStickyOffset.bind(this));
     document.addEventListener('click', this.handleDocumentClick);
@@ -351,6 +346,16 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
         this.filteredActivities.set([]);
         this.isLoading.set(false);
       }
+    });
+  }
+
+  private loadHeroImages(): void {
+    this.cloudinaryService.getActivityImages().subscribe({
+      next: images => {
+        const urls = images.map(image => image.secure_url).filter(Boolean);
+        this.heroImages.set(['/images/smartmushrooms/q.jpeg', ...urls]);
+      },
+      error: () => this.heroImages.set(['/images/smartmushrooms/q.jpeg', this.fallbackImage])
     });
   }
 
@@ -400,7 +405,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       return stripped.length > 140 ? `${stripped.slice(0, 140)}...` : stripped;
     }
 
-    return 'Explore this BRIDGE-AI update and keep up with the latest field progress.';
+    return 'Explore this Smart Mushroom Kenya Pilot update and keep up with the latest field progress.';
   }
 
   protected hasActiveFilters(): boolean {

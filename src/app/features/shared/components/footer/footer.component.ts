@@ -1,5 +1,5 @@
 // ============================================================
-// BRIDGE-AI Kenya - Footer Component
+// Smart Mushroom Kenya Pilot - Footer Component
 // ============================================================
 
 import { Component } from '@angular/core';
@@ -18,17 +18,20 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
           <div class="footer-logo-item footer-logo-item-bridge">
             <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI" class="footer-logo footer-logo-bridge" loading="lazy" />
           </div>
-          <p class="footer-description">BRIDGE-AI develops and employs innovative digital solutions based on Generative AI to support farmers in their daily decisions.</p>
+          <div class="footer-logo-item footer-logo-item-eu">
+            <img src="/images/logos/eu_emblem.svg" alt="Funded by the European Union" class="footer-logo footer-logo-eu" loading="lazy" />
+          </div>
+          <p class="footer-description">Smart Mushroom Kenya Pilot helps farmers build better growing rooms, understand their crop environment and use connected tools with confidence.</p>
         </div>
 
         <div class="footer-middle">
           <div class="footer-col">
             <h4 class="footer-col-title">Project</h4>
             <ul class="footer-col-links">
-              <li><a [routerLink]="['/about']">About BRIDGE-AI</a></li>
-              <li><a [routerLink]="['/partners']">Partners</a></li>
-              <li><a [routerLink]="['/privacy-ethics']">Privacy and Ethics</a></li>
-              <li><a [routerLink]="['/activities']">Activities</a></li>
+              <li><a [routerLink]="['/about']">About the pilot</a></li>
+              <li><a [routerLink]="['/partners']">JKUAT &amp; team</a></li>
+              <li><a [routerLink]="['/privacy-ethics']">Privacy</a></li>
+              <li><a [routerLink]="['/activities']">Journey &amp; news</a></li>
               <li><a [routerLink]="['/contact']">Contact</a></li>
             </ul>
           </div>
@@ -36,12 +39,10 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
           <div class="footer-col">
             <h4 class="footer-col-title">Activities</h4>
             <ul class="footer-col-links">
-              <li><a [routerLink]="['/smart-mushrooms']">Smart Mushroom Pilot</a></li>
-              <li><a [routerLink]="['/training-wp5']">Training and WP5</a></li>
-              <li><a [routerLink]="['/activities']">News and Updates</a></li>
-              <li><a [routerLink]="['/gallery']">Gallery</a></li>
-              <li><a [routerLink]="['/pilot-nigeria']">Nigeria Pilot</a></li>
-              <li><a [routerLink]="['/pilot-tunisia']">Tunisia Pilot</a></li>
+              <li><a [routerLink]="['/smart-mushrooms']">How it works</a></li>
+              <li><a [routerLink]="['/training-events']">Farmer training</a></li>
+              <li><a [routerLink]="['/activities']">Journey and updates</a></li>
+              <li><a [routerLink]="['/gallery']">Visual stories</a></li>
             </ul>
           </div>
 
@@ -75,9 +76,10 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
 
         <div class="footer-bottom">
           <p class="footer-copyright">
-            © 2026- BRIDGE-AI. All Rights Reserved.
+            © 2026 Smart Mushroom Kenya Pilot · JKUAT
           </p>
           <div class="footer-bottom-right">
+            <span class="eu-mark" aria-label="Funded by the European Union">★ Funded by the European Union</span>
             <span class="footer-builders">
               Built by <a href="https://jhubafrica.com" target="_blank" rel="noopener noreferrer">JHUB Africa</a>
               <span class="footer-sep">·</span>
@@ -185,6 +187,9 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
     .footer-logo-bridge {
       height: 68px;
     }
+
+    .footer-logo-item-eu { min-width: 110px; }
+    .footer-logo-eu { height: 62px; }
 
     .footer-middle {
       display: grid;

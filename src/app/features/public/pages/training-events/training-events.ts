@@ -96,6 +96,7 @@ export class TrainingEvents implements OnInit, OnDestroy {
     upcoming: this.allEvents().filter(event => event.status === 'upcoming').length,
     ongoing: this.allEvents().filter(event => event.status === 'ongoing').length,
     completed: this.allEvents().filter(event => event.status === 'completed').length,
+    cancelled: this.allEvents().filter(event => event.status === 'cancelled').length,
     total: this.allEvents().length
   }));
 

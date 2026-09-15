@@ -18,8 +18,8 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
       <section class="gallery-hero">
         <div class="hero-inner container">
           <span class="hero-badge">Gallery</span>
-          <h1>Visual stories from BRIDGE-AI</h1>
-          <p>See the field work, training moments, and community collaboration shaping BRIDGE-AI across Nigeria, Kenya, and Tunisia.</p>
+          <h1>Smart Mushroom visual stories</h1>
+          <p>See the pumice room, training moments, farmer conversations and growing experiments shaping the JKUAT Kenya pilot.</p>
         </div>
       </section>
 
@@ -44,7 +44,7 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
             <div class="content">
               <span class="tag">{{ album.tags?.[0] || 'Project' }}</span>
               <h3>{{ album.title }}</h3>
-              <p>{{ album.description || 'Project album from BRIDGE-AI activities.' }}</p>
+              <p>{{ album.description || 'A visual story from Smart Mushroom Kenya Pilot activities.' }}</p>
             </div>
           </article>
         </div>

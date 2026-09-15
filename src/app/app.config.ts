@@ -18,14 +18,14 @@ import { APP } from './features/core/constants/app.constants';
 @Injectable()
 class AppTitleStrategy extends TitleStrategy {
   private readonly routeTitles: Record<string, string> = {
-    '': 'Home', about: 'About BRIDGE-AI', activities: 'Activities and News',
-    'training-wp5': 'Training and WP5', 'training-events': 'Training Events',
-    'sme-mentoring': 'SME Mentoring', 'community-practice': 'Community of Practice',
-    'replication-toolkit': 'Replication Toolkit', resources: 'Resources',
-    partners: 'Project Partners', gallery: 'Project Gallery', contact: 'Contact BRIDGE-AI',
-    'smart-mushrooms': 'Smart Mushroom Pilot', 'pilot-nigeria': 'Nigeria Pilot',
-    'pilot-tunisia': 'Tunisia Pilot', 'jkuat-role': 'JKUAT and BRIDGE-AI',
-    'privacy-ethics': 'Privacy and Ethics', admin: 'Admin Dashboard',
+    '': 'Home', about: 'About the Smart Mushroom Kenya Pilot', activities: 'Smart Mushroom Journey and News',
+    'training-events': 'Smart Mushroom Training Events',
+    'sme-mentoring': 'Smart Mushroom Enterprise Support', 'community-practice': 'Smart Mushroom Community',
+    'replication-toolkit': 'Smart Mushroom Implementation Toolkit', resources: 'Smart Mushroom Resources',
+    partners: 'JKUAT and Smart Mushroom Pilot Team', gallery: 'Smart Mushroom Visual Stories', contact: 'Contact Smart Mushroom Kenya Pilot',
+    'smart-mushrooms': 'Smart Mushroom System', 'pilot-nigeria': 'Smart Mushroom Kenya Pilot',
+    'pilot-tunisia': 'Smart Mushroom Kenya Pilot', 'jkuat-role': 'JKUAT and Smart Mushroom Kenya Pilot',
+    'privacy-ethics': 'Smart Mushroom Privacy and Ethics', admin: 'Admin Dashboard',
     'admin/login': 'Admin Login', '404': 'Page Not Found'
   };
 
@@ -34,8 +34,9 @@ class AppTitleStrategy extends TitleStrategy {
   override updateTitle(state: RouterStateSnapshot): void {
     const segments = this.getUrlSegments(state.root);
     const pageTitle = this.getPageTitle(segments);
-    this.title.setTitle(`${pageTitle} | ${APP.NAME}`);
-    this.meta.updateTag({ name: 'description', content: APP.DESCRIPTION });
+    const siteTitle = 'BRIDGE-AI Smart Mushroom Kenya Pilot';
+    this.title.setTitle(`${pageTitle} | ${siteTitle}`);
+    this.meta.updateTag({ name: 'description', content: 'BRIDGE-AI Smart Mushroom Kenya Pilot at JKUAT: pumice growing rooms, IoT sensors, farmer training and remote dashboard monitoring.' });
   }
 
   private getUrlSegments(route: ActivatedRouteSnapshot): string[] {

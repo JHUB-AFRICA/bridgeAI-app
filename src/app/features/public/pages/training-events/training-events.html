@@ -2,7 +2,6 @@
 	<nav class="breadcrumb-bar" aria-label="Breadcrumb">
 		<div class="breadcrumb-container">
 			<a routerLink="/">Home</a><span class="sep">·</span>
-			<a routerLink="/training-wp5">Training and WP5</a><span class="sep">·</span>
 			<span class="current">Training Events</span>
 		</div>
 	</nav>
@@ -12,13 +11,9 @@
 		<div class="hero-container">
 			<div class="hero-grid">
 				<div class="hero-left">
-					<span class="hero-badge">T5.2 Local Training Bootcamps</span>
-					<h1 class="hero-title">Training <span class="gold">Events</span></h1>
-					<p class="hero-subtitle">Upcoming bootcamps, workshops, and training sessions from the BRIDGE-AI consortium. Discover opportunities to build skills in AI, IoT, and smart agriculture across Nigeria, Kenya, and Tunisia.</p>
-					<div class="hero-actions">
-						<a routerLink="/training-events" fragment="events" class="btn-primary">Explore Events <span class="btn-arrow">→</span></a>
-						<a routerLink="/training-events" fragment="filters" class="btn-outline">Filter Events</a>
-					</div>
+					<span class="hero-badge">JKUAT · Smart Mushroom Kenya Pilot</span>
+					<h1 class="hero-title">Smart Mushroom <span class="gold">Training Events</span></h1>
+					<p class="hero-subtitle">Practical bootcamps, workshops, and farmer learning sessions from the Smart Mushroom team at JKUAT. Build confidence in growing-room setup, smart sensors, dashboard monitoring, and better mushroom production.</p>
 				</div>
 				<div class="hero-right">
 								<div class="hero-image-wrapper">
@@ -30,24 +25,12 @@
 		</div>
 	</section>
 
-	<section class="stats-strip" aria-label="Event statistics">
-		<div class="stats-container">
-			<div class="stat-item"><span class="stat-number gold">{{ counts().upcoming }}</span><span class="stat-label">Upcoming</span></div>
-			<span class="stat-divider"></span>
-			<div class="stat-item"><span class="stat-number">{{ counts().ongoing }}</span><span class="stat-label">Ongoing</span></div>
-			<span class="stat-divider"></span>
-			<div class="stat-item"><span class="stat-number">{{ counts().completed }}</span><span class="stat-label">Completed</span></div>
-			<span class="stat-divider"></span>
-			<div class="stat-item"><span class="stat-number">{{ counts().total }}</span><span class="stat-label">Total Events</span></div>
-		</div>
-	</section>
-
 	<section class="filter-section" id="filters" aria-label="Filter events">
 		<div class="filter-container">
 			<div class="filter-group">
 				<span class="filter-label">Filter</span>
 				<select aria-label="Filter by status" [value]="status()" (change)="setFilter('status', $event)">
-					<option value="">All Status</option><option value="upcoming">Upcoming</option><option value="ongoing">Ongoing</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option>
+					<option value="">All Status ({{ counts().total }})</option><option value="upcoming">Upcoming ({{ counts().upcoming }})</option><option value="ongoing">Ongoing ({{ counts().ongoing }})</option><option value="completed">Completed ({{ counts().completed }})</option><option value="cancelled">Cancelled ({{ counts().cancelled }})</option>
 				</select>
 				<select aria-label="Filter by audience" [value]="audience()" (change)="setFilter('audience', $event)">
 					<option value="">All Audiences</option>@for (value of audiences(); track value) {<option [value]="value">{{ value | titlecase }}</option>}
@@ -68,7 +51,7 @@
 			@if (isLoading()) {
 				<div class="loading-state" role="status"><div class="spinner"></div><p>Loading events...</p></div>
 			} @else if (!timeline().length) {
-				<div class="empty-state"><h2>No Events Found</h2><p>There are no events matching your filters. Try clearing the filters or check back later.</p><a routerLink="/training-wp5" class="btn-back">Back to Training →</a></div>
+				<div class="empty-state"><h2>No Events Found</h2><p>There are no events matching your filters. Try clearing the filters or check back later.</p></div>
 			} @else {
 				@for (yearGroup of timeline(); track yearGroup.year) {
 					<div class="timeline-year"><span class="year-text">{{ yearGroup.year }}</span></div>
@@ -86,5 +69,4 @@
 		</div>
 	</section>
 
-	<section class="back-section"><a routerLink="/training-wp5" class="back-link">← Back to Training and WP5</a></section>
 </div>

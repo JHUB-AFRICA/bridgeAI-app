@@ -43,7 +43,7 @@ interface ContactFormData {
         <div class="hero-content container">
           <span class="hero-badge">Contact</span>
           <h1>We’d love to hear from you.</h1>
-          <p>Whether you are a farmer, partner, researcher or student, the BRIDGE-AI team is ready to connect.</p>
+          <p>Whether you are a farmer, builder, researcher, student or buyer, the JKUAT and JHUB Smart Mushroom team is ready to connect.</p>
         </div>
       </section>
 
@@ -153,18 +153,18 @@ interface ContactFormData {
 
           <div class="contact-info">
             <div class="info-card">
-              <h3 class="info-title">Get in Touch</h3>
+              <h3 class="info-title">Contact JKUAT JHUB Smart Mushroom</h3>
               <div class="info-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
-                <a href="mailto:info@bridge-project.ai">info@bridge-project.ai</a>
+                <a href="mailto:info@jhubafrica.com">info@jhubafrica.com</a>
               </div>
               <div class="info-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-                <span>Coordinated by Eurecat Technology Center</span>
+                <span>JKUAT Smart Farm Zone, Juja, Kenya</span>
               </div>
               <div class="info-item">
                 <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path d="M5.2 3.5A2.4 2.4 0 1 1 .4 3.5a2.4 2.4 0 0 1 4.8 0ZM.7 8h4.5v13H.7V8Zm7.3 0h4.3v1.8h.1c.6-1.1 2.1-2.3 4.3-2.3 4.6 0 5.5 3 5.5 6.9V21h-4.5v-5.9c0-1.4 0-3.3-2-3.3s-2.3 1.5-2.3 3.2V21H8V8Z" /></svg>
-                <a href="https://www.linkedin.com/company/bridge-ai-agriculture/" target="_blank" rel="noopener noreferrer">Bridge AI on LinkedIn</a>
+                  <a href="https://jhubafrica.com" target="_blank" rel="noopener noreferrer">JHUB Africa</a>
               </div>
             </div>
 
@@ -173,11 +173,9 @@ interface ContactFormData {
               <ul class="quick-links">
                 <li><a [routerLink]="['/smart-mushrooms']">Smart Mushroom Pilot</a></li>
                 <li><a [routerLink]="['/activities']">Activities</a></li>
-                <li><a [routerLink]="['/training-wp5']">Training &amp; WP5</a></li>
+                <li><a [routerLink]="['/training-events']">Smart Mushroom training</a></li>
                 <li><a [routerLink]="['/resources']">Resources</a></li>
                 <li><a [routerLink]="['/partners']">Partners</a></li>
-                <li><a [routerLink]="['/pilot-nigeria']">Nigeria Pilot</a></li>
-                <li><a [routerLink]="['/pilot-tunisia']">Tunisia Pilot</a></li>
                 <li><a [routerLink]="['/privacy-ethics']">Privacy &amp; Ethics</a></li>
               </ul>
             </div>

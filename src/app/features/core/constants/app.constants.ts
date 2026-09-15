@@ -158,7 +158,6 @@ export const ROUTES = {
     SMART_MUSHROOMS: 'smart-mushrooms',
     ACTIVITIES: 'activities',
     ACTIVITY_DETAIL: 'activities/:slug',
-    TRAINING_WP5: 'training-wp5',
     TRAINING_EVENTS: 'training-events',
     EVENT_DETAIL: 'training-events/:slug',
     SME_MENTORING: 'sme-mentoring',

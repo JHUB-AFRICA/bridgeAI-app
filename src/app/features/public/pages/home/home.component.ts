@@ -29,12 +29,11 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
         <div class="hero-content-wrapper">
           <div class="hero-content">
             <h1>
-              BRIDGE-AI
+              Smart Mushroom Kenya
             </h1>
 
             <p class="hero-sub">
-              Building ResIlient Development with<br>
-              GEnerative AI in Education &amp; Agriculture
+              A practical smart growing pilot at JKUAT
             </p>
 
             <h2 class="hero-highlight-title">
@@ -42,17 +41,15 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
             </h2>
 
             <p class="hero-description">
-              BRIDGE-AI is building a climate-resilient agricultural future across Africa.
-              By combining generative AI, IoT sensing, and digital shadow technology,
-              we're empowering farmers, youth, and SMEs with the tools and skills they need to thrive.
+              We combine a pumice growing room, IoT sensing, automation and a farmer dashboard to help mushroom growers work with clearer information.
             </p>
 
             <div class="hero-buttons">
               <a [routerLink]="['/about']" fragment="countries" class="btn-primary">
                 <i class="fas fa-map-location-dot btn-icon"></i>
-                Explore Pilot Regions
+                Explore the pilot
               </a>
-              <a [routerLink]="['/training-wp5']" class="btn-secondary">
+              <a [routerLink]="['/training-events']" class="btn-secondary">
                 <i class="fas fa-graduation-cap btn-icon"></i>
                 Training
               </a>
@@ -63,8 +60,8 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
       <nav class="section-nav" aria-label="Page sections">
         <div class="section-nav-inner">
-          <a href="#pilot-regions" data-section="pilot-regions" class="active">Pilot Regions</a>
-          <a href="#challenge" data-section="challenge">Challenge</a>
+          <a href="#pilot-regions" data-section="pilot-regions" class="active">The pilot</a>
+          <a href="#challenge" data-section="challenge">The need</a>
           <a href="#latest" data-section="latest">Activities</a>
           <a href="#impact" data-section="impact">Impact</a>
           <a href="#connect" data-section="connect">Connect</a>
@@ -74,8 +71,8 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       <section class="pilot-section" id="pilot-regions">
         <div class="container">
           <div class="section-header">
-            <h2>Pilot <span class="highlight">Regions</span></h2>
-            <p>One view of the agricultural contexts where BRIDGE-AI is being tested and shaped.</p>
+            <h2>Smart Mushroom <span class="highlight">Kenya Pilot</span></h2>
+            <p>One practical view of the room, technology and people building a repeatable mushroom system at JKUAT.</p>
           </div>
           <a class="pilot-feature" [routerLink]="[activePilot().route]">
             <img class="pilot-feature-image" [src]="activePilot().image" [alt]="activePilot().title + ' in ' + activePilot().country" fetchpriority="high" />
@@ -83,7 +80,7 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
               <span class="pilot-kicker">{{ activePilot().country }} · {{ activePilot().index }} / {{ pilotRegions.length }}</span>
               <h3>{{ activePilot().title }}</h3>
               <p>{{ activePilot().description }}</p>
-              <span class="pilot-feature-link">Explore region <i class="fas fa-arrow-right"></i></span>
+              <span class="pilot-feature-link">Explore the system <i class="fas fa-arrow-right"></i></span>
             </div>
             <div class="pilot-dots" aria-label="Pilot region slides">
               @for (region of pilotRegions; track region.country; let index = $index) {
@@ -100,26 +97,12 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
             <div class="challenge-text">
               <h2>The <span class="highlight">Challenge</span></h2>
               <p>
-                Agriculture in Africa is highly dependent on rainfall, with more than 95% of cultivated land relying on it. This makes farmers particularly vulnerable to climate variability and extreme weather conditions.
+                Mushroom farming depends on a stable growing environment. Heat, dry air and high carbon dioxide can change the crop before a farmer has time to respond.
               </p>
               <p>
-                Limited access to irrigation systems, advisory services and digital tools further constrains productivity and innovation. While artificial intelligence offers strong potential, many solutions remain inaccessible or not adapted to local needs.
+                Manual checking is time-consuming and often gives only one moment of the room. The pilot makes conditions visible throughout the day and connects readings to practical action.
               </p>
 
-              <div class="challenge-stats">
-                <div class="challenge-stat">
-                  <span class="stat-number">95%</span>
-                  <span class="stat-label">Rain-fed Agriculture</span>
-                </div>
-                <div class="challenge-stat">
-                  <span class="stat-number">3</span>
-                  <span class="stat-label">Pilot Countries</span>
-                </div>
-                <div class="challenge-stat">
-                  <span class="stat-number">400K+</span>
-                  <span class="stat-label">Farmers Reached</span>
-                </div>
-              </div>
             </div>
 
             <div class="challenge-image">
@@ -192,12 +175,12 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
               <ng-template #eventFallback>
                 <div class="event-item">
                   <div class="event-date"><span class="day">TBA</span><span class="month">TBA</span></div>
-                  <div class="event-info"><h5>Bootcamp Coming Soon</h5><p>Nigeria · Kenya · Tunisia</p></div>
+                  <div class="event-info"><h5>Farmer training coming soon</h5><p>JKUAT Smart Farm Zone · Kenya</p></div>
                   <span class="event-status soon">Coming Soon</span>
                 </div>
               </ng-template>
 
-              <a [routerLink]="['/training-wp5']" class="view-all-link">View all training <i class="fas fa-arrow-right"></i></a>
+                <a [routerLink]="['/training-events']" class="view-all-link">View all training <i class="fas fa-arrow-right"></i></a>
             </div>
           </div>
         </div>
@@ -206,24 +189,24 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       <section class="impact-section" id="impact">
         <div class="container">
           <div class="section-header">
-            <h2>BRIDGE-AI <span class="highlight">in practice</span></h2>
-            <p>Shared research, local knowledge and practical tools moving from evidence to action.</p>
+            <h2>Smart Mushroom <span class="highlight">in practice</span></h2>
+            <p>A pumice room, connected sensors and farmer training moving from demonstration to practical adoption.</p>
           </div>
           <div class="impact-grid">
             <article>
               <span class="impact-index">01 · SCOPE</span>
-              <strong>Three pilot regions</strong>
-              <span>Local contexts shape the way BRIDGE-AI tools are tested and adapted.</span>
+              <strong>One Kenya pilot</strong>
+              <span>JKUAT provides the demonstration setting for a farmer-first mushroom system.</span>
             </article>
             <article>
               <span class="impact-index">02 · EVIDENCE</span>
-              <strong>Four agricultural use cases</strong>
-              <span>Maize, mushrooms, pasture and pomegranate keep the work grounded in practice.</span>
+              <strong>One connected room</strong>
+              <span>Pumice, sensors, automation and the farmer dashboard work together.</span>
             </article>
             <article>
               <span class="impact-index">03 · CAPABILITY</span>
-              <strong>Six technology building blocks</strong>
-              <span>AI, sensors, earth observation and accessible advice work as one system.</span>
+              <strong>Practical learning</strong>
+              <span>Farmers learn how to build, monitor and improve each production cycle.</span>
             </article>
           </div>
         </div>
@@ -1442,10 +1425,7 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
 export class HomeComponent implements OnInit, OnDestroy {
   protected readonly heroImages = signal<string[]>([]);
   protected readonly pilotRegions = [
-    { country: 'Kenya', index: '01', title: 'Smart mushroom cultivation', description: 'Helping farmers monitor growing conditions while supporting youth and women in digital agriculture.', image: '/images/webimages/mushroom.png', route: '/smart-mushrooms' },
-    { country: 'Nigeria', index: '02', title: 'Maize production', description: 'Supporting climate-smart maize farming with better decisions for planting, harvesting and crop management.', image: '/images/webimages/maize.png', route: '/pilot-nigeria' },
-    { country: 'Tunisia', index: '03', title: 'Pasture management', description: 'Using environmental information and digital tools to support informed grazing and climate adaptation.', image: '/images/webimages/Pasture.png', route: '/pilot-tunisia' },
-    { country: 'Tunisia', index: '04', title: 'Pomegranate cultivation', description: 'Improving irrigation, crop care and harvest planning with tailored, resource-efficient recommendations.', image: '/images/webimages/Pomegranate.png', route: '/pilot-tunisia' }
+    { country: 'Kenya', index: '01', title: 'Smart mushroom cultivation', description: 'Helping farmers build a pumice growing room, monitor conditions and manage production through a connected farmer dashboard.', image: '/images/webimages/mushroom.png', route: '/smart-mushrooms' }
   ];
   protected readonly heroIndex = signal(0);
   protected readonly pilotIndex = signal(0);

@@ -1,5 +1,5 @@
 // ============================================================
-// BRIDGE-AI Kenya - Header Component
+// Smart Mushroom Kenya Pilot - Header Component
 // ============================================================
 
 import { Component, HostListener } from '@angular/core';
@@ -22,13 +22,15 @@ interface NavItem {
       <div class="header-container">
         <div class="header-left">
           <div class="logo-group">
-            <a [routerLink]="['/']" class="logo" aria-label="BRIDGE-AI home">
-              <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI Logo" class="logo-img bridge-logo" />
+            <a [routerLink]="['/']" class="logo" aria-label="Smart Mushroom Kenya Pilot home">
+              <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI" class="logo-img bridge-logo" />
+              <span class="logo-divider" aria-hidden="true"></span>
+              <span class="logo-copy"><strong>Smart Mushroom</strong><small>Kenya Pilot · JKUAT</small></span>
             </a>
           </div>
         </div>
 
-        <div class="brand-center" aria-label="BRIDGE-AI Kenya">BRIDGE-AI Kenya</div>
+        <div class="brand-center" aria-label="Smart Mushroom Kenya Pilot">Smart Mushroom Kenya Pilot</div>
 
         <button class="mobile-toggle" type="button" (click)="toggleMobileMenu()" aria-label="Toggle navigation" aria-expanded="{{ mobileOpen }}">
           @if (!mobileOpen) {
@@ -122,8 +124,14 @@ interface NavItem {
     .logo {
       display: inline-flex;
       align-items: center;
+      gap: 14px;
       text-decoration: none;
     }
+
+    .logo-divider { width: 1px; height: 38px; background: #d9e2dc; }
+    .logo-copy { display: flex; flex-direction: column; gap: 3px; color: #0b4d3b; line-height: 1.1; }
+    .logo-copy strong { font-size: .86rem; letter-spacing: .04em; text-transform: uppercase; }
+    .logo-copy small { color: #6a7a70; font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 
     .logo-img {
       display: block;
@@ -376,6 +384,10 @@ interface NavItem {
         max-width: 170px;
       }
 
+      .logo-copy strong { font-size: .72rem; }
+      .logo-copy small { font-size: .56rem; }
+      .logo-divider { height: 30px; }
+
       
 
       .main-nav {
@@ -390,12 +402,12 @@ export class HeaderComponent {
 
   protected navItems: NavItem[] = [
     { path: '/', label: 'Home' },
-    { path: '/about', label: 'About' },
-    { path: '/activities', label: 'News & Activities' },
-    { path: '/training-wp5', label: 'Training' },
+    { path: '/about', label: 'About the pilot' },
+    { path: '/activities', label: 'Journey & news' },
+    { path: '/training-events', label: 'Farmer training' },
     { path: '/resources', label: 'Resources' },
-    { path: '/partners', label: 'Partners' },
-    { path: '/gallery', label: 'Gallery' }
+    { path: '/partners', label: 'JKUAT Team' },
+    { path: '/gallery', label: 'Visual stories' }
   ];
 
   protected socialLinks = SOCIAL_LINKS;

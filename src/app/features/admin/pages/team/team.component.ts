@@ -116,13 +116,15 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
                 <label>Affiliation</label>
                 <input type="text" [(ngModel)]="formData.affiliation" name="affiliation" class="form-control" />
               </div>
-              <div class="form-group">
-                <label>Bio</label>
-                <textarea [(ngModel)]="formData.bio" name="bio" class="form-control" rows="3"></textarea>
-              </div>
-              <div class="form-group">
-                <label>Profile Link</label>
-                <input type="url" [(ngModel)]="formData.link" name="link" class="form-control" placeholder="https://example.com/profile" />
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Profile Link</label>
+                  <input type="url" [(ngModel)]="formData.link" name="link" class="form-control" placeholder="https://linkedin.com/in/..." />
+                </div>
+                <div class="form-group">
+                  <label>Website</label>
+                  <input type="url" [(ngModel)]="formData.website" name="website" class="form-control" placeholder="https://example.com" />
+                </div>
               </div>
               <div class="form-row">
                 <div class="form-group">
@@ -501,8 +503,8 @@ export class AdminTeamComponent implements OnInit {
       name: '',
       role: '',
       affiliation: '',
-      bio: '',
       link: '',
+      website: '',
       display_order: 0,
       is_visible: true,
       consent_status: 'pending'
@@ -522,7 +524,7 @@ export class AdminTeamComponent implements OnInit {
   }
 
   saveMember(): void {
-    const data = { ...this.formData };
+    const { bio: _bio, ...data } = this.formData;
     const isEditing = !!this.editingMember;
     this.notificationService.showInfo(isEditing ? 'Updating team member...' : 'Creating team member...');
 

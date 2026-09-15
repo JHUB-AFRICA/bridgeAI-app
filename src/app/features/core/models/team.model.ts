@@ -18,11 +18,14 @@ export interface TeamMember {
   /** Affiliation (e.g., "JKUAT", "JHUB Africa") */
   affiliation?: string;
 
-  /** Biography (HTML content) */
+  /** Existing biography content used by legacy public team views */
   bio?: string;
 
   /** Public profile or professional website link */
   link?: string;
+
+  /** Personal or organization website */
+  website?: string;
 
   /** Photo URL (stored in Cloudinary) */
   photo?: string;

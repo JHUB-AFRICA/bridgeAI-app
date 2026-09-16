@@ -297,10 +297,11 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
     .hero-slide-bg {
       position: absolute;
       inset: 0;
+      background-image: url('/images/smartmushrooms/q.jpeg');
       background-size: cover;
       background-position: center;
-      opacity: 0.72;
-      filter: saturate(0.9);
+      opacity: 0.94;
+      filter: saturate(1.05) contrast(1.04);
       transform: translate3d(0, var(--hero-parallax, 0px), 0) scale(1.08);
       transition: background-image 1.8s ease, opacity 1.8s ease, transform 0.08s linear;
     }
@@ -309,7 +310,7 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(22, 40, 26, 0.65);
+      background: rgba(22, 40, 26, 0.38);
       z-index: 1;
     }
 
@@ -1450,10 +1451,11 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
   `]
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  protected readonly heroImages = signal<string[]>([]);
+  private readonly localHeroFallback = '/images/smartmushrooms/q.jpeg';
+  protected readonly heroImages = signal<string[]>([this.localHeroFallback]);
   protected readonly heroIndex = signal(0);
-  protected readonly activeHeroImage = computed(() => this.heroImages()[this.heroIndex()] || '');
-  protected readonly heroFallbackImage = computed(() => this.heroImages()[0] || '');
+  protected readonly activeHeroImage = computed(() => this.heroImages()[this.heroIndex()] || this.localHeroFallback);
+  protected readonly heroFallbackImage = computed(() => this.heroImages()[0] || this.localHeroFallback);
   private rotation?: ReturnType<typeof setInterval>;
   private readonly handleResize = (): void => this.syncStickyOffset();
   private readonly handleScroll = (): void => {
@@ -1523,13 +1525,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       next: (images) => {
         const sources = images
           .map(image => image.secure_url)
-          .filter(image => image.includes('/bridge-ai/activities/'));
-        this.heroImages.set(sources);
+          .filter(image => image.includes('/bridge-ai/activities/'))
+          .filter((image, index, collection) => collection.indexOf(image) === index);
+        this.heroImages.set([this.localHeroFallback, ...sources.filter(image => image !== this.localHeroFallback)]);
         this.heroIndex.set(0);
         this.preloadImages();
       },
       error: () => {
-        this.heroImages.set([]);
+        this.heroImages.set([this.localHeroFallback]);
       }
     });
   }

@@ -16,11 +16,17 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
       <div class="footer-container">
         <div class="footer-logos-row" aria-label="Project partners">
           <div class="footer-logo-item footer-logo-item-bridge">
-            <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI" class="footer-logo footer-logo-bridge" loading="lazy" />
+            <img src="/images/logos/smartlogo.svg" alt="Smart Mushroom Kenya Pilot" class="footer-logo footer-logo-bridge" loading="lazy" />
           </div>
           <div class="footer-logo-item footer-logo-item-eu">
             <img src="/images/logos/eu_emblem.svg" alt="Funded by the European Union" class="footer-logo footer-logo-eu" loading="lazy" />
           </div>
+          <a class="footer-logo-item footer-logo-item-partner" [routerLink]="['/partners/jkuat']" aria-label="View the JKUAT partner page">
+            <img src="/images/logos/jkuat_logo.svg" alt="Jomo Kenyatta University of Agriculture and Technology" class="footer-logo footer-logo-partner" loading="lazy" />
+          </a>
+          <a class="footer-logo-item footer-logo-item-partner" [routerLink]="['/partners/jhub']" aria-label="View the JHUB Africa partner page">
+            <img src="/images/logos/jhub_logo.svg" alt="JHUB Africa" class="footer-logo footer-logo-partner" loading="lazy" />
+          </a>
           <p class="footer-description">Smart Mushroom Kenya Pilot helps farmers build better growing rooms, understand their crop environment and use connected tools with confidence.</p>
         </div>
 
@@ -28,7 +34,7 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
           <div class="footer-col">
             <h4 class="footer-col-title">Project</h4>
             <ul class="footer-col-links">
-              <li><a [routerLink]="['/about']">About the pilot</a></li>
+              <li><a [routerLink]="['/smart-mushrooms']">Mushroom farm</a></li>
               <li><a [routerLink]="['/partners']">JKUAT &amp; team</a></li>
               <li><a [routerLink]="['/privacy-ethics']">Privacy</a></li>
               <li><a [routerLink]="['/activities']">Journey &amp; news</a></li>
@@ -40,9 +46,9 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
             <h4 class="footer-col-title">Activities</h4>
             <ul class="footer-col-links">
               <li><a [routerLink]="['/smart-mushrooms']">How it works</a></li>
-              <li><a [routerLink]="['/training-events']">Farmer training</a></li>
+              <li><a [routerLink]="['/training-events']">Training events</a></li>
               <li><a [routerLink]="['/activities']">Journey and updates</a></li>
-              <li><a [routerLink]="['/gallery']">Visual stories</a></li>
+              <li><a [routerLink]="['/gallery']">Gallery</a></li>
             </ul>
           </div>
 
@@ -141,28 +147,30 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
     }
 
     .footer-logos-row {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       align-items: center;
-      justify-content: center;
-      gap: 52px;
+      gap: 20px 32px;
       padding-bottom: 28px;
       border-bottom: 1px solid var(--footer-border);
-      flex-wrap: wrap;
     }
 
     .footer-logo-item {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 120px;
+      min-width: 0;
+      min-height: 82px;
     }
 
     .footer-logo-item-bridge {
-      min-width: 180px;
+      min-width: 0;
     }
 
     .footer-description {
       max-width: 520px;
+      grid-column: 1 / -1;
+      justify-self: center;
       margin: 0;
       color: var(--footer-text-muted);
       font-size: .82rem;
@@ -185,11 +193,34 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
     }
 
     .footer-logo-bridge {
-      height: 68px;
+      height: 78px;
     }
 
-    .footer-logo-item-eu { min-width: 110px; }
-    .footer-logo-eu { height: 62px; }
+    .footer-logo-item-eu { min-width: 0; }
+    .footer-logo-eu { height: 70px; }
+
+    .footer-logo-item-partner {
+      min-width: 0;
+      min-height: 82px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: background-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .footer-logo-item-partner:hover {
+      background: var(--footer-primary-dim);
+      transform: translateY(-2px);
+    }
+
+    .footer-logo-item-partner:focus-visible {
+      outline: 2px solid var(--footer-primary);
+      outline-offset: 3px;
+    }
+
+    .footer-logo-partner {
+      height: 68px;
+      max-width: 175px;
+    }
 
     .footer-middle {
       display: grid;
@@ -399,8 +430,8 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
     }
 
     @media (max-width: 1024px) {
-      .footer-logs-row {
-        gap: 30px;
+      .footer-logos-row {
+        gap: 16px 18px;
       }
 
       .footer-middle {
@@ -409,11 +440,11 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
       }
 
       .footer-logo-item {
-        min-width: 80px;
+        min-height: 72px;
       }
 
       .footer-logo-item-bridge {
-        min-width: 100px;
+        min-width: 0;
       }
 
     }
@@ -425,18 +456,17 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
       }
 
       .footer-logos-row {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px 12px;
         padding-bottom: 20px;
       }
 
       .footer-logo {
-        height: 36px;
+        height: 44px;
       }
 
       .footer-logo-bridge {
-        height: 40px;
+        height: 54px;
       }
 
       .footer-description {
@@ -446,7 +476,17 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
       }
 
       .footer-logo-eu {
-        height: 34px;
+        height: 48px;
+      }
+
+      .footer-logo-item-partner {
+        min-width: 0;
+        min-height: 58px;
+      }
+
+      .footer-logo-partner {
+        height: 48px;
+        max-width: 140px;
       }
 
       .footer-middle {
@@ -504,6 +544,7 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
 
     @media (prefers-reduced-motion: reduce) {
       .footer-logo:hover,
+      .footer-logo-item-partner:hover,
       .footer-col-links a:hover,
       .footer-back-top:hover,
       .footer-back-top:hover svg {

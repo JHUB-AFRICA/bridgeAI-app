@@ -6,13 +6,12 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Activity } from '../../../core/models/activity.model';
-import { TruncatePipe } from '../../pipes/truncate.pipe';
 import { CloudinaryImageComponent } from '../cloudinary-image/cloudinary-image.component';
 
 @Component({
   selector: 'app-activity-card',
   standalone: true,
-  imports: [CommonModule, RouterModule, TruncatePipe, CloudinaryImageComponent],
+  imports: [CommonModule, RouterModule, CloudinaryImageComponent],
   template: `
     <div class="activity-card">
       <div class="activity-image">
@@ -40,7 +39,6 @@ import { CloudinaryImageComponent } from '../cloudinary-image/cloudinary-image.c
         <h3 class="activity-title">
           <a [routerLink]="['/activities', activity.slug]">{{ activity.title }}</a>
         </h3>
-        <p class="activity-summary">{{ activity.summary || activity.body | truncate:120 }}</p>
         <div class="activity-meta">
           <span class="activity-date">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
@@ -130,13 +128,6 @@ import { CloudinaryImageComponent } from '../cloudinary-image/cloudinary-image.c
 
     .activity-title a:hover {
       color: #3b82f6;
-    }
-
-    .activity-summary {
-      font-size: 14px;
-      color: #6b7280;
-      line-height: 1.5;
-      margin: 0 0 12px 0;
     }
 
     .activity-meta {

@@ -146,10 +146,6 @@ type ActivityFilters = {
                       <a [routerLink]="['/activities', activity.slug || activity.id]">{{ activity.title }}</a>
                     </h3>
 
-                    <p class="card-summary">
-                      {{ getSummary(activity) }}
-                    </p>
-
                     <div class="card-footer">
                       @if (activity.location) {
                         <span class="card-location"><i class="fas fa-map-pin"></i> {{ activity.location }}</span>
@@ -242,7 +238,6 @@ type ActivityFilters = {
     .activity-card.featured-card .card-image { height: auto; min-height: 0; }
     .activity-card.featured-card .card-body { min-height: 0; padding: 18px 16px 0; background: #fff; }
     .activity-card.featured-card .card-body h3 a { color: #17241b; font-size: 1.1rem; }
-    .activity-card.featured-card .card-summary { color: #6e7767; font-size: .78rem; }
     .activity-card.featured-card .card-footer { border-top-color: #e1d8c0; }
     .activity-card.featured-card .meta-date, .activity-card.featured-card .card-location { color: #6e7767; }
     .card-image { position: relative; height: 210px; overflow: hidden; background: #16281a; }
@@ -258,7 +253,6 @@ type ActivityFilters = {
     .meta-tag.type { background: #efe6ce; color: #26432b; }
     .card-body h3 { margin: 0 0 8px; font-size: 1.1rem; font-weight: 700; line-height: 1.3; }
     .card-body h3 a { color: #17241b; }
-    .card-summary { margin: 0 0 14px; flex: 1; font-size: 0.88rem; line-height: 1.7; color: #6e7767; }
     .card-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 14px 0 20px; border-top: 1px solid #e1d8c0; }
     .card-location { display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; color: #6e7767; }
     .card-link { font-size: 0.75rem; font-weight: 600; color: #26432b; gap: 6px; text-decoration: none; }
@@ -393,19 +387,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
   protected getActivityImage(activity: Activity): string {
     return activity.featured_image || this.fallbackImage;
-  }
-
-  protected getSummary(activity: Activity): string {
-    if (activity.summary) {
-      return activity.summary;
-    }
-
-    if (activity.body) {
-      const stripped = activity.body.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-      return stripped.length > 140 ? `${stripped.slice(0, 140)}...` : stripped;
-    }
-
-    return 'Explore this Smart Mushroom Kenya Pilot update and keep up with the latest field progress.';
   }
 
   protected hasActiveFilters(): boolean {

@@ -129,7 +129,7 @@ export const SOCIAL_LINKS = {
   /**
    * LinkedIn page URL.
    */
-  LINKEDIN: 'https://www.linkedin.com/company/bridge-ai-agriculture/',
+  LINKEDIN: 'https://www.linkedin.com/company/smartmushroom/about/',
 
   /**
    * GitHub organization URL (for open-source repositories).
@@ -153,7 +153,6 @@ export const ROUTES = {
    */
   PUBLIC: {
     HOME: '',
-    ABOUT: 'about',
     JKUAT_ROLE: 'jkuat-role',
     SMART_MUSHROOMS: 'smart-mushrooms',
     ACTIVITIES: 'activities',

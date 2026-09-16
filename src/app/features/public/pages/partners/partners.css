@@ -56,9 +56,9 @@
 
 .intro-image {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr);
+	grid-template-columns: repeat(2, minmax(0, 1fr));
 	align-items: center;
-	gap: 12px;
+	gap: 18px;
 	min-height: 360px;
 	padding: 30px;
 	border: 1px solid #e5e9d8;
@@ -106,18 +106,6 @@
 	font-size: 0.67rem;
 	font-weight: 600;
 	line-height: 1.45;
-}
-
-.institution-connector {
-	display: grid;
-	place-items: center;
-	width: 34px;
-	height: 34px;
-	border: 1px solid #c4c98d;
-	border-radius: 50%;
-	color: #818528;
-	font-size: 1.2rem;
-	font-weight: 500;
 }
 
 .partner-section {
@@ -360,10 +348,6 @@
 
 	.institution-card img {
 		height: 100px;
-	}
-
-	.institution-connector {
-		margin: 0 auto;
 	}
 
 	.pilot-team-grid {

@@ -29,41 +29,31 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
         <div class="hero-content-wrapper">
           <div class="hero-content">
             <h1>
-              Smart Mushroom Kenya
+              Smart Mushroom
             </h1>
 
             <p class="hero-sub">
-              A practical smart growing pilot at JKUAT
+              Revolutionize your mushroom farming experience
             </p>
 
             <h2 class="hero-highlight-title">
-              <span class="highlight">Transforming</span> African Agriculture
+              <span class="highlight">Smarter growing.</span> Better decisions.
             </h2>
 
             <p class="hero-description">
-              We combine a pumice growing room, IoT sensing, automation and a farmer dashboard to help mushroom growers work with clearer information.
+              Leveraging IoT and machine learning to provide smart solutions for mushroom farmers. Monitor and control your farm from anywhere in the world.
             </p>
 
-            <div class="hero-buttons">
-              <a [routerLink]="['/about']" fragment="countries" class="btn-primary">
-                <i class="fas fa-map-location-dot btn-icon"></i>
-                Explore the pilot
-              </a>
-              <a [routerLink]="['/training-events']" class="btn-secondary">
-                <i class="fas fa-graduation-cap btn-icon"></i>
-                Training
-              </a>
-            </div>
           </div>
         </div>
       </section>
 
       <nav class="section-nav" aria-label="Page sections">
         <div class="section-nav-inner">
-          <a href="#pilot-regions" data-section="pilot-regions" class="active">The pilot</a>
-          <a href="#challenge" data-section="challenge">The need</a>
-          <a href="#latest" data-section="latest">Activities</a>
-          <a href="#impact" data-section="impact">Impact</a>
+          <a href="#pilot-regions" data-section="pilot-regions" class="active">Mushroom varieties</a>
+          <a href="#challenge" data-section="challenge">Smartmushroom Solution</a>
+          <a href="#latest" data-section="latest">latest News</a>
+          <a href="#impact" data-section="impact">smartmushroom tracking</a>
           <a href="#connect" data-section="connect">Connect</a>
         </div>
       </nav>
@@ -71,23 +61,38 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       <section class="pilot-section" id="pilot-regions">
         <div class="container">
           <div class="section-header">
-            <h2>Smart Mushroom <span class="highlight">Kenya Pilot</span></h2>
-            <p>One practical view of the room, technology and people building a repeatable mushroom system at JKUAT.</p>
+            <h2>Mushroom <span class="highlight">Varieties</span></h2>
+            <p>Explore mushroom varieties grown for food, wellness and strong market opportunities.</p>
           </div>
-          <a class="pilot-feature" [routerLink]="[activePilot().route]">
-            <img class="pilot-feature-image" [src]="activePilot().image" [alt]="activePilot().title + ' in ' + activePilot().country" fetchpriority="high" />
-            <div class="pilot-feature-content">
-              <span class="pilot-kicker">{{ activePilot().country }} · {{ activePilot().index }} / {{ pilotRegions.length }}</span>
-              <h3>{{ activePilot().title }}</h3>
-              <p>{{ activePilot().description }}</p>
-              <span class="pilot-feature-link">Explore the system <i class="fas fa-arrow-right"></i></span>
-            </div>
-            <div class="pilot-dots" aria-label="Pilot region slides">
-              @for (region of pilotRegions; track region.country; let index = $index) {
-                <span [class.active]="index === pilotIndex()"></span>
-              }
-            </div>
-          </a>
+          <div class="varieties-grid">
+            <article class="variety-card variety-card-featured">
+              <img src="/images/smartmushrooms/button.jpeg" alt="Button mushrooms" loading="lazy" />
+              <div class="variety-card-content">
+                <span class="variety-number">01 / EVERYDAY FAVOURITE</span>
+                <h3>Button Mushroom</h3>
+                <p>Button mushrooms are a popular everyday variety with a mild taste, smooth texture and strong demand in the food market.</p>
+              </div>
+              <div class="variety-card-footer"><span>Market price</span><strong>800 Ksh / kg</strong></div>
+            </article>
+            <article class="variety-card">
+              <img src="/images/smartmushrooms/oyster.jpeg" alt="Oyster mushrooms growing in clusters" loading="lazy" />
+              <div class="variety-card-content">
+                <span class="variety-number">02 / POPULAR &amp; VERSATILE</span>
+                <h3>Oyster Mushroom</h3>
+                <p>Oyster mushrooms grow in clusters and are valued for their delicate flavour, quick production cycles and versatility in cooking.</p>
+              </div>
+              <div class="variety-card-footer"><span>Market price</span><strong>400 Ksh / kg</strong></div>
+            </article>
+            <article class="variety-card">
+              <img src="/images/smartmushrooms/reishi.jpeg" alt="Reishi mushrooms" loading="lazy" />
+              <div class="variety-card-content">
+                <span class="variety-number">03 / WELLNESS MARKET</span>
+                <h3>Reishi Mushroom</h3>
+                <p>Reishi is a medicinal variety known for its distinctive form and traditional wellness uses, creating opportunities beyond fresh produce.</p>
+              </div>
+              <div class="variety-card-footer"><span>Market price</span><strong>1000 Ksh / kg</strong></div>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -95,18 +100,32 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
         <div class="container">
           <div class="challenge-wrapper">
             <div class="challenge-text">
-              <h2>The <span class="highlight">Challenge</span></h2>
-              <p>
-                Mushroom farming depends on a stable growing environment. Heat, dry air and high carbon dioxide can change the crop before a farmer has time to respond.
-              </p>
-              <p>
-                Manual checking is time-consuming and often gives only one moment of the room. The pilot makes conditions visible throughout the day and connects readings to practical action.
-              </p>
+              <span class="solutions-kicker">Smart Mushroom technology</span>
+              <h2>Our <span class="highlight">Smart Solutions</span></h2>
+              <p>Our IoT and machine learning solutions help you monitor and control your mushroom farm from anywhere in the world.</p>
+              <div class="solutions-list">
+                <article class="solution-item">
+                  <span class="solution-index">01</span>
+                  <div><h3>Sensor networks</h3><p>Track temperature, humidity, CO₂ and substrate moisture in real time.</p></div>
+                </article>
+                <article class="solution-item">
+                  <span class="solution-index">02</span>
+                  <div><h3>Connected data</h3><p>Transmit readings wirelessly to a central hub or cloud platform.</p></div>
+                </article>
+                <article class="solution-item">
+                  <span class="solution-index">03</span>
+                  <div><h3>Remote monitoring</h3><p>Check your farm from a phone, tablet or computer wherever you are.</p></div>
+                </article>
+                <article class="solution-item">
+                  <span class="solution-index">04</span>
+                  <div><h3>Smart automation</h3><p>Trigger misters and other actions automatically when conditions change.</p></div>
+                </article>
+              </div>
 
             </div>
 
             <div class="challenge-image">
-              <img src="/images/webimages/Challenge.png" alt="Challenges facing climate-resilient agriculture in Africa" loading="lazy">
+              <img src="/images/smartmushrooms/iott.jpeg" alt="IoT technology supporting Smart Mushroom farm monitoring" loading="lazy">
             </div>
           </div>
         </div>
@@ -189,24 +208,34 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       <section class="impact-section" id="impact">
         <div class="container">
           <div class="section-header">
-            <h2>Smart Mushroom <span class="highlight">in practice</span></h2>
-            <p>A pumice room, connected sensors and farmer training moving from demonstration to practical adoption.</p>
+            <h2>Smart Mushroom <span class="highlight">Tracking</span></h2>
+            <p>Machine learning turns farm data into clearer decisions, healthier crops and more consistent growing conditions.</p>
           </div>
           <div class="impact-grid">
             <article>
-              <span class="impact-index">01 · SCOPE</span>
-              <strong>One Kenya pilot</strong>
-              <span>JKUAT provides the demonstration setting for a farmer-first mushroom system.</span>
+              <span class="impact-index">01 · DATA ANALYSIS</span>
+              <strong>Learn from every reading</strong>
+              <span>Machine learning studies sensor data over time to reveal patterns in temperature, humidity, CO₂ and moisture.</span>
             </article>
             <article>
-              <span class="impact-index">02 · EVIDENCE</span>
-              <strong>One connected room</strong>
-              <span>Pumice, sensors, automation and the farmer dashboard work together.</span>
+              <span class="impact-index">02 · PREDICTIVE CARE</span>
+              <strong>Act before problems grow</strong>
+              <span>Historical readings can help flag disease risk, equipment faults and changing crop conditions early.</span>
             </article>
             <article>
-              <span class="impact-index">03 · CAPABILITY</span>
-              <strong>Practical learning</strong>
-              <span>Farmers learn how to build, monitor and improve each production cycle.</span>
+              <span class="impact-index">03 · OPTIMIZED CONDITIONS</span>
+              <strong>Fine-tune the room</strong>
+              <span>Past successful crops guide the right temperature, humidity and CO₂ balance for better yield and quality.</span>
+            </article>
+            <article>
+              <span class="impact-index">04 · PUMICE FOUNDATION</span>
+              <strong>Start with the right walls</strong>
+              <span>Sealed pumice walls help create a clean, insulated growing room where sensors can measure and automation can respond.</span>
+            </article>
+            <article>
+              <span class="impact-index">05 · PROTOTYPE STAGE</span>
+              <strong>Explore mushroom classification</strong>
+              <span>Image-based models are being explored to distinguish mushroom varieties, with identification still under development.</span>
             </article>
           </div>
         </div>
@@ -215,7 +244,7 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       <section class="cta-section" id="connect">
         <div class="container">
           <h2>Stay Connected</h2>
-          <p>Follow our journey and be a part of the BRIDGE-AI community.</p>
+          <p>Follow our journey and be a part of the Smartmushroom community.</p>
           <div class="cta-buttons">
             <a [routerLink]="['/contact']" class="btn-primary btn-primary-two">
               <i class="fas fa-envelope btn-icon"></i>
@@ -487,68 +516,59 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
     }
 
     .section-header h2 {
-      font-size: 2.8rem;
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 2.8rem);
       font-weight: 800;
       color: #17241b;
       line-height: 1.08;
-      letter-spacing: -0.02em;
+      letter-spacing: 0;
     }
 
     .section-header p {
-      font-size: 1.05rem;
-      color: #6e7767;
-      margin-top: 14px;
+      max-width: 620px;
+      margin: 16px auto 0;
+      font-size: 1rem;
+      color: #43534a;
+      line-height: 1.65;
       font-weight: 400;
     }
 
-    .pilot-grid {
-      display: block;
+    .varieties-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(260px, .85fr);
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 18px;
     }
 
-    .pilot-feature {
-      min-height: 70vh;
-      position: relative;
+    .variety-card {
       display: flex;
-      align-items: flex-end;
-      overflow: hidden;
-      color: #fff;
+      min-height: 250px;
+      flex-direction: column;
+      padding: 18px;
+      border: 1px solid #e2e5d8;
+      border-radius: 14px;
+      background: #fffdf7;
+      color: #24352e;
       text-decoration: none;
-      background: #16281a;
-      border-radius: 24px;
-      isolation: isolate;
+      box-shadow: 0 14px 30px rgba(22, 40, 26, .12);
+      transition: transform .25s ease, box-shadow .25s ease;
     }
 
-    .pilot-feature-image {
-      position: absolute;
-      inset: 0;
-      z-index: -2;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-      filter: saturate(.9);
-      transition: transform 8s ease;
+    .variety-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 22px 42px rgba(22, 40, 26, .2);
+      border-color: #aeb879;
     }
 
-    .pilot-feature:hover .pilot-feature-image { transform: scale(1.04); }
-
-    .pilot-feature::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      background: linear-gradient(90deg, rgba(9, 21, 14, .88), rgba(9, 21, 14, .12) 75%), linear-gradient(0deg, rgba(9, 21, 14, .8), transparent 55%);
-    }
-
-    .pilot-feature-content { max-width: 650px; padding: clamp(28px, 6vw, 72px); }
-    .pilot-kicker { color: #d8e86b; font: 600 .7rem 'IBM Plex Mono', monospace; letter-spacing: .14em; text-transform: uppercase; }
-    .pilot-feature h3 { margin: 12px 0; color: #fff; font-size: clamp(2.2rem, 5vw, 4.8rem); line-height: 1.04; }
-    .pilot-feature p { max-width: 520px; color: rgba(255, 255, 255, .82); font-size: 1.05rem; line-height: 1.75; }
-    .pilot-feature-link { display: inline-flex; gap: 10px; align-items: center; margin-top: 18px; color: #fff; font-weight: 700; }
-    .pilot-dots { position: absolute; right: 32px; bottom: 32px; display: flex; gap: 8px; }
-    .pilot-dots span { width: 28px; height: 3px; background: rgba(255, 255, 255, .4); transition: background .3s ease, width .3s ease; }
-    .pilot-dots span.active { width: 48px; background: #d8e86b; }
+    .variety-card-featured { grid-row: span 2; min-height: 520px; padding: 22px; }
+    .variety-card img { order: 0; width: 100%; height: 150px; margin: 0 0 18px; border-radius: 9px; object-fit: cover; }
+    .variety-card-featured img { flex: 1; min-height: 290px; height: auto; margin-bottom: 22px; }
+    .variety-card-content { order: 1; }
+    .variety-number { display: block; margin-bottom: 9px; color: #59600f; font-size: .63rem; font-weight: 800; letter-spacing: .1em; line-height: 1.35; }
+    .variety-card h3 { margin: 0 0 10px; color: #17241b; font-size: 1.25rem; font-weight: 800; line-height: 1.25; }
+    .variety-card p { margin: 0; color: #43534a; font-size: .86rem; line-height: 1.65; }
+    .variety-card-footer { order: 2; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 18px; color: #43534a; font-size: .75rem; font-weight: 700; }
+    .variety-card-footer strong { padding: 8px 14px; border-radius: 999px; background: #dce68a; color: #17241b; font-size: .7rem; font-weight: 800; white-space: nowrap; }
 
     .impact-section { padding: 80px 0; background: #16281a; }
     .impact-section .section-header h2 { color: #fff; }
@@ -632,16 +652,18 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
     }
 
     .challenge-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 48px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+      gap: 52px;
       align-items: center;
     }
 
     .challenge-text {
-      flex: 1 1 55%;
-      text-align: center;
+      min-width: 0;
+      text-align: left;
     }
+
+    .solutions-kicker { display: block; margin-bottom: 10px; color: #818528; font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
 
     .challenge-text h2 {
       font-size: 2.6rem;
@@ -653,14 +675,18 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
     }
 
     .challenge-text p {
-      font-size: 1.02rem;
-      color: #2d3d35;
-      line-height: 1.8;
-      margin-bottom: 14px;
-      max-width: 620px;
-      margin-left: auto;
-      margin-right: auto;
+      max-width: 600px;
+      margin: 0 0 22px;
+      font-size: 1rem;
+      color: #43534a;
+      line-height: 1.65;
     }
+
+    .solutions-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
+    .solution-item { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; padding-top: 13px; border-top: 1px solid #d7ddc8; }
+    .solution-index { color: #818528; font-size: .65rem; font-weight: 800; letter-spacing: .08em; }
+    .solution-item h3 { margin: 0 0 4px; color: #17241b; font-size: .94rem; font-weight: 800; }
+    .solution-item p { margin: 0; color: #59685f; font-size: .78rem; line-height: 1.5; }
 
     .challenge-stats {
       display: flex;
@@ -690,19 +716,19 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
     }
 
     .challenge-image {
-      flex: 1 1 35%;
+      min-width: 0;
       border-radius: 24px;
       overflow: hidden;
       box-shadow: 0 24px 64px rgba(0, 0, 0, 0.12);
-      min-height: 280px;
-      background: #16281a;
+      min-height: 420px;
+      background: #dfe6d4;
     }
 
     .challenge-image img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      min-height: 280px;
+      min-height: 420px;
     }
 
     .jkuat-section {
@@ -1189,11 +1215,14 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       }
 
       .challenge-wrapper {
-        flex-direction: column;
+        grid-template-columns: 1fr;
       }
 
       .challenge-image {
-        flex: 1 1 100%;
+        min-height: 200px;
+      }
+
+      .challenge-image img {
         min-height: 200px;
       }
     }
@@ -1256,22 +1285,20 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
         font-size: 0.95rem;
       }
 
-      .pilot-feature {
-        min-height: 72vh;
-        border-radius: 16px;
+      .varieties-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+        max-width: 420px;
+        margin: 0 auto;
       }
 
-      .pilot-feature-content {
-        padding: 28px 22px 64px;
+      .variety-card-featured {
+        grid-row: auto;
+        min-height: 390px;
       }
 
-      .pilot-feature h3 {
-        font-size: 2.4rem;
-      }
-
-      .pilot-dots {
-        right: 22px;
-        bottom: 24px;
+      .variety-card-featured img {
+        height: 210px;
       }
 
       .impact-grid {
@@ -1292,6 +1319,10 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
       .challenge-text p {
         max-width: 100%;
+      }
+
+      .solutions-list {
+        grid-template-columns: 1fr;
       }
 
       .pilot-card {
@@ -1385,10 +1416,6 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
         font-size: 1.5rem;
       }
 
-      .pilot-feature h3 {
-        font-size: 2rem;
-      }
-
       .cta-section h2 {
         font-size: 1.5rem;
       }
@@ -1418,20 +1445,15 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
       }
-      .hero-slide-bg, .pilot-feature-image { transform: none; transition: none; }
+      .hero-slide-bg { transform: none; transition: none; }
     }
   `]
 })
 export class HomeComponent implements OnInit, OnDestroy {
   protected readonly heroImages = signal<string[]>([]);
-  protected readonly pilotRegions = [
-    { country: 'Kenya', index: '01', title: 'Smart mushroom cultivation', description: 'Helping farmers build a pumice growing room, monitor conditions and manage production through a connected farmer dashboard.', image: '/images/webimages/mushroom.png', route: '/smart-mushrooms' }
-  ];
   protected readonly heroIndex = signal(0);
-  protected readonly pilotIndex = signal(0);
   protected readonly activeHeroImage = computed(() => this.heroImages()[this.heroIndex()] || '');
   protected readonly heroFallbackImage = computed(() => this.heroImages()[0] || '');
-  protected readonly activePilot = () => this.pilotRegions[this.pilotIndex()];
   private rotation?: ReturnType<typeof setInterval>;
   private readonly handleResize = (): void => this.syncStickyOffset();
   private readonly handleScroll = (): void => {
@@ -1463,7 +1485,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (imageCount > 0) {
         this.heroIndex.update(index => (index + 1) % imageCount);
       }
-      this.pilotIndex.update(index => (index + 1) % this.pilotRegions.length);
     }, 8000);
     window.addEventListener('resize', this.handleResize);
     window.addEventListener('scroll', this.handleScroll, { passive: true });
@@ -1490,7 +1511,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private preloadImages(): void {
-    [...this.heroImages().slice(0, 3), ...this.pilotRegions.map(region => region.image)].forEach(source => {
+    this.heroImages().slice(0, 3).forEach(source => {
       const image = new Image();
       image.decoding = 'async';
       image.src = source;

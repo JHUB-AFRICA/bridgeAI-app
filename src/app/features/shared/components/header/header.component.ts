@@ -23,9 +23,9 @@ interface NavItem {
         <div class="header-left">
           <div class="logo-group">
             <a [routerLink]="['/']" class="logo" aria-label="Smart Mushroom Kenya Pilot home">
-              <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI" class="logo-img bridge-logo" />
+              <img src="/images/logos/smartlogo.svg" alt="Smart Mushroom Kenya Pilot" class="logo-img bridge-logo" />
               <span class="logo-divider" aria-hidden="true"></span>
-              <span class="logo-copy"><strong>Smart Mushroom</strong><small>Kenya Pilot · JKUAT</small></span>
+              <span class="logo-copy"><strong>Smart Mushroom</strong><small>Smart farming</small></span>
             </a>
           </div>
         </div>
@@ -63,11 +63,8 @@ interface NavItem {
                 </a>
               </li>
             }
-            <li class="nav-item contact-nav">
-              <a [routerLink]="['/contact']" routerLinkActive="active" (click)="closeMobileMenu()">Contact</a>
-            </li>
             <li class="nav-item linkedin-nav">
-              <a [href]="socialLinks.LINKEDIN" target="_blank" rel="noopener noreferrer" aria-label="BRIDGE-AI on LinkedIn" title="BRIDGE-AI on LinkedIn" (click)="closeMobileMenu()">
+              <a [href]="socialLinks.LINKEDIN" target="_blank" rel="noopener noreferrer" aria-label="Smart Mushroom on LinkedIn" title="Smart Mushroom on LinkedIn" (click)="closeMobileMenu()">
                 <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M5.2 3.5A2.4 2.4 0 1 1 .4 3.5a2.4 2.4 0 0 1 4.8 0ZM.7 8h4.5v13H.7V8Zm7.3 0h4.3v1.8h.1c.6-1.1 2.1-2.3 4.3-2.3 4.6 0 5.5 3 5.5 6.9V21h-4.5v-5.9c0-1.4 0-3.3-2-3.3s-2.3 1.5-2.3 3.2V21H8V8Z"/></svg>
                 <span class="linkedin-label">LinkedIn</span>
               </a>
@@ -136,11 +133,11 @@ interface NavItem {
     .logo-img {
       display: block;
       width: auto;
-      height: 56px;
+      height: 68px;
     }
 
     .bridge-logo {
-      height: 56px;
+      height: 68px;
       max-width: 240px;
       object-fit: contain;
     }
@@ -376,11 +373,11 @@ interface NavItem {
       }
 
       .logo-img {
-        height: 40px;
+        height: 48px;
       }
 
       .bridge-logo {
-        height: 44px;
+        height: 52px;
         max-width: 170px;
       }
 
@@ -402,12 +399,12 @@ export class HeaderComponent {
 
   protected navItems: NavItem[] = [
     { path: '/', label: 'Home' },
-    { path: '/about', label: 'About the pilot' },
-    { path: '/activities', label: 'Journey & news' },
-    { path: '/training-events', label: 'Farmer training' },
+    { path: '/smart-mushrooms', label: 'Mushroom farm' },
+    { path: '/activities', label: 'News & activities' },
+    { path: '/training-events', label: 'Training events' },
     { path: '/resources', label: 'Resources' },
     { path: '/partners', label: 'JKUAT Team' },
-    { path: '/gallery', label: 'Visual stories' }
+    { path: '/gallery', label: 'Gallery' }
   ];
 
   protected socialLinks = SOCIAL_LINKS;

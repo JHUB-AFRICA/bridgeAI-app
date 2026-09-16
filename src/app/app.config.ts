@@ -18,13 +18,12 @@ import { APP } from './features/core/constants/app.constants';
 @Injectable()
 class AppTitleStrategy extends TitleStrategy {
   private readonly routeTitles: Record<string, string> = {
-    '': 'Home', about: 'About the Smart Mushroom Kenya Pilot', activities: 'Smart Mushroom Journey and News',
+    '': 'Home', activities: 'Smart Mushroom Journey and News',
     'training-events': 'Smart Mushroom Training Events',
     'sme-mentoring': 'Smart Mushroom Enterprise Support', 'community-practice': 'Smart Mushroom Community',
     'replication-toolkit': 'Smart Mushroom Implementation Toolkit', resources: 'Smart Mushroom Resources',
     partners: 'JKUAT and Smart Mushroom Pilot Team', gallery: 'Smart Mushroom Visual Stories', contact: 'Contact Smart Mushroom Kenya Pilot',
-    'smart-mushrooms': 'Smart Mushroom System', 'pilot-nigeria': 'Smart Mushroom Kenya Pilot',
-    'pilot-tunisia': 'Smart Mushroom Kenya Pilot', 'jkuat-role': 'JKUAT and Smart Mushroom Kenya Pilot',
+    'smart-mushrooms': 'Smart Mushroom System', 'jkuat-role': 'JKUAT and Smart Mushroom Kenya Pilot',
     'privacy-ethics': 'Smart Mushroom Privacy and Ethics', admin: 'Admin Dashboard',
     'admin/login': 'Admin Login', '404': 'Page Not Found'
   };

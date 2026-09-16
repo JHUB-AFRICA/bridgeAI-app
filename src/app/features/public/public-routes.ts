@@ -10,24 +10,12 @@ export const PublicRoutes: Routes = [
     loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
   },
   {
-    path: 'about',
-    loadComponent: () => import('./pages/smart-mushrooms/smart-mushrooms').then(m => m.SmartMushrooms)
-  },
-  {
     path: 'jkuat-role',
     loadComponent: () => import('./pages/jkuat-role/jkuat-role.component').then(m => m.JkuatRoleComponent)
   },
   {
     path: 'smart-mushrooms',
     loadComponent: () => import('./pages/smart-mushrooms/smart-mushrooms').then(m => m.SmartMushrooms)
-  },
-  {
-    path: 'pilot-nigeria',
-    loadComponent: () => import('./pages/about/about.component').then(m => m.PilotNigeriaComponent)
-  },
-  {
-    path: 'pilot-tunisia',
-    loadComponent: () => import('./pages/about/about.component').then(m => m.PilotTunisiaComponent)
   },
   {
     path: 'activities',

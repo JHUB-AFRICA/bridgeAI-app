@@ -25,7 +25,7 @@ import { APP } from '../../../core/constants/app.constants';
       </div>
 
       <a [routerLink]="['/admin']" class="center-brand" aria-label="BRIDGE-AI dashboard">
-        <img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI" />
+        <img src="/images/logos/smartlogo.svg" alt="Smart Mushroom Kenya Pilot" />
       </a>
 
       <div class="header-right">

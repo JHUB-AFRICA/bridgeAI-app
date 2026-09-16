@@ -83,7 +83,6 @@ import { AuthService } from '../../../core/services/auth.service';
       </div>
     </div>
   `,
-  
   styles: [`
     .login-page {
       height: 100%;

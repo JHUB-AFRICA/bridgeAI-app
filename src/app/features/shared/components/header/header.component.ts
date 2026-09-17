@@ -403,7 +403,7 @@ export class HeaderComponent {
     { path: '/activities', label: 'News & activities' },
     { path: '/training-events', label: 'Training events' },
     { path: '/resources', label: 'Resources' },
-    { path: '/partners', label: 'JKUAT Team' },
+    { path: '/partners', label: 'Team' },
     { path: '/gallery', label: 'Gallery' }
   ];
 

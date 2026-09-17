@@ -144,30 +144,32 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
                 <h2>Updates <span class="accent">Activities</span></h2>
               </div>
 
-              <ng-container *ngIf="latestActivities().length; else activityFallback">
-                <a class="activity-item" *ngFor="let activity of latestActivities() | slice:0:3" [routerLink]="['/activities', activity.slug || activity.id]" [attr.aria-label]="'Open activity: ' + activity.title">
-                  <div class="activity-img">
-                    <img [src]="activity.featured_image || heroFallbackImage()" [alt]="activity.title" loading="lazy">
-                  </div>
-                  <div class="activity-copy">
-                    <div class="activity-meta">
-                      <span class="date">{{ activity.date || 'Coming Soon' }}</span>
-                      <span class="tag" *ngIf="activity.wp_tag">{{ activity.wp_tag }}</span>
+              <div class="activity-track" aria-label="Latest activities">
+                <ng-container *ngIf="latestActivities().length; else activityFallback">
+                  <a class="activity-item" *ngFor="let activity of latestActivities() | slice:0:3" [routerLink]="['/activities', activity.slug || activity.id]" [attr.aria-label]="'Open activity: ' + activity.title">
+                    <div class="activity-img">
+                      <img [src]="activity.featured_image || heroFallbackImage()" [alt]="activity.title" loading="lazy">
                     </div>
-                    <h4>{{ activity.title }}</h4>
-                  </div>
-                </a>
-              </ng-container>
+                    <div class="activity-copy">
+                      <div class="activity-meta">
+                        <span class="date">{{ activity.date || 'Coming Soon' }}</span>
+                        <span class="tag" *ngIf="activity.wp_tag">{{ activity.wp_tag }}</span>
+                      </div>
+                      <h4>{{ activity.title }}</h4>
+                    </div>
+                  </a>
+                </ng-container>
 
-              <ng-template #activityFallback>
-                <div class="activity-item">
-                  <div class="activity-img"><div class="placeholder">UPD</div></div>
-                  <div class="activity-copy">
-                    <div class="activity-meta"><span class="date">Coming Soon</span></div>
-                    <h4>Activities Loading</h4>
+                <ng-template #activityFallback>
+                  <div class="activity-item">
+                    <div class="activity-img"><div class="placeholder">UPD</div></div>
+                    <div class="activity-copy">
+                      <div class="activity-meta"><span class="date">Coming Soon</span></div>
+                      <h4>Activities Loading</h4>
+                    </div>
                   </div>
-                </div>
-              </ng-template>
+                </ng-template>
+              </div>
 
               <a [routerLink]="['/activities']" class="view-all-link">View all activities <i class="fas fa-arrow-right"></i></a>
             </div>
@@ -177,27 +179,29 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
                 <h2>Upcoming <span class="accent purple">Training</span></h2>
               </div>
 
-              <ng-container *ngIf="upcomingEvents().length; else eventFallback">
-                <a class="event-item" *ngFor="let event of upcomingEvents() | slice:0:3" [routerLink]="['/training-events', event.slug || event.id]" [attr.aria-label]="'Open training event: ' + event.title">
-                  <div class="event-date">
-                    <span class="day">{{ event.date ? event.date.slice(8,10) : 'TBA' }}</span>
-                    <span class="month">{{ event.date ? event.date.slice(5,7) : 'TBA' }}</span>
-                  </div>
-                  <div class="event-info">
-                    <h5>{{ event.title }}</h5>
-                    <p>{{ event.location || 'Location TBD' }}</p>
-                  </div>
-                  <span class="event-status">{{ event.status || 'Upcoming' }}</span>
-                </a>
-              </ng-container>
+              <div class="event-track" aria-label="Upcoming training">
+                <ng-container *ngIf="upcomingEvents().length; else eventFallback">
+                  <a class="event-item" *ngFor="let event of upcomingEvents() | slice:0:3" [routerLink]="['/training-events', event.slug || event.id]" [attr.aria-label]="'Open training event: ' + event.title">
+                    <div class="event-date">
+                      <span class="day">{{ event.date ? event.date.slice(8,10) : 'TBA' }}</span>
+                      <span class="month">{{ event.date ? event.date.slice(5,7) : 'TBA' }}</span>
+                    </div>
+                    <div class="event-info">
+                      <h5>{{ event.title }}</h5>
+                      <p>{{ event.location || 'Location TBD' }}</p>
+                    </div>
+                    <span class="event-status">{{ event.status || 'Upcoming' }}</span>
+                  </a>
+                </ng-container>
 
-              <ng-template #eventFallback>
-                <div class="event-item">
-                  <div class="event-date"><span class="day">TBA</span><span class="month">TBA</span></div>
-                  <div class="event-info"><h5>Farmer training coming soon</h5><p>JKUAT Smart Farm Zone · Kenya</p></div>
-                  <span class="event-status soon">Coming Soon</span>
-                </div>
-              </ng-template>
+                <ng-template #eventFallback>
+                  <div class="event-item">
+                    <div class="event-date"><span class="day">TBA</span><span class="month">TBA</span></div>
+                    <div class="event-info"><h5>Farmer training coming soon</h5><p>JKUAT Smart Farm Zone · Kenya</p></div>
+                    <span class="event-status soon">Coming Soon</span>
+                  </div>
+                </ng-template>
+              </div>
 
                 <a [routerLink]="['/training-events']" class="view-all-link">View all training <i class="fas fa-arrow-right"></i></a>
             </div>
@@ -913,18 +917,17 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
     .activity-grid {
       display: flex;
-      flex-wrap: wrap;
-      gap: 56px;
+      flex-direction: column;
+      gap: 52px;
     }
 
     .activity-col {
-      flex: 1 1 calc(50% - 28px);
-      min-width: 280px;
+      min-width: 0;
     }
 
     .col-heading {
-      margin-bottom: 26px;
-      text-align: center;
+      margin-bottom: 20px;
+      text-align: left;
     }
 
     .col-heading h2 {
@@ -939,34 +942,54 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       font-weight: 700;
     }
 
+    .activity-track,
+    .event-track {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      padding: 4px 2px 18px;
+      scrollbar-width: thin;
+      scrollbar-color: #c89b3c transparent;
+    }
+
+    .activity-track::-webkit-scrollbar,
+    .event-track::-webkit-scrollbar {
+      height: 7px;
+    }
+
+    .activity-track::-webkit-scrollbar-thumb,
+    .event-track::-webkit-scrollbar-thumb {
+      background: #c89b3c;
+      border-radius: 999px;
+    }
+
     .activity-item {
-      display: grid;
-      grid-template-columns: 180px minmax(0, 1fr);
-      gap: 22px;
-      padding: 22px 0;
-      border-bottom: 1px solid #e1d8c0;
-      align-items: flex-start;
+      display: flex;
+      flex: 0 0 min(360px, 78vw);
+      flex-direction: column;
+      gap: 0;
+      padding: 0 0 18px;
+      background: #fffdf7;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid #e1d8c0;
+      box-shadow: 0 8px 24px rgba(23, 36, 27, 0.07);
       transition: all 0.3s ease;
       color: inherit;
       text-decoration: none;
     }
 
-    .activity-item:first-child {
-      padding-top: 0;
-    }
-
-    .activity-item:last-child {
-      border-bottom: none;
-    }
-
     .activity-item:hover {
-      padding-left: 6px;
+      border-color: #c89b3c;
+      box-shadow: 0 14px 30px rgba(23, 36, 27, 0.12);
+      transform: translateY(-4px);
     }
 
     .activity-img {
       width: 100%;
-      height: 132px;
-      border-radius: 14px;
+      height: 190px;
+      border-radius: 0;
       overflow: hidden;
       flex-shrink: 0;
       background: #efe6ce;
@@ -1021,20 +1044,25 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       font-size: 1.14rem;
       font-weight: 700;
       color: #17241b;
-      margin: 0 0 5px;
+      margin: 0;
       line-height: 1.35;
+    }
+
+    .activity-copy {
+      padding: 16px 18px 0;
     }
 
     .activity-copy p { display: none; }
 
     .event-item {
       display: flex;
+      flex: 0 0 min(360px, 78vw);
       align-items: center;
       gap: 16px;
       padding: 15px 18px;
       background: #fffdf7;
       border-radius: 16px;
-      margin-bottom: 12px;
+      margin-bottom: 0;
       transition: all 0.3s ease;
       border: 1px solid #e1d8c0;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
@@ -1043,7 +1071,7 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
     .event-item:hover {
       border-color: #7c4fa3;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-      transform: translateX(4px);
+      transform: translateY(-4px);
     }
 
     .event-item:focus-visible,
@@ -1350,12 +1378,11 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       }
 
       .activity-col {
-        flex: 1 1 100%;
+        width: 100%;
       }
 
       .activity-item {
-        grid-template-columns: 1fr;
-        gap: 14px;
+        flex-basis: min(320px, 82vw);
       }
 
       .activity-img {
@@ -1364,12 +1391,7 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       }
 
       .event-item {
-        flex-wrap: wrap;
-      }
-
-      .event-status {
-        width: 100%;
-        text-align: center;
+        flex-basis: min(320px, 82vw);
       }
 
       .cta-section {

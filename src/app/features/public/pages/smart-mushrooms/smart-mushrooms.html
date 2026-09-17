@@ -3,6 +3,8 @@
 	.smart-page em { font-style: normal; font-family: inherit; }
 	.smart-page [id] { scroll-margin-top: calc(var(--site-header-offset, 92px) + 64px); }
 	.smart-page .section-nav { top: var(--site-header-offset, 92px); }
+	.smart-page .section-nav a { position: relative; padding-block: 8px 10px; border-bottom: 2px solid transparent; transition: color .2s ease, border-color .2s ease; }
+	.smart-page .section-nav a:hover, .smart-page .section-nav a.active { color: var(--green); border-bottom-color: var(--gold); }
 	.smart-page .hero { padding-top: 32px; padding-inline: max(24px, calc((100% - 1180px) / 2)); }
 	.smart-page .hero-copy { position: relative; }
 	.smart-page .hero h1 { max-width: 720px; margin: 0; font-size: clamp(3rem, 6vw, 5.8rem); line-height: .98; }
@@ -29,7 +31,7 @@
 		<div class="hero-image"><img src="/images/smartmushrooms/q.jpeg" alt="Smart Mushroom growing room at the Kenya pilot" /><span>01 / Connected growing room</span></div>
 	</section>
 
-	<nav class="section-nav" aria-label="Smart Mushroom guide sections"><a href="#structure" (click)="scrollToSection($event, 'structure')">Build a growing room</a><a href="#sensors" (click)="scrollToSection($event, 'sensors')">Install sensors</a><a href="#dashboard" (click)="scrollToSection($event, 'dashboard')">Connect to dashboard</a><a href="#training" (click)="scrollToSection($event, 'training')">View training events</a><a routerLink="/gallery">Gallery</a><a href="#support" (click)="scrollToSection($event, 'support')">Support and buying</a></nav>
+	<nav class="section-nav" aria-label="Smart Mushroom guide sections"><a href="#structure" data-section="structure" class="active" (click)="scrollToSection($event, 'structure')">Build a growing room</a><a href="#sensors" data-section="sensors" (click)="scrollToSection($event, 'sensors')">Install smart sensors</a><a href="#dashboard" data-section="dashboard" (click)="scrollToSection($event, 'dashboard')">Connect to dashboard</a><a href="#training" data-section="training" (click)="scrollToSection($event, 'training')">View training events</a><a routerLink="/gallery">Gallery</a><a href="#support" data-section="support" (click)="scrollToSection($event, 'support')">Support and buying</a></nav>
 
 	<section class="section intro" id="pilot"><div class="container intro-grid"><div><span class="eyebrow">What is the Smart Mushroom Pilot?</span><h2>A complete pathway for farmers, groups and aspiring growers.</h2><p>Smart Mushroom farming combines a clean, insulated growing room, environmental sensors, simple automation and a farmer dashboard. The Kenya pilot at JKUAT demonstrates how these pieces work together and trains farmers to use them confidently.</p><p>You can build with guidance, ask the JKUAT Smart Mushroom Team to build the room, or begin with training and grow into a complete setup.</p></div><div class="promise"><strong>Room</strong><span>Build the right growing environment.</span><strong>Data</strong><span>See what is happening remotely.</span><strong>Skills</strong><span>Learn, improve and grow sustainably.</span></div></div></section>
 

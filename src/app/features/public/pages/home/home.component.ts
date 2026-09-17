@@ -100,25 +100,66 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
         <div class="container">
           <div class="challenge-wrapper">
             <div class="challenge-text">
-              <span class="solutions-kicker">Smart Mushroom technology</span>
-              <h2>Our <span class="highlight">Smart Solutions</span></h2>
-              <p>Our IoT and machine learning solutions help you monitor and control your mushroom farm from anywhere in the world.</p>
+              <div class="challenge-intro">
+                <span class="solutions-kicker">Smart Mushroom technology</span>
+                <h2>Smarter mushroom farming, powered by <span class="highlight">data.</span></h2>
+                <p class="challenge-lead">From grow room to your table, SmartMushroom combines sensor-monitored growing conditions with hands-on farming expertise to produce healthier button mushrooms, consistently.</p>
+              </div>
+
+              <div class="problem-panel">
+                <span class="panel-label">The problem</span>
+                <h3>Small changes can affect an entire harvest.</h3>
+                <p>Mushroom farming is sensitive. Shifts in temperature, humidity and air quality can damage a crop, while manual checks may miss the warning signs until it is too late.</p>
+              </div>
+
+              <div class="solution-story">
+                <div class="story-heading">
+                  <span class="panel-label">Our solution</span>
+                  <h3>Sense <span aria-hidden="true">→</span> Understand <span aria-hidden="true">→</span> Advise <span aria-hidden="true">→</span> Act</h3>
+                </div>
+                <div class="story-steps">
+                  <div><strong>Sense</strong><span>Sensors continuously watch the grow room.</span></div>
+                  <div><strong>Understand</strong><span>The system flags unusual changes.</span></div>
+                  <div><strong>Advise</strong><span>Farmers get clear, simple guidance.</span></div>
+                  <div><strong>Act</strong><span>Conditions are adjusted before crops suffer.</span></div>
+                </div>
+              </div>
+
+              <div class="monitor-panel">
+                <div>
+                  <span class="panel-label">What we monitor</span>
+                  <h3>Know what your crop needs.</h3>
+                </div>
+                <div class="monitor-list" aria-label="Farm conditions monitored by SmartMushroom">
+                  <span><i class="fas fa-temperature-half" aria-hidden="true"></i> Temperature</span>
+                  <span><i class="fas fa-droplet" aria-hidden="true"></i> Humidity</span>
+                  <span><i class="fas fa-wind" aria-hidden="true"></i> CO₂ levels</span>
+                  <span><i class="fas fa-lightbulb" aria-hidden="true"></i> Light</span>
+                  <span><i class="fas fa-seedling" aria-hidden="true"></i> Moisture</span>
+                </div>
+              </div>
+
+              <div class="solutions-heading">
+                <span class="panel-label">Connected growing</span>
+                <h3>Our <span class="highlight">Smart Solutions</span></h3>
+                <p>Monitor and control your mushroom farm from anywhere in the world.</p>
+              </div>
               <div class="solutions-list">
                 <article class="solution-item">
                   <span class="solution-index">01</span>
-                  <div><h3>Sensor networks</h3><p>Track temperature, humidity, CO₂ and substrate moisture in real time.</p></div>
+                  <div><h4>Sensor networks</h4><p>Track temperature, humidity, CO₂ and substrate moisture in real time.</p></div>
                 </article>
                 <article class="solution-item">
                   <span class="solution-index">02</span>
-                  <div><h3>Connected data</h3><p>Transmit readings wirelessly to a central hub or cloud platform.</p></div>
+                  <div><h4>Connected data</h4><p>Transmit readings wirelessly to a central hub or cloud platform.</p></div>
                 </article>
                 <article class="solution-item">
                   <span class="solution-index">03</span>
-                  <div><h3>Remote monitoring</h3><p>Check your farm from a phone, tablet or computer wherever you are.</p></div>
+                  <div><h4>Remote monitoring</h4><p>Check your farm from a phone, tablet or computer wherever you are.</p></div>
                 </article>
                 <article class="solution-item">
                   <span class="solution-index">04</span>
-                  <div><h3>Smart automation</h3><p>Trigger misters and other actions automatically when conditions change.</p></div>
+                  <div><h4>Smart automation</h4><p>Trigger misters and other actions automatically when conditions change.</p></div>
                 </article>
               </div>
 
@@ -481,6 +522,20 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       justify-content: center;
     }
 
+    @media (max-width: 768px) {
+      .section-nav {
+        overflow-x: auto;
+        scrollbar-width: thin;
+      }
+
+      .section-nav-inner {
+        width: max-content;
+        min-width: 100%;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+      }
+    }
+
     .section-nav a {
       display: inline-flex;
       align-items: center;
@@ -660,7 +715,7 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       display: grid;
       grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
       gap: 52px;
-      align-items: center;
+      align-items: start;
     }
 
     .challenge-text {
@@ -671,11 +726,12 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
     .solutions-kicker { display: block; margin-bottom: 10px; color: #818528; font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
 
     .challenge-text h2 {
-      font-size: 2.6rem;
+      max-width: 760px;
+      font-size: clamp(2.5rem, 4vw, 4rem);
       font-weight: 800;
       color: #17241b;
       line-height: 1.08;
-      letter-spacing: -0.02em;
+      letter-spacing: 0;
       margin-bottom: 16px;
     }
 
@@ -687,10 +743,150 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       line-height: 1.65;
     }
 
+    .challenge-intro {
+      padding-bottom: 8px;
+    }
+
+    .challenge-lead {
+      max-width: 720px !important;
+      font-size: 1.15rem !important;
+      line-height: 1.8 !important;
+      color: #30483b !important;
+    }
+
+    .problem-panel,
+    .solution-story,
+    .monitor-panel {
+      margin-top: 22px;
+      padding: 22px 24px;
+      border: 1px solid rgba(129, 133, 40, .22);
+      background: rgba(255, 253, 247, .58);
+    }
+
+    .problem-panel {
+      border-left: 5px solid #818528;
+    }
+
+    .panel-label {
+      display: block;
+      margin-bottom: 8px;
+      color: #818528;
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .problem-panel h3,
+    .solution-story h3,
+    .monitor-panel h3,
+    .solutions-heading h3 {
+      margin: 0 0 8px;
+      color: #17241b;
+      font-size: 1.3rem;
+      line-height: 1.25;
+    }
+
+    .problem-panel p,
+    .solution-story span,
+    .monitor-panel p {
+      margin: 0;
+      font-size: .94rem;
+      line-height: 1.65;
+    }
+
+    .solution-story {
+      background: #26432b;
+      border-color: #26432b;
+    }
+
+    .solution-story .panel-label,
+    .solution-story h3,
+    .solution-story span {
+      color: #fffdf7;
+    }
+
+    .solution-story h3 {
+      font-size: 1.5rem;
+    }
+
+    .story-steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .story-steps div {
+      padding-top: 13px;
+      border-top: 1px solid rgba(255, 253, 247, .28);
+    }
+
+    .story-steps strong,
+    .story-steps span {
+      display: block;
+    }
+
+    .story-steps strong {
+      margin-bottom: 5px;
+      color: #d8e86b;
+      font-size: .85rem;
+    }
+
+    .story-steps span {
+      color: rgba(255, 253, 247, .78);
+      font-size: .78rem;
+      line-height: 1.5;
+    }
+
+    .monitor-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      background: #fffdf7;
+    }
+
+    .monitor-panel h3 {
+      margin-bottom: 0;
+    }
+
+    .monitor-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      max-width: 370px;
+    }
+
+    .monitor-list span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 10px;
+      border: 1px solid #d7ddc8;
+      color: #30483b;
+      font-size: .77rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .solutions-heading {
+      margin-top: 34px;
+    }
+
+    .solutions-heading h3 {
+      font-size: 1.8rem;
+    }
+
+    .solutions-heading p {
+      margin-bottom: 16px;
+    }
+
     .solutions-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
     .solution-item { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; padding-top: 13px; border-top: 1px solid #d7ddc8; }
     .solution-index { color: #818528; font-size: .65rem; font-weight: 800; letter-spacing: .08em; }
-    .solution-item h3 { margin: 0 0 4px; color: #17241b; font-size: .94rem; font-weight: 800; }
+    .solution-item h4 { margin: 0 0 4px; color: #17241b; font-size: 1rem; font-weight: 800; }
     .solution-item p { margin: 0; color: #59685f; font-size: .78rem; line-height: 1.5; }
 
     .challenge-stats {
@@ -734,6 +930,18 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       height: 100%;
       object-fit: cover;
       min-height: 420px;
+    }
+
+    @media (min-width: 901px) {
+      .challenge-image {
+        position: sticky;
+        top: calc(var(--site-header-offset, 92px) + var(--section-nav-height, 52px) + 18px);
+        height: 520px;
+      }
+
+      .challenge-image img {
+        min-height: 520px;
+      }
     }
 
     .jkuat-section {
@@ -1350,6 +1558,20 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
         max-width: 100%;
       }
 
+      .story-steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .monitor-panel {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .monitor-list {
+        justify-content: flex-start;
+        max-width: none;
+      }
+
       .solutions-list {
         grid-template-columns: 1fr;
       }
@@ -1580,12 +1802,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         event.preventDefault();
         const header = document.querySelector('.site-header') as HTMLElement | null;
         const nav = document.querySelector('.section-nav') as HTMLElement | null;
-        const headerHeight = header ? header.offsetHeight : 0;
-        const navHeight = nav ? nav.offsetHeight : 0;
-        const offset = headerHeight + navHeight + 18;
+        const offset = (header?.offsetHeight ?? 0) + (nav?.offsetHeight ?? 0) + 18;
         const targetTop = target.getBoundingClientRect().top + window.scrollY - offset;
 
-        window.scrollTo({ top: targetTop, behavior: 'smooth' });
+        window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+        window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${targetId}`);
       });
     });
 
@@ -1594,17 +1815,26 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const link = document.querySelector(`.section-nav a[data-section="${entry.target.id}"]`) as HTMLAnchorElement | null;
-        if (!link) {
-          return;
-        }
+      const activeEntry = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((first, second) => Math.abs(first.boundingClientRect.top - window.innerHeight * 0.45)
+          - Math.abs(second.boundingClientRect.top - window.innerHeight * 0.45))[0];
+      if (!activeEntry) {
+        return;
+      }
 
-        if (entry.isIntersecting) {
-          navLinks.forEach((item) => item.classList.remove('active'));
-          link.classList.add('active');
+      const link = document.querySelector(`.section-nav a[data-section="${activeEntry.target.id}"]`) as HTMLAnchorElement | null;
+      if (link) {
+        navLinks.forEach((item) => item.classList.remove('active'));
+        link.classList.add('active');
+        const nav = document.querySelector('.section-nav') as HTMLElement | null;
+        if (nav && nav.scrollWidth > nav.clientWidth) {
+          nav.scrollTo({
+            left: Math.max(0, link.offsetLeft - (nav.clientWidth - link.offsetWidth) / 2),
+            behavior: 'smooth'
+          });
         }
-      });
+      }
     }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
 
     sections.forEach((section) => observer.observe(section));

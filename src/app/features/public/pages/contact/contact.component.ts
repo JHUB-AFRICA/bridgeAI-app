@@ -78,6 +78,13 @@ interface ContactFormData {
                 <input type="email" id="email" name="email" [(ngModel)]="formData.email" required class="form-control" placeholder="your@email.com" />
               </div>
 
+              @if (formData.form_type === 'contact' || formData.form_type === 'training') {
+              <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" [(ngModel)]="formData.phone" required class="form-control" placeholder="Your phone number" />
+              </div>
+              }
+
               @if (formData.form_type === 'contact' || formData.form_type === 'sme') {
               <div class="form-group">
                 <label for="organisation">Organisation</label>
@@ -436,11 +443,16 @@ export class ContactComponent implements OnInit {
       const type = params.get('type');
       const validAudiences = ['general', 'farmer', 'student', 'developer', 'sme', 'researcher', 'media', 'partner'];
       const validMessageTypes: MessageType[] = ['contact', 'training', 'media', 'sme'];
+      const prefilledMessage = params.get('message');
+
       if (type && validMessageTypes.includes(type as MessageType)) {
         this.formData.form_type = type as MessageType;
       }
       if (type && validAudiences.includes(type)) {
         this.formData.audience = type;
+      }
+      if (prefilledMessage) {
+        this.formData.message = prefilledMessage;
       }
     });
   }

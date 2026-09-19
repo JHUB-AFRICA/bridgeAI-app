@@ -4,10 +4,53 @@ import { RouterLink } from '@angular/router';
 @Component({
   imports: [RouterLink],
   selector: 'app-smart-mushrooms',
-  styleUrl: './smart-mushrooms.css',
+  styleUrl: './smart-mushrooms.component.css',
   templateUrl: './smart-mushrooms.html',
 })
 export class SmartMushrooms implements AfterViewInit, OnDestroy {
+  protected readonly materialRequestTemplates = {
+    structure: [
+      'I would like to request a quotation for a Smart Mushroom growing room structure.',
+      '',
+      'Please include the full list of materials required for a complete build, including:',
+      '- Pumice blocks or pumice-concrete materials',
+      '- Cement, sand and foundation materials',
+      '- Metal frame and structural support',
+      '- Reflective insulation',
+      '- Shade netting',
+      '- Waterproof roof and overhang materials',
+      '- Shelves and rack components',
+      '- Ventilation and exhaust system',
+      '- Humidifier and water setup',
+      '- Lighting and electrical fittings',
+      '',
+      'Please also advise on quantities, recommended dimensions and guidance for a clean, insulated mushroom room.'
+    ].join('\n'),
+    sensors: [
+      'I would like to request a shopping list for the smart sensor and automation kit for my mushroom room.',
+      '',
+      'Please include the full hardware list for the complete system, including:',
+      '- ESP32 Development Board',
+      '- Raspberry Pi 4',
+      '- DHT22 Temperature & Humidity Sensor',
+      '- CO₂ Sensor',
+      '- Light Sensor',
+      '- Water Level Sensor',
+      '- Soil Moisture Sensor (optional)',
+      '- Exhaust Fan',
+      '- Humidifier',
+      '- Heater',
+      '- LED Grow Lights',
+      '- Water Pump',
+      '- Relay Module',
+      '- LCD Display',
+      '- Power Supply',
+      '- Jumper Wires',
+      '',
+      'Please advise on quantities, compatibility and installation guidance for a complete IoT-based mushroom cultivation setup.'
+    ].join('\n')
+  } as const;
+
   protected scrollToSection(event: Event, sectionId: string): void {
     event.preventDefault();
 

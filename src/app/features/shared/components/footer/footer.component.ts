@@ -16,16 +16,19 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
       <div class="footer-container">
         <div class="footer-logos-row" aria-label="Project partners">
           <div class="footer-logo-item footer-logo-item-bridge">
-            <img src="/images/logos/smartlogo.svg" alt="Smart Mushroom Kenya Pilot" class="footer-logo footer-logo-bridge" loading="lazy" />
+            <img src="/images/logos/mushlogo.jpeg" alt="Smart Mushroom Kenya Pilot" class="footer-logo footer-logo-bridge" loading="lazy" />
           </div>
-          <div class="footer-logo-item footer-logo-item-eu">
+          <a class="footer-logo-item footer-logo-item-eu" href="/partners/eu" aria-label="View the European Union grant page">
             <img src="/images/logos/eu_emblem.svg" alt="Funded by the European Union" class="footer-logo footer-logo-eu" loading="lazy" />
-          </div>
-          <a class="footer-logo-item footer-logo-item-partner" [routerLink]="['/partners/jkuat']" aria-label="View the JKUAT partner page">
+          </a>
+          <a class="footer-logo-item footer-logo-item-partner" href="/partners/jkuat" aria-label="View the JKUAT partner page">
             <img src="/images/logos/jkuat_logo.svg" alt="Jomo Kenyatta University of Agriculture and Technology" class="footer-logo footer-logo-partner" loading="lazy" />
           </a>
-          <a class="footer-logo-item footer-logo-item-partner" [routerLink]="['/partners/jhub']" aria-label="View the JHUB Africa partner page">
+          <a class="footer-logo-item footer-logo-item-partner" href="/partners/jhub" aria-label="View the JHUB Africa partner page">
             <img src="/images/logos/jhub_logo.svg" alt="JHUB Africa" class="footer-logo footer-logo-partner" loading="lazy" />
+          </a>
+          <a class="footer-logo-item footer-logo-item-partner footer-logo-item-mush" href="/partners/mush%26" aria-label="View the Mush& partner page">
+            <img src="/images/logos/mush.jpeg" alt="Mush&" class="footer-logo footer-logo-partner footer-logo-mush" loading="lazy" />
           </a>
           <p class="footer-description">Smart Mushroom Kenya Pilot helps farmers build better growing rooms, understand their crop environment and use connected tools with confidence.</p>
         </div>
@@ -215,6 +218,12 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
     .footer-logo-item-partner:focus-visible {
       outline: 2px solid var(--footer-primary);
       outline-offset: 3px;
+    }
+
+    .footer-logo-item-mush {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: min(100%, 220px);
     }
 
     .footer-logo-partner {

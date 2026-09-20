@@ -18,13 +18,13 @@ import { APP } from './features/core/constants/app.constants';
 @Injectable()
 class AppTitleStrategy extends TitleStrategy {
   private readonly routeTitles: Record<string, string> = {
-    '': 'Home', activities: 'Smart Mushroom Journey and News',
-    'training-events': 'Smart Mushroom Training Events',
-    'sme-mentoring': 'Smart Mushroom Enterprise Support', 'community-practice': 'Smart Mushroom Community',
-    'replication-toolkit': 'Smart Mushroom Implementation Toolkit', resources: 'Smart Mushroom Resources',
-    partners: 'JKUAT and Smart Mushroom Pilot Team', gallery: 'Smart Mushroom Visual Stories', contact: 'Contact Smart Mushroom Kenya Pilot',
-    'smart-mushrooms': 'Smart Mushroom System', 'jkuat-role': 'JKUAT and Smart Mushroom Kenya Pilot',
-    'privacy-ethics': 'Smart Mushroom Privacy and Ethics', admin: 'Admin Dashboard',
+    '': 'smart-mushroom farming', activities: 'smart-mushroom news & activities',
+    'training-events': 'smart-mushroom training-events',
+    'sme-mentoring': 'Support', 'community-practice': 'Community',
+    'replication-toolkit': 'Toolkit', resources: 'smart-mushroom resources',
+    partners: 'smart-mushroom team', gallery: 'smart-mushroom gallery', contact: 'Contact smart-mushroom Team',
+    'smart-mushrooms': 'smart-mushroom farm setup', 'jkuat-role': 'JKUAT',
+    'privacy-ethics': 'Privacy', admin: 'Admin Dashboard',
     'admin/login': 'Admin Login', '404': 'Page Not Found'
   };
 
@@ -33,9 +33,8 @@ class AppTitleStrategy extends TitleStrategy {
   override updateTitle(state: RouterStateSnapshot): void {
     const segments = this.getUrlSegments(state.root);
     const pageTitle = this.getPageTitle(segments);
-    const siteTitle = 'BRIDGE-AI Smart Mushroom Kenya Pilot';
-    this.title.setTitle(`${pageTitle} | ${siteTitle}`);
-    this.meta.updateTag({ name: 'description', content: 'BRIDGE-AI Smart Mushroom Kenya Pilot at JKUAT: pumice growing rooms, IoT sensors, farmer training and remote dashboard monitoring.' });
+    this.title.setTitle(pageTitle);
+    this.meta.updateTag({ name: 'description', content: 'Smart Mushroom Kenya Pilot at JKUAT: growing rooms, IoT sensors, farmer training and remote dashboard monitoring.' });
   }
 
   private getUrlSegments(route: ActivatedRouteSnapshot): string[] {

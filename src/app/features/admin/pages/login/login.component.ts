@@ -18,7 +18,7 @@ import { AuthService } from '../../../core/services/auth.service';
         <div class="login-card">
           <div class="login-header">
             <a routerLink="/" class="logo-link" aria-label="Go to BRIDGE-AI home page">
-              <img src="/images/logos/smartlogo.svg" alt="Smart Mushroom Kenya Pilot home" class="login-logo" />
+              <img src="/images/logos/mushlogo.jpeg" alt="Smart Mushroom Kenya Pilot home" class="login-logo" />
             </a>
           </div>
 

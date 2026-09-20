@@ -5,7 +5,7 @@
 import { AfterViewInit, Component, Injectable, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { AdminSidebarComponent } from '../admin-sidebar/admin-sidebar.component';
 import { AdminHeaderComponent } from '../admin-header/admin-header.component';
 import { Notification, NotificationService } from '../../../core/services/notification.service';
@@ -81,31 +81,114 @@ export class AdminDetailsModalService {
         ></app-admin-sidebar>
         <main class="admin-main" [class.expanded]="sidebarCollapsed()">
           <div class="admin-content">
-            <section class="table-tools" aria-label="Table filters">
-              <label class="search-control">
-                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                <input [(ngModel)]="tableSearch" (ngModelChange)="applyTableControls()" type="search" placeholder="Search this page" aria-label="Search this page" />
-              </label>
-              <label class="filter-control">
-                <span>Field</span>
-                <select [(ngModel)]="tableFilterColumn" (ngModelChange)="onFilterColumnChange()" aria-label="Choose filter field">
-                  <option value="">No filter</option>
-                  @for (column of tableColumns(); track column) {
-                    <option [value]="column">{{ column }}</option>
+            @if (!isDashboardPage()) {
+              <section class="table-tools desktop-table-tools" aria-label="Table filters">
+                <label class="search-control">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input [(ngModel)]="tableSearch" (ngModelChange)="applyTableControls()" type="search" placeholder="Search this page" aria-label="Search this page" />
+                </label>
+                <label class="filter-control">
+                  <span>Field</span>
+                  <select [(ngModel)]="tableFilterColumn" (ngModelChange)="onFilterColumnChange()" aria-label="Choose filter field">
+                    <option value="">No filter</option>
+                    @for (column of tableColumns(); track column) {
+                      <option [value]="column">{{ column }}</option>
+                    }
+                  </select>
+                </label>
+                <label class="filter-control">
+                  <span>Value</span>
+                  <select [(ngModel)]="tableFilterValue" (ngModelChange)="applyTableControls()" aria-label="Choose filter value">
+                    <option value="all">All values</option>
+                    @for (value of tableFilterValues(); track value) {
+                      <option [value]="value">{{ value }}</option>
+                    }
+                  </select>
+                </label>
+                <label class="filter-control">
+                  <span>Sort</span>
+                  <select [(ngModel)]="tableSortColumn" (ngModelChange)="applyTableControls()" aria-label="Choose sort field">
+                    <option value="">Default</option>
+                    @for (column of tableColumns(); track column) {
+                      <option [value]="column">{{ column }}</option>
+                    }
+                  </select>
+                </label>
+                <label class="filter-control">
+                  <span>Order</span>
+                  <select [(ngModel)]="tableSortDirection" (ngModelChange)="applyTableControls()" aria-label="Choose sort direction">
+                    <option value="default">Default</option>
+                    <option value="asc">A–Z / Oldest</option>
+                    <option value="desc">Z–A / Newest</option>
+                  </select>
+                </label>
+                <button type="button" class="clear-tools" (click)="resetTableControls()" [disabled]="!hasTableControls()">Clear</button>
+              </section>
+              <section class="mobile-table-tools" aria-label="Table search and filters">
+                <label class="search-control">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input [(ngModel)]="tableSearch" (ngModelChange)="applyTableControls()" type="search" placeholder="Search this page" aria-label="Search this page" />
+                </label>
+                <button type="button" class="filter-button" (click)="openMobileFilters()" [attr.aria-expanded]="mobileFiltersOpen" aria-controls="mobile-filter-dialog">
+                  <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                  <span>Filter</span>
+                  @if (hasActiveFilters()) {
+                    <span class="filter-count" aria-label="Active filters">{{ activeFilterCount() }}</span>
                   }
-                </select>
-              </label>
-              <label class="filter-control">
-                <span>Value</span>
-                <select [(ngModel)]="tableFilterValue" (ngModelChange)="applyTableControls()" aria-label="Choose filter value">
-                  <option value="all">All values</option>
-                  @for (value of tableFilterValues(); track value) {
-                    <option [value]="value">{{ value }}</option>
-                  }
-                </select>
-              </label>
-              <button type="button" class="clear-tools" (click)="resetTableControls()" [disabled]="!hasTableControls()">Clear</button>
-            </section>
+                </button>
+              </section>
+              @if (mobileFiltersOpen) {
+                <div class="filter-modal-backdrop" role="presentation" (click)="closeMobileFilters()">
+                  <section id="mobile-filter-dialog" class="filter-modal" role="dialog" aria-modal="true" aria-labelledby="mobile-filter-title" (click)="$event.stopPropagation()">
+                    <header class="filter-modal-header">
+                      <h2 id="mobile-filter-title">Filter and sort</h2>
+                      <button type="button" class="modal-close" aria-label="Close filters" (click)="closeMobileFilters()"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+                    </header>
+                    <div class="filter-modal-body">
+                      <label class="filter-control">
+                        <span>Field</span>
+                        <select [(ngModel)]="tableFilterColumn" (ngModelChange)="onFilterColumnChange()" aria-label="Choose filter field">
+                          <option value="">No filter</option>
+                          @for (column of tableColumns(); track column) {
+                            <option [value]="column">{{ column }}</option>
+                          }
+                        </select>
+                      </label>
+                      <label class="filter-control">
+                        <span>Value</span>
+                        <select [(ngModel)]="tableFilterValue" (ngModelChange)="applyTableControls()" aria-label="Choose filter value">
+                          <option value="all">All values</option>
+                          @for (value of tableFilterValues(); track value) {
+                            <option [value]="value">{{ value }}</option>
+                          }
+                        </select>
+                      </label>
+                      <label class="filter-control">
+                        <span>Sort</span>
+                        <select [(ngModel)]="tableSortColumn" (ngModelChange)="applyTableControls()" aria-label="Choose sort field">
+                          <option value="">Default</option>
+                          @for (column of tableColumns(); track column) {
+                            <option [value]="column">{{ column }}</option>
+                          }
+                        </select>
+                      </label>
+                      <label class="filter-control">
+                        <span>Order</span>
+                        <select [(ngModel)]="tableSortDirection" (ngModelChange)="applyTableControls()" aria-label="Choose sort direction">
+                          <option value="default">Default</option>
+                          <option value="asc">A–Z / Oldest</option>
+                          <option value="desc">Z–A / Newest</option>
+                        </select>
+                      </label>
+                    </div>
+                    <footer class="filter-modal-footer">
+                      <button type="button" class="clear-tools" (click)="resetTableControls()" [disabled]="!hasTableControls()">Clear all</button>
+                      <button type="button" class="apply-filters" (click)="closeMobileFilters()">Apply filters</button>
+                    </footer>
+                  </section>
+                </div>
+              }
+            }
             <router-outlet></router-outlet>
           </div>
         </main>
@@ -137,7 +220,7 @@ export class AdminDetailsModalService {
       position: relative;
       display: flex;
       flex: 1;
-      margin-top: 64px;
+      margin-top: 0;
     }
 
     .admin-main {
@@ -145,7 +228,7 @@ export class AdminDetailsModalService {
       min-width: 0;
       margin-left: 250px;
       transition: margin-left 0.3s ease;
-      padding: 24px;
+      padding: 0 24px 24px;
       min-height: calc(100vh - 64px);
     }
 
@@ -159,7 +242,7 @@ export class AdminDetailsModalService {
       min-width: 0;
     }
 
-    .table-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; }
+    .table-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 18px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; }
     .search-control { display: flex; align-items: center; gap: 8px; flex: 1 1 220px; min-width: 180px; padding: 8px 11px; border: 1px solid #d1d5db; border-radius: 7px; color: #6b7280; }
     .search-control input { min-width: 0; width: 100%; border: 0; outline: 0; color: #1f2937; background: transparent; font: inherit; }
     .filter-control { display: flex; align-items: center; gap: 7px; color: #6b7280; font-size: 12px; font-weight: 600; }
@@ -167,6 +250,19 @@ export class AdminDetailsModalService {
     .clear-tools { min-height: 36px; padding: 0 12px; border: 1px solid #d1d5db; border-radius: 7px; background: #fff; color: #374151; font-size: 13px; font-weight: 600; cursor: pointer; }
     .clear-tools:hover:not(:disabled) { background: #f3f4f6; }
     .clear-tools:disabled { cursor: not-allowed; opacity: .5; }
+    .mobile-table-tools { display: none; }
+    .filter-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 1px solid #2563eb; border-radius: 8px; background: #2563eb; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+    .filter-count { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: #fff; color: #2563eb; font-size: 12px; }
+    .filter-modal-backdrop { position: fixed; inset: 0; z-index: 300; display: grid; align-items: end; background: rgba(15, 23, 42, .48); }
+    .filter-modal { width: 100%; max-height: min(620px, 90vh); overflow-y: auto; border-radius: 18px 18px 0 0; background: #fff; box-shadow: 0 -12px 40px rgba(15, 23, 42, .2); }
+    .filter-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid #e5e7eb; }
+    .filter-modal-header h2 { margin: 0; color: #172b4d; font-size: 18px; }
+    .modal-close { display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 7px; background: #f1f5f9; color: #475569; cursor: pointer; }
+    .filter-modal-body { display: grid; gap: 14px; padding: 20px; }
+    .filter-modal-body .filter-control { display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: center; gap: 12px; }
+    .filter-modal-body .filter-control select { width: 100%; min-height: 44px; }
+    .filter-modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 0 20px 20px; }
+    .apply-filters { min-height: 40px; padding: 0 15px; border: 0; border-radius: 7px; background: #2563eb; color: #fff; font-weight: 700; cursor: pointer; }
 
     .sidebar-backdrop {
       display: none;
@@ -212,6 +308,26 @@ export class AdminDetailsModalService {
         padding: 14px;
       }
 
+      .desktop-table-tools { display: none; }
+
+      .mobile-table-tools {
+        display: flex;
+        align-items: stretch;
+        gap: 8px;
+        margin: 0 0 18px;
+      }
+
+      .mobile-table-tools .search-control {
+        flex: 1;
+        min-width: 0;
+        min-height: 44px;
+        background: #fff;
+      }
+
+      .mobile-table-tools .filter-button {
+        flex: 0 0 auto;
+      }
+
       .search-control,
       .filter-control {
         width: min(100%, 360px);
@@ -243,12 +359,16 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
   protected mobileSidebarOpen = signal(false);
   protected detailsModal = inject(AdminDetailsModalService);
   private notificationService = inject(NotificationService);
+  private router = inject(Router);
   protected notifications = signal<Notification[]>([]);
   protected tableSearch = '';
   protected tableColumns = signal<string[]>([]);
   protected tableFilterValues = signal<string[]>([]);
   protected tableFilterColumn = '';
   protected tableFilterValue = 'all';
+  protected tableSortColumn = '';
+  protected tableSortDirection: 'default' | 'asc' | 'desc' = 'default';
+  protected mobileFiltersOpen = false;
   private document = inject(DOCUMENT);
   private tableObserver?: MutationObserver;
   private updatingTables = false;
@@ -303,7 +423,9 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
     this.updatingTables = true;
     const rows = Array.from(this.document.querySelectorAll<HTMLTableRowElement>('.admin-content .data-table tbody tr'));
     const search = this.tableSearch.trim().toLowerCase();
-    rows.forEach(row => {
+    const sortedRows = this.sortTableRows(rows);
+
+    sortedRows.forEach(row => {
       const text = row.textContent?.toLowerCase() ?? '';
       const isEmpty = row.classList.contains('empty-state') || text.includes('no ') && text.includes(' found');
       const filterMatch = this.matchesTableFilter(row);
@@ -311,6 +433,71 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
     });
 
     this.updatingTables = false;
+  }
+
+  private sortTableRows(rows: HTMLTableRowElement[]): HTMLTableRowElement[] {
+    const column = this.tableSortColumn;
+    if (!column || this.tableSortDirection === 'default') return rows;
+
+    const tables = Array.from(this.document.querySelectorAll<HTMLTableElement>('.admin-content .data-table'));
+    const table = tables.find(current => Array.from(current.tBodies[0]?.rows ?? []).includes(rows[0])) ?? rows[0]?.closest('table');
+    if (!table) return rows;
+
+    const index = this.columnIndex(table, column);
+    if (index < 0) return rows;
+
+    const isDateColumn = this.isDateLikeColumn(table, column, index);
+    const sorted = [...rows].sort((first, second) => {
+      const firstValue = this.getSortValue(first, index, isDateColumn);
+      const secondValue = this.getSortValue(second, index, isDateColumn);
+
+      if (isDateColumn) {
+        const result = (firstValue as number) - (secondValue as number);
+        return this.tableSortDirection === 'asc' ? result : -result;
+      }
+
+      const firstText = String(firstValue ?? '').toLowerCase();
+      const secondText = String(secondValue ?? '').toLowerCase();
+      const result = firstText.localeCompare(secondText, undefined, { numeric: true, sensitivity: 'base' });
+      return this.tableSortDirection === 'asc' ? result : -result;
+    });
+
+    sorted.forEach(row => {
+      const tbody = row.parentElement;
+      if (tbody) {
+        tbody.appendChild(row);
+      }
+    });
+
+    return sorted;
+  }
+
+  private isDateLikeColumn(table: HTMLTableElement, column: string, index: number): boolean {
+    const tableColumn = Array.from(table.tHead?.rows[0]?.cells ?? [])[index]?.textContent?.trim() ?? column;
+    if (/date|created|updated|published|deadline|submitted|start|end|time/i.test(tableColumn)) {
+      return true;
+    }
+
+    const cells = Array.from(table.tBodies[0]?.rows ?? []).map(row => row.cells[index]?.textContent?.trim() ?? '');
+    return cells.some(value => this.parseDateValue(value) !== null);
+  }
+
+  private getSortValue(row: HTMLTableRowElement, index: number, isDateColumn: boolean): string | number {
+    const raw = row.cells[index]?.textContent?.trim() ?? '';
+
+    if (isDateColumn) {
+      const parsed = this.parseDateValue(raw);
+      return parsed ?? Number.MAX_SAFE_INTEGER;
+    }
+
+    return raw;
+  }
+
+  private parseDateValue(value: string): number | null {
+    if (!value) return null;
+    const cleaned = value.replace(/\s+/g, ' ').trim();
+    const parsed = new Date(cleaned);
+    return Number.isNaN(parsed.getTime()) ? null : parsed.getTime();
   }
 
   private matchesTableFilter(row: HTMLTableRowElement): boolean {
@@ -344,6 +531,38 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
     });
     this.tableFilterValues.set([...values].sort());
     if (this.tableFilterValue !== 'all' && !values.has(this.tableFilterValue)) this.tableFilterValue = 'all';
+
+    if (!this.tableSortColumn && columns.size > 0) {
+      const defaultSortColumn = [...columns].find(column => /date|created|updated|published|deadline|submitted|start|end/i.test(column)) ?? [...columns][0];
+      if (defaultSortColumn) {
+        this.tableSortColumn = defaultSortColumn;
+      }
+    }
+  }
+
+  protected isDashboardPage(): boolean {
+    return this.router.url === '/admin' || this.router.url === '/admin/';
+  }
+
+  openMobileFilters(): void {
+    this.mobileFiltersOpen = true;
+  }
+
+  closeMobileFilters(): void {
+    this.mobileFiltersOpen = false;
+  }
+
+  hasActiveFilters(): boolean {
+    return !!this.tableFilterColumn || this.tableFilterValue !== 'all' || !!this.tableSortColumn || this.tableSortDirection !== 'default';
+  }
+
+  activeFilterCount(): number {
+    return [
+      !!this.tableFilterColumn,
+      this.tableFilterValue !== 'all',
+      !!this.tableSortColumn,
+      this.tableSortDirection !== 'default'
+    ].filter(Boolean).length;
   }
 
   onFilterColumnChange(): void {
@@ -353,13 +572,15 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
   }
 
   hasTableControls(): boolean {
-    return !!this.tableSearch || !!this.tableFilterColumn || this.tableFilterValue !== 'all';
+    return !!this.tableSearch || !!this.tableFilterColumn || this.tableFilterValue !== 'all' || !!this.tableSortColumn || this.tableSortDirection !== 'default';
   }
 
   resetTableControls(): void {
     this.tableSearch = '';
     this.tableFilterColumn = '';
     this.tableFilterValue = 'all';
+    this.tableSortColumn = '';
+    this.tableSortDirection = 'default';
     this.applyTableControls();
   }
 

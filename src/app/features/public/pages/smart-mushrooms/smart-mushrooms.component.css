@@ -514,10 +514,38 @@
 }
 
 @media (max-width: 620px) {
-	.smart-page .container { width: min(100% - 32px, 600px); }
-	.smart-page .hero { padding: 120px 24px 62px; }
-	.smart-page .hero h1 { font-size: clamp(2.7rem, 14vw, 4.2rem); }
-	.smart-page .hero-image { height: 285px; }
+	.smart-page .container { width: 100%; max-width: 600px; }
+	.smart-page .hero {
+		display: block;
+		padding: 86px 0 28px;
+		background: #fff;
+		color: var(--green);
+	}
+	.smart-page .hero-copy {
+		padding: 0 18px;
+	}
+	.smart-page .hero h1 {
+		max-width: 100%;
+		font-size: clamp(2.5rem, 16vw, 4.3rem);
+		line-height: .9;
+		letter-spacing: -.05em;
+		word-break: break-word;
+		overflow-wrap: break-word;
+	}
+	.smart-page .hero-title-lead,
+	.smart-page .hero-title-tail { color: var(--green); }
+	.smart-page .hero-title-accent { color: var(--gold); }
+	.smart-page .hero-image {
+		height: 300px;
+		margin-top: 14px;
+		border-radius: 30px 80px 30px 80px;
+	}
+	.smart-page .hero-image span {
+		right: 14px;
+		bottom: 14px;
+		padding: 8px 10px;
+		font-size: .62rem;
+	}
 	.smart-page .section-nav { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; gap: 22px; }
 	.smart-page .section { padding: 58px 0; }
 	.smart-page #structure .split { gap: 28px; }

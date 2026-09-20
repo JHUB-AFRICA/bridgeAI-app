@@ -25,13 +25,13 @@
 }
 
 .consortium-intro {
-	max-width: 1180px;
+	max-width: 1380px;
 	margin: 0 auto;
-	padding: 72px 38px 54px;
+	padding: 72px 48px 54px;
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(300px, 460px);
+	grid-template-columns: minmax(0, 1fr) minmax(620px, 1.15fr);
 	align-items: center;
-	gap: clamp(40px, 8vw, 100px);
+	gap: clamp(48px, 6vw, 92px);
 }
 
 .intro-copy h2 {
@@ -55,12 +55,13 @@
 }
 
 .intro-image {
-	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
+	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
-	gap: 18px;
-	min-height: 360px;
-	padding: 30px;
+	justify-content: center;
+	gap: 20px;
+	min-height: 430px;
+	padding: 38px;
 	border: 1px solid #e5e9d8;
 	border-radius: 24px;
 	background: linear-gradient(145deg, #fbfcf6, #f1f3e7);
@@ -69,13 +70,15 @@
 
 .institution-card {
 	display: flex;
-	min-width: 0;
-	height: 230px;
+	flex: 1 1 180px;
+	min-width: 170px;
+	max-width: 230px;
+	min-height: 310px;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	gap: 22px;
-	padding: 24px 16px;
+	gap: 28px;
+	padding: 30px 18px;
 	border: 1px solid rgba(129, 133, 40, 0.16);
 	border-radius: 16px;
 	background: rgba(255, 255, 255, 0.82);
@@ -97,15 +100,19 @@
 .institution-card img {
 	display: block;
 	width: 100%;
-	height: 120px;
+	height: 155px;
 	object-fit: contain;
 }
 
 .institution-card span {
 	color: #687278;
-	font-size: 0.67rem;
+	font-size: 0.78rem;
 	font-weight: 600;
 	line-height: 1.45;
+}
+
+.institution-card-eu img {
+	height: 118px;
 }
 
 .partner-section {
@@ -201,6 +208,7 @@
 .pilot-team {
 	margin-top: 74px;
 	padding-top: 42px;
+	padding-bottom: 72px;
 	border-top: 1px solid #e5e9df;
 	text-align: center;
 }
@@ -305,9 +313,10 @@
 	}
 
 	.intro-image {
-		max-width: 620px;
+		max-width: 760px;
 		width: 100%;
 		margin: 0 auto;
+		padding: 28px;
 	}
 
 	.partner-grid {
@@ -335,14 +344,17 @@
 	}
 
 	.intro-image {
-		grid-template-columns: 1fr;
+		flex-direction: column;
 		gap: 8px;
 		min-height: 0;
 		padding: 16px;
 	}
 
 	.institution-card {
-		height: 180px;
+		flex: 1 1 auto;
+		width: 100%;
+		max-width: none;
+		min-height: 180px;
 		padding: 20px 16px;
 	}
 
@@ -372,6 +384,9 @@
 .partner-copy h1 { margin: 0 0 18px; color: #544f35; font-size: clamp(1.25rem, 2.3vw, 1.55rem); }
 .partner-copy h2 { margin: 24px 0 12px; color: #544f35; font-size: 1.05rem; text-transform: uppercase; }
 .partner-copy p { margin: 0 0 14px; color: #596166; font-size: .84rem; line-height: 1.75; }
+.grant-details { display: inline-flex; flex-direction: column; gap: 5px; margin-top: 4px; padding: 12px 16px; border-left: 3px solid #818528; background: #f8f9f1; color: #596166; font-size: .76rem; }
+.grant-details span { color: #818528; font-size: .65rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.grant-details strong { color: #544f35; font-size: .9rem; }
 .social-links { display: flex; gap: 5px; margin-top: 20px; }
 .social-links a { display: grid; place-items: center; width: 21px; height: 21px; border-radius: 50%; color: #fff; background: #5b5134; font-size: .62rem; font-weight: 800; text-decoration: none; }
 .related-projects { width: min(1080px, calc(100% - 48px)); margin: 0 auto; padding-bottom: 90px; }

@@ -24,8 +24,8 @@ import { APP } from '../../../core/constants/app.constants';
         </a>
       </div>
 
-      <a [routerLink]="['/admin']" class="center-brand" aria-label="BRIDGE-AI dashboard">
-        <img src="/images/logos/smartlogo.svg" alt="Smart Mushroom Kenya Pilot" />
+      <a [routerLink]="['/admin']" class="center-brand" aria-label="Smart Mushroom dashboard">
+        <img src="/images/logos/mushlogo.jpeg" alt="Smart Mushroom Kenya Pilot" />
       </a>
 
       <div class="header-right">
@@ -92,7 +92,7 @@ import { APP } from '../../../core/constants/app.constants';
 export class AdminHeaderComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
 
-  protected appName = APP.ACRONYM;
+  protected appName = 'Smart Mushroom';
 
   constructor(private authService: AuthService) {}
 

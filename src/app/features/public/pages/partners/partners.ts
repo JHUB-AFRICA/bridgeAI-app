@@ -12,6 +12,7 @@ export interface ConsortiumPartner {
   logo: string;
   description: string;
   role: string;
+  grantNumber?: string;
 }
 
 export const CONSORTIUM_PARTNERS: ConsortiumPartner[] = [
@@ -19,6 +20,8 @@ export const CONSORTIUM_PARTNERS: ConsortiumPartner[] = [
   { slug: 'upm', name: 'Universidad Politécnica de Madrid', country: 'Spain', website: 'https://www.upm.es/internacional', logo: '/images/webimages/partners/Universidad Politécnica de Madrid.jpeg', description: 'Universidad Politécnica de Madrid is the largest Spanish technology university and a renowned European institution with strong research capacity across engineering and applied sciences.', role: 'UPM contributes scientific expertise and fine-tunes generative AI models for BRIDGE-AI use cases, while supporting training and long-term deployment across Africa.' },
   { slug: 'jkuat', name: 'Jomo Kenyatta University of Agriculture and Technology', country: 'Kenya', website: 'https://www.jkuat.ac.ke/', logo: '/images/logos/jkuat_logo.svg', description: 'JKUAT is a premier public university in Kenya, renowned for excellence in science, engineering and technology education, with a strong commitment to practical solutions.', role: 'JKUAT serves as the implementing partner for the Smart Mushroom pilot, harnessing generative AI and IoT to build climate-resilient, youth-driven mushroom farming systems.' },
   { slug: 'jhub', name: 'JHUB Africa', country: 'Kenya', website: 'https://jhubafrica.com/', logo: '/images/logos/jhub_logo.svg', description: 'JHUB Africa is JKUAT’s digital innovation centre, supporting practical technology adoption, entrepreneurship and locally relevant digital solutions.', role: 'JHUB Africa supports Smart Mushroom Kenya through innovation, digital onboarding and the connection between the growing room, farmer dashboard and the people who use the system.' },
+  { slug: 'mush&', name: 'Mush&', country: 'South Korea', website: 'https://mushn.co.kr/', logo: '/images/logos/mush.jpeg', description: 'Mush& is a biotechnology and food innovation company developing premium mycelium-based functional ingredients through controlled, closed-loop fermentation.', role: 'Mush& brings expertise in converting agricultural by-products into high-quality mycelium ingredients and translating fermentation technology into scalable food applications, creating a strong bridge between mushroom science, sustainability and future nutrition.' },
+  { slug: 'eu', name: 'European Union', country: 'European Union', website: 'https://cordis.europa.eu/project/id/101299050', logo: '/images/logos/eu_emblem.svg', description: 'The European Union supports the Smart Mushroom Kenya Pilot through Horizon Europe, the European Union’s research and innovation programme for collaborative projects with societal impact.', role: 'The grant enables the pilot to develop practical climate-smart mushroom farming solutions, strengthen digital skills and connect research, innovation and farmer learning across the consortium.', grantNumber: 'No. 101299050' },
   { slug: 'university-of-sousse', name: 'University of Sousse', country: 'Tunisia', website: 'https://www.uc.rnu.tn/', logo: '/images/webimages/partners/University of Sousse.jpeg', description: 'The University of Sousse is one of Tunisia’s leading public universities, bringing together expertise in engineering, computer science, artificial intelligence, agriculture and digital technologies.', role: 'The University of Sousse leads WP2 and coordinates requirements definition, stakeholder engagement, data collection and use-case preparation for the Tunisian pilot.' },
   { slug: 'moome', name: 'MooMe', country: 'Tunisia', website: 'https://moome.tn/', logo: '/images/webimages/partners/moome.png', description: 'MooMe, developed by STE LIFEYE SARL, is a mobile-first operating system for livestock that connects farmers, veterinarians and value-chain partners through shared digital records.', role: 'Within BRIDGE-AI, MooMe contributes to the co-design, implementation and validation of use cases, including AI-optimised, climate-resilient pasture management.' },
   { slug: 'agroinfotech', name: 'AgroInfoTech Labs Limited', country: 'Nigeria', website: 'https://agroinfotech.com.ng/', logo: '/images/webimages/partners/Agroinfotech.jpeg', description: 'AgroInfoTech Labs is a Nigerian research, innovation and venture design company developing resilient, trusted and inclusive digital food systems across Africa.', role: 'AgroInfoTech Labs serves as the Nigerian user-case provider for climate-smart maize production and contributes to validation of generative AI, Earth observation and decision-support systems.' },
@@ -41,12 +44,12 @@ export class Partners {
 
   protected get relatedPartners(): ConsortiumPartner[] {
     return CONSORTIUM_PARTNERS.filter(partner => partner.slug !== this.detailPartner?.slug
-      && (partner.slug === 'jkuat' || partner.slug === 'jhub'));
+      && (partner.slug === 'jkuat' || partner.slug === 'jhub' || partner.slug === 'mush&' || partner.slug === 'eu'));
   }
 
   constructor(route: ActivatedRoute) {
     route.paramMap.subscribe(params => {
-      const slug = params.get('slug');
+      const slug = params.get('slug') ? decodeURIComponent(params.get('slug')!) : null;
       this.detailPartner = CONSORTIUM_PARTNERS.find(partner => partner.slug === slug) ?? null;
     });
     this.teamService.getVisibleTeamMembers().subscribe({ next: members => this.team.set(members), error: () => this.team.set([]) });

@@ -5,18 +5,38 @@
 	.smart-page .section-nav { top: var(--site-header-offset, 92px); }
 	.smart-page .section-nav a { position: relative; padding-block: 8px 10px; border-bottom: 2px solid transparent; transition: color .2s ease, border-color .2s ease; }
 	.smart-page .section-nav a:hover, .smart-page .section-nav a.active { color: var(--green); border-bottom-color: var(--gold); }
-	.smart-page .hero { padding-top: 32px; padding-inline: max(24px, calc((100% - 1180px) / 2)); }
+	.smart-page .hero {
+		padding-top: 32px;
+		padding-inline: max(24px, calc((100% - 1180px) / 2));
+		background: #fff;
+		color: var(--green);
+	}
 	.smart-page .hero-copy { position: relative; }
 	.smart-page .hero h1 { max-width: 720px; margin: 0; font-size: clamp(3rem, 6vw, 5.8rem); line-height: .98; }
 	.smart-page .hero-title-lead, .smart-page .hero-title-accent, .smart-page .hero-title-tail { display: block; }
-	.smart-page .hero-title-lead { color: #f4f8f5; font-size: .38em; line-height: 1.2; }
+	.smart-page .hero-title-lead { color: var(--green); font-size: .38em; line-height: 1.2; }
 	.smart-page .hero-title-accent { color: #d3a64e; margin: .08em 0; }
-	.smart-page .hero-title-tail { color: #fff; }
+	.smart-page .hero-title-tail { color: var(--green); }
 	.smart-page #pilot .eyebrow, .smart-page #pilot h2 { display: none; }
 	.smart-page .steps article { display: block; padding: 0; }
 	@media (max-width: 640px) {
-		.smart-page .hero { padding-top: 18px; padding-inline: 16px; }
-		.smart-page .hero h1 { font-size: clamp(2.7rem, 14vw, 4.2rem); }
+		.smart-page .hero {
+			padding-top: 18px;
+			padding-inline: 0;
+			background: #fff;
+			color: var(--green);
+		}
+		.smart-page .hero h1 {
+			max-width: 100%;
+			font-size: clamp(2.6rem, 16vw, 4.4rem);
+			line-height: .92;
+			letter-spacing: -.05em;
+			word-break: break-word;
+			overflow-wrap: break-word;
+		}
+		.smart-page .hero-title-lead,
+		.smart-page .hero-title-tail { color: var(--green); }
+		.smart-page .hero-title-accent { color: var(--gold); }
 		.smart-page .section-nav { top: var(--site-header-offset, 78px); justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; gap: 22px; padding: 14px 24px; }
 		.smart-page .section-nav::-webkit-scrollbar { display: none; }
 		.smart-page .section-nav a { flex: 0 0 auto; min-height: 24px; display: inline-flex; align-items: center; }

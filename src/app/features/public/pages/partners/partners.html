@@ -11,6 +11,9 @@
 			<p>{{ partner.description }}</p>
 			<h2>Role in BRIDGE-AI</h2>
 			<p>{{ partner.role }}</p>
+			@if (partner.grantNumber) {
+				<div class="grant-details"><span>Grant agreement</span><strong>{{ partner.grantNumber }}</strong></div>
+			}
 			<div class="social-links"><a [href]="partner.website" target="_blank" rel="noopener noreferrer" aria-label="Visit partner website">↗</a><a href="https://www.linkedin.com/company/smartmushroom/about/" target="_blank" rel="noopener noreferrer" aria-label="Smart Mushroom on LinkedIn">in</a></div>
 		</article>
 	</section>
@@ -38,6 +41,8 @@
 			<p>Smart Mushroom Kenya is anchored at <strong>Jomo Kenyatta University of Agriculture and Technology (JKUAT)</strong>, where research, demonstration and farmer learning meet in one practical setting.</p>
 			<p><strong>JHUB Africa</strong> supports innovation, digital onboarding and the connection between the growing room, the farmer dashboard and the people who will use the system.</p>
 			<p>Together, JKUAT, JHUB and the Smart Mushroom Kenya Pilot team are testing a system that farmers can understand, maintain and adapt.</p>
+			<p><strong>Mush&amp;</strong> adds expertise in mycelium biotechnology and sustainable food innovation, helping connect mushroom science with practical, future-ready applications.</p>
+			<p class="funding-note">The Smart Mushroom Kenya Pilot is funded by a grant from the <strong>European Union</strong>.</p>
 		</div>
 
 		<div class="intro-image" aria-label="JKUAT and JHUB Africa partnership">
@@ -48,6 +53,14 @@
 			<a class="institution-card institution-card-jhub" routerLink="/partners/jhub" aria-label="View the JHUB Africa partner page">
 				<img src="/images/logos/jhub_logo.svg" alt="JHUB Africa logo" title="JHUB Africa logo" />
 				<span>Innovation, onboarding and digital connection</span>
+			</a>
+			<a class="institution-card institution-card-mush" [routerLink]="['/partners', 'mush&']" aria-label="View the Mush& partner page">
+				<img src="/images/logos/mush.jpeg" alt="Mush& logo" title="Mush& logo" />
+				<span>Mycelium biotechnology and food innovation</span>
+			</a>
+			<a class="institution-card institution-card-eu" [routerLink]="['/partners', 'eu']" aria-label="View the European Union grant page">
+				<img src="/images/logos/eu_emblem.svg" alt="European Union emblem" title="European Union emblem" />
+				<span>Horizon Europe grant funding</span>
 			</a>
 		</div>
 	</section>

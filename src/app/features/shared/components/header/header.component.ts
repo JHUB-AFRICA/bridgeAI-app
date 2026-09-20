@@ -23,9 +23,9 @@ interface NavItem {
         <div class="header-left">
           <div class="logo-group">
             <a [routerLink]="['/']" class="logo" aria-label="Smart Mushroom Kenya Pilot home">
-              <img src="/images/logos/smartlogo.svg" alt="Smart Mushroom Kenya Pilot" class="logo-img bridge-logo" />
+              <img src="/images/logos/mushlogo.jpeg" alt="Smart Mushroom Kenya Pilot" class="logo-img bridge-logo" />
               <span class="logo-divider" aria-hidden="true"></span>
-              <span class="logo-copy"><strong>Smart Mushroom</strong><small>Smart farming</small></span>
+              <span class="logo-copy"><strong>Smart Mushroom</strong></span>
             </a>
           </div>
         </div>
@@ -126,9 +126,19 @@ interface NavItem {
     }
 
     .logo-divider { width: 1px; height: 38px; background: #d9e2dc; }
-    .logo-copy { display: flex; flex-direction: column; gap: 3px; color: #0b4d3b; line-height: 1.1; }
-    .logo-copy strong { font-size: .86rem; letter-spacing: .04em; text-transform: uppercase; }
-    .logo-copy small { color: #6a7a70; font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .logo-copy {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0b4d3b;
+      line-height: 1;
+    }
+    .logo-copy strong {
+      font-size: clamp(1.05rem, 1.2vw, 1.5rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
 
     .logo-img {
       display: block;
@@ -381,8 +391,7 @@ interface NavItem {
         max-width: 170px;
       }
 
-      .logo-copy strong { font-size: .72rem; }
-      .logo-copy small { font-size: .56rem; }
+      .logo-copy strong { font-size: 0.9rem; }
       .logo-divider { height: 30px; }
 
       

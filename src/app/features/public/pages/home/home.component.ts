@@ -1843,7 +1843,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   private loadData(): void {
     this.activityService.getActivities().subscribe({
       next: (activities) => {
-        const published = activities.filter(a => a.evidence_status === 'published');
+        const published = (activities ?? []).filter(activity =>
+          activity.evidence_status?.trim().toLowerCase() === 'published'
+        );
         this.activitiesCount = published.length;
         this.latestActivities.set(published.slice(0, 3));
       },
@@ -1854,8 +1856,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.eventService.getEvents().subscribe({
       next: (events) => {
-        const upcoming = events.filter(e => e.status === 'upcoming');
-        this.eventsCount = events.length;
+        const availableEvents = events ?? [];
+        const upcoming = availableEvents.filter(event =>
+          event.status?.trim().toLowerCase() === 'upcoming'
+        );
+        this.eventsCount = availableEvents.length;
         this.upcomingEvents.set(upcoming.slice(0, 3));
       },
       error: () => {

@@ -105,23 +105,6 @@ export class AdminDetailsModalService {
                     }
                   </select>
                 </label>
-                <label class="filter-control">
-                  <span>Sort</span>
-                  <select [(ngModel)]="tableSortColumn" (ngModelChange)="applyTableControls()" aria-label="Choose sort field">
-                    <option value="">Default</option>
-                    @for (column of tableColumns(); track column) {
-                      <option [value]="column">{{ column }}</option>
-                    }
-                  </select>
-                </label>
-                <label class="filter-control">
-                  <span>Order</span>
-                  <select [(ngModel)]="tableSortDirection" (ngModelChange)="applyTableControls()" aria-label="Choose sort direction">
-                    <option value="default">Default</option>
-                    <option value="asc">A–Z / Oldest</option>
-                    <option value="desc">Z–A / Newest</option>
-                  </select>
-                </label>
                 <button type="button" class="clear-tools" (click)="resetTableControls()" [disabled]="!hasTableControls()">Clear</button>
               </section>
               <section class="mobile-table-tools" aria-label="Table search and filters">
@@ -141,7 +124,7 @@ export class AdminDetailsModalService {
                 <div class="filter-modal-backdrop" role="presentation" (click)="closeMobileFilters()">
                   <section id="mobile-filter-dialog" class="filter-modal" role="dialog" aria-modal="true" aria-labelledby="mobile-filter-title" (click)="$event.stopPropagation()">
                     <header class="filter-modal-header">
-                      <h2 id="mobile-filter-title">Filter and sort</h2>
+                      <h2 id="mobile-filter-title">Filter</h2>
                       <button type="button" class="modal-close" aria-label="Close filters" (click)="closeMobileFilters()"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
                     </header>
                     <div class="filter-modal-body">
@@ -161,23 +144,6 @@ export class AdminDetailsModalService {
                           @for (value of tableFilterValues(); track value) {
                             <option [value]="value">{{ value }}</option>
                           }
-                        </select>
-                      </label>
-                      <label class="filter-control">
-                        <span>Sort</span>
-                        <select [(ngModel)]="tableSortColumn" (ngModelChange)="applyTableControls()" aria-label="Choose sort field">
-                          <option value="">Default</option>
-                          @for (column of tableColumns(); track column) {
-                            <option [value]="column">{{ column }}</option>
-                          }
-                        </select>
-                      </label>
-                      <label class="filter-control">
-                        <span>Order</span>
-                        <select [(ngModel)]="tableSortDirection" (ngModelChange)="applyTableControls()" aria-label="Choose sort direction">
-                          <option value="default">Default</option>
-                          <option value="asc">A–Z / Oldest</option>
-                          <option value="desc">Z–A / Newest</option>
                         </select>
                       </label>
                     </div>
@@ -366,8 +332,6 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
   protected tableFilterValues = signal<string[]>([]);
   protected tableFilterColumn = '';
   protected tableFilterValue = 'all';
-  protected tableSortColumn = '';
-  protected tableSortDirection: 'default' | 'asc' | 'desc' = 'default';
   protected mobileFiltersOpen = false;
   private document = inject(DOCUMENT);
   private tableObserver?: MutationObserver;
@@ -423,9 +387,7 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
     this.updatingTables = true;
     const rows = Array.from(this.document.querySelectorAll<HTMLTableRowElement>('.admin-content .data-table tbody tr'));
     const search = this.tableSearch.trim().toLowerCase();
-    const sortedRows = this.sortTableRows(rows);
-
-    sortedRows.forEach(row => {
+    rows.forEach(row => {
       const text = row.textContent?.toLowerCase() ?? '';
       const isEmpty = row.classList.contains('empty-state') || text.includes('no ') && text.includes(' found');
       const filterMatch = this.matchesTableFilter(row);
@@ -433,71 +395,6 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
     });
 
     this.updatingTables = false;
-  }
-
-  private sortTableRows(rows: HTMLTableRowElement[]): HTMLTableRowElement[] {
-    const column = this.tableSortColumn;
-    if (!column || this.tableSortDirection === 'default') return rows;
-
-    const tables = Array.from(this.document.querySelectorAll<HTMLTableElement>('.admin-content .data-table'));
-    const table = tables.find(current => Array.from(current.tBodies[0]?.rows ?? []).includes(rows[0])) ?? rows[0]?.closest('table');
-    if (!table) return rows;
-
-    const index = this.columnIndex(table, column);
-    if (index < 0) return rows;
-
-    const isDateColumn = this.isDateLikeColumn(table, column, index);
-    const sorted = [...rows].sort((first, second) => {
-      const firstValue = this.getSortValue(first, index, isDateColumn);
-      const secondValue = this.getSortValue(second, index, isDateColumn);
-
-      if (isDateColumn) {
-        const result = (firstValue as number) - (secondValue as number);
-        return this.tableSortDirection === 'asc' ? result : -result;
-      }
-
-      const firstText = String(firstValue ?? '').toLowerCase();
-      const secondText = String(secondValue ?? '').toLowerCase();
-      const result = firstText.localeCompare(secondText, undefined, { numeric: true, sensitivity: 'base' });
-      return this.tableSortDirection === 'asc' ? result : -result;
-    });
-
-    sorted.forEach(row => {
-      const tbody = row.parentElement;
-      if (tbody) {
-        tbody.appendChild(row);
-      }
-    });
-
-    return sorted;
-  }
-
-  private isDateLikeColumn(table: HTMLTableElement, column: string, index: number): boolean {
-    const tableColumn = Array.from(table.tHead?.rows[0]?.cells ?? [])[index]?.textContent?.trim() ?? column;
-    if (/date|created|updated|published|deadline|submitted|start|end|time/i.test(tableColumn)) {
-      return true;
-    }
-
-    const cells = Array.from(table.tBodies[0]?.rows ?? []).map(row => row.cells[index]?.textContent?.trim() ?? '');
-    return cells.some(value => this.parseDateValue(value) !== null);
-  }
-
-  private getSortValue(row: HTMLTableRowElement, index: number, isDateColumn: boolean): string | number {
-    const raw = row.cells[index]?.textContent?.trim() ?? '';
-
-    if (isDateColumn) {
-      const parsed = this.parseDateValue(raw);
-      return parsed ?? Number.MAX_SAFE_INTEGER;
-    }
-
-    return raw;
-  }
-
-  private parseDateValue(value: string): number | null {
-    if (!value) return null;
-    const cleaned = value.replace(/\s+/g, ' ').trim();
-    const parsed = new Date(cleaned);
-    return Number.isNaN(parsed.getTime()) ? null : parsed.getTime();
   }
 
   private matchesTableFilter(row: HTMLTableRowElement): boolean {
@@ -532,12 +429,6 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
     this.tableFilterValues.set([...values].sort());
     if (this.tableFilterValue !== 'all' && !values.has(this.tableFilterValue)) this.tableFilterValue = 'all';
 
-    if (!this.tableSortColumn && columns.size > 0) {
-      const defaultSortColumn = [...columns].find(column => /date|created|updated|published|deadline|submitted|start|end/i.test(column)) ?? [...columns][0];
-      if (defaultSortColumn) {
-        this.tableSortColumn = defaultSortColumn;
-      }
-    }
   }
 
   protected isDashboardPage(): boolean {
@@ -553,15 +444,13 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
   }
 
   hasActiveFilters(): boolean {
-    return !!this.tableFilterColumn || this.tableFilterValue !== 'all' || !!this.tableSortColumn || this.tableSortDirection !== 'default';
+    return !!this.tableFilterColumn || this.tableFilterValue !== 'all';
   }
 
   activeFilterCount(): number {
     return [
       !!this.tableFilterColumn,
-      this.tableFilterValue !== 'all',
-      !!this.tableSortColumn,
-      this.tableSortDirection !== 'default'
+      this.tableFilterValue !== 'all'
     ].filter(Boolean).length;
   }
 
@@ -572,15 +461,13 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
   }
 
   hasTableControls(): boolean {
-    return !!this.tableSearch || !!this.tableFilterColumn || this.tableFilterValue !== 'all' || !!this.tableSortColumn || this.tableSortDirection !== 'default';
+    return !!this.tableSearch || !!this.tableFilterColumn || this.tableFilterValue !== 'all';
   }
 
   resetTableControls(): void {
     this.tableSearch = '';
     this.tableFilterColumn = '';
     this.tableFilterValue = 'all';
-    this.tableSortColumn = '';
-    this.tableSortDirection = 'default';
     this.applyTableControls();
   }
 

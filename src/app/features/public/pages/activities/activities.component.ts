@@ -329,7 +329,9 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   private loadActivities(): void {
     this.activityService.getActivities().subscribe({
       next: (activities) => {
-        const published = activities.filter((a) => a.evidence_status === 'published');
+        const published = (activities ?? []).filter((activity) =>
+          activity.evidence_status?.trim().toLowerCase() === 'published'
+        );
         this.allActivities.set(published);
         this.updateFilterOptions(published);
         this.applyFilters();

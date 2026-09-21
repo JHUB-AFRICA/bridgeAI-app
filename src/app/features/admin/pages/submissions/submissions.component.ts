@@ -336,12 +336,7 @@ export class AdminSubmissionsComponent implements OnInit {
 
   private applyFilter(): void {
     const filtered = this.allSubmissions.filter(s => s.form_type === this.activeTab);
-    const sorted = filtered.sort((a, b) => {
-      if (a.is_read && !b.is_read) return 1;
-      if (!a.is_read && b.is_read) return -1;
-      return new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime();
-    });
-    this.filteredSubmissions.set(sorted);
+    this.filteredSubmissions.set(filtered);
   }
 
   getSubmissionDetails(item: any): string {

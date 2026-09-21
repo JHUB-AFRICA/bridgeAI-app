@@ -3,7 +3,7 @@
 // ============================================================
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 import { ApiService } from '../features/core/services/api.service';
 import { API_ENDPOINTS } from '../features/core/constants/api.constants';
 import { Activity, ActivityFilterParams, ActivityTypeCount } from '../features/core/models/activity.model';
@@ -15,7 +15,7 @@ export class ActivityService {
   constructor(private api: ApiService) {}
 
   getActivities(): Observable<Activity[]> {
-    return this.api.get<Activity[]>(API_ENDPOINTS.ACTIVITIES.GET_ALL);
+    return this.api.get<Activity[]>(API_ENDPOINTS.ACTIVITIES.GET_ALL).pipe(timeout({ first: 10000 }));
   }
 
   getFilteredActivities(params: ActivityFilterParams): Observable<Activity[]> {

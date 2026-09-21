@@ -3,7 +3,7 @@
 // ============================================================
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 import { ApiService } from '../features/core/services/api.service';
 import { API_ENDPOINTS } from '../features/core/constants/api.constants';
 import { TeamMember } from '../features/core/models/team.model';
@@ -19,7 +19,7 @@ export class TeamService {
   }
 
   getVisibleTeamMembers(): Observable<TeamMember[]> {
-    return this.api.get<TeamMember[]>(API_ENDPOINTS.TEAM.GET_ALL, { is_visible: true });
+    return this.api.get<TeamMember[]>(API_ENDPOINTS.TEAM.GET_ALL, { is_visible: true }).pipe(timeout({ first: 10000 }));
   }
 
   getApprovedTeamMembers(): Observable<TeamMember[]> {

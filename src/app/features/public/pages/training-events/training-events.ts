@@ -38,11 +38,9 @@ export class TrainingEvents implements OnInit, OnDestroy {
       && image.includes('/bridge-ai/events/'))));
   });
 
-  protected readonly activeHeroImage = computed(() =>
-    this.heroImages()[this.heroImageIndex()] ?? this.imageFallback
-  );
+  protected readonly activeHeroImage = computed(() => this.imageFallback);
 
-  protected readonly imageFallback = 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1000&q=85';
+  protected readonly imageFallback = '/images/smartmushrooms/training%20events.jpg';
 
   protected readonly audiences = computed(() => Array.from(new Set(
     this.allEvents()

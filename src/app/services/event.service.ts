@@ -3,7 +3,7 @@
 // ============================================================
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 import { ApiService } from '../features/core/services/api.service';
 import { API_ENDPOINTS } from '../features/core/constants/api.constants';
 import { Event, EventFilterParams } from '../features/core/models/event.model';
@@ -15,7 +15,7 @@ export class EventService {
   constructor(private api: ApiService) {}
 
   getEvents(): Observable<Event[]> {
-    return this.api.get<Event[]>(API_ENDPOINTS.EVENTS.GET_ALL);
+    return this.api.get<Event[]>(API_ENDPOINTS.EVENTS.GET_ALL).pipe(timeout({ first: 10000 }));
   }
 
   getFilteredEvents(params: EventFilterParams): Observable<Event[]> {

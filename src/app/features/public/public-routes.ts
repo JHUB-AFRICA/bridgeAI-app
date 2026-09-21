@@ -58,6 +58,10 @@ export const PublicRoutes: Routes = [
     loadComponent: () => import('./pages/partners/partners').then(m => m.Partners)
   },
   {
+    path: 'team',
+    loadComponent: () => import('./pages/partners/partners').then(m => m.Partners)
+  },
+  {
     path: 'partners/:slug',
     loadComponent: () => import('./pages/partners/partners').then(m => m.Partners)
   },

@@ -18,7 +18,7 @@
 		</article>
 	</section>
 	<section class="related-projects" aria-labelledby="related-title">
-		<div class="related-heading"><h2 id="related-title">Related projects</h2><a routerLink="/partners">All partners</a></div>
+		<div class="related-heading"><h2 id="related-title">Related projects</h2><a routerLink="/team">All partners</a></div>
 		<div class="related-tabs" role="tablist" aria-label="Related consortium partners">
 			@for (related of relatedPartners; track related.slug) {
 				<a role="tab" [routerLink]="['/partners', related.slug]">{{ related.name }}</a>

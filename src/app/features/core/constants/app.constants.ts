@@ -154,7 +154,7 @@ export const ROUTES = {
   PUBLIC: {
     HOME: '',
     JKUAT_ROLE: 'jkuat-role',
-    SMART_MUSHROOMS: 'smart-mushrooms',
+    SMART_MUSHROOMS: 'smartmushroom-tech',
     ACTIVITIES: 'activities',
     ACTIVITY_DETAIL: 'activities/:slug',
     TRAINING_EVENTS: 'training-events',

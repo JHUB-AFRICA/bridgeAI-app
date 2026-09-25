@@ -1,0 +1,8 @@
+<section class="shop-requests-page">
+	<header class="page-header"><div><p class="eyebrow">Marketplace</p><h1>Shop requests</h1><p class="page-intro">Review customer orders and coordinate fulfilment.</p></div><button type="button" class="refresh-button" (click)="loadRequests()" [disabled]="loading()">Refresh</button></header>
+	@if (loading()) { <div class="loading-state">Loading shop requests...</div> }
+	@else if (requests().length === 0) { <div class="empty-state"><strong>No shop requests yet</strong><span>New checkout requests will appear here.</span></div> }
+	@else {
+		<div class="request-table-wrap"><table class="request-table"><thead><tr><th>Customer</th><th>Order</th><th>Delivery</th><th>Total</th><th>Received</th><th>Status</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody>@for (item of requests(); track item.id) { <tr><td><strong>{{ item.full_name }}</strong><a [href]="'tel:' + item.phone_number">{{ item.phone_number }}</a></td><td class="order-cell">{{ itemSummary(item) }}</td><td>{{ deliveryLabel(item.delivery_option) }}</td><td><strong>KSh {{ item.total_amount | number }}</strong></td><td>{{ item.submitted_at | date:'mediumDate' }}</td><td><select [value]="item.status" (change)="updateStatus(item, $any($event.target).value)" [disabled]="updatingId() === item.id" [attr.aria-label]="'Status for ' + item.full_name"><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="fulfilled">Fulfilled</option><option value="cancelled">Cancelled</option></select></td><td><button type="button" class="delete-button" (click)="deleteRequest(item)" [disabled]="updatingId() === item.id" aria-label="Delete request">Delete</button></td></tr> }</tbody></table></div>
+	}
+</section>

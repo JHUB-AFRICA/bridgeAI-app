@@ -1,5 +1,5 @@
 <style>
-	.smart-page, .smart-page h1, .smart-page h2, .smart-page h3, .smart-page p, .smart-page a, .smart-page span, .smart-page strong, .smart-page b, .smart-page li, .smart-page button { font-family: 'Trebuchet MS', Arial, sans-serif; }
+	.smart-page, .smart-page h1, .smart-page h2, .smart-page h3, .smart-page p, .smart-page a, .smart-page span, .smart-page strong, .smart-page b, .smart-page li, .smart-page button { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
 	.smart-page em { font-style: normal; font-family: inherit; }
 	.smart-page [id] { scroll-margin-top: calc(var(--site-header-offset, 92px) + 64px); }
 	.smart-page .section-nav { top: var(--site-header-offset, 92px); }
@@ -43,7 +43,29 @@
 		.smart-page .steps { grid-template-columns: 1fr; gap: 24px; }
 	}
 </style>
-<main class="smart-page">
+<main class="tech-page">
+	<header class="tech-intro" aria-labelledby="tech-intro-title">
+		<h1 id="tech-intro-title">A connected mushroom system that turns microclimate signals into clear, local and timely growing decisions.</h1>
+	</header>
+
+	<section class="tech-content" aria-labelledby="technology-title">
+		<div class="tech-section-heading"><p class="tech-kicker">The SmartMushroom system</p><h2 id="technology-title">Engineering and microclimate control inside the pumice house.</h2><p class="section-note">Every layer is designed to help growers see earlier, respond faster and work with the climate around them.</p></div>
+		<ol class="tech-list">
+			<li><span class="tech-item-code">SENSE</span><strong>LoRaWAN sensor array</strong><span>Continuous tracking of temperature, relative humidity, CO2 concentration, ambient light and substrate moisture.</span></li>
+			<li><span class="tech-item-code">ANTICIPATE</span><strong>Conduit outdoor weather intelligence</strong><span>REST API integration connects the grow room to 3D-FEWSNET weather stations, helping the control system respond to external climate shifts.</span></li>
+			<li><span class="tech-item-code">ADVISE</span><strong>Lugha offline local-language AI</strong><span>Speech-driven advisory support works without internet access and translates environmental alerts into Sheng, Kiswahili, Kamba and Luo.</span></li>
+		</ol>
+	</section>
+
+	<section class="gateway-card">
+		<div><p class="tech-kicker">Farmers access</p><p>See live telemetry, sensor logs, automated controls and AI yield forecasts from the dedicated grower portal.</p></div>
+		<div class="gateway-panel"><strong>Already have a Smart Pumice Structure installed on your farm?</strong><span>Access your live grow-room data and control Dashboard.</span><a class="tech-link" href="https://portal.smartmushroom.jkuat.ac.ke" target="_blank" rel="noopener noreferrer">Launch live farm dashboard <span aria-hidden="true">→</span></a></div>
+	</section>
+
+	<section class="tech-footer" aria-label="SmartMushroom technology contact"><p>Designed for practical decisions, stable conditions and better harvests.</p><a routerLink="/contact" class="tech-link">Talk to the SmartMushroom team <span aria-hidden="true">→</span></a></section>
+</main>
+
+<main class="smart-page legacy-page" aria-hidden="true" ngNonBindable>
 	<section class="hero">
 		<div class="hero-copy">
 			<h1><span class="hero-title-lead">How to make</span><span class="hero-title-accent">Smart Mushroom</span><span class="hero-title-tail">farming practical.</span></h1>

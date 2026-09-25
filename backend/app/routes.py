@@ -633,6 +633,41 @@ def clear_submissions():
     return jsonify({'success': True})
 
 # ============================================================
+# Shop requests
+# ============================================================
+@api_bp.route('/shop', methods=['GET', 'POST'])
+def shop_requests():
+    if request.method == 'GET':
+        return jsonify(json_service.get_all('shop.json'))
+
+    data = request.get_json(silent=True) or {}
+    required_fields = ('full_name', 'phone_number', 'delivery_option', 'items', 'total_amount')
+    if any(not data.get(field) for field in required_fields):
+        return jsonify({'error': 'Full name, phone number, delivery option, items, and total amount are required'}), 400
+    if data['delivery_option'] not in ('pickup', 'courier') or not isinstance(data['items'], list):
+        return jsonify({'error': 'Invalid delivery option or order items'}), 400
+
+    data['status'] = 'pending'
+    data['submitted_at'] = datetime.now(timezone.utc).isoformat()
+    data['ip_address'] = request.remote_addr
+    return jsonify(json_service.create('shop.json', data)), 201
+
+@api_bp.route('/shop/<int:id>', methods=['PATCH', 'DELETE'])
+def manage_shop_request(id):
+    if request.method == 'DELETE':
+        return jsonify({'success': True}) if json_service.delete('shop.json', id) else (jsonify({'error': 'Not found'}), 404)
+
+    data = request.get_json(silent=True) or {}
+    if set(data) - {'status'} or data.get('status') not in ('pending', 'confirmed', 'fulfilled', 'cancelled'):
+        return jsonify({'error': 'Only a valid request status can be updated'}), 400
+    shop_request = json_service.get_by_id('shop.json', id)
+    if not shop_request:
+        return jsonify({'error': 'Not found'}), 404
+    shop_request['status'] = data['status']
+    shop_request['updated_at'] = datetime.now(timezone.utc).isoformat()
+    return jsonify(json_service.update('shop.json', id, shop_request))
+
+# ============================================================
 # Challenges
 # ============================================================
 @api_bp.route('/challenges', methods=['GET'])

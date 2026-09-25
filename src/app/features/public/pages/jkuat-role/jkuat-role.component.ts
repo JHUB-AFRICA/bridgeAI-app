@@ -274,9 +274,9 @@ import { LOCAL_CONTEXT } from '../../../core/constants/app.constants';
     :host {
       --site-header-offset: 92px;
       display: block;
-      background: #f7f2e6;
-      color: #2d3d35;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-clay);
+      color: var(--color-text-main);
+      font-family: var(--font-body);
     }
 
     * { box-sizing: border-box; }

@@ -7,15 +7,24 @@ import { Routes } from '@angular/router';
 export const PublicRoutes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
+    loadComponent: () => import('./pages/home/home.component').then(m => m.LegacyHomeComponent)
   },
   {
     path: 'jkuat-role',
     loadComponent: () => import('./pages/jkuat-role/jkuat-role.component').then(m => m.JkuatRoleComponent)
   },
   {
-    path: 'smart-mushrooms',
+    path: 'smartmushroom-tech',
     loadComponent: () => import('./pages/smart-mushrooms/smart-mushrooms').then(m => m.SmartMushrooms)
+  },
+  {
+    path: 'smart-mushrooms',
+    redirectTo: 'smartmushroom-tech',
+    pathMatch: 'full'
+  },
+  {
+    path: 'shop',
+    loadComponent: () => import('./pages/shop/shop.component').then(m => m.ShopComponent)
   },
   {
     path: 'activities',
@@ -80,5 +89,9 @@ export const PublicRoutes: Routes = [
   {
     path: 'privacy-ethics',
     loadComponent: () => import('./pages/privacy-ethics/privacy-ethics.component').then(m => m.PrivacyEthicsComponent)
+  },
+  {
+    path: 'terms',
+    loadComponent: () => import('./pages/privacy-ethics/privacy-ethics.component').then(m => m.TermsComponent)
   }
 ];

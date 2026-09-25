@@ -1,0 +1,66 @@
+<main class="shop-page">
+	<section class="shop-hero">
+		<div class="marketplace-hero-title"><span class="eyebrow">SmartMushroom</span><h1>SmartMushroom marketplace</h1></div>
+	</section>
+
+	<section class="catalog-section" id="catalog" aria-labelledby="catalog-title">
+		<div class="section-heading">
+			<div><h2 id="catalog-title">Everything for your next harvest</h2></div>
+		</div>
+		<div class="product-grid">
+			@for (product of products; track product.id) {
+				<article class="product-card">
+					<div class="product-image-wrap">
+						<img [src]="product.image" [alt]="product.name" class="product-image" loading="lazy" />
+						@if (product.badge) { <span class="product-badge">{{ product.badge }}</span> }
+					</div>
+					<div class="product-content">
+						<p class="product-category">{{ product.category }}</p>
+						<h3>{{ product.name }}</h3>
+						<p class="product-description">{{ product.description }}</p>
+						<div class="product-footer"><div><strong>KSh {{ product.price | number }}</strong><span>/ {{ product.unit }}</span></div><button type="button" class="add-button" (click)="addToCart(product)">Add to cart</button></div>
+						<button type="button" class="buy-link" (click)="buyNow(product)">Buy now <span aria-hidden="true">→</span></button>
+					</div>
+				</article>
+			}
+		</div>
+	</section>
+</main>
+
+<button type="button" class="floating-cart-button" (click)="openDrawer()" [attr.aria-label]="'Open cart with ' + cartCount() + ' items'">
+	<span>Cart</span>
+	<strong>{{ cartCount() }}</strong>
+</button>
+
+@if (drawerOpen()) {
+	<div class="drawer-backdrop" (click)="closeDrawer()" role="presentation"></div>
+	<aside class="checkout-drawer" role="dialog" aria-modal="true" aria-labelledby="checkout-title">
+		<header class="drawer-header"><div><p class="eyebrow">Your order</p><h2 id="checkout-title">Checkout request <span class="drawer-cart-count">{{ cartCount() }}</span></h2></div><button type="button" class="close-button" aria-label="Close checkout" (click)="closeDrawer()">×</button></header>
+		@if (submitted()) {
+			<div class="success-state"><div class="success-icon" aria-hidden="true">✓</div><h3>Request received</h3><p>Thank you. Our team will call you shortly to confirm availability, delivery, and payment.</p><button type="button" class="primary-button" (click)="closeDrawer()">Continue shopping</button></div>
+		} @else {
+			<div class="drawer-body">
+				@if (cart().length === 0) { <div class="empty-cart"><p>Your cart is empty.</p><button type="button" class="buy-link" (click)="closeDrawer()">Return to catalogue</button></div> }
+				@else {
+					<div class="cart-items">
+						@for (item of cart(); track item.id) {
+							<div class="cart-item"><img [src]="item.image" [alt]="item.name" /><div class="cart-item-details"><strong>{{ item.name }}</strong><span>KSh {{ item.price | number }}</span><div class="quantity-control"><button type="button" (click)="changeQuantity(item.id, -1)" [attr.aria-label]="'Decrease ' + item.name">−</button><span>{{ item.quantity }}</span><button type="button" (click)="changeQuantity(item.id, 1)" [attr.aria-label]="'Increase ' + item.name">+</button><button type="button" class="remove-item" (click)="removeFromCart(item.id)">Remove</button></div></div></div>
+						}
+					</div>
+					<div class="order-total"><span>Estimated total</span><strong>KSh {{ cartTotal() | number }}</strong></div>
+					  <form [formGroup]="checkoutForm" (ngSubmit)="submitOrder()" class="checkout-form" novalidate>
+						<h3>Delivery details</h3>
+						<label>Full name<input type="text" formControlName="fullName" autocomplete="name" placeholder="Your full name" /></label>
+						@if (checkoutForm.controls.fullName.touched && checkoutForm.controls.fullName.invalid) { <small class="field-error">Please enter your full name.</small> }
+						<label>Phone number<input type="tel" formControlName="phoneNumber" autocomplete="tel" placeholder="0712 345 678" /></label>
+						@if (checkoutForm.controls.phoneNumber.touched && checkoutForm.controls.phoneNumber.invalid) { <small class="field-error">Enter a valid Kenyan phone number.</small> }
+						<fieldset><legend>Delivery option</legend><label class="delivery-option"><input type="radio" value="pickup" formControlName="deliveryOption" /><span><strong>JKUAT Juja Farm Pickup</strong><small>Collect from the Living Lab</small></span></label><label class="delivery-option"><input type="radio" value="courier" formControlName="deliveryOption" /><span><strong>County Courier Dispatch</strong><small>We will confirm the courier fee by phone</small></span></label></fieldset>
+						@if (checkoutError()) { <p class="field-error">{{ checkoutError() }}</p> }
+						<button type="submit" class="submit-button" [disabled]="submitting()">{{ submitting() ? 'Sending request...' : 'Send checkout request' }}</button>
+						<p class="privacy-note">No payment is taken online. We will contact you to confirm your order.</p>
+					</form>
+				}
+			</div>
+		}
+	</aside>
+}

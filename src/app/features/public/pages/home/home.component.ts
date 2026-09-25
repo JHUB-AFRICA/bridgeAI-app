@@ -2,7 +2,7 @@
 // BRIDGE-AI - Home Component
 // ============================================================
 
-import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ActivityService } from '../../../../services/activity.service';
@@ -11,6 +11,47 @@ import { Activity } from '../../../core/models/activity.model';
 import { Event } from '../../../core/models/event.model';
 import { APP } from '../../../core/constants/app.constants';
 import { CloudinaryService } from '../../../core/services/cloudinary.service';
+import { TeamService } from '../../../../services/team.service';
+import { TeamMember } from '../../../core/models/team.model';
+import { Router } from '@angular/router';
+import { ShopCartService, ShopProduct, SHOP_PRODUCTS } from '../shop/shop.component';
+
+type SmartMushroomFeedItem = {
+  title: string;
+  date: string;
+  image?: string;
+  kind: 'activity' | 'event';
+  slug: string;
+  label: string;
+  summary?: string;
+};
+
+@Component({
+  selector: 'app-home-redesigned',
+  imports: [CommonModule, RouterModule],
+  template: `
+    <main class="redesign-home">
+      <section class="redesign-hero"><div class="hero-wash" aria-hidden="true"></div><div class="hero-content"><h1>Climate-Smart Mushroom Farming Powered by <em>IoT &amp; AI</em></h1><p>Revolutionizing African agriculture through passive pumice architecture, high-yield biological strains, offline voice AI, and real-time environmental automation.</p><div class="hero-buttons"><a class="primary-action" routerLink="/smartmushroom-tech">Explore SmartMushroom Tech &#8594;</a><a class="secondary-action" routerLink="/shop">SmartMushroom Marketplace &#8594;</a></div></div></section>
+      <section class="redesign-partners"><h2>A connected network for <em>local impact</em>.</h2><div class="logo-marquee"><div class="logo-track">@for (partner of marqueePartners; track $index) {<a [routerLink]="['/partners', partner.slug]" [attr.aria-label]="'Open partner profile for ' + partner.name">@if (partner.logo) {<img [src]="partner.logo" [alt]="partner.name + ' logo'" loading="lazy">} @else {<b>{{ partner.name }}</b>}<span>{{ partner.name }}</span></a>}</div></div></section>
+      <section class="redesign-innovation"><div class="innovation-block" aria-hidden="true"><b>IoT</b><b>AI</b><b>GROW</b></div><div><h2>Passive first, <em>smart second.</em></h2><p>We redesigned our grow rooms around a simple principle: reduce energy demand before adding automation. Pumice walls, passive natural cooling and connected sensing make off-grid mushroom farming more practical for smallholder farmers.</p><a class="gold-link" routerLink="/smartmushroom-tech">See the Smart Mushroom system &#8594;</a></div></section>
+      <section class="redesign-products"><p class="eyebrow">Built for the field</p><h2>Tools that turn good ideas into <em>good harvests.</em></h2><div class="product-row">@for (product of products; track product.title) {<a [routerLink]="product.route"><small>{{ product.index }}</small><strong>{{ product.icon }} {{ product.title }}</strong><span>{{ product.description }}</span><i aria-hidden="true">&#8594;</i></a>}</div></section>
+      <section class="redesign-impact"><p class="eyebrow">Live impact</p><h2>Progress you can <em>measure.</em></h2><p>Our counters track people reached through training, community practice and farmer-led experimentation.</p><div class="counter-row">@for (counter of counters; track counter.label) {<div><strong>{{ counter.value }}</strong><span>{{ counter.label }}</span></div>}</div></section>
+      <section class="redesign-team"><p class="eyebrow">Project developers &amp; leadership</p><h2>The minds making the <em>future practical.</em></h2><div class="team-row">@for (member of team(); track member.id ?? member.name) {<article>@if (member.photo) {<img [src]="member.photo" [alt]="member.name" loading="lazy">}<h3>{{ member.name }}</h3><p>{{ member.role }}</p><small>{{ member.affiliation || 'BRIDGE-AI' }}</small></article>} @empty {<p>Our project team profiles will appear here shortly.</p>}</div></section>
+    </main>
+  `,
+  styles: [`
+    :host{display:block;--forest:#183d31;--deep:#102d25;--lime:#d8e86b;--gold:#d3a64e;--cream:#f7f2e6;--clay:#efe6ce;--muted:#617269;font-family:'Avenir Next','Trebuchet MS',sans-serif;color:#1b2d27}.redesign-home{overflow:hidden;background:var(--cream)}.redesign-hero{min-height:650px;display:grid;align-items:center;position:relative;color:#fffdf7;background:var(--deep)}.hero-wash{position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,rgba(16,45,37,.97),rgba(16,45,37,.62)),url('/images/smartmushrooms/q.jpeg') center/cover}.hero-content{position:relative;z-index:1;width:min(1180px,calc(100% - 48px));margin:auto;padding:110px 0}.eyebrow{margin:0 0 16px;color:var(--gold);font:700 .72rem monospace;letter-spacing:.12em;text-transform:uppercase}h1,h2,h3{font-family:Georgia,serif}h1,h2{font-weight:400;line-height:.98}h1{max-width:780px;font-size:clamp(3.2rem,7vw,6.8rem);margin:0 0 24px}h2{font-size:clamp(2.2rem,4vw,4.1rem);margin:0 0 20px}em{color:var(--lime);font-style:normal}.hero-content>p:not(.eyebrow){max-width:560px;color:rgba(255,253,247,.8);line-height:1.7;margin-bottom:30px}.primary-action,.gold-link{display:inline-block;padding:14px 20px;text-decoration:none;font-weight:700}.primary-action{background:var(--lime);color:var(--deep)}.redesign-partners,.redesign-products,.redesign-team{padding:100px max(24px,calc((100vw - 1180px)/2))}.redesign-partners{background:var(--cream)}.logo-marquee{width:100vw;margin-left:calc((1180px - 100vw)/2);overflow:hidden;border-block:1px solid #d8cfba}.logo-track{display:flex;width:max-content;animation:marquee 34s linear infinite}.logo-track a{display:grid;grid-template-columns:52px 150px;align-items:center;gap:14px;width:230px;padding:22px 24px;border-right:1px solid #d8cfba;color:var(--forest);text-decoration:none}.logo-track img,.logo-track b{width:52px;height:42px;object-fit:contain}.logo-track b{display:grid;place-items:center;background:var(--forest);color:var(--lime);font-size:.6rem;text-align:center}.logo-track span{font-weight:700;font-size:.82rem;line-height:1.15}@keyframes marquee{to{transform:translateX(-50%)}}.redesign-innovation{display:grid;grid-template-columns:1fr 1fr;gap:9vw;align-items:center;padding:110px max(24px,calc((100vw - 1180px)/2));background:var(--forest);color:#fffdf7}.redesign-innovation p:not(.eyebrow){max-width:580px;color:rgba(255,253,247,.72);line-height:1.75}.innovation-block{display:grid;grid-template-columns:1fr 1fr;gap:10px;transform:rotate(-4deg)}.innovation-block b{display:grid;place-items:center;min-height:180px;background:var(--lime);color:var(--deep);font:700 3rem Georgia,serif}.innovation-block b:nth-child(2){margin-top:30px;background:var(--gold)}.innovation-block b:last-child{grid-column:span 2;background:#f0eee1;color:var(--forest)}.gold-link{padding-left:0;color:var(--gold)}.redesign-products{background:var(--clay)}.product-row,.counter-row,.team-row{display:grid;gap:14px}.product-row{grid-template-columns:repeat(4,1fr)}.product-row a{position:relative;min-height:260px;padding:24px;background:#fffdf7;color:var(--deep);text-decoration:none;border-top:4px solid var(--forest)}.product-row a:hover{background:var(--lime)}.product-row small,.team-row small{display:block;color:var(--gold);font:700 .65rem monospace}.product-row strong{display:block;margin:42px 0 12px;font:700 1.3rem Georgia,serif}.product-row span{color:var(--muted);font-size:.82rem;line-height:1.6}.product-row i{position:absolute;right:20px;bottom:18px}.redesign-impact{padding:110px max(24px,calc((100vw - 1180px)/2));background:var(--deep);color:#fffdf7}.redesign-impact>p:not(.eyebrow){color:rgba(255,255,255,.7);max-width:600px}.counter-row{grid-template-columns:repeat(4,1fr);margin-top:50px;border-top:1px solid rgba(255,255,255,.2)}.counter-row div{padding:26px 18px;border-right:1px solid rgba(255,255,255,.2)}.counter-row strong{display:block;color:var(--lime);font:400 3.8rem Georgia,serif}.counter-row span{color:rgba(255,255,255,.68);font-size:.78rem}.redesign-team{background:var(--cream)}.team-row{grid-template-columns:repeat(4,1fr)}.team-row article{background:#fffdf7}.team-row img{width:100%;aspect-ratio:1;object-fit:cover}.team-row h3,.team-row p,.team-row small{margin:14px 18px 0}.team-row p{color:var(--muted);font-size:.78rem}.team-row small{padding-bottom:18px}@media(max-width:800px){.redesign-innovation{grid-template-columns:1fr}.product-row,.team-row{grid-template-columns:repeat(2,1fr)}.counter-row{grid-template-columns:repeat(2,1fr)}}@media(max-width:480px){.hero-content,.redesign-partners,.redesign-products,.redesign-team,.redesign-innovation,.redesign-impact{padding-left:20px;padding-right:20px}.logo-marquee{margin-left:-20px}.product-row,.team-row{grid-template-columns:1fr}}
+  `]
+})
+export class HomeComponent {
+  private readonly teamService = inject(TeamService);
+  protected readonly team = signal<TeamMember[]>([]);
+  protected readonly partners = [{ slug:'eu',name:'European Union (EU)',logo:'/images/logos/eu_emblem.svg' },{ slug:'bridge-ai',name:'BRIDGE-AI',logo:'/images/logos/bridge_ai_logo.svg' },{ slug:'gates-foundation',name:'Bill & Melinda Gates Foundation',logo:'/images/logos/bill.jpeg' },{ slug:'jkuat',name:'JKUAT',logo:'/images/logos/jkuat_logo.svg' },{ slug:'mush&',name:'Mush&',logo:'/images/logos/mush.jpeg' },{ slug:'koica',name:'KOICA',logo:'/images/logos/koica.jpeg' },{ slug:'gdih',name:'gDIH',logo:'/images/logos/gdih.jpeg' },{ slug:'jhub',name:'JHUB Africa',logo:'/images/logos/jhub_logo.svg' }];
+  protected readonly marqueePartners = [...this.partners,...this.partners];
+  protected readonly products = [{ index:'01 / GROWING SYSTEM',icon:'◒',title:'Smart Mushroom',description:'Sensor-led growing guidance for more stable conditions.',route:'/smartmushroom-tech' },{ index:'02 / LEARNING',icon:'✦',title:'Farmer training',description:'Practical workshops for digital farming skills.',route:'/training-events' },{ index:'03 / REPLICATION',icon:'↗',title:'Replication toolkit',description:'Open resources for adapting climate-smart innovation.',route:'/replication-toolkit' },{ index:'04 / COMMUNITY',icon:'◎',title:'Community practice',description:'A network of builders, researchers, farmers and SMEs.',route:'/community-practice' }];
+  protected readonly counters = [{value:'0',label:'Farmers trained'},{value:'0',label:'Grow houses connected'},{value:'0',label:'Training sessions'},{value:'0',label:'SMEs supported'}];
+  constructor(){this.teamService.getVisibleTeamMembers().subscribe({next:members=>this.team.set(members),error:()=>this.team.set([])});}
+}
 
 @Component({
   selector: 'app-home',
@@ -28,260 +69,105 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
 
         <div class="hero-content-wrapper">
           <div class="hero-content">
-            <h1>
-              Smart Mushroom
-            </h1>
-
-            <p class="hero-sub">
-              Revolutionize your mushroom farming experience
-            </p>
-
-            <h2 class="hero-highlight-title">
-              <span class="highlight">Smarter growing.</span> Better decisions.
-            </h2>
-
-            <p class="hero-description">
-              Leveraging IoT and machine learning to provide smart solutions for mushroom farmers. Monitor and control your farm from anywhere in the world.
-            </p>
+            <h1>Climate-Smart Mushroom Farming Powered by IoT &amp; AI</h1>
+            <p class="hero-description">Revolutionizing African agriculture through passive pumice architecture, high-yield biological strains, offline voice AI, and real-time environmental automation.</p>
+            <div class="hero-buttons">
+              <a [routerLink]="['/smartmushroom-tech']" class="btn-primary">Explore SmartMushroom Tech <span aria-hidden="true">→</span></a>
+              <a [routerLink]="['/shop']" class="btn-secondary">SmartMushroom Marketplace <span aria-hidden="true">↗</span></a>
+            </div>
 
           </div>
         </div>
       </section>
 
-      <nav class="section-nav" aria-label="Page sections">
-        <div class="section-nav-inner">
-          <a href="#pilot-regions" data-section="pilot-regions" class="active">Mushroom varieties</a>
-          <a href="#challenge" data-section="challenge">Smartmushroom Solution</a>
-          <a href="#latest" data-section="latest">latest News</a>
-          <a href="#impact" data-section="impact">smartmushroom tracking</a>
-          <a href="#connect" data-section="connect">Connect</a>
+      <section class="partner-network-section" aria-labelledby="partner-network-title">
+        <div class="container">
+          <div class="section-header partner-network-heading">
+            <h2 id="partner-network-title">A connected network for <span class="highlight">local impact.</span></h2>
+          </div>
         </div>
-      </nav>
+        <div class="partner-marquee" aria-label="SmartMushroom partners">
+          <div class="partner-track">
+            @for (partner of marqueePartners; track $index) {
+              <a [routerLink]="['/partners', partner.slug]" [attr.aria-label]="'Open partner profile for ' + partner.name">
+                @if (partner.logo) { <img [src]="partner.logo" [alt]="partner.name + ' logo'" loading="lazy"> }
+                @else { <span class="partner-placeholder">{{ partner.name }}</span> }
+                <strong>{{ partner.name }}</strong>
+              </a>
+            }
+          </div>
+        </div>
+      </section>
 
-      <section class="pilot-section" id="pilot-regions">
+      <section class="innovation-highlight-section">
+        <div class="container innovation-highlight-grid">
+          <div class="innovation-highlight-visual" aria-hidden="true">
+            <span>IoT</span><span>AI</span><strong>GROW</strong>
+          </div>
+          <div class="innovation-highlight-copy">
+            <h3>Rethinking the grow room: why pumice outperforms metal containers</h3>
+            <p>Early automated prototypes revealed that active cooling in metallic containers consumed excessive electricity, proving that smart does not mean sustainable. At JKUAT, we redesigned our grow rooms around a passive-first, smart-second principle. Our porous pumice wall structure uses natural thermal mass and evaporative cooling to cut power draw and make off-grid solar operation viable for smallholder farmers across Kenya.</p>
+            <a class="innovation-link" [routerLink]="['/smartmushroom-tech']">Explore the SmartMushroom system <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="featured-products-section" id="shop">
+        <div class="container">
+          <div class="section-header featured-products-heading">
+            <p class="section-kicker">SmartMushroom Marketplace</p>
+          </div>
+          <div class="featured-products-track" aria-label="Featured shop products">
+            @for (product of featuredProducts; track product.id) {
+              <article class="featured-product-card">
+                <img [src]="product.image" [alt]="product.name" loading="lazy" />
+                @if (product.badge) { <span class="product-badge">{{ product.badge }}</span> }
+                <div class="featured-product-copy"><p>{{ product.category }}</p><h3>{{ product.name }}</h3><span>KSh {{ product.price | number }} / {{ product.unit }}</span><button type="button" class="add-to-bag-button" [class.added-to-cart]="isInCart(product)" (click)="addToBag(product)">{{ isInCart(product) ? 'Added to cart' : 'Add to cart' }} <span aria-hidden="true">{{ isInCart(product) ? '✓' : '+' }}</span></button></div>
+              </article>
+            }
+          </div>
+          <div class="featured-products-actions"><button type="button" class="bag-button" (click)="openBag()">Open Cart ({{ cartCount() }})</button><a [routerLink]="['/shop']" class="catalog-link">View full marketplace <span aria-hidden="true">→</span></a></div>
+        </div>
+      </section>
+
+      <section class="activity-section latest-feed-section" id="latest">
         <div class="container">
           <div class="section-header">
-            <h2>Mushroom <span class="highlight">Varieties</span></h2>
-            <p>Explore mushroom varieties grown for food, wellness and strong market opportunities.</p>
+            <h2>News, learning, and <span class="highlight">field activity.</span></h2>
           </div>
-          <div class="varieties-grid">
-            <article class="variety-card variety-card-featured">
-              <img src="/images/smartmushrooms/button.jpeg" alt="Button mushrooms" loading="lazy" />
-              <div class="variety-card-content">
-                <span class="variety-number">01 / EVERYDAY FAVOURITE</span>
-                <h3>Button Mushroom</h3>
-                <p>Button mushrooms are a popular everyday variety with a mild taste, smooth texture and strong demand in the food market.</p>
-              </div>
-              <div class="variety-card-footer"><span>Market price</span><strong>800 Ksh / kg</strong></div>
-            </article>
-            <article class="variety-card">
-              <img src="/images/smartmushrooms/oyster.jpeg" alt="Oyster mushrooms growing in clusters" loading="lazy" />
-              <div class="variety-card-content">
-                <span class="variety-number">02 / POPULAR &amp; VERSATILE</span>
-                <h3>Oyster Mushroom</h3>
-                <p>Oyster mushrooms grow in clusters and are valued for their delicate flavour, quick production cycles and versatility in cooking.</p>
-              </div>
-              <div class="variety-card-footer"><span>Market price</span><strong>400 Ksh / kg</strong></div>
-            </article>
-            <article class="variety-card">
-              <img src="/images/smartmushrooms/reishi.jpeg" alt="Reishi mushrooms" loading="lazy" />
-              <div class="variety-card-content">
-                <span class="variety-number">03 / WELLNESS MARKET</span>
-                <h3>Reishi Mushroom</h3>
-                <p>Reishi is a medicinal variety known for its distinctive form and traditional wellness uses, creating opportunities beyond fresh produce.</p>
-              </div>
-              <div class="variety-card-footer"><span>Market price</span><strong>1000 Ksh / kg</strong></div>
-            </article>
+
+          <div class="activity-track" aria-label="Latest SmartMushroom news and activities">
+            @for (item of latestFeed(); track item.kind + item.slug) {
+              <a class="activity-item" [routerLink]="item.kind === 'activity' ? ['/activities', item.slug] : ['/training-events', item.slug]" [attr.aria-label]="'Open ' + item.label + ': ' + item.title">
+                <div class="activity-img"><img [src]="item.image || heroFallbackImage()" [alt]="item.title" loading="lazy"></div>
+                <div class="activity-copy"><div class="activity-meta"><span class="date">{{ item.date }}</span><span class="tag">{{ item.label }}</span></div><h4>{{ item.title }}</h4><p>{{ item.summary }}</p></div>
+              </a>
+            } @empty { <p class="feed-empty">New SmartMushroom updates are on the way.</p> }
+          </div>
+          <a [routerLink]="['/activities']" class="view-all-link">View all news and activities <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+
+      <section class="live-impact-section">
+        <div class="container">
+          <div class="section-header live-impact-heading">
+            <p class="section-kicker">Live impact</p>
+          </div>
+          <div class="live-impact-grid">
+            @for (counter of impactCounters; track counter.label) {
+              <article><strong>{{ counter.value }}</strong><span>{{ counter.label }}</span></article>
+            }
           </div>
         </div>
       </section>
 
-      <section class="challenge-section" id="challenge">
+      <section class="home-team-section" aria-labelledby="home-team-title">
         <div class="container">
-          <div class="challenge-wrapper">
-            <div class="challenge-text">
-              <div class="challenge-intro">
-                <span class="solutions-kicker">Smart Mushroom technology</span>
-                <h2>Smarter mushroom farming, powered by <span class="highlight">data.</span></h2>
-                <p class="challenge-lead">From grow room to your table, SmartMushroom combines sensor-monitored growing conditions with hands-on farming expertise to produce healthier button mushrooms, consistently.</p>
-              </div>
-
-              <div class="problem-panel">
-                <span class="panel-label">The problem</span>
-                <h3>Small changes can affect an entire harvest.</h3>
-                <p>Mushroom farming is sensitive. Shifts in temperature, humidity and air quality can damage a crop, while manual checks may miss the warning signs until it is too late.</p>
-              </div>
-
-              <div class="solution-story">
-                <div class="story-heading">
-                  <span class="panel-label">Our solution</span>
-                  <h3>Sense <span aria-hidden="true">→</span> Understand <span aria-hidden="true">→</span> Advise <span aria-hidden="true">→</span> Act</h3>
-                </div>
-                <div class="story-steps">
-                  <div><strong>Sense</strong><span>Sensors continuously watch the grow room.</span></div>
-                  <div><strong>Understand</strong><span>The system flags unusual changes.</span></div>
-                  <div><strong>Advise</strong><span>Farmers get clear, simple guidance.</span></div>
-                  <div><strong>Act</strong><span>Conditions are adjusted before crops suffer.</span></div>
-                </div>
-              </div>
-
-              <div class="monitor-panel">
-                <div>
-                  <span class="panel-label">What we monitor</span>
-                  <h3>Know what your crop needs.</h3>
-                </div>
-                <div class="monitor-list" aria-label="Farm conditions monitored by SmartMushroom">
-                  <span><i class="fas fa-temperature-half" aria-hidden="true"></i> Temperature</span>
-                  <span><i class="fas fa-droplet" aria-hidden="true"></i> Humidity</span>
-                  <span><i class="fas fa-wind" aria-hidden="true"></i> CO₂ levels</span>
-                  <span><i class="fas fa-lightbulb" aria-hidden="true"></i> Light</span>
-                  <span><i class="fas fa-seedling" aria-hidden="true"></i> Moisture</span>
-                </div>
-              </div>
-
-              <div class="solutions-heading">
-                <span class="panel-label">Connected growing</span>
-                <h3>Our <span class="highlight">Smart Solutions</span></h3>
-                <p>Monitor and control your mushroom farm from anywhere in the world.</p>
-              </div>
-              <div class="solutions-list">
-                <article class="solution-item">
-                  <span class="solution-index">01</span>
-                  <div><h4>Sensor networks</h4><p>Track temperature, humidity, CO₂ and substrate moisture in real time.</p></div>
-                </article>
-                <article class="solution-item">
-                  <span class="solution-index">02</span>
-                  <div><h4>Connected data</h4><p>Transmit readings wirelessly to a central hub or cloud platform.</p></div>
-                </article>
-                <article class="solution-item">
-                  <span class="solution-index">03</span>
-                  <div><h4>Remote monitoring</h4><p>Check your farm from a phone, tablet or computer wherever you are.</p></div>
-                </article>
-                <article class="solution-item">
-                  <span class="solution-index">04</span>
-                  <div><h4>Smart automation</h4><p>Trigger misters and other actions automatically when conditions change.</p></div>
-                </article>
-              </div>
-
-            </div>
-
-            <div class="challenge-image">
-              <img src="/images/smartmushrooms/iott.jpeg" alt="IoT technology supporting Smart Mushroom farm monitoring" loading="lazy">
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="activity-section" id="latest">
-        <div class="container">
-          <div class="section-header">
-            <h2>Latest <span class="highlight">Activities</span> &amp; <span class="highlight purple">Events</span></h2>
-            <p>Stay updated with the latest news and upcoming training opportunities.</p>
-          </div>
-
-          <div class="activity-grid">
-            <div class="activity-col">
-              <div class="col-heading">
-                <h2>Updates <span class="accent">Activities</span></h2>
-              </div>
-
-              <div class="activity-track" aria-label="Latest activities">
-                <ng-container *ngIf="latestActivities().length; else activityFallback">
-                  <a class="activity-item" *ngFor="let activity of latestActivities() | slice:0:3" [routerLink]="['/activities', activity.slug || activity.id]" [attr.aria-label]="'Open activity: ' + activity.title">
-                    <div class="activity-img">
-                      <img [src]="activity.featured_image || heroFallbackImage()" [alt]="activity.title" loading="lazy">
-                    </div>
-                    <div class="activity-copy">
-                      <div class="activity-meta">
-                        <span class="date">{{ activity.date || 'Coming Soon' }}</span>
-                        <span class="tag" *ngIf="activity.wp_tag">{{ activity.wp_tag }}</span>
-                      </div>
-                      <h4>{{ activity.title }}</h4>
-                    </div>
-                  </a>
-                </ng-container>
-
-                <ng-template #activityFallback>
-                  <div class="activity-item">
-                    <div class="activity-img"><div class="placeholder">UPD</div></div>
-                    <div class="activity-copy">
-                      <div class="activity-meta"><span class="date">Coming Soon</span></div>
-                      <h4>Activities Loading</h4>
-                    </div>
-                  </div>
-                </ng-template>
-              </div>
-
-              <a [routerLink]="['/activities']" class="view-all-link">View all activities <i class="fas fa-arrow-right"></i></a>
-            </div>
-
-            <div class="activity-col">
-              <div class="col-heading">
-                <h2>Upcoming <span class="accent purple">Training</span></h2>
-              </div>
-
-              <div class="event-track" aria-label="Upcoming training">
-                <ng-container *ngIf="upcomingEvents().length; else eventFallback">
-                  <a class="event-item" *ngFor="let event of upcomingEvents() | slice:0:3" [routerLink]="['/training-events', event.slug || event.id]" [attr.aria-label]="'Open training event: ' + event.title">
-                    <div class="event-date">
-                      <span class="day">{{ event.date ? event.date.slice(8,10) : 'TBA' }}</span>
-                      <span class="month">{{ event.date ? event.date.slice(5,7) : 'TBA' }}</span>
-                    </div>
-                    <div class="event-info">
-                      <h5>{{ event.title }}</h5>
-                      <p>{{ event.location || 'Location TBD' }}</p>
-                    </div>
-                    <span class="event-status">{{ event.status || 'Upcoming' }}</span>
-                  </a>
-                </ng-container>
-
-                <ng-template #eventFallback>
-                  <div class="event-item">
-                    <div class="event-date"><span class="day">TBA</span><span class="month">TBA</span></div>
-                    <div class="event-info"><h5>Farmer training coming soon</h5><p>JKUAT Smart Farm Zone · Kenya</p></div>
-                    <span class="event-status soon">Coming Soon</span>
-                  </div>
-                </ng-template>
-              </div>
-
-                <a [routerLink]="['/training-events']" class="view-all-link">View all training <i class="fas fa-arrow-right"></i></a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="impact-section" id="impact">
-        <div class="container">
-          <div class="section-header">
-            <h2>Smart Mushroom <span class="highlight">Tracking</span></h2>
-            <p>Machine learning turns farm data into clearer decisions, healthier crops and more consistent growing conditions.</p>
-          </div>
-          <div class="impact-grid">
-            <article>
-              <span class="impact-index">01 · DATA ANALYSIS</span>
-              <strong>Learn from every reading</strong>
-              <span>Machine learning studies sensor data over time to reveal patterns in temperature, humidity, CO₂ and moisture.</span>
-            </article>
-            <article>
-              <span class="impact-index">02 · PREDICTIVE CARE</span>
-              <strong>Act before problems grow</strong>
-              <span>Historical readings can help flag disease risk, equipment faults and changing crop conditions early.</span>
-            </article>
-            <article>
-              <span class="impact-index">03 · OPTIMIZED CONDITIONS</span>
-              <strong>Fine-tune the room</strong>
-              <span>Past successful crops guide the right temperature, humidity and CO₂ balance for better yield and quality.</span>
-            </article>
-            <article>
-              <span class="impact-index">04 · PUMICE FOUNDATION</span>
-              <strong>Start with the right walls</strong>
-              <span>Sealed pumice walls help create a clean, insulated growing room where sensors can measure and automation can respond.</span>
-            </article>
-            <article>
-              <span class="impact-index">05 · PROTOTYPE STAGE</span>
-              <strong>Explore mushroom classification</strong>
-              <span>Image-based models are being explored to distinguish mushroom varieties, with identification still under development.</span>
-            </article>
+          <div class="section-header"><p class="section-kicker">Project developers &amp; leadership team</p></div>
+          <div class="home-team-grid">
+            @for (member of team(); track member.id ?? member.name) {
+              <article class="home-team-card"><div class="home-team-photo">@if (member.photo) { <img [src]="member.photo" [alt]="member.name" loading="lazy"> }<div class="home-team-socials">@if (member.link) { <a [href]="member.link" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Open LinkedIn profile for ' + member.name"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a> } @if (member.website) { <a [href]="member.website" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Open website for ' + member.name"><i class="fas fa-globe" aria-hidden="true"></i></a> }</div></div><h3>{{ member.name }}</h3><p>{{ member.role }}</p><small>{{ member.affiliation || 'BRIDGE-AI' }}</small></article>
+            } @empty { <p>Our project team profiles will appear here shortly.</p> }
           </div>
         </div>
       </section>
@@ -304,9 +190,9 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
   styles: [`
     :host {
       display: block;
-      background: #f7f2e6;
-      color: #2d3d35;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-clay);
+      color: var(--color-text-main);
+      font-family: var(--font-body);
     }
 
     .home-page {
@@ -346,7 +232,7 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       background-size: cover;
       background-position: center;
       opacity: 0.94;
-      filter: saturate(1.05) contrast(1.04);
+      filter: saturate(1.2) contrast(1.1) brightness(.86);
       transform: translate3d(0, var(--hero-parallax, 0px), 0) scale(1.08);
       transition: background-image 1.8s ease, opacity 1.8s ease, transform 0.08s linear;
     }
@@ -355,7 +241,7 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(22, 40, 26, 0.38);
+      background: rgba(6, 78, 59, 0.64);
       z-index: 1;
     }
 
@@ -448,21 +334,21 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       padding: 14px 32px;
       border-radius: 50px;
       text-decoration: none;
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font-body);
       font-weight: 600;
       font-size: 0.88rem;
       transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .btn-primary {
-      background: #26432b;
-      color: #fff;
+      background: #d8e86b;
+      color: #102d25;
       border: none;
-      box-shadow: 0 12px 32px rgba(22, 40, 26, 0.3);
+      box-shadow: 0 14px 34px rgba(6, 78, 59, 0.36);
     }
 
     .btn-primary:hover {
-      background: #16281a;
+      background: #eff69b;
       transform: translateY(-3px);
     }
 
@@ -502,6 +388,19 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
     html {
       scroll-padding-top: calc(var(--site-header-offset, 92px) + var(--section-nav-height, 52px) + 20px);
     }
+
+    .partner-network-section { padding: 84px 0 0; background: #26432b; color: #fffdf7; }
+    .partner-network-heading { margin-bottom: 34px; }
+    .partner-network-heading h2 { max-width: 760px; margin-inline: auto; color: #f7f2e6 !important; text-shadow: 0 2px 14px rgba(16,45,37,.3); }
+    .partner-network-heading .highlight { color: #d8e86b !important; }
+    .partner-marquee { overflow: hidden; border-block: 1px solid #e1d8c0; background: #fff; }
+    .partner-track { display: flex; width: max-content; animation: partner-marquee 48s linear infinite; }
+    .partner-track a { display: grid; grid-template-columns: 104px 180px; align-items: center; gap: 20px; width: 330px; min-height: 146px; padding: 26px 30px; border-right: 1px solid #ecebe6; color: #17241b; text-decoration: none; }
+    .partner-track img, .partner-placeholder { width: 104px; height: 82px; object-fit: contain; }
+    .partner-placeholder { display: grid; place-items: center; padding: 8px; background: #26432b; color: #d8e86b; font-size: .68rem; font-weight: 800; text-align: center; }
+    .partner-track strong { font-size: .88rem; line-height: 1.2; }
+    .partner-track a:focus-visible { outline: 3px solid #c89b3c; outline-offset: -3px; }
+    @keyframes partner-marquee { to { transform: translateX(-50%); } }
 
     .section-nav {
       position: sticky;
@@ -1107,6 +1006,100 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       background: #f7f2e6;
     }
 
+    .innovation-highlight-section { position: relative; overflow: hidden; padding: 104px 0; background: #26432b; color: #fffdf7; }
+    .innovation-highlight-section::before { content: ''; position: absolute; inset: 0; opacity: .14; background-image: linear-gradient(rgba(216,232,107,.28) 1px, transparent 1px), linear-gradient(90deg, rgba(216,232,107,.28) 1px, transparent 1px); background-size: 42px 42px; pointer-events: none; }
+    .innovation-highlight-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(280px, .85fr) minmax(0, 1.15fr); gap: 72px; align-items: center; }
+    .innovation-highlight-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; transform: rotate(-3deg); }
+    .innovation-highlight-visual span, .innovation-highlight-visual strong { display: grid; place-items: center; min-height: 150px; border: 1px solid rgba(23,36,27,.12); background: #d8e86b; color: #17241b; font: 700 2.2rem Georgia, serif; box-shadow: 14px 14px 0 rgba(16,45,37,.38); }
+    .innovation-highlight-visual span:nth-child(2) { margin-top: 28px; background: #d3a64e; }
+    .innovation-highlight-visual strong { grid-column: 1 / -1; background: #f7f2e6; font-size: 2rem; }
+    .innovation-highlight-copy .section-kicker { color: #d3a64e; }
+    .innovation-highlight-copy h2 { margin-bottom: 18px; color: #fffdf7; font-size: clamp(2.3rem, 4vw, 4rem); }
+    .innovation-highlight-copy .highlight { color: #d8e86b; }
+    .innovation-highlight-copy h3 { max-width: 650px; margin: 0 0 14px; color: #d8e86b; font-size: 1.28rem; line-height: 1.35; }
+    .innovation-highlight-copy > p:not(.section-kicker) { max-width: 680px; margin: 0; color: rgba(255,253,247,.78); line-height: 1.8; }
+    .innovation-link { display: inline-flex; gap: 8px; margin-top: 26px; color: #d3a64e; font-weight: 800; text-decoration: none; }
+    .live-impact-section { position: relative; overflow: hidden; padding: 104px 0; background: #102d25; color: #fffdf7; }
+    .live-impact-section::before { content: ''; position: absolute; inset: 0; opacity: .18; background-image: linear-gradient(rgba(216,232,107,.24) 1px, transparent 1px), linear-gradient(90deg, rgba(216,232,107,.24) 1px, transparent 1px); background-size: 48px 48px; pointer-events: none; }
+    .live-impact-section .container { position: relative; z-index: 1; }
+    .live-impact-heading { margin-bottom: 42px; }
+    .live-impact-heading .section-kicker { display: inline-flex; margin: 0; padding: 8px 14px; border: 1px solid rgba(216,232,107,.55); background: rgba(216,232,107,.12); color: #d8e86b; font-size: .74rem; font-weight: 900; letter-spacing: .18em; }
+    .live-impact-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: rgba(255,253,247,.22); box-shadow: 0 24px 50px rgba(0,0,0,.16); }
+    .live-impact-grid article { position: relative; min-height: 180px; padding: 32px 26px; background: rgba(16,45,37,.92); border: 0; transition: background .25s ease, transform .25s ease; }
+    .live-impact-grid article::before { content: ''; position: absolute; top: 0; right: 26px; left: 26px; height: 3px; background: #d8e86b; transform: scaleX(.28); transform-origin: left; transition: transform .25s ease; }
+    .live-impact-grid article:hover { z-index: 1; background: #183d31; transform: translateY(-5px); }
+    .live-impact-grid article:hover::before { transform: scaleX(1); }
+    .live-impact-grid article:last-child { border-right: 0; }
+    .live-impact-grid strong { display: block; margin-bottom: 12px; color: #d8e86b; font: 400 clamp(2.4rem, 4vw, 3.8rem) Georgia, serif; }
+    .live-impact-grid span { color: rgba(255,253,247,.72); font-size: .8rem; }
+    .featured-products-section { padding: 96px 0; background: #26432b; color: #fffdf7; }
+    .featured-products-section .featured-products-heading h2 { color: #fffdf7; }
+    .featured-products-section .featured-products-heading p:last-child { color: rgba(255,253,247,.78); }
+    .featured-products-section .section-kicker { display: inline-flex; align-items: center; margin-bottom: 20px; padding: 8px 13px; border: 1px solid rgba(216,232,107,.52); background: rgba(216,232,107,.12); color: #d8e86b !important; font-size: .72rem; font-weight: 900; letter-spacing: .14em; }
+    .featured-products-section .featured-products-track { padding-bottom: 22px; scrollbar-width: thin; scrollbar-color: #d8e86b rgba(255,253,247,.16); }
+    .featured-products-section .featured-products-track::-webkit-scrollbar { height: 8px; }
+    .featured-products-section .featured-products-track::-webkit-scrollbar-track { background: rgba(255,253,247,.16); border-radius: 999px; }
+    .featured-products-section .featured-products-track::-webkit-scrollbar-thumb { background: #d8e86b; border-radius: 999px; }
+    .featured-products-actions { display: flex; align-items: center; gap: 14px; margin-top: 24px; padding-top: 22px; border-top: 1px solid rgba(255,253,247,.2); }
+    .featured-products-section .bag-button { display: inline-flex; align-items: center; justify-content: center; min-width: 190px; padding: 14px 22px; border: 1px solid #d8e86b; border-radius: 10px; background: #818528; color: #fffdf7; box-shadow: 0 10px 24px rgba(16,45,37,.22); transition: background .2s ease, transform .2s ease, box-shadow .2s ease; }
+    .featured-products-section .bag-button:hover { background: #6f7623; transform: translateY(-2px); box-shadow: 0 14px 28px rgba(16,45,37,.32); }
+    .featured-products-section .catalog-link { display: inline-flex; align-items: center; gap: 8px; padding: 13px 16px; border: 1px solid rgba(216,232,107,.5); border-radius: 10px; background: rgba(216,232,107,.1); color: #d8e86b; font-weight: 900; text-decoration: none; transition: background .2s ease, gap .2s ease, border-color .2s ease; }
+    .featured-products-section .catalog-link:hover { gap: 12px; border-color: #d8e86b; background: rgba(216,232,107,.2); }
+    .latest-feed-section { background: #183d31; color: #fffdf7; }
+    .latest-feed-section .section-header h2 { color: #fffdf7; }
+    .latest-feed-section .section-header p:last-child { color: rgba(255,253,247,.76); }
+    .latest-feed-section .section-kicker { color: #d3a64e; }
+    .latest-feed-section .view-all-link { color: #d8e86b; }
+    .home-team-section { position: relative; overflow: hidden; background: var(--color-forest-green, #064e3b) !important; color: #fffdf7; }
+    .home-team-section::before { content: ''; position: absolute; inset: 0; opacity: .12; background-image: linear-gradient(rgba(216,232,107,.24) 1px, transparent 1px), linear-gradient(90deg, rgba(216,232,107,.24) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; }
+    .home-team-section .container { position: relative; z-index: 1; }
+    .home-team-section .section-header { max-width: 820px; margin-bottom: 42px; }
+    .home-team-section .section-header h2 { color: #fffdf7; }
+    .home-team-section .section-header p:last-child { color: rgba(255,253,247,.76); }
+    .home-team-section .section-kicker { display: inline-flex; align-items: center; margin-bottom: 18px; padding: 8px 13px; border: 1px solid rgba(216,232,107,.5); background: rgba(216,232,107,.12); color: #d8e86b; font-size: .72rem; font-weight: 900; letter-spacing: .14em; }
+    .home-team-grid { gap: 22px; }
+    .home-team-card { border: 1px solid rgba(255,253,247,.18); background: #f7f2e6; box-shadow: 0 18px 34px rgba(16,45,37,.22); transition: transform .25s ease, box-shadow .25s ease; }
+    .home-team-card:hover { transform: translateY(-6px); box-shadow: 0 24px 44px rgba(16,45,37,.34); }
+    .home-team-photo { background: #102d25; }
+    .home-team-socials a { border: 2px solid #183d31; background: #d8e86b; transition: background .2s ease, color .2s ease, transform .2s ease; }
+    .home-team-socials a:hover { background: #d3a64e; color: #102d25; transform: scale(1.08); }
+    .home-team-card h3 { font-size: 1.12rem; }
+    .home-team-card p { min-height: 2.4em; }
+    .home-team-section .team-contact-link { color: #d8e86b; }
+    .cta-section { background: #102d25; }
+    .section-kicker { margin: 0 0 10px; color: #818528; font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .featured-products-heading { margin-bottom: 34px; }
+    .featured-products-track { display: flex; gap: 18px; overflow-x: auto; padding: 4px 2px 18px; scrollbar-width: thin; scrollbar-color: #818528 transparent; }
+    .featured-product-card { position: relative; flex: 0 0 min(280px, 78vw); overflow: hidden; background: #fffdf7; border: 1px solid #e1d8c0; box-shadow: 0 10px 28px rgba(23, 36, 27, .08); }
+    .featured-product-card > img { width: 100%; height: 190px; object-fit: cover; }
+    .product-badge { position: absolute; top: 12px; left: 12px; padding: 5px 9px; background: #d8e86b; color: #17241b; font-size: .62rem; font-weight: 800; text-transform: uppercase; }
+    .featured-product-copy { padding: 18px; }
+    .featured-product-copy p { margin: 0 0 6px; color: #818528; font-size: .65rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .featured-product-copy h3 { min-height: 50px; margin: 0 0 8px; color: #17241b; font-size: 1.12rem; line-height: 1.25; }
+    .featured-product-copy > span { display: block; margin-bottom: 16px; color: #59685f; font-size: .78rem; }
+    .add-to-bag-button, .bag-button { border: 0; cursor: pointer; font: inherit; font-weight: 800; }
+    .add-to-bag-button { width: 100%; padding: 11px 14px; background: #26432b; color: #fffdf7; transition: background .2s ease, color .2s ease, transform .2s ease; }
+    .add-to-bag-button:hover { background: #16281a; transform: translateY(-1px); }
+    .add-to-bag-button.added-to-cart { background: #818528; color: #fffdf7; }
+    .add-to-bag-button.added-to-cart:hover { background: #6f7623; }
+    .add-to-bag-button:hover, .bag-button:hover { background: #16281a; }
+    .featured-products-actions { display: flex; align-items: center; gap: 20px; margin-top: 18px; }
+    .bag-button { padding: 12px 18px; background: #818528; color: #fff; }
+    .catalog-link, .team-contact-link { color: #26432b; font-weight: 800; text-decoration: none; }
+    .latest-feed-section { padding-top: 88px; }
+    .feed-empty { color: #59685f; }
+    .home-team-section { padding: 88px 0; background: #fffdf7; }
+    .home-team-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+    .home-team-card { overflow: hidden; background: #f7f2e6; border: 1px solid #e1d8c0; }
+    .home-team-photo { position: relative; aspect-ratio: 1; background: #26432b; }
+    .home-team-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .home-team-socials { position: absolute; top: 12px; right: 12px; display: grid; gap: 7px; }
+    .home-team-socials a { display: grid; width: 32px; height: 32px; place-items: center; background: #d8e86b; color: #17241b; font-size: .78rem; font-weight: 900; text-decoration: none; }
+    .home-team-card h3 { margin: 16px 16px 5px; color: #17241b; font-size: 1.05rem; }
+    .home-team-card p { margin: 0 16px; color: #43534a; font-size: .8rem; }
+    .home-team-card small { display: block; padding: 8px 16px 18px; color: #818528; font-size: .68rem; font-weight: 800; }
+    .team-contact-link { display: inline-flex; gap: 8px; margin-top: 30px; }
+
     .activity-section .section-header {
       display: block;
       max-width: 100%;
@@ -1474,6 +1467,20 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
         font-size: 0.6rem;
       }
 
+      .partner-network-section { padding-top: 56px; }
+      .partner-track a { grid-template-columns: 82px 150px; width: 270px; min-height: 122px; padding: 20px 22px; }
+      .partner-track img, .partner-placeholder { width: 82px; height: 66px; }
+      .innovation-highlight-section { padding: 68px 0; }
+      .innovation-highlight-grid { grid-template-columns: 1fr; gap: 38px; }
+      .innovation-highlight-copy { text-align: center; }
+      .innovation-highlight-copy h3, .innovation-highlight-copy > p:not(.section-kicker) { margin-right: auto; margin-left: auto; }
+      .innovation-link { justify-content: center; }
+      .live-impact-section { padding: 68px 0; }
+      .live-impact-grid { grid-template-columns: repeat(2, 1fr); }
+      .live-impact-grid article:nth-child(2) { border-right: 0; }
+      .live-impact-grid article:nth-child(-n + 2) { border-bottom: 1px solid rgba(255,253,247,.2); }
+      .latest-feed-section .view-all-link { display: flex; justify-content: center; width: 100%; text-align: center; }
+
       .hero {
         min-height: 100vh;
         height: 100vh;
@@ -1541,6 +1548,8 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
       .impact-grid {
         grid-template-columns: 1fr;
       }
+
+      .home-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
       .challenge-section,
       .pilot-section,
@@ -1641,6 +1650,11 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
         padding: 0 16px;
       }
 
+      .featured-products-actions { align-items: center; flex-direction: row; flex-wrap: nowrap; gap: 8px; }
+      .featured-products-section .bag-button { min-width: 0; flex: 0 0 auto; padding: 12px 13px; font-size: .76rem; white-space: nowrap; }
+      .featured-products-section .catalog-link { min-width: 0; flex: 1 1 auto; justify-content: center; padding: 12px 10px; font-size: .72rem; white-space: nowrap; }
+      .home-team-grid { grid-template-columns: 1fr; }
+
       .hero-content h1 {
         font-size: 1.8rem;
       }
@@ -1694,12 +1708,24 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
     }
   `]
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class LegacyHomeComponent implements OnInit, OnDestroy {
+  private readonly teamService = inject(TeamService);
   private readonly localHeroFallback = '/images/smartmushrooms/q.jpeg';
   protected readonly heroImages = signal<string[]>([this.localHeroFallback]);
   protected readonly heroIndex = signal(0);
   protected readonly activeHeroImage = computed(() => this.heroImages()[this.heroIndex()] || this.localHeroFallback);
   protected readonly heroFallbackImage = computed(() => this.heroImages()[0] || this.localHeroFallback);
+  protected readonly partners = [
+    { slug: 'eu', name: 'European Union (EU)', logo: '/images/logos/eu_emblem.svg' },
+    { slug: 'bridge-ai', name: 'BRIDGE-AI', logo: '/images/logos/bridge_ai_logo.svg' },
+    { slug: 'gates-foundation', name: 'Bill & Melinda Gates Foundation', logo: '/images/logos/bill.jpeg' },
+    { slug: 'jkuat', name: 'JKUAT', logo: '/images/logos/jkuat_logo.svg' },
+    { slug: 'mush&', name: 'Mush&', logo: '/images/logos/mush.jpeg' },
+    { slug: 'koica', name: 'KOICA', logo: '/images/logos/koica.jpeg' },
+    { slug: 'gdih', name: 'gDIH', logo: '/images/logos/gdih.jpeg' },
+    { slug: 'jhub', name: 'JHUB Africa', logo: '/images/logos/jhub_logo.svg' }
+  ];
+  protected readonly marqueePartners = [...this.partners, ...this.partners];
   private rotation?: ReturnType<typeof setInterval>;
   private readonly handleResize = (): void => this.syncStickyOffset();
   private readonly handleScroll = (): void => {
@@ -1711,10 +1737,48 @@ export class HomeComponent implements OnInit, OnDestroy {
   protected heroDescription = APP.DESCRIPTION;
   protected latestActivities = signal<Activity[]>([]);
   protected upcomingEvents = signal<Event[]>([]);
+  protected readonly team = signal<TeamMember[]>([]);
+  protected readonly featuredProducts = SHOP_PRODUCTS.filter(product => [
+    'jambo101-spawn',
+    'mambo101-spawn',
+    'fresh-mushroom-punnets',
+    'mushroom-wine',
+    'pumice-house-iot-kit'
+  ].includes(product.id));
+  protected readonly impactCounters = [
+    { value: '0', label: 'Active grow houses' },
+    { value: '0 kg', label: 'Spawn distributed' },
+    { value: '0', label: 'Farmers trained' },
+    { value: '0', label: 'Community partners' }
+  ];
+  private readonly cartService = inject(ShopCartService);
+  protected readonly cartCount = this.cartService.cartCount;
+  protected readonly latestFeed = computed<SmartMushroomFeedItem[]>(() => [
+    ...this.latestActivities().map(activity => ({
+      title: activity.title,
+      date: activity.date,
+      image: activity.featured_image,
+      kind: 'activity' as const,
+      slug: activity.slug,
+      label: activity.wp_tag || activity.activity_type,
+      summary: activity.summary
+    })),
+    ...this.upcomingEvents().map(event => ({
+      title: event.title,
+      date: event.date,
+      image: event.featured_image,
+      kind: 'event' as const,
+      slug: event.slug,
+      label: 'Event',
+      summary: event.description
+    }))
+  ].sort((first, second) => second.date.localeCompare(first.date)));
   protected activitiesCount: number = 0;
   protected eventsCount: number = 0;
   protected partnersCount: number = 12;
   protected resourcesCount: number = 0;
+
+  private readonly router = inject(Router);
 
   constructor(
     private activityService: ActivityService,
@@ -1722,7 +1786,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     private cloudinaryService: CloudinaryService
   ) {}
 
+  protected addToBag(product: ShopProduct): void {
+    this.cartService.add(product);
+  }
+
+  protected isInCart(product: ShopProduct): boolean {
+    return this.cartService.cart().some(item => item.id === product.id);
+  }
+
+  protected openBag(): void {
+    this.router.navigate(['/shop'], { queryParams: { bag: 'open' } });
+  }
+
   ngOnInit(): void {
+    this.teamService.getVisibleTeamMembers().subscribe({ next: members => this.team.set(members), error: () => this.team.set([]) });
     this.loadData();
     this.loadHeroImages();
     this.syncStickyOffset();
@@ -1847,7 +1924,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           activity.evidence_status?.trim().toLowerCase() === 'published'
         );
         this.activitiesCount = published.length;
-        this.latestActivities.set(published.slice(0, 3));
+        this.latestActivities.set([...published].sort((first, second) => second.date.localeCompare(first.date)));
       },
       error: () => {
         this.latestActivities.set([]);
@@ -1857,11 +1934,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.eventService.getEvents().subscribe({
       next: (events) => {
         const availableEvents = events ?? [];
-        const upcoming = availableEvents.filter(event =>
-          event.status?.trim().toLowerCase() === 'upcoming'
-        );
+        const upcoming = [...availableEvents].sort((first, second) => second.date.localeCompare(first.date));
         this.eventsCount = availableEvents.length;
-        this.upcomingEvents.set(upcoming.slice(0, 3));
+        this.upcomingEvents.set(upcoming);
       },
       error: () => {
         this.upcomingEvents.set([]);

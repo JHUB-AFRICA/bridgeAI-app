@@ -277,7 +277,8 @@ export class AdminSidebarComponent {
     { path: 'sme', label: 'SME', icon: this.getSmeIcon(), active: false },
     { path: 'community', label: 'Community', icon: this.getCommunityIcon(), active: false },
     { path: 'replication', label: 'Replication', icon: this.getReplicationIcon(), active: false },
-    { path: 'submissions', label: 'Submissions', icon: this.getSubmissionsIcon(), active: false }
+    { path: 'submissions', label: 'Submissions', icon: this.getSubmissionsIcon(), active: false },
+    { path: 'shop-requests', label: 'Shop requests', icon: this.getShopIcon(), active: false }
   ]);
 
   constructor(
@@ -331,6 +332,10 @@ export class AdminSidebarComponent {
 
   getSubmissionsIcon(): string {
     return 'fa-solid fa-inbox';
+  }
+
+  getShopIcon(): string {
+    return 'fa-solid fa-basket-shopping';
   }
 
   isActive(path: string): boolean {

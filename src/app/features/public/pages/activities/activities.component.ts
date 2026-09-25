@@ -21,17 +21,11 @@ type ActivityFilters = {
   imports: [CommonModule, RouterModule],
   template: `
     <div class="activities-page">
-      <section class="activities-banner" [style.background-image]="'linear-gradient(rgba(18, 52, 43, .68), rgba(18, 52, 43, .68)), url(' + heroImages()[heroIndex()] + ')'" aria-labelledby="activities-title">
-        <h1 id="activities-title">Smart Mushroom journey</h1>
-      </section>
-
-      <section class="activities-intro">
-        <div>
-          <h2>Follow the <span>Kenya Pilot</span> journey</h2>
-          <p>Follow the Smart Mushroom Kenya Pilot at JKUAT as the room, sensors, dashboard and farmer community take shape.</p>
-          <p>From practical demonstrations and training to build milestones and field conversations, this is the pilot journal.</p>
+      <section class="activities-banner" aria-labelledby="activities-title">
+        <div class="activities-banner-inner">
+          <h1 id="activities-title">SmartMushroom News and Activities</h1>
+          <span class="activities-banner-rule" aria-hidden="true"></span>
         </div>
-        <img src="/images/smartmushrooms/q.jpeg" alt="Smart Mushroom Kenya Pilot growing room" title="Smart Mushroom Kenya Pilot" />
       </section>
 
       <section class="filter-section" id="filters">
@@ -101,7 +95,6 @@ type ActivityFilters = {
         <div class="container">
           <div class="section-header reveal">
             <h2>Latest <span class="highlight">Activities</span></h2>
-            <p>News, events and field updates from the Smart Mushroom Kenya Pilot.</p>
           </div>
 
           <div class="activities-grid">
@@ -172,9 +165,9 @@ type ActivityFilters = {
   styles: [`
     :host {
       display: block;
-      color: #2d3d35;
-      background: #f7f2e6;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--color-text-main);
+      background: var(--color-bg-clay);
+      font-family: var(--font-body);
     }
 
     * { box-sizing: border-box; }
@@ -182,13 +175,6 @@ type ActivityFilters = {
     a { text-decoration: none; }
 
     .container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
-    .activities-banner { min-height: 108px; display: grid; place-items: center; padding: 24px; background: #818528; }
-    .activities-banner h1 { margin: 0; color: #fff; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; }
-    .activities-intro { max-width: 1180px; margin: 0 auto; padding: 60px 38px 54px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 460px); align-items: center; gap: clamp(40px, 8vw, 100px); background: #fff; }
-    .activities-intro h2 { margin: 0 0 22px; color: #343b40; font-size: clamp(1.45rem, 2.6vw, 2rem); font-weight: 500; line-height: 1.2; }
-    .activities-intro h2 span { color: #818528; }
-    .activities-intro p { max-width: 590px; margin: 0 0 14px; color: #687278; font-size: .9rem; line-height: 1.7; }
-    .activities-intro img { display: block; width: 100%; aspect-ratio: 1.55; object-fit: cover; border-radius: 24px; }
     .hero { display: none; }
     .hero-image-wrapper { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
     .hero-slide-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; filter: none; transition: opacity 1.2s ease; }
@@ -204,11 +190,11 @@ type ActivityFilters = {
     .hero-description { max-width: 560px; font-size: 1.02rem; line-height: 1.8; color: rgba(255,255,255,0.76); margin: 16px 0 28px; }
     .hero-buttons { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
     .btn-primary, .btn-secondary, .filter-clear, .card-link { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 50px; font-weight: 600; transition: all 0.25s ease; }
-    .btn-primary { background: #26432b; color: #f7f2e6; padding: 14px 32px; border: none; text-decoration: none; }
-    .btn-primary:hover { background: #16281a; transform: translateY(-3px); }
+    .btn-primary { background: var(--color-forest-green); color: var(--color-surface-white); padding: 14px 32px; border: none; text-decoration: none; }
+    .btn-primary:hover { background: var(--color-forest-green-dark); transform: translateY(-3px); }
     .btn-secondary { background: transparent; color: #fff; padding: 14px 32px; border: 1.5px solid rgba(255,255,255,0.3); text-decoration: none; }
     .btn-secondary:hover { background: rgba(255,255,255,0.08); transform: translateY(-3px); }
-    .filter-section { position: sticky; top: var(--site-header-offset, 80px); z-index: 40; background: #818528; border-bottom: 1px solid #73771f; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    .filter-section { position: sticky; top: var(--site-header-offset, 80px); z-index: 40; background: var(--color-warm-ochre); border-bottom: 1px solid rgba(10, 10, 10, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
     .filter-container { max-width: 1280px; margin: 0 auto; padding: 16px 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; }
     .filter-group { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
     .filter-label { font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; font-weight: 600; }
@@ -272,8 +258,8 @@ type ActivityFilters = {
     .empty-state .empty-icon { display: block; margin-bottom: 16px; font-size: 2.6rem; color: #26432b; opacity: 0.3; }
     .empty-state h3 { margin: 0 0 6px; font-size: 1.3rem; color: #17241b; }
     .empty-state p { max-width: 400px; margin: 0 auto; color: #6e7767; }
-    @media (max-width: 1024px) { .activities-intro { gap: 36px; } .section-header h2 { font-size: 2.2rem; } }
-    @media (max-width: 768px) { .activities-intro { grid-template-columns: 1fr; padding: 44px 20px; } .activities-intro img { max-width: 560px; } .filter-container { padding: 0 16px; flex-direction: column; } .filter-group { justify-content: center; } .activities-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 600px; } .section-header h2 { font-size: 1.8rem; } .section-header p { font-size: 0.95rem; } }
+    @media (max-width: 1024px) { .section-header h2 { font-size: 2.2rem; } }
+    @media (max-width: 768px) { .filter-container { padding: 0 16px; flex-direction: column; } .filter-group { justify-content: center; } .activities-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 600px; } .section-header h2 { font-size: 1.8rem; } .section-header p { font-size: 0.95rem; } }
     @media (max-width: 480px) { .container { padding: 0 16px; } .hero-left h1 { font-size: 1.8rem; } .section-header h2 { font-size: 1.5rem; } .card-body { padding: 16px 18px 0; } .card-footer { flex-direction: column; align-items: flex-start; } .activities-grid { grid-template-columns: 1fr; } }
   `]
 })

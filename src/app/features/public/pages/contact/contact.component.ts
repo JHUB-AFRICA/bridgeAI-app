@@ -5,7 +5,7 @@
 import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, finalize, map } from 'rxjs';
 import { SubmissionService } from '../../../../services/submission.service';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -35,7 +35,7 @@ interface ContactFormData {
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   template: `
     <div class="contact-page">
       <section class="contact-hero">
@@ -159,32 +159,29 @@ interface ContactFormData {
           </div>
 
           <div class="contact-info">
-            <div class="info-card">
-              <h3 class="info-title">Contact JKUAT JHUB Smart Mushroom</h3>
+            <div class="info-card professional-contact-card">
+              <h3 class="info-title">Contact SmartMushroom team</h3>
+
               <div class="info-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                <span class="info-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                </span>
                 <a href="mailto:info@jhubafrica.com">info@jhubafrica.com</a>
               </div>
+
               <div class="info-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                <span class="info-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                </span>
                 <span>JKUAT Smart Farm Zone, Juja, Kenya</span>
               </div>
-              <div class="info-item">
-                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path d="M5.2 3.5A2.4 2.4 0 1 1 .4 3.5a2.4 2.4 0 0 1 4.8 0ZM.7 8h4.5v13H.7V8Zm7.3 0h4.3v1.8h.1c.6-1.1 2.1-2.3 4.3-2.3 4.6 0 5.5 3 5.5 6.9V21h-4.5v-5.9c0-1.4 0-3.3-2-3.3s-2.3 1.5-2.3 3.2V21H8V8Z" /></svg>
-                  <a href="https://jhubafrica.com" target="_blank" rel="noopener noreferrer">JHUB Africa</a>
-              </div>
-            </div>
 
-            <div class="info-card">
-              <h3 class="info-title">Quick Links</h3>
-              <ul class="quick-links">
-                <li><a [routerLink]="['/smart-mushrooms']">Smart Mushroom Pilot</a></li>
-                <li><a [routerLink]="['/activities']">Activities</a></li>
-                <li><a [routerLink]="['/training-events']">Smart Mushroom training</a></li>
-                <li><a [routerLink]="['/resources']">Resources</a></li>
-                <li><a [routerLink]="['/partners']">Partners</a></li>
-                <li><a [routerLink]="['/privacy-ethics']">Privacy &amp; Ethics</a></li>
-              </ul>
+              <div class="info-item">
+                <span class="info-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" aria-hidden="true"><path d="M10 6.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" /><path d="M8.5 10.5v7.5" /><path d="M5.5 13.5c0-1.9 1.8-3.5 4-3.5s4 1.6 4 3.5v4.5H5.5v-4.5Z" /><path d="M13.5 9.5h5a2 2 0 0 1 2 2v7h-4v-5.5h-2.5V9.5Z" /><path d="M17 6h1.5A1.5 1.5 0 0 1 20 7.5V9" /></svg>
+                </span>
+                <a href="https://jhubafrica.com" target="_blank" rel="noopener noreferrer">Website</a>
+              </div>
             </div>
           </div>
         </div>
@@ -197,9 +194,9 @@ interface ContactFormData {
       display: block;
       max-width: 100%;
       overflow-x: clip;
-      color: #1f2a37;
-      background: #f7f2e6;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--color-text-main);
+      background: var(--color-bg-clay);
+      font-family: var(--font-body);
     }
 
     * { box-sizing: border-box; }
@@ -251,23 +248,34 @@ interface ContactFormData {
       font-size: 1.12rem;
       line-height: 1.7;
     }
-    .page-wrap { padding-top: 52px; padding-bottom: 64px; }
+    .page-wrap {
+      padding-top: 52px;
+      padding-bottom: 64px;
+    }
     .contact-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 30px;
+      grid-template-columns: minmax(0, 1fr) minmax(440px, 760px);
+      gap: 30px 40px;
+      justify-content: space-between;
       align-items: start;
       min-width: 0;
+      width: 100%;
     }
     .contact-form-wrapper, .info-card {
       min-width: 0;
       max-width: 100%;
+      width: 100%;
       background: #fffdf7;
       border: 1px solid #e3dac2;
       border-radius: 18px;
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
     }
-    .contact-form-wrapper { padding: 30px; }
+    .contact-form-wrapper {
+      grid-column: 2;
+      grid-row: 1;
+      padding: 30px;
+      margin-left: auto;
+    }
     .form-title {
       margin: 0 0 20px;
       font-size: 2rem;
@@ -307,6 +315,19 @@ interface ContactFormData {
     .select-field { position: relative; min-width: 0; }
     .select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; text-align: left; }
     .select-trigger span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .select-trigger:hover,
+    .select-trigger:focus-visible,
+    .select-trigger:active {
+      color: #ffffff;
+    }
+    .select-trigger:hover span:first-child,
+    .select-trigger:focus-visible span:first-child,
+    .select-trigger:active span:first-child,
+    .select-trigger:hover .select-chevron,
+    .select-trigger:focus-visible .select-chevron,
+    .select-trigger:active .select-chevron {
+      color: #ffffff;
+    }
     .select-chevron { color: #26432b; font-size: 1.2rem; line-height: .7; transform: translateY(-2px); transition: transform .2s ease; }
     .select-field.is-open .select-chevron { transform: rotate(180deg) translateY(2px); }
     .select-menu { position: absolute; z-index: 20; top: calc(100% + 6px); left: 0; right: 0; max-width: 100%; max-height: 240px; overflow-y: auto; padding: 6px; border: 1px solid #cbd8ca; border-radius: 12px; background: #fffdf7; box-shadow: 0 14px 30px rgba(23, 36, 27, .16); }
@@ -335,44 +356,65 @@ interface ContactFormData {
     }
     .btn-submit:hover:not(:disabled) { transform: translateY(-1px); }
     .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
-    .contact-info { display: flex; flex-direction: column; gap: 20px; }
-    .info-card { padding: 26px 24px; }
+    .contact-info {
+      display: block;
+      grid-column: 1;
+      grid-row: 1;
+      max-width: 820px;
+      margin-top: 0;
+      align-self: stretch;
+    }
+    .info-card {
+      padding: 26px 24px;
+    }
+    .professional-contact-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 260px;
+      justify-content: center;
+    }
     .info-title {
       margin: 0 0 16px;
       color: #17241b;
-      font-size: 1.5rem;
+      font-size: clamp(2rem, 2.8vw, 3.1rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      font-weight: 700;
     }
     .info-item {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       color: #465c50;
       padding: 10px 0;
       min-width: 0;
       overflow-wrap: anywhere;
+      font-size: 1.05rem;
     }
     .info-item svg {
       color: #26432b;
       flex-shrink: 0;
+    }
+    .info-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+      color: #26432b;
     }
 
     .info-item a {
       min-width: 0;
       color: #26432b;
       overflow-wrap: anywhere;
-    }
-    .quick-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .quick-links li { padding: 8px 0; }
-    .quick-links a {
       text-decoration: none;
-      color: #26432b;
-      font-weight: 600;
     }
-    .quick-links a:hover { text-decoration: underline; }
+    .info-item a:hover {
+      text-decoration: underline;
+    }
     @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; } }
     @media (max-width: 640px) {
       .container { width: 100%; max-width: 100%; padding: 0 18px; }

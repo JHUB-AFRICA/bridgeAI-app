@@ -183,9 +183,9 @@ import { CloudinaryImageComponent } from '../../../shared/components/cloudinary-
   styles: [`
     :host {
       display: block;
-      background: #f7f2e6;
-      color: #2d3d35;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--color-bg-clay);
+      color: var(--color-text-main);
+      font-family: var(--font-body);
     }
 
     .container { max-width: 980px; margin: 0 auto; padding: 0 20px; }

@@ -204,9 +204,9 @@ import { NotificationService } from '../../../core/services/notification.service
     `
       :host {
         display: block;
-        background: #f7f2e6;
-        color: #15231d;
-        font-family: 'Inter', 'Segoe UI', sans-serif;
+        background: var(--color-bg-clay);
+        color: var(--color-text-main);
+        font-family: var(--font-body);
       }
 
       * { box-sizing: border-box; }

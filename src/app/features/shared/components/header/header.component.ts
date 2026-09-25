@@ -5,8 +5,7 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
-import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
+import { SOCIAL_LINKS } from '../../../core/constants/app.constants';
 
 interface NavItem {
   path: string;
@@ -25,7 +24,7 @@ interface NavItem {
             <a [routerLink]="['/']" class="logo" aria-label="Smart Mushroom Kenya Pilot home">
               <img src="/images/logos/mushlogo.jpeg" alt="Smart Mushroom Kenya Pilot" class="logo-img bridge-logo" />
               <span class="logo-divider" aria-hidden="true"></span>
-              <span class="logo-copy"><strong>Smart Mushroom</strong></span>
+              <span class="logo-copy"><strong>SmartMushroom</strong></span>
             </a>
           </div>
         </div>
@@ -50,16 +49,9 @@ interface NavItem {
         <nav class="main-nav" [class.open]="mobileOpen" aria-label="Main navigation">
           <ul class="nav-list">
             @for (item of navItems; track item.path) {
-              <li class="nav-item" [class.home-nav]="item.path === '/'">
+              <li class="nav-item">
                 <a [routerLink]="[item.path]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: item.path === '/' }" (click)="closeMobileMenu()">
                   {{ item.label }}
-                </a>
-              </li>
-            }
-            @if (isLoggedIn()) {
-              <li class="nav-item admin-link">
-                <a [routerLink]="['/admin']" routerLinkActive="active" class="admin-link-btn" (click)="closeMobileMenu()">
-                  Dashboard
                 </a>
               </li>
             }
@@ -85,10 +77,10 @@ interface NavItem {
       left: 0;
       right: 0;
       z-index: 1000;
-      background: #ffffff;
-      backdrop-filter: none;
-      border-bottom: 1px solid #e8edf2;
-      box-shadow: 0 4px 18px rgba(8, 32, 45, 0.04);
+      background: #064e3b;
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, .16);
+      box-shadow: 0 8px 24px rgba(3, 56, 43, .22);
     }
 
     .header-container {
@@ -125,19 +117,20 @@ interface NavItem {
       text-decoration: none;
     }
 
-    .logo-divider { width: 1px; height: 38px; background: #d9e2dc; }
+    .logo-divider { width: 1px; height: 38px; background: rgba(255, 255, 255, .32); }
     .logo-copy {
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #0b4d3b;
+      color: #ffffff;
       line-height: 1;
     }
     .logo-copy strong {
-      font-size: clamp(1.05rem, 1.2vw, 1.5rem);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      color: #d8e86b;
+      font: 800 clamp(1.28rem, 1.65vw, 1.9rem)/1 Georgia, 'Times New Roman', serif;
+      letter-spacing: 0.015em;
       font-weight: 800;
+      text-shadow: 0 2px 12px rgba(0,0,0,.18);
     }
 
     .logo-img {
@@ -156,7 +149,7 @@ interface NavItem {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      color: #0b4d3b;
+      color: #f0b45e;
       font-size: 0.8rem;
       font-weight: 800;
       letter-spacing: 0.14em;
@@ -193,7 +186,7 @@ interface NavItem {
       justify-content: center;
       min-height: 38px;
       padding: 8px 12px;
-      color: #243742;
+      color: #e8f2ed;
       text-decoration: none;
       font-size: 0.78rem;
       font-weight: 600;
@@ -213,14 +206,14 @@ interface NavItem {
       bottom: 5px;
       height: 2px;
       border-radius: 999px;
-      background: #0b4d3b;
+      background: #d97706;
       transform: scaleX(0);
       transform-origin: center;
       transition: transform 0.25s ease;
     }
 
     .nav-item a:hover {
-      color: #0b4d3b;
+      color: #f0b45e;
       background: transparent;
       transform: translateY(-1px);
     }
@@ -231,17 +224,9 @@ interface NavItem {
     }
 
     .nav-item a.active {
-      color: #0b4d3b;
+      color: #f0b45e;
       background: transparent;
       box-shadow: none;
-    }
-
-    .home-nav {
-      display: none;
-    }
-
-    .contact-nav {
-      margin-left: 10px;
     }
 
     .linkedin-nav a {
@@ -261,17 +246,12 @@ interface NavItem {
     .linkedin-nav svg { width: 18px; height: 18px; }
     .linkedin-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
-    .admin-link-btn {
-      color: #0b4d3b !important;
-      font-weight: 700;
-    }
-
     .mobile-toggle {
       display: none;
       background: transparent;
-      border: 1px solid #dfe7ee;
+      border: 1px solid rgba(255, 255, 255, .28);
       border-radius: 10px;
-      color: #1a2a35;
+      color: #ffffff;
       width: 42px;
       height: 42px;
       align-items: center;
@@ -282,13 +262,13 @@ interface NavItem {
     }
 
     .mobile-toggle:hover {
-      background: rgba(11, 77, 59, 0.04);
-      border-color: #cfe0d7;
+      background: rgba(255, 255, 255, .1);
+      border-color: #f0b45e;
     }
 
     .nav-item a:focus-visible,
     .mobile-toggle:focus-visible {
-      outline: 2px solid #0b4d3b;
+      outline: 2px solid #f0b45e;
       outline-offset: 3px;
       border-radius: 999px;
     }
@@ -306,7 +286,7 @@ interface NavItem {
 
     @media (max-width: 980px) {
       .site-header {
-        border-bottom-color: #edf2f6;
+        border-bottom-color: rgba(255, 255, 255, .16);
       }
 
       .brand-center {
@@ -327,10 +307,10 @@ interface NavItem {
         left: 0;
         right: 0;
         padding: 14px 18px 20px;
-        background: #ffffff;
-        border: 1px solid #edf2f6;
+        background: #04382b;
+        border: 1px solid rgba(255, 255, 255, .16);
         border-top: none;
-        box-shadow: 0 20px 30px rgba(8, 32, 45, 0.08);
+        box-shadow: 0 20px 30px rgba(3, 56, 43, .3);
         display: none;
       }
 
@@ -345,8 +325,6 @@ interface NavItem {
         gap: 4px;
       }
 
-      .contact-nav { margin-left: 0; }
-
       .linkedin-nav a { width: 100%; justify-content: flex-start; }
       .linkedin-label { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
 
@@ -356,10 +334,6 @@ interface NavItem {
         padding: 12px 14px;
         font-size: 0.88rem;
         border-radius: 10px;
-      }
-
-      .home-nav {
-        display: list-item;
       }
 
       .nav-item a::after {
@@ -376,7 +350,12 @@ interface NavItem {
 
       .header-left {
         flex: 1;
+        justify-content: flex-start;
       }
+
+      .header-container { justify-content: space-between; }
+      .logo { justify-content: flex-start; }
+      .mobile-toggle { position: absolute; right: 16px; }
 
       .logo-group {
         gap: 8px;
@@ -391,7 +370,7 @@ interface NavItem {
         max-width: 170px;
       }
 
-      .logo-copy strong { font-size: 0.9rem; }
+      .logo-copy strong { font-size: 1.18rem; }
       .logo-divider { height: 30px; }
 
       
@@ -403,22 +382,16 @@ interface NavItem {
   `]
 })
 export class HeaderComponent {
-  protected appName = APP.ACRONYM;
   protected mobileOpen = false;
 
   protected navItems: NavItem[] = [
     { path: '/', label: 'Home' },
-    { path: '/smart-mushrooms', label: 'Mushroom farm' },
-    { path: '/activities', label: 'News & activities' },
-    { path: '/training-events', label: 'Training events' },
-    { path: '/resources', label: 'Resources' },
-    { path: '/partners', label: 'Team' },
-    { path: '/gallery', label: 'Gallery' }
+    { path: '/smartmushroom-tech', label: 'SmartMushroom Tech' },
+    { path: '/shop', label: 'SmartMushroom Shop' },
+    { path: '/training-events', label: 'Farmers-Training' }
   ];
 
   protected socialLinks = SOCIAL_LINKS;
-
-  constructor(private authService: AuthService) {}
 
   @HostListener('window:resize')
   onResize(): void {
@@ -435,7 +408,4 @@ export class HeaderComponent {
     this.mobileOpen = false;
   }
 
-  isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
-  }
 }

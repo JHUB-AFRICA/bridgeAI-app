@@ -5,7 +5,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
 
 @Component({
   selector: 'app-footer',
@@ -14,93 +13,28 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
   template: `
     <footer class="footer-ultimate" role="contentinfo">
       <div class="footer-container">
-        <div class="footer-logos-row" aria-label="Project partners">
-          <div class="footer-logo-item footer-logo-item-bridge">
-            <img src="/images/logos/mushlogo.jpeg" alt="Smart Mushroom Kenya Pilot" class="footer-logo footer-logo-bridge" loading="lazy" />
-          </div>
-          <a class="footer-logo-item footer-logo-item-eu" href="/partners/eu" aria-label="View the European Union grant page">
-            <img src="/images/logos/eu_emblem.svg" alt="Funded by the European Union" class="footer-logo footer-logo-eu" loading="lazy" />
-          </a>
-          <a class="footer-logo-item footer-logo-item-partner" href="/partners/jkuat" aria-label="View the JKUAT partner page">
-            <img src="/images/logos/jkuat_logo.svg" alt="Jomo Kenyatta University of Agriculture and Technology" class="footer-logo footer-logo-partner" loading="lazy" />
-          </a>
-          <a class="footer-logo-item footer-logo-item-partner" href="/partners/jhub" aria-label="View the JHUB Africa partner page">
-            <img src="/images/logos/jhub_logo.svg" alt="JHUB Africa" class="footer-logo footer-logo-partner" loading="lazy" />
-          </a>
-          <a class="footer-logo-item footer-logo-item-partner footer-logo-item-mush" href="/partners/mush%26" aria-label="View the Mush& partner page">
-            <img src="/images/logos/mush.jpeg" alt="Mush&" class="footer-logo footer-logo-partner footer-logo-mush" loading="lazy" />
-          </a>
-          <p class="footer-description">Smart Mushroom Kenya Pilot helps farmers build better growing rooms, understand their crop environment and use connected tools with confidence.</p>
+        <div class="footer-reference-grid">
+          <section class="footer-reference-column">
+            <h3>Contacts &amp; Location</h3>
+            <p><strong>Physical Address:</strong> JKUAT Main Campus, Juja, Kiambu County, Kenya.</p>
+            <p><strong>Contact Info:</strong> Email: <a href="mailto:info@smartmushroom.jkuat.ac.ke">info@smartmushroom.jkuat.ac.ke</a> <span aria-hidden="true">|</span> Phone/WhatsApp: <a href="tel:+254700000000">+254 700 000 000</a>.</p>
+          </section>
+
+          <section class="footer-reference-column">
+            <h3>Legal &amp; Compliance</h3>
+            <p><a [routerLink]="['/privacy-ethics']">Privacy &amp; Ethics</a> — Outlines compliance with Kenya’s Data Protection Act 2019 and NACOSTI research clearance protocols.</p>
+            <p><a href="/terms">Terms &amp; Conditions</a> — E-commerce fulfillment, product returns, and spawn replacement guidelines.</p>
+          </section>
+
+          <section class="footer-reference-column footer-disclosures" aria-label="Project logos">
+            <a class="footer-logo-only" href="/partners/eu" aria-label="European Union partner page"><img src="/images/logos/eu_emblem.svg" alt="European Union emblem" loading="lazy" /></a>
+            <a class="footer-logo-only" href="/partners/bridge-ai" aria-label="BRIDGE-AI partner page"><img src="/images/logos/bridge_ai_logo.svg" alt="BRIDGE-AI logo" loading="lazy" /></a>
+          </section>
         </div>
 
-        <div class="footer-middle">
-          <div class="footer-col">
-            <h4 class="footer-col-title">Project</h4>
-            <ul class="footer-col-links">
-              <li><a [routerLink]="['/smart-mushrooms']">Mushroom farm</a></li>
-              <li><a [routerLink]="['/partners']">JKUAT &amp; team</a></li>
-              <li><a [routerLink]="['/privacy-ethics']">Privacy</a></li>
-              <li><a [routerLink]="['/activities']">Journey &amp; news</a></li>
-              <li><a [routerLink]="['/contact']">Contact</a></li>
-            </ul>
-          </div>
-
-          <div class="footer-col">
-            <h4 class="footer-col-title">Activities</h4>
-            <ul class="footer-col-links">
-              <li><a [routerLink]="['/smart-mushrooms']">How it works</a></li>
-              <li><a [routerLink]="['/training-events']">Training events</a></li>
-              <li><a [routerLink]="['/activities']">Journey and updates</a></li>
-              <li><a [routerLink]="['/gallery']">Gallery</a></li>
-            </ul>
-          </div>
-
-          <div class="footer-col">
-            <h4 class="footer-col-title">Resources</h4>
-            <ul class="footer-col-links">
-              <li><a [routerLink]="['/resources']" [queryParams]="{ type: 'deliverable' }">Deliverables</a></li>
-              <li><a [routerLink]="['/resources']">Training Materials</a></li>
-              <li><a [routerLink]="['/resources']" [queryParams]="{ type: 'policy_brief' }">Policy Briefs</a></li>
-              <li><a [routerLink]="['/resources']" [queryParams]="{ type: 'publication' }">Publications</a></li>
-            </ul>
-          </div>
-
-          <div class="footer-col">
-            <h4 class="footer-col-title">Connect</h4>
-            <ul class="footer-col-links">
-              <li><a [routerLink]="['/contact']">Contact Us</a></li>
-              <li>
-                <a [href]="socialLinks.LINKEDIN" target="_blank" rel="noopener noreferrer">
-                  <svg class="footer-social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-                    <rect x="2" y="9" width="4" height="12"/>
-                    <circle cx="4" cy="4" r="2"/>
-                  </svg>
-                  LinkedIn
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="footer-bottom">
-          <p class="footer-copyright">
-            © 2026 Smart Mushroom Kenya Pilot · JKUAT
-          </p>
-          <div class="footer-bottom-right">
-            <span class="eu-mark" aria-label="Funded by the European Union">★ Funded by the European Union</span>
-            <span class="footer-builders">
-              Built by <a href="https://jhubafrica.com" target="_blank" rel="noopener noreferrer">JHUB Africa</a>
-              <span class="footer-sep">·</span>
-              <a href="https://www.bradon.space" target="_blank" rel="noopener noreferrer">B.M.M</a>
-            </span>
-            <a href="#top" class="footer-back-top" (click)="scrollToTop($event)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="18 15 12 9 6 15"/>
-              </svg>
-              <span>Back to Top</span>
-            </a>
-          </div>
+        <div class="footer-bottom footer-reference-bottom">
+          <p class="footer-copyright">© Developed by SmartMushroom Team 2026. All Rights Reserved.</p>
+          <a href="#top" class="footer-back-top" (click)="scrollToTop($event)"><span>Back to Top</span><span aria-hidden="true">↑</span></a>
         </div>
       </div>
     </footer>
@@ -111,16 +45,16 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
     }
 
     .footer-ultimate {
-      --footer-bg: #ffffff;
-      --footer-text: #061420;
-      --footer-text-strong: #081a28;
-      --footer-text-muted: #3a4a5a;
-      --footer-text-light: #6a7a8a;
-      --footer-border: #dce2e8;
-      --footer-primary: #0b4d3b;
-      --footer-primary-light: #1a7a5e;
-      --footer-primary-dim: rgba(11, 77, 59, 0.06);
-      --footer-shadow: 0 -4px 40px rgba(0, 0, 0, 0.04);
+      --footer-bg: #064e3b;
+      --footer-text: #f7faf8;
+      --footer-text-strong: #ffffff;
+      --footer-text-muted: #bdd3c9;
+      --footer-text-light: #8fb5a6;
+      --footer-border: rgba(255, 255, 255, .18);
+      --footer-primary: #d97706;
+      --footer-primary-light: #f0b45e;
+      --footer-primary-dim: rgba(255, 255, 255, 0.1);
+      --footer-shadow: 0 -4px 40px rgba(0, 0, 0, 0.18);
       --footer-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
       background: var(--footer-bg);
@@ -141,7 +75,7 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
       right: 0;
       height: 3px;
       background: linear-gradient(90deg, transparent, var(--footer-primary), var(--footer-primary-light), var(--footer-primary), transparent);
-      opacity: 0.2;
+      opacity: 0.9;
     }
 
     .footer-container {
@@ -438,6 +372,22 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
       border-radius: 2px;
     }
 
+    .footer-reference-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px; padding: 14px 0 30px; border-bottom: 1px solid var(--footer-border); text-align: center; }
+    .footer-reference-column { min-width: 0; padding: 0 10px; }
+    .footer-reference-column h3 { margin: 0 0 18px; color: var(--footer-primary-light); font-size: .78rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+    .footer-reference-column h3::after { content: ''; display: block; width: 34px; height: 2px; margin: 8px auto 0; background: var(--footer-primary-light); }
+    .footer-reference-column p { max-width: 340px; margin: 0 auto 14px; color: var(--footer-text-muted); font-size: .84rem; line-height: 1.7; }
+    .footer-reference-column strong { color: var(--footer-text-strong); }
+    .footer-reference-column a { color: var(--footer-text-muted); text-decoration: underline; text-decoration-color: rgba(240,180,94,.6); text-underline-offset: 3px; }
+    .footer-reference-column a:hover { color: var(--footer-primary-light); }
+    .footer-disclosures { display: flex; align-items: center; justify-content: center; gap: 22px; }
+    .footer-logo-only { display: grid; place-items: center; width: 104px; height: 76px; padding: 10px; border: 1px solid var(--footer-border); border-radius: 12px; background: #fff; box-shadow: 0 10px 22px rgba(0,0,0,.14); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+    .footer-logo-only:hover { transform: translateY(-3px); border-color: var(--footer-primary-light); }
+    .footer-logo-only:hover { box-shadow: 0 14px 28px rgba(0,0,0,.22); }
+    .footer-logo-only img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .footer-reference-bottom { justify-content: center; padding-top: 18px; text-align: center; }
+    .footer-reference-bottom .footer-bottom-right { justify-content: center; }
+
     @media (max-width: 1024px) {
       .footer-logos-row {
         gap: 16px 18px;
@@ -536,6 +486,14 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
         justify-content: center;
       }
 
+      .footer-reference-grid { grid-template-columns: 1fr; gap: 24px; padding-top: 8px; }
+      .footer-reference-column { padding: 0; }
+      .footer-reference-column h3 { margin-bottom: 12px; }
+      .footer-reference-column p { font-size: .82rem; }
+      .footer-disclosures { justify-content: center; }
+      .footer-disclosures { gap: 12px; }
+      .footer-logo-only { width: 84px; height: 64px; padding: 8px; }
+
       .footer-copyright,
       .footer-credit {
         font-size: 0.7rem;
@@ -608,10 +566,6 @@ import { APP, SOCIAL_LINKS } from '../../../core/constants/app.constants';
   `]
 })
 export class FooterComponent {
-  protected appName = APP.ACRONYM;
-  protected currentYear = new Date().getFullYear();
-  protected socialLinks = SOCIAL_LINKS;
-
   scrollToTop(event: Event): void {
     event.preventDefault();
     window.scrollTo({ top: 0, behavior: 'smooth' });

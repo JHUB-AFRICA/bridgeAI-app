@@ -19,7 +19,8 @@ export const AdminRoutes: Routes = [
       { path: 'sme', loadComponent: () => import('./pages/sme/sme.component').then(m => m.AdminSmeComponent) },
       { path: 'community', loadComponent: () => import('./pages/community/community.component').then(m => m.AdminCommunityComponent) },
       { path: 'replication', loadComponent: () => import('./pages/replication/replication.component').then(m => m.AdminReplicationComponent) },
-      { path: 'submissions', loadComponent: () => import('./pages/submissions/submissions.component').then(m => m.AdminSubmissionsComponent) }
+      { path: 'submissions', loadComponent: () => import('./pages/submissions/submissions.component').then(m => m.AdminSubmissionsComponent) },
+      { path: 'shop-requests', loadComponent: () => import('./pages/shop-requests/shop-requests.component').then(m => m.ShopRequestsComponent) }
     ]
   }
 ];
